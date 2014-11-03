@@ -3,56 +3,47 @@
  */
 package de.interoberlin.lymbo;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.RegexFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
+import de.interoberlin.lymbo.controller.LymboController;
+import de.interoberlin.lymbo.controller.SplashController;
 import de.interoberlin.lymbo.view.activities.HomeActivity;
 import de.interoberlin.lymbo.view.activities.RobotoTextView;
-import de.interoberlin.mate.lib.model.Log;
 
 public class SplashActivity extends Activity {
-    // private static WebView wvLogo;
-    private static LinearLayout ll;
-    private static RobotoTextView tvMessage;
+    // Controllers
+    SplashController splashController = SplashController.getInstance();
+    LymboController lymboController = LymboController.getInstance();
 
-    private static List<String> messages = new ArrayList<String>();
-    private static boolean ready = false;
-
+    // Activity
     private static Activity activity;
 
-    @SuppressWarnings("deprecation")
-    @SuppressLint("SetJavaScriptEnabled")
+    // Members
+    private static LinearLayout ll;
+    private static RobotoTextView tvMessage;
+    private static boolean ready = false;
+
+    // --------------------
+    // Methods - Lifecycle
+    // --------------------
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // Get activtiy and contex for further use
+        // Get activtiy and context for further use
         activity = this;
 
-        // wvLogo = (WebView) findViewById(R.id.wvLogo);
         ll = (LinearLayout) findViewById(R.id.ll);
         tvMessage = (RobotoTextView) findViewById(R.id.tvMessage);
-
-        tvMessage.setText("Search lymbo files");
-
-        ll.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.splash));
 
         ll.setOnClickListener(new OnClickListener() {
             @Override
@@ -66,12 +57,14 @@ public class SplashActivity extends Activity {
 
         Thread timer = new Thread() {
             public void run() {
-                loadMessages();
-                findLymboFiles();
+                tvMessage.setText(R.string.search_lymbo_files);
 
-                Collections.shuffle(messages);
+                splashController.loadMessages();
+                lymboController.findLymboFiles();
 
-                uiMessage(messages.get(0));
+                Collections.shuffle(splashController.getMessages());
+
+                uiMessage(splashController.getMessages().get(0));
 
                 try {
                     sleep(100);
@@ -81,23 +74,17 @@ public class SplashActivity extends Activity {
 
                 int i = 0;
 
-            /*
-        while (Properties.getLymboFiles().isEmpty())
-		{
+                while (lymboController.getLymboFiles().isEmpty()) {
+                    uiMessage(splashController.getMessages().get(i++));
 
-		    uiMessage(messages.get(i++));
+                    try {
+                        sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-		    try
-		    {
-			sleep(500);
-		    } catch (InterruptedException e)
-		    {
-			e.printStackTrace();
-		    }
-		}
-
-		uiMessage("Found " + Properties.getLymboFiles().size() + " lymbo files");
-*/
+                uiMessage("Found " + lymboController.getLymboFiles().size() + " lymbo files");
 
                 try {
                     sleep(1000);
@@ -105,7 +92,7 @@ public class SplashActivity extends Activity {
                     e.printStackTrace();
                 }
 
-                uiMessage("Click on screen to continue");
+                uiMessage(R.string.click_to_continue);
 
                 ready = true;
             }
@@ -119,25 +106,20 @@ public class SplashActivity extends Activity {
         finish();
     }
 
-    private static void loadMessages() {
-        for (int i = 0; i < EMessage.values().length; i++) {
-            messages.add(EMessage.values()[i].getText());
-        }
-    }
-
-    private static void findLymboFiles() {
-        /*
-	Log.trace("SplashActivity.findLymboFiles()");
-	Properties.setLymboFiles(findFiles(".lymbo"));
-	*/
-    }
-
-    public static Collection<File> findFiles(String pattern) {
-        Log.trace("StackActivity.findFiles()");
-        return FileUtils.listFiles(Environment.getExternalStorageDirectory(), new RegexFileFilter(".*" + pattern), TrueFileFilter.TRUE);
-    }
+    // --------------------
+    // Methods
+    // --------------------
 
     public static void uiMessage(final String message) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tvMessage.setText(message);
+            }
+        });
+    }
+
+    public static void uiMessage(final int message) {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {

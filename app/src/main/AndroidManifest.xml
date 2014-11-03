@@ -3,6 +3,7 @@
     package="de.interoberlin.lymbo" >
 
     <application
+        android:name="de.interoberlin.lymbo.controller.LymboController"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
