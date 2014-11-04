@@ -18,6 +18,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="de.interoberlin.lymbo.view.activities.StacksActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="de.interoberlin.lymbo.SplashActivity">
+        </activity>
+        <activity
             android:name="de.interoberlin.lymbo.view.activities.HomeActivity"
             android:label="@string/app_name"
             android:parentActivityName="de.interoberlin.lymbo.SplashActivity">

@@ -14,8 +14,8 @@ import java.util.Collections;
 
 import de.interoberlin.lymbo.controller.LymboController;
 import de.interoberlin.lymbo.controller.SplashController;
-import de.interoberlin.lymbo.view.activities.HomeActivity;
 import de.interoberlin.lymbo.view.activities.RobotoTextView;
+import de.interoberlin.lymbo.view.activities.StacksActivity;
 
 public class SplashActivity extends Activity {
     // Controllers
@@ -49,7 +49,7 @@ public class SplashActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (ready) {
-                    Intent openStartingPoint = new Intent(SplashActivity.this, HomeActivity.class);
+                    Intent openStartingPoint = new Intent(SplashActivity.this, StacksActivity.class);
                     startActivity(openStartingPoint);
                 }
             }

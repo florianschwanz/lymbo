@@ -1,6 +1,7 @@
 package de.interoberlin.lymbo.controller;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Environment;
 
 import org.apache.commons.io.FileUtils;
@@ -13,15 +14,17 @@ import java.util.Collection;
 import de.interoberlin.mate.lib.model.Log;
 
 public class LymboController extends Application {
+    private static Context context;
+
     private Collection<File> lymboFiles;
 
     private static LymboController instance;
 
     // --------------------
-    // Singleton
+    // Constructors
     // --------------------
 
-    private LymboController() {
+    public LymboController() {
     }
 
     public static LymboController getInstance() {
@@ -33,9 +36,24 @@ public class LymboController extends Application {
     }
 
     // --------------------
+    // Methods - Lifecycle
+    // --------------------
+
+    @Override
+    public void onCreate()
+    {
+        super.onCreate();
+        context = this;
+    }
+
+    // --------------------
     // Methods
     // --------------------
 
+    public static Context getContext()
+    {
+        return context;
+    }
     /**
      * Finds all files having the extension .lymbo
      */
@@ -53,6 +71,32 @@ public class LymboController extends Application {
     public Collection<File> findFiles(String pattern) {
         Log.trace("LymboController.findFiles()");
         return FileUtils.listFiles(Environment.getExternalStorageDirectory(), new RegexFileFilter(".*" + pattern), TrueFileFilter.TRUE);
+    }
+
+    public boolean checkStorage()
+    {
+        boolean externalStorageAvailable = false;
+        boolean externalStorageWriteable = false;
+
+        String state = Environment.getExternalStorageState();
+
+        if (Environment.MEDIA_MOUNTED.equals(state))
+        {
+            // We can read and write the media
+            externalStorageAvailable = externalStorageWriteable = true;
+        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state))
+        {
+            // We can only read the media
+            externalStorageAvailable = true;
+            externalStorageWriteable = false;
+        } else
+        {
+            // Something else is wrong. It may be one of many other states, but
+            // all we need to know is we can neither read nor write
+            externalStorageAvailable = externalStorageWriteable = false;
+        }
+
+        return externalStorageAvailable && externalStorageWriteable;
     }
 
     // --------------------
