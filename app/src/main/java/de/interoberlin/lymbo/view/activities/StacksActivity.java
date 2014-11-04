@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import org.apache.commons.io.FileUtils;
@@ -38,6 +41,7 @@ public class StacksActivity extends BaseActivity {
     private static Activity a;
 
     // Views
+    private DrawerLayout drawer;
     private static RecyclerView rv;
     private RecyclerView.Adapter ca;
     private RecyclerView.LayoutManager lm;
@@ -51,8 +55,10 @@ public class StacksActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stacks);
+        setActionBarIcon(R.drawable.ic_ab_drawer);
 
+        drawer = (DrawerLayout) findViewById(R.id.dl);
+        drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
 /*
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -76,7 +82,15 @@ public class StacksActivity extends BaseActivity {
 
         List<CardView> cards = new ArrayList<CardView>();
 
-        cards.add(new CardView(c));
+        for (int i=0; i<5; i++)
+        {
+            CardView cv = new CardView(c);
+            cv.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 100));
+            cv.setMinimumWidth(200);
+            cv.setMinimumHeight(200);
+
+            cards.add(cv);
+        }
 
         ca = new CardAdapter(cards);
         rv.setAdapter(ca);
@@ -117,6 +131,9 @@ public class StacksActivity extends BaseActivity {
             }
             case R.id.menu_about: {
                 Intent i = new Intent(StacksActivity.this, AboutActivity.class);
+                Bundle b = new Bundle();
+                b.putString("flavor", "interoberlin");
+                i.putExtras(b);
                 startActivity(i);
                 break;
             }
@@ -186,7 +203,6 @@ public class StacksActivity extends BaseActivity {
 
         if (lymboController.checkStorage()) {
             a.setTitle(a.getResources().getString(R.string.app_name));
-
         }
     }
 
