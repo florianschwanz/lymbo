@@ -2,11 +2,12 @@ package de.interoberlin.lymbo.view.activities;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import java.util.List;
 
-import de.interoberlin.lymbo.controller.LymboController;
+import de.interoberlin.lymbo.R;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
@@ -27,7 +28,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     @Override
     public CardAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                      int viewType) {
-        CardView cv = new CardView(LymboController.getContext());
+
+        CardView cv = (CardView) LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.card, parent, false);
 
         return new ViewHolder(cv);
     }

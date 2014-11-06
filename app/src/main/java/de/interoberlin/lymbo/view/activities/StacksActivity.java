@@ -82,7 +82,7 @@ public class StacksActivity extends BaseActivity {
 
         List<CardView> cards = new ArrayList<CardView>();
 
-        for (int i=0; i<5; i++)
+        for (int i=0; i<500; i++)
         {
             CardView cv = new CardView(c);
             cv.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 100));
