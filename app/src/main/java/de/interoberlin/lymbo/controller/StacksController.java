@@ -1,17 +1,19 @@
 package de.interoberlin.lymbo.controller;
 
 import java.io.File;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
-import de.interoberlin.lymbo.model.XmlLymbo;
-import de.interoberlin.lymbo.model.XmlStack;
+import de.interoberlin.lymbo.model.card.XmlLymbo;
+import de.interoberlin.lymbo.model.card.XmlStack;
 
 public class StacksController {
+    private static List<XmlStack> stacks;
+
     private String currentFileString;
     private File currentFile;
     private XmlLymbo currentLymbo;
     private XmlStack currentStack;
-    private Collection<File> lymboFiles;
 
     private static StacksController instance;
 
@@ -20,6 +22,7 @@ public class StacksController {
     // --------------------
 
     private StacksController() {
+        init();
     }
 
     public static StacksController getInstance() {
@@ -31,8 +34,37 @@ public class StacksController {
     }
 
     // --------------------
+    // Methods
+    // --------------------
+
+    private void init() {
+        if (stacks == null) {
+            getStacksFromLymbos();
+        }
+    }
+
+    private void getStacksFromLymbos() {
+        stacks = new ArrayList<XmlStack>();
+
+        System.out.println("A");
+        for (XmlLymbo xmlLymbo : LymboController.getInstance().getLymbos()) {
+            stacks.add(xmlLymbo.getStack());
+            System.out.println("HU");
+        }
+        System.out.println("B");
+    }
+
+    // --------------------
     // Getters / Setters
     // --------------------
+
+    public List<XmlStack> getStacks() {
+        return stacks;
+    }
+
+    public void setStacks(List<XmlStack> stacks) {
+        this.stacks = stacks;
+    }
 
     public String getCurrentFileString() {
         return this.currentFileString;
@@ -64,13 +96,5 @@ public class StacksController {
 
     public void setCurrentStack(XmlStack currentStack) {
         this.currentStack = currentStack;
-    }
-
-    public Collection<File> getLymboFiles() {
-        return this.lymboFiles;
-    }
-
-    public void setLymboFiles(Collection<File> lymboFiles) {
-        this.lymboFiles = lymboFiles;
     }
 }

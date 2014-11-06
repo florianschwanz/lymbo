@@ -14,7 +14,7 @@ import java.util.Collections;
 
 import de.interoberlin.lymbo.controller.LymboController;
 import de.interoberlin.lymbo.controller.SplashController;
-import de.interoberlin.lymbo.view.activities.RobotoTextView;
+import de.interoberlin.lymbo.view.controls.RobotoTextView;
 import de.interoberlin.lymbo.view.activities.StacksActivity;
 
 public class SplashActivity extends Activity {
@@ -60,7 +60,7 @@ public class SplashActivity extends Activity {
                 tvMessage.setText(R.string.search_lymbo_files);
 
                 splashController.loadMessages();
-                lymboController.findLymboFiles();
+                lymboController.getLymbos();
 
                 Collections.shuffle(splashController.getMessages());
 

@@ -6,13 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import org.apache.commons.io.FileUtils;
@@ -25,8 +23,10 @@ import java.util.Collection;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.LymboController;
 import de.interoberlin.lymbo.controller.StacksController;
+import de.interoberlin.lymbo.model.card.XmlStack;
+import de.interoberlin.lymbo.view.adapters.StacksAdapter;
+import de.interoberlin.lymbo.view.card.DisplayStack;
 import de.interoberlin.mate.lib.model.Log;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
@@ -34,7 +34,6 @@ import de.interoberlin.mate.lib.view.LogActivity;
 public class StacksActivity extends BaseActivity {
     // Controllers
     StacksController stacksController = StacksController.getInstance();
-    LymboController lymboController = LymboController.getInstance();
 
     // Context and Activity
     private static Context c;
@@ -43,10 +42,8 @@ public class StacksActivity extends BaseActivity {
     // Views
     private DrawerLayout drawer;
     private static RecyclerView rv;
-    private RecyclerView.Adapter ca;
+    private RecyclerView.Adapter stacksAdapter;
     private RecyclerView.LayoutManager lm;
-
-    private Collection<File> lymboFiles = stacksController.getLymboFiles();
 
     // --------------------
     // Methods - Lifecycle
@@ -80,28 +77,15 @@ public class StacksActivity extends BaseActivity {
         lm = new LinearLayoutManager(this);
         rv.setLayoutManager(lm);
 
-        List<CardView> cards = new ArrayList<CardView>();
+        List<DisplayStack> stacks = new ArrayList<DisplayStack>();
 
-        for (int i=0; i<500; i++)
+        for (XmlStack stack : stacksController.getStacks())
         {
-            CardView cv = new CardView(c);
-            cv.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 100));
-            cv.setMinimumWidth(200);
-            cv.setMinimumHeight(200);
-
-            cards.add(cv);
+            stacks.add(new DisplayStack(0, a,  "title", "text", "image", "hint", "file"));
         }
 
-        ca = new CardAdapter(cards);
-        rv.setAdapter(ca);
-
-        /*
-        if (lymboFiles == null || lymboFiles.isEmpty()) {
-            lymboController.findLymboFiles();
-            clear();
-            draw();
-        }
-        */
+        stacksAdapter = new StacksAdapter(stacks);
+        rv.setAdapter(stacksAdapter);
     }
 
     public void onResume() {
@@ -188,6 +172,8 @@ public class StacksActivity extends BaseActivity {
         return R.layout.activity_stacks;
     }
 
+
+
     public static Collection<File> findFiles(String pattern) {
         Log.trace("StackActivity.findFiles()");
         return FileUtils.listFiles(Environment.getExternalStorageDirectory(), new RegexFileFilter(".*" + pattern), TrueFileFilter.TRUE);
@@ -198,12 +184,6 @@ public class StacksActivity extends BaseActivity {
     }
 
     public void draw() {
-        // Get list of lymbo files
-        lymboFiles = stacksController.getLymboFiles();
-
-        if (lymboController.checkStorage()) {
-            a.setTitle(a.getResources().getString(R.string.app_name));
-        }
     }
 
     public static void uiToast(final String message) {

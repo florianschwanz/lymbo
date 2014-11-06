@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.model;
+package de.interoberlin.lymbo.model.card;
 
 public class XmlChoice {
     private String text;

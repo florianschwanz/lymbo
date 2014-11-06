@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.view.activities;
+package de.interoberlin.lymbo.view.adapters;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +9,7 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 
-public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
+public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> {
 
     private List<CardView> dataset;
 
@@ -17,7 +17,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     // Constructors
     // --------------------
 
-    public CardAdapter(List<CardView> dataset) {
+    public CardsAdapter(List<CardView> dataset) {
         this.dataset = dataset;
     }
 
@@ -26,7 +26,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     // --------------------
 
     @Override
-    public CardAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public CardsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                      int viewType) {
 
         CardView cv = (CardView) LayoutInflater.from(parent.getContext())

@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.view.activities;
+package de.interoberlin.lymbo.view.controls;
 
 import android.content.Context;
 import android.content.res.TypedArray;

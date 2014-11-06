@@ -1,7 +1,7 @@
 package de.interoberlin.lymbo.controller;
 
 
-import de.interoberlin.lymbo.model.XmlCard;
+import de.interoberlin.lymbo.model.card.XmlCard;
 
 public class StackController {
     private XmlCard currentCard;
