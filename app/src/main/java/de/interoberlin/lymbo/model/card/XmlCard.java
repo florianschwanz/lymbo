@@ -2,10 +2,18 @@ package de.interoberlin.lymbo.model.card;
 
 public class XmlCard {
     private int id;
-    private String title;
-    private String color;
+    private String title = "";
+    private String color = "#FFFFFF";
     private XmlSide front;
     private XmlSide back;
+
+    // -------------------------
+    // Constructors
+    // -------------------------
+
+    public XmlCard() {
+
+    }
 
     public XmlCard(int id, String title, String color, XmlSide front) {
         this.id = id;
@@ -21,6 +29,10 @@ public class XmlCard {
         this.front = front;
         this.back = back;
     }
+
+    // -------------------------
+    // Getters / Setters
+    // -------------------------
 
     public int getId() {
         return id;

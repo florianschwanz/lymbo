@@ -18,80 +18,80 @@ import de.interoberlin.lymbo.util.Base64BitmapConverter;
 import de.interoberlin.lymbo.view.activities.StacksActivity;
 import de.interoberlin.mate.lib.model.Log;
 
-public class DisplayStack extends CardView
-{
-	private int			id		= 0;
-	private Activity	a;
+public class DisplayStack extends CardView {
+    private int id = 0;
+    private Activity a;
 
-	private String		title	= "";
-	private String		text	= "";
-	private String		file;
-	private String		image;
-	private String		hint;
+    private String title = "";
+    private String text = "";
+    private String file;
+    private String image;
+    private String hint;
 
-	private TextView	tvTitle;
-	private TextView	tvText;
-	private ImageView	ivEdit;
-	private ImageView	ivDiscard;
-	private ImageView	ivShare;
-	private ImageView	ivUpload;
-	private ImageView	ivHint;
-	private ImageView	ivLogo;
+    private TextView tvTitle;
+    private TextView tvText;
+    private ImageView ivEdit;
+    private ImageView ivDiscard;
+    private ImageView ivShare;
+    private ImageView ivUpload;
+    private ImageView ivHint;
+    private ImageView ivLogo;
 
     // --------------------
     // Constructors
     // --------------------
 
-	public DisplayStack(int id, Activity a, String title, String text, String image, String hint, String file)
-	{
+    public DisplayStack(int id, Activity a) {
+        super(a);
+        this.id = id;
+    }
+
+    public DisplayStack(int id, Activity a, String title, String text, String image, String hint, String file) {
         super(a);
 
-		this.id = id;
-		this.a = a;
-		this.title = title;
-		this.text = text;
-		this.image = image;
-		this.hint = hint;
-		this.file = file;
-	}
+        this.id = id;
+        this.a = a;
+        this.title = title;
+        this.text = text;
+        this.image = image;
+        this.hint = hint;
+        this.file = file;
+    }
 
     // --------------------
     // Methods
     // --------------------
 
-	public View getCardContent(Context context)
-	{
-		Log.trace("DisplayStack.getCardContent()");
+    public View getCardContent(Context context) {
+        Log.trace("DisplayStack.getCardContent()");
 
-		// Load layout
-		View view = LayoutInflater.from(context).inflate(R.layout.display_stack, null);
-		view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (a.getResources()
-				.getDimension(R.dimen.stack_height))));
+        // Load layout
+        View view = LayoutInflater.from(context).inflate(R.layout.display_stack, null);
+        view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (a.getResources()
+                .getDimension(R.dimen.stack_height))));
 
-		// Load vies
-		tvTitle = (TextView) view.findViewById(R.id.tvTitle);
-		tvText = (TextView) view.findViewById(R.id.tvText);
-		ivEdit = (ImageView) view.findViewById(R.id.ivEdit);
-		ivDiscard = (ImageView) view.findViewById(R.id.ivDiscard);
-		ivShare = (ImageView) view.findViewById(R.id.ivShare);
-		ivUpload = (ImageView) view.findViewById(R.id.ivUpload);
-		ivHint = (ImageView) view.findViewById(R.id.ivHint);
-		ivLogo = (ImageView) view.findViewById(R.id.ivLogo);
+        // Load vies
+        tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+        tvText = (TextView) view.findViewById(R.id.tvText);
+        ivEdit = (ImageView) view.findViewById(R.id.ivEdit);
+        ivDiscard = (ImageView) view.findViewById(R.id.ivDiscard);
+        ivShare = (ImageView) view.findViewById(R.id.ivShare);
+        ivUpload = (ImageView) view.findViewById(R.id.ivUpload);
+        ivHint = (ImageView) view.findViewById(R.id.ivHint);
+        ivLogo = (ImageView) view.findViewById(R.id.ivLogo);
 
-		// Title
-		tvTitle.setText(title);
+        // Title
+        tvTitle.setText(title);
 
-		// Text
-		tvText.setText(text);
+        // Text
+        tvText.setText(text);
 
-		// Edit
-		ivEdit.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
+        // Edit
+        ivEdit.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 /*
-				InputDialogFragment inputDialogFragment = new InputDialogFragment();
+                InputDialogFragment inputDialogFragment = new InputDialogFragment();
 				Bundle b = new Bundle();
 				b.putString("type", "CHANGE_STACK");
 				b.putString("file", file);
@@ -102,15 +102,13 @@ public class DisplayStack extends CardView
 				inputDialogFragment.setArguments(b);
 				inputDialogFragment.show(a.getFragmentManager(), "okay");
 				*/
-			}
-		});
+            }
+        });
 
-		// Discard
-		ivDiscard.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
+        // Discard
+        ivDiscard.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 /*
 				// Make current settings available
 				Properties.setCurrentFileString(file);
@@ -124,52 +122,45 @@ public class DisplayStack extends CardView
 				displayDialogFragment.setArguments(b);
 				displayDialogFragment.show(a.getFragmentManager(), "okay");
 				*/
-			}
-		});
+            }
+        });
 
-		// Share
-		ivShare.setOnClickListener(new OnClickListener()
-		{
+        // Share
+        ivShare.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v)
-			{
-				Intent emailIntent = new Intent(Intent.ACTION_SEND);
-				emailIntent.setType("message/rfc822");
-				emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Lymbo");
-				emailIntent.putExtra(Intent.EXTRA_TEXT, "Here is a lymbo file I want to share with you");
+            @Override
+            public void onClick(View v) {
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.setType("message/rfc822");
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Lymbo");
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "Here is a lymbo file I want to share with you");
 
-				File fi = new File(file);
+                File fi = new File(file);
 
-				if (!fi.exists() || !fi.canRead())
-				{
-					StacksActivity.uiToast("Attachment Error");
-					// finish();
-					return;
-				}
-				Uri uri = Uri.parse("file://" + file);
-				emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                if (!fi.exists() || !fi.canRead()) {
+                    StacksActivity.uiToast("Attachment Error");
+                    // finish();
+                    return;
+                }
+                Uri uri = Uri.parse("file://" + file);
+                emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
 
-				a.startActivity(Intent.createChooser(emailIntent, "Send mail"));
-			}
-		});
+                a.startActivity(Intent.createChooser(emailIntent, "Send mail"));
+            }
+        });
 
-		// Upload
-		ivUpload.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				StacksActivity.uiToast("Not yet implemented");
-			}
-		});
+        // Upload
+        ivUpload.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StacksActivity.uiToast("Not yet implemented");
+            }
+        });
 
-		// Hint
-		ivHint.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
+        // Hint
+        ivHint.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 /*
 				DisplayDialogFragment displayDialogFragment = new DisplayDialogFragment();
 				Bundle b = new Bundle();
@@ -180,25 +171,50 @@ public class DisplayStack extends CardView
 				displayDialogFragment.setArguments(b);
 				displayDialogFragment.show(a.getFragmentManager(), "okay");
 				*/
-			}
-		});
+            }
+        });
 
-		// Set background image
-		if (!image.equals(""))
-		{
-			ivLogo.setBackgroundDrawable(new BitmapDrawable(Base64BitmapConverter.decodeBase64(image)));
-		}
+        // Set background image
+        if (!image.equals("")) {
+            ivLogo.setBackgroundDrawable(new BitmapDrawable(Base64BitmapConverter.decodeBase64(image)));
+        }
 
-		return view;
-	}
+        return view;
+    }
 
-	public int getId()
-	{
-		return id;
-	}
+    // --------------------
+    // Getters / Setters
+    // --------------------
 
-	public void setId(int id)
-	{
-		this.id = id;
-	}
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
+    }
 }

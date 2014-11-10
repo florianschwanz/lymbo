@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.util.List;
 
 import de.interoberlin.lymbo.model.card.XmlCard;
-import de.interoberlin.lymbo.model.card.XmlChoice;
+import de.interoberlin.lymbo.model.card.components.XmlChoice;
 import de.interoberlin.lymbo.model.card.XmlLymbo;
 import de.interoberlin.lymbo.model.card.XmlSide;
 import de.interoberlin.lymbo.model.card.XmlStack;
-import de.interoberlin.lymbo.model.card.XmlText;
+import de.interoberlin.lymbo.model.card.components.XmlTextComponent;
 
 /**
  * This class can be used to write a lymbo object into an xml file
@@ -167,11 +167,11 @@ public class XmlWriter
 	/**
 	 * Appends a text tag (text or code) to the xml file
 	 */
-	private static void appendTexts(List<XmlText> texts)
+	private static void appendTexts(List<XmlTextComponent> texts)
 	{
 		if (texts != null)
 		{
-			for (XmlText t : texts)
+			for (XmlTextComponent t : texts)
 			{
 				switch (t.getType())
 				{

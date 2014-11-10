@@ -11,12 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.model.card.XmlCard;
-import de.interoberlin.lymbo.model.card.XmlChoice;
 import de.interoberlin.lymbo.model.card.XmlLymbo;
 import de.interoberlin.lymbo.model.card.XmlSide;
-import de.interoberlin.lymbo.model.card.XmlStack;
-import de.interoberlin.lymbo.model.card.XmlText;
-import de.interoberlin.lymbo.model.card.XmlTextType;
+import de.interoberlin.lymbo.model.card.components.XmlAnswer;
+import de.interoberlin.lymbo.model.card.components.XmlChoiceComponent;
+import de.interoberlin.lymbo.model.card.components.XmlComponent;
+import de.interoberlin.lymbo.model.card.components.XmlHintComponent;
+import de.interoberlin.lymbo.model.card.components.XmlImageComponent;
+import de.interoberlin.lymbo.model.card.components.XmlTextComponent;
 
 public class XmlParser {
     private static XmlParser instance;
@@ -51,14 +53,12 @@ public class XmlParser {
      * @throws java.io.IOException
      */
     public XmlLymbo parse(InputStream in) throws XmlPullParserException, IOException {
-        i = 0;
-
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in, null);
             parser.nextTag();
-            return readLymbo(parser);
+            return parseLymbo(parser);
         } finally {
             in.close();
         }
@@ -72,61 +72,50 @@ public class XmlParser {
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private XmlLymbo readLymbo(XmlPullParser parser) throws XmlPullParserException, IOException {
-        String text = null;
-        String image = null;
-        XmlStack stack = null;
-
+    private XmlLymbo parseLymbo(XmlPullParser parser) throws XmlPullParserException, IOException {
+        String name = "";
         parser.require(XmlPullParser.START_TAG, null, "lymbo");
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
 
-            String name = parser.getName();
+        // Create element
+        XmlLymbo lymbo = new XmlLymbo();
+        i = 0;
 
-            // Starts by looking for the entry tag
-            if (name.equals("text")) {
-                text = (readText(parser));
-            } else if (name.equals("image")) {
-                image = (readText(parser));
-            } else if (name.equals("stack")) {
-                stack = (readStack(parser));
-            } else {
-                skip(parser);
-            }
-        }
+        // Read attributes
+        String title = parser.getAttributeValue(null, "title");
+        String description = parser.getAttributeValue(null, "description");
+        String image = parser.getAttributeValue(null, "image");
+        String author = parser.getAttributeValue(null, "author");
 
-        return new XmlLymbo(text, image, stack);
-    }
-
-    /**
-     * Returns a stack which is a List of cards
-     *
-     * @param parser
-     * @return xmlStack
-     * @throws org.xmlpull.v1.XmlPullParserException
-     * @throws java.io.IOException
-     */
-    private XmlStack readStack(XmlPullParser parser) throws XmlPullParserException, IOException {
+        // Read sub elements
         List<XmlCard> cards = new ArrayList<XmlCard>();
 
-        parser.require(XmlPullParser.START_TAG, null, "stack");
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
 
-            String name = parser.getName();
+            name = parser.getName();
 
-            // Starts by looking for the entry tag
             if (name.equals("card")) {
-                cards.add(readCard(parser));
+                cards.add(parseCard(parser));
             } else {
                 skip(parser);
             }
         }
-        return new XmlStack(cards);
+
+        // Fill element
+        if (title != null)
+            lymbo.setTitle(title);
+        if (description != null)
+            lymbo.setDescription(description);
+        if (image != null)
+            lymbo.setImage(image);
+        if (author != null)
+            lymbo.setAuthor(author);
+        if (cards != null)
+            lymbo.setCards(cards);
+
+        return lymbo;
     }
 
     /**
@@ -137,88 +126,242 @@ public class XmlParser {
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private XmlCard readCard(XmlPullParser parser) throws XmlPullParserException, IOException {
-        String title = "";
-        String color = "#FFFFFF";
+    private XmlCard parseCard(XmlPullParser parser) throws XmlPullParserException, IOException {
+        String name = "";
+        parser.require(XmlPullParser.START_TAG, null, "card");
+
+        // Create element
+        XmlCard card = new XmlCard();
+
+        // Read attributes
+        String title = parser.getAttributeValue(null, "title");
+        String color = parser.getAttributeValue(null, "color");
+
+        // Read sub elements
         XmlSide front = null;
         XmlSide back = null;
 
-        parser.require(XmlPullParser.START_TAG, null, "card");
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
 
-            String name = parser.getName();
+            name = parser.getName();
 
-            // Starts by looking for the entry tag
-            if (name.equals("title")) {
-                title = readString(parser, "title");
-            } else if (name.equals("color")) {
-                color = readString(parser, "color");
-            } else if (name.equals("front")) {
-                front = readSide(parser, "front");
+            if (name.equals("front")) {
+                front = parseSide(parser, "front");
             } else if (name.equals("back")) {
-                back = readSide(parser, "back");
+                back = parseSide(parser, "back");
             } else {
                 skip(parser);
             }
         }
-        return new XmlCard(i++, title, color, front, back);
+
+        // Fill element
+        if (title != null)
+            card.setTitle(title);
+        if (color != null)
+            card.setColor(color);
+        if (front != null)
+            card.setFront(front);
+        if (back != null)
+            card.setBack(back);
+
+        return card;
     }
 
     /**
-     * Returns the front side of a card
+     * Returns a side of a card
      *
      * @param parser
      * @return xmlSide
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private XmlSide readSide(XmlPullParser parser, String tag) throws XmlPullParserException, IOException {
-        List<XmlText> texts = new ArrayList<XmlText>();
-        String image = "";
-        String hint = "";
-        List<XmlChoice> choices = new ArrayList<XmlChoice>();
-
+    private XmlSide parseSide(XmlPullParser parser, String tag) throws XmlPullParserException, IOException {
+        String name = "";
         parser.require(XmlPullParser.START_TAG, null, tag);
+
+        // Create element
+        XmlSide side = new XmlSide();
+
+        // Read sub elements
+        List<XmlComponent> components = new ArrayList<XmlComponent>();
+
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
-            String name = parser.getName();
+            name = parser.getName();
 
             if (name.equals("text")) {
-                texts.add(new XmlText(XmlTextType.NORMAL, readString(parser, "text")));
-            } else if (name.equals("code")) {
-                texts.add(new XmlText(XmlTextType.CODE, readString(parser, "code")));
-            } else if (name.equals("image")) {
-                image = readString(parser, "image");
+                components.add(parseTextComponent(parser));
             } else if (name.equals("hint")) {
-                hint = readString(parser, "hint");
-            } else if (name.equals("right")) {
-                choices.add(new XmlChoice(readString(parser, "right"), true));
-            } else if (name.equals("wrong")) {
-                choices.add(new XmlChoice(readString(parser, "wrong"), false));
+                components.add(parseHintComponent(parser));
+            } else if (name.equals("image")) {
+                components.add(parseImageComponent(parser));
+            } else if (name.equals("choice")) {
+                components.add(parseChoiceComponent(parser));
             } else {
                 skip(parser);
             }
         }
 
-        return new XmlSide(texts, image, hint, choices);
+        // Fill element
+        if (!components.isEmpty())
+            side.setComponents(components);
+
+        return side;
     }
 
     /**
-     * Returns the title of a card
+     * Returns a text component
+     *
+     * @param parser
+     * @return xmlSide
+     * @throws org.xmlpull.v1.XmlPullParserException
+     * @throws java.io.IOException
+     */
+    private XmlTextComponent parseTextComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, null, "text");
+
+        // Create element
+        XmlTextComponent component = new XmlTextComponent();
+
+        // Read attributes
+        String text = parser.getAttributeValue(null, "text");
+
+        // Fill element
+        if (text != null)
+            component.setText(text);
+
+        return component;
+    }
+
+    /**
+     * Returns am hint component
+     *
+     * @param parser
+     * @return xmlSide
+     * @throws org.xmlpull.v1.XmlPullParserException
+     * @throws java.io.IOException
+     */
+    private XmlHintComponent parseHintComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, null, "hint");
+
+        // Create element
+        XmlHintComponent component = new XmlHintComponent();
+
+        // Read attributes
+        String text = parser.getAttributeValue(null, "text");
+
+        // Fill element
+        if (text != null)
+            component.setText(text);
+
+        return component;
+    }
+
+    /**
+     * Returns am image component
+     *
+     * @param parser
+     * @return xmlSide
+     * @throws org.xmlpull.v1.XmlPullParserException
+     * @throws java.io.IOException
+     */
+    private XmlImageComponent parseImageComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, null, "image");
+
+        // Create element
+        XmlImageComponent component = new XmlImageComponent();
+
+        // Read attributes
+        String image = parser.getAttributeValue(null, "image");
+
+        // Fill element
+        if (image != null)
+            component.setImage(image);
+
+        return component;
+    }
+
+    /**
+     * Returns a choice component
+     *
+     * @param parser
+     * @return xmlSide
+     * @throws org.xmlpull.v1.XmlPullParserException
+     * @throws java.io.IOException
+     */
+    private XmlChoiceComponent parseChoiceComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+        String name;
+        parser.require(XmlPullParser.START_TAG, null, "choice");
+
+        // Create element
+        XmlChoiceComponent component = new XmlChoiceComponent();
+
+        // Read sub elements
+        List<XmlAnswer> answers = new ArrayList<XmlAnswer>();
+
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            name = parser.getName();
+
+            if (name.equals("answer")) {
+                answers.add(parseAnswer(parser));
+            } else {
+                skip(parser);
+            }
+        }
+
+        // Fill element
+        if (!answers.isEmpty())
+            component.setAnswers(answers);
+
+        return component;
+    }
+
+    /**
+     * Returns an answer component
+     *
+     * @param parser
+     * @return xmlSide
+     * @throws org.xmlpull.v1.XmlPullParserException
+     * @throws java.io.IOException
+     */
+    private XmlAnswer parseAnswer(XmlPullParser parser) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, null, "answer");
+
+        // Create element
+        XmlAnswer answer = new XmlAnswer();
+
+        // Read attributes
+        String text = parser.getAttributeValue(null, "text");
+        String correct = parser.getAttributeValue(null, "correct");
+
+        // Fill element
+        if (text != null)
+            answer.setText(text);
+        if (correct != null)
+            answer.setCorrect(Boolean.parseBoolean(correct));
+
+        return answer;
+    }
+
+    /**
+     * Returns a string
      *
      * @param parser
      * @return title
      * @throws java.io.IOException
      * @throws org.xmlpull.v1.XmlPullParserException
      */
-    private String readString(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
+    private String parseString(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, tag);
-        String title = readText(parser);
+        String title = parseText(parser);
         parser.require(XmlPullParser.END_TAG, null, tag);
         return title;
     }
@@ -231,7 +374,7 @@ public class XmlParser {
      * @throws java.io.IOException
      * @throws org.xmlpull.v1.XmlPullParserException
      */
-    private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private String parseText(XmlPullParser parser) throws IOException, XmlPullParserException {
         String result = "";
         if (parser.next() == XmlPullParser.TEXT) {
             result = parser.getText();

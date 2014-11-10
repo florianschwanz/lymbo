@@ -46,12 +46,9 @@ public class StacksController {
     private void getStacksFromLymbos() {
         stacks = new ArrayList<XmlStack>();
 
-        System.out.println("A");
         for (XmlLymbo xmlLymbo : LymboController.getInstance().getLymbos()) {
             stacks.add(xmlLymbo.getStack());
-            System.out.println("HU");
         }
-        System.out.println("B");
     }
 
     // --------------------

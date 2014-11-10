@@ -1,22 +1,39 @@
 package de.interoberlin.lymbo.model.card;
 
+import java.util.List;
+
 public class XmlLymbo {
-    private String text;
-    private String image;
-    private XmlStack stack;
+    private String title = "";
+    private String description = "";
+    private String image = "";
+    private String author = "";
+    private List<XmlCard> cards;
 
-    public XmlLymbo(String text, String image, XmlStack stack) {
-        this.text = text;
-        this.image = image;
-        this.stack = stack;
+    // -------------------------
+    // Constructors
+    // -------------------------
+
+    public XmlLymbo() {
     }
 
-    public String getText() {
-        return text;
+    // -------------------------
+    // Getters / Setters
+    // -------------------------
+
+    public String getTitle() {
+        return title;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getImage() {
@@ -27,11 +44,19 @@ public class XmlLymbo {
         this.image = image;
     }
 
-    public XmlStack getStack() {
-        return stack;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setStack(XmlStack stack) {
-        this.stack = stack;
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public List<XmlCard> getCards() {
+        return cards;
+    }
+
+    public void setCards(List<XmlCard> cards) {
+        this.cards = cards;
     }
 }
