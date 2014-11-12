@@ -5,7 +5,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XmlChoiceComponent implements XmlComponent {
+public class XmlChoiceComponent implements de.interoberlin.lymbo.model.Displayable {
     private List<XmlAnswer> answers = new ArrayList<XmlAnswer>();
 
     // --------------------

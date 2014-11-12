@@ -3,10 +3,10 @@ package de.interoberlin.lymbo.model.card;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.interoberlin.lymbo.model.card.components.XmlComponent;
+import de.interoberlin.lymbo.model.Displayable;
 
 public class XmlSide {
-    private List<XmlComponent> components = new ArrayList<XmlComponent>();
+    private List<Displayable> components = new ArrayList<Displayable>();
 
     // -------------------------
     // Constructors
@@ -19,11 +19,11 @@ public class XmlSide {
     // Getters / Setters
     // -------------------------
 
-    public List<XmlComponent> getComponents() {
+    public List<Displayable> getComponents() {
         return components;
     }
 
-    public void setComponents(List<XmlComponent> components) {
+    public void setComponents(List<Displayable> components) {
         this.components = components;
     }
 }

@@ -5,11 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import de.interoberlin.lymbo.model.card.XmlCard;
-import de.interoberlin.lymbo.model.card.components.XmlChoice;
 import de.interoberlin.lymbo.model.card.XmlLymbo;
-import de.interoberlin.lymbo.model.card.XmlSide;
-import de.interoberlin.lymbo.model.card.XmlStack;
 import de.interoberlin.lymbo.model.card.components.XmlTextComponent;
 
 /**
@@ -105,9 +101,9 @@ public class XmlWriter
 	{
 		addStartTag(tag);
 
-		appendTag("text", lymbo.getText().toString());
+		//appendTag("text", lymbo.getText().toString());
 		appendTag("image", lymbo.getImage().toString());
-		appendStack("stack", lymbo.getStack());
+		//appendStack("stack", lymbo.getStack());
 
 		addEndTag(tag);
 	}
@@ -118,17 +114,19 @@ public class XmlWriter
 	 * @param tag
 	 * @param stack
 	 */
+    /*
 	private static void appendStack(String tag, XmlStack stack)
 	{
 		addStartTag(tag);
 
-		for (XmlCard c : stack.getCards())
-		{
-			appendCard("card", c);
-		}
+		//for (XmlCard c : stack.getCards())
+		//{
+		//	appendCard("card", c);
+		//}
 
 		addEndTag(tag);
 	}
+    */
 
 	/**
 	 * Appends a card to the xml
@@ -136,6 +134,7 @@ public class XmlWriter
 	 * @param tag
 	 * @param card
 	 */
+    /*
 	private static void appendCard(String tag, XmlCard card)
 	{
 		addStartTag(tag);
@@ -146,6 +145,7 @@ public class XmlWriter
 
 		addEndTag(tag);
 	}
+	*/
 
 	/**
 	 * Appends a side (front or back) to the xml
@@ -153,6 +153,7 @@ public class XmlWriter
 	 * @param tag
 	 * @param side
 	 */
+    /*
 	private static void appendSide(String tag, XmlSide side)
 	{
 		addStartTag(tag);
@@ -163,6 +164,7 @@ public class XmlWriter
 		appendChoices("choices", side.getChoices());
 		addEndTag(tag);
 	}
+	*/
 
 	/**
 	 * Appends a text tag (text or code) to the xml file
@@ -200,6 +202,7 @@ public class XmlWriter
 	 * @param tag
 	 * @param choices
 	 */
+    /*
 	private static void appendChoices(String tag, List<XmlChoice> choices)
 	{
 		if (choices != null)
@@ -220,4 +223,5 @@ public class XmlWriter
 			// addEndTag(tag);
 		}
 	}
+	*/
 }

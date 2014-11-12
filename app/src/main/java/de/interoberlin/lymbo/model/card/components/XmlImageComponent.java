@@ -2,7 +2,7 @@ package de.interoberlin.lymbo.model.card.components;
 
 import android.view.View;
 
-public class XmlImageComponent implements XmlComponent {
+public class XmlImageComponent implements de.interoberlin.lymbo.model.Displayable {
     private String image;
 
     // --------------------

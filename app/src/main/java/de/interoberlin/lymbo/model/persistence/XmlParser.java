@@ -15,14 +15,13 @@ import de.interoberlin.lymbo.model.card.XmlLymbo;
 import de.interoberlin.lymbo.model.card.XmlSide;
 import de.interoberlin.lymbo.model.card.components.XmlAnswer;
 import de.interoberlin.lymbo.model.card.components.XmlChoiceComponent;
-import de.interoberlin.lymbo.model.card.components.XmlComponent;
+import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.components.XmlHintComponent;
 import de.interoberlin.lymbo.model.card.components.XmlImageComponent;
 import de.interoberlin.lymbo.model.card.components.XmlTextComponent;
 
 public class XmlParser {
     private static XmlParser instance;
-    private static int i;
 
     // --------------------
     // Constructors
@@ -47,7 +46,7 @@ public class XmlParser {
     /**
      * Parses xml file an returns a map
      *
-     * @param in
+     * @param in InputStream
      * @return xmlLymbo
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
@@ -67,18 +66,17 @@ public class XmlParser {
     /**
      * Returns a lymbo
      *
-     * @param parser
+     * @param parser the XmlPullParser
      * @return xmlLymbo
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
     private XmlLymbo parseLymbo(XmlPullParser parser) throws XmlPullParserException, IOException {
-        String name = "";
+        String name;
         parser.require(XmlPullParser.START_TAG, null, "lymbo");
 
         // Create element
         XmlLymbo lymbo = new XmlLymbo();
-        i = 0;
 
         // Read attributes
         String title = parser.getAttributeValue(null, "title");
@@ -112,7 +110,7 @@ public class XmlParser {
             lymbo.setImage(image);
         if (author != null)
             lymbo.setAuthor(author);
-        if (cards != null)
+
             lymbo.setCards(cards);
 
         return lymbo;
@@ -121,13 +119,13 @@ public class XmlParser {
     /**
      * Returns a card which contains one or two sides
      *
-     * @param parser
+     * @param parser the XmlPullParser
      * @return xmlCard
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
     private XmlCard parseCard(XmlPullParser parser) throws XmlPullParserException, IOException {
-        String name = "";
+        String name;
         parser.require(XmlPullParser.START_TAG, null, "card");
 
         // Create element
@@ -135,6 +133,7 @@ public class XmlParser {
 
         // Read attributes
         String title = parser.getAttributeValue(null, "title");
+        String hint = parser.getAttributeValue(null, "hint");
         String color = parser.getAttributeValue(null, "color");
 
         // Read sub elements
@@ -160,6 +159,8 @@ public class XmlParser {
         // Fill element
         if (title != null)
             card.setTitle(title);
+        if (hint != null)
+            card.setHint(hint);
         if (color != null)
             card.setColor(color);
         if (front != null)
@@ -173,20 +174,20 @@ public class XmlParser {
     /**
      * Returns a side of a card
      *
-     * @param parser
+     * @param parser the XmlPullParser
      * @return xmlSide
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
     private XmlSide parseSide(XmlPullParser parser, String tag) throws XmlPullParserException, IOException {
-        String name = "";
+        String name;
         parser.require(XmlPullParser.START_TAG, null, tag);
 
         // Create element
         XmlSide side = new XmlSide();
 
         // Read sub elements
-        List<XmlComponent> components = new ArrayList<XmlComponent>();
+        List<Displayable> components = new ArrayList<Displayable>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -217,7 +218,7 @@ public class XmlParser {
     /**
      * Returns a text component
      *
-     * @param parser
+     * @param parser the XmlPullParser
      * @return xmlSide
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
@@ -241,7 +242,7 @@ public class XmlParser {
     /**
      * Returns am hint component
      *
-     * @param parser
+     * @param parser the XmlPullParser
      * @return xmlSide
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
@@ -265,7 +266,7 @@ public class XmlParser {
     /**
      * Returns am image component
      *
-     * @param parser
+     * @param parser the XmlPullParser
      * @return xmlSide
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
@@ -289,7 +290,7 @@ public class XmlParser {
     /**
      * Returns a choice component
      *
-     * @param parser
+     * @param parser the XmlPullParser
      * @return xmlSide
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
@@ -327,7 +328,7 @@ public class XmlParser {
     /**
      * Returns an answer component
      *
-     * @param parser
+     * @param parser the XmlPullParser
      * @return xmlSide
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
@@ -352,41 +353,9 @@ public class XmlParser {
     }
 
     /**
-     * Returns a string
-     *
-     * @param parser
-     * @return title
-     * @throws java.io.IOException
-     * @throws org.xmlpull.v1.XmlPullParserException
-     */
-    private String parseString(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, null, tag);
-        String title = parseText(parser);
-        parser.require(XmlPullParser.END_TAG, null, tag);
-        return title;
-    }
-
-    /**
-     * Reads the value of a cell
-     *
-     * @param parser
-     * @return result
-     * @throws java.io.IOException
-     * @throws org.xmlpull.v1.XmlPullParserException
-     */
-    private String parseText(XmlPullParser parser) throws IOException, XmlPullParserException {
-        String result = "";
-        if (parser.next() == XmlPullParser.TEXT) {
-            result = parser.getText();
-            parser.nextTag();
-        }
-        return result;
-    }
-
-    /**
      * Skips a tag that does not fit
      *
-     * @param parser
+     * @param parser the XmlPullParser
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */

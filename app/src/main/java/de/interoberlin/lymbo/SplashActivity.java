@@ -14,8 +14,8 @@ import java.util.Collections;
 
 import de.interoberlin.lymbo.controller.LymboController;
 import de.interoberlin.lymbo.controller.SplashController;
+import de.interoberlin.lymbo.view.activities.LymbosActivity;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
-import de.interoberlin.lymbo.view.activities.StacksActivity;
 
 public class SplashActivity extends Activity {
     // Controllers
@@ -49,7 +49,7 @@ public class SplashActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (ready) {
-                    Intent openStartingPoint = new Intent(SplashActivity.this, StacksActivity.class);
+                    Intent openStartingPoint = new Intent(SplashActivity.this, LymbosActivity.class);
                     startActivity(openStartingPoint);
                 }
             }
@@ -60,7 +60,6 @@ public class SplashActivity extends Activity {
                 tvMessage.setText(R.string.search_lymbo_files);
 
                 splashController.loadMessages();
-                lymboController.getLymbos();
 
                 Collections.shuffle(splashController.getMessages());
 

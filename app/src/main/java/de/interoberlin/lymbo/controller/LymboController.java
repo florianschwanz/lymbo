@@ -78,8 +78,11 @@ public class LymboController extends Application {
      */
     private void findLymboFiles() {
         Log.trace("LymboController.findLymboFiles()");
-        lymboFiles = findFiles(LYMBO_FILE_EXTENSION);
-        System.out.println(lymboFiles.size());
+        // lymboFiles = findFiles(LYMBO_FILE_EXTENSION);
+
+        lymboFiles = new ArrayList<File>();
+        lymboFiles.add(new File("/storage/emulated/0/Interoberlin/lymbo/java_oca.lymbo"));
+        // lymboFiles.add(new File("/storage/emulated/0/Interoberlin/lymbo/java_oca2.lymbo"));
     }
 
     /**

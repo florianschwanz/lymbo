@@ -2,7 +2,7 @@ package de.interoberlin.lymbo.model.card.components;
 
 import android.view.View;
 
-public class XmlTextComponent implements XmlComponent {
+public class XmlTextComponent implements de.interoberlin.lymbo.model.Displayable {
     private XmlTextType type;
     private String text;
 

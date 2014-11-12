@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -13,27 +13,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.RegexFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.StacksController;
-import de.interoberlin.lymbo.model.card.XmlStack;
-import de.interoberlin.lymbo.view.adapters.StacksAdapter;
+import de.interoberlin.lymbo.controller.LymboController;
+import de.interoberlin.lymbo.model.card.XmlLymbo;
+import de.interoberlin.lymbo.view.adapters.LymbosAdapter;
 import de.interoberlin.lymbo.view.card.DisplayStack;
-import de.interoberlin.mate.lib.model.Log;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 
-public class StacksActivity extends BaseActivity {
+public class LymbosActivity extends BaseActivity {
     // Controllers
-    StacksController stacksController = StacksController.getInstance();
+    LymboController lymboController = LymboController.getInstance();
 
     // Context and Activity
     private static Context c;
@@ -42,7 +35,7 @@ public class StacksActivity extends BaseActivity {
     // Views
     private DrawerLayout drawer;
     private static RecyclerView rv;
-    private RecyclerView.Adapter stacksAdapter;
+    private RecyclerView.Adapter lymbosAdapter;
     private RecyclerView.LayoutManager lm;
 
     // --------------------
@@ -52,6 +45,7 @@ public class StacksActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_lymbos);
         setActionBarIcon(R.drawable.ic_ab_drawer);
 
         drawer = (DrawerLayout) findViewById(R.id.dl);
@@ -74,18 +68,22 @@ public class StacksActivity extends BaseActivity {
         rv.setHasFixedSize(true);
 
         // use a linear layout manager
-        lm = new LinearLayoutManager(this);
-        rv.setLayoutManager(lm);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setItemAnimator(new DefaultItemAnimator());
 
-        List<DisplayStack> stacks = new ArrayList<DisplayStack>();
+        List<DisplayStack> lymbos = new ArrayList<DisplayStack>();
 
-        for (XmlStack stack : stacksController.getStacks())
-        {
-            stacks.add(new DisplayStack(0, a,  "title", "text", "image", "hint", "file"));
+        for (XmlLymbo l : lymboController.getLymbos()) {
+            DisplayStack s = new DisplayStack(a);
+            s.setTitle(l.getTitle());
+            s.setHint(l.getDescription());
+            s.setImage(l.getImage());
+
+            lymbos.add(s);
         }
 
-        stacksAdapter = new StacksAdapter(stacks);
-        rv.setAdapter(stacksAdapter);
+        lymbosAdapter = new LymbosAdapter(this, lymbos, true);
+        rv.setAdapter(lymbosAdapter);
     }
 
     public void onResume() {
@@ -109,12 +107,12 @@ public class StacksActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_log: {
-                Intent i = new Intent(StacksActivity.this, LogActivity.class);
+                Intent i = new Intent(LymbosActivity.this, LogActivity.class);
                 startActivity(i);
                 break;
             }
             case R.id.menu_about: {
-                Intent i = new Intent(StacksActivity.this, AboutActivity.class);
+                Intent i = new Intent(LymbosActivity.this, AboutActivity.class);
                 Bundle b = new Bundle();
                 b.putString("flavor", "interoberlin");
                 i.putExtras(b);
@@ -169,18 +167,11 @@ public class StacksActivity extends BaseActivity {
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.activity_stacks;
-    }
-
-
-
-    public static Collection<File> findFiles(String pattern) {
-        Log.trace("StackActivity.findFiles()");
-        return FileUtils.listFiles(Environment.getExternalStorageDirectory(), new RegexFileFilter(".*" + pattern), TrueFileFilter.TRUE);
+        return R.layout.activity_lymbos;
     }
 
     private static void clear() {
-        rv.removeAllViews();
+        // rv.removeAllViews();
     }
 
     public void draw() {
