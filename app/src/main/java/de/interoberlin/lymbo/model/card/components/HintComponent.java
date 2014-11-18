@@ -7,15 +7,14 @@ import android.view.ViewGroup;
 
 import de.interoberlin.lymbo.model.Displayable;
 
-public class XmlTextComponent implements Displayable {
+public class HintComponent implements Displayable {
     private String value = "";
-    private XmlTextType type;
 
     // --------------------
     // Constructor
     // --------------------
 
-    public XmlTextComponent() {
+    public HintComponent() {
     }
 
     // --------------------
@@ -38,13 +37,4 @@ public class XmlTextComponent implements Displayable {
     public void setValue(String value) {
         this.value = value;
     }
-
-    public XmlTextType getType() {
-        return type;
-    }
-
-    public void setType(XmlTextType type) {
-        this.type = type;
-    }
-
 }

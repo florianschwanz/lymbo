@@ -1,19 +1,20 @@
 package de.interoberlin.lymbo.model.card.components;
 
+import android.app.Activity;
+import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 
-public class XmlImageComponent implements de.interoberlin.lymbo.model.Displayable {
+import de.interoberlin.lymbo.model.Displayable;
+
+public class ImageComponent implements Displayable {
     private String image;
 
     // --------------------
     // Constructor
     // --------------------
 
-    public XmlImageComponent() {
-    }
-
-    public XmlImageComponent(String image) {
-        this.setImage(image);
+    public ImageComponent() {
     }
 
     // --------------------
@@ -21,7 +22,7 @@ public class XmlImageComponent implements de.interoberlin.lymbo.model.Displayabl
     // --------------------
 
     @Override
-    public View getView() {
+    public View getView(Context c, Activity a, ViewGroup parent) {
         return null;
     }
 

@@ -5,26 +5,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fortysevendeg.swipelistview.SwipeListView;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.LymboController;
-import de.interoberlin.lymbo.model.card.XmlLymbo;
-import de.interoberlin.lymbo.view.adapters.LymbosAdapter;
-import de.interoberlin.lymbo.view.card.DisplayStack;
+import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
+import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 
-public class LymbosActivity extends BaseActivity {
+public class LymbosActivity extends BaseActivity implements DisplayDialogFragment.OnCompleteListener {
     // Controllers
     LymboController lymboController = LymboController.getInstance();
 
@@ -34,7 +30,8 @@ public class LymbosActivity extends BaseActivity {
 
     // Views
     private DrawerLayout drawer;
-    private static RecyclerView rv;
+    // private static RecyclerView rv;
+    private SwipeListView slv;
     private RecyclerView.Adapter lymbosAdapter;
     private RecyclerView.LayoutManager lm;
 
@@ -45,7 +42,6 @@ public class LymbosActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lymbos);
         setActionBarIcon(R.drawable.ic_ab_drawer);
 
         drawer = (DrawerLayout) findViewById(R.id.dl);
@@ -60,6 +56,17 @@ public class LymbosActivity extends BaseActivity {
         a = this;
         c = getApplicationContext();
 
+        SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
+
+        /*
+        for (XmlLymbo l : lymboController.getLymbos())
+        {
+            slv.addView(l.getView(c, a, slv));
+        }*/
+
+        slv.setAdapter(new LymbosListAdapter(this, R.layout.stack, lymboController.getLymbos()));
+
+        /*
         // Get Controls by ID
         rv = (RecyclerView) findViewById(R.id.rv);
 
@@ -71,19 +78,9 @@ public class LymbosActivity extends BaseActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
 
-        List<DisplayStack> lymbos = new ArrayList<DisplayStack>();
-
-        for (XmlLymbo l : lymboController.getLymbos()) {
-            DisplayStack s = new DisplayStack(a);
-            s.setTitle(l.getTitle());
-            s.setHint(l.getDescription());
-            s.setImage(l.getImage());
-
-            lymbos.add(s);
-        }
-
-        lymbosAdapter = new LymbosAdapter(this, lymbos, true);
+        // lymbosAdapter = new LymbosAdapter(this, this, lymboController.getLymbos(), true);
         rv.setAdapter(lymbosAdapter);
+        */
     }
 
     public void onResume() {
@@ -162,6 +159,25 @@ public class LymbosActivity extends BaseActivity {
     }
 
     // --------------------
+    // Methods - Callbacks
+    // --------------------
+
+    @Override
+    public void onHintDialogComplete() {
+
+    }
+
+    @Override
+    public void onDiscardStackDialogComplete() {
+
+    }
+
+    @Override
+    public void onDiscardCardDialogComplete() {
+
+    }
+
+    // --------------------
     // Methods
     // --------------------
 
@@ -196,6 +212,8 @@ public class LymbosActivity extends BaseActivity {
         });
     }
 
+
+
     /*
     @Override
     public void onCreateStackDialogComplete(String input) {
@@ -215,12 +233,6 @@ public class LymbosActivity extends BaseActivity {
 
         clear();
         draw();
-    }
-    */
-
-    /*
-    @Override
-    public void onHintDialogComplete() {
     }
     */
 

@@ -10,15 +10,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.XmlCard;
 import de.interoberlin.lymbo.model.card.XmlLymbo;
 import de.interoberlin.lymbo.model.card.XmlSide;
-import de.interoberlin.lymbo.model.card.components.XmlAnswer;
-import de.interoberlin.lymbo.model.card.components.XmlChoiceComponent;
-import de.interoberlin.lymbo.model.Displayable;
-import de.interoberlin.lymbo.model.card.components.XmlHintComponent;
-import de.interoberlin.lymbo.model.card.components.XmlImageComponent;
+import de.interoberlin.lymbo.model.card.components.Answer;
+import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
+import de.interoberlin.lymbo.model.card.components.HintComponent;
+import de.interoberlin.lymbo.model.card.components.ImageComponent;
 import de.interoberlin.lymbo.model.card.components.XmlTextComponent;
+import de.interoberlin.lymbo.model.card.components.XmlTitleComponent;
 
 public class XmlParser {
     private static XmlParser instance;
@@ -80,7 +81,8 @@ public class XmlParser {
 
         // Read attributes
         String title = parser.getAttributeValue(null, "title");
-        String description = parser.getAttributeValue(null, "description");
+        String subtitle = parser.getAttributeValue(null, "subtitle");
+        String hint = parser.getAttributeValue(null, "hint");
         String image = parser.getAttributeValue(null, "image");
         String author = parser.getAttributeValue(null, "author");
 
@@ -104,8 +106,10 @@ public class XmlParser {
         // Fill element
         if (title != null)
             lymbo.setTitle(title);
-        if (description != null)
-            lymbo.setDescription(description);
+        if (subtitle != null)
+            lymbo.setSubtitle(subtitle);
+        if (hint != null)
+            lymbo.setHint(hint);
         if (image != null)
             lymbo.setImage(image);
         if (author != null)
@@ -133,6 +137,7 @@ public class XmlParser {
 
         // Read attributes
         String title = parser.getAttributeValue(null, "title");
+        String subtitle = parser.getAttributeValue(null, "subtitle");
         String hint = parser.getAttributeValue(null, "hint");
         String color = parser.getAttributeValue(null, "color");
 
@@ -159,6 +164,8 @@ public class XmlParser {
         // Fill element
         if (title != null)
             card.setTitle(title);
+        if (subtitle != null)
+            card.setSubtitle(subtitle);
         if (hint != null)
             card.setHint(hint);
         if (color != null)
@@ -195,7 +202,9 @@ public class XmlParser {
             }
             name = parser.getName();
 
-            if (name.equals("text")) {
+            if (name.equals("title")) {
+                components.add(parseTitleComponent(parser));
+            } else if (name.equals("text")) {
                 components.add(parseTextComponent(parser));
             } else if (name.equals("hint")) {
                 components.add(parseHintComponent(parser));
@@ -216,6 +225,30 @@ public class XmlParser {
     }
 
     /**
+     * Returns a title component
+     *
+     * @param parser the XmlPullParser
+     * @return xmlSide
+     * @throws org.xmlpull.v1.XmlPullParserException
+     * @throws java.io.IOException
+     */
+    private XmlTitleComponent parseTitleComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, null, "title");
+
+        // Create element
+        XmlTitleComponent component = new XmlTitleComponent();
+
+        // Read attributes
+        String value = parser.getAttributeValue(null, "value");
+
+        // Fill element
+        if (value != null)
+            component.setValue(value);
+
+        return component;
+    }
+
+    /**
      * Returns a text component
      *
      * @param parser the XmlPullParser
@@ -230,11 +263,11 @@ public class XmlParser {
         XmlTextComponent component = new XmlTextComponent();
 
         // Read attributes
-        String text = parser.getAttributeValue(null, "text");
+        String value = parser.getAttributeValue(null, "value");
 
         // Fill element
-        if (text != null)
-            component.setText(text);
+        if (value != null)
+            component.setValue(value);
 
         return component;
     }
@@ -247,18 +280,18 @@ public class XmlParser {
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private XmlHintComponent parseHintComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private HintComponent parseHintComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, "hint");
 
         // Create element
-        XmlHintComponent component = new XmlHintComponent();
+        HintComponent component = new HintComponent();
 
         // Read attributes
-        String text = parser.getAttributeValue(null, "text");
+        String value = parser.getAttributeValue(null, "value");
 
         // Fill element
-        if (text != null)
-            component.setText(text);
+        if (value != null)
+            component.setValue(value);
 
         return component;
     }
@@ -271,11 +304,11 @@ public class XmlParser {
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private XmlImageComponent parseImageComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private ImageComponent parseImageComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, "image");
 
         // Create element
-        XmlImageComponent component = new XmlImageComponent();
+        ImageComponent component = new ImageComponent();
 
         // Read attributes
         String image = parser.getAttributeValue(null, "image");
@@ -295,15 +328,15 @@ public class XmlParser {
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private XmlChoiceComponent parseChoiceComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private ChoiceComponent parseChoiceComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
         String name;
         parser.require(XmlPullParser.START_TAG, null, "choice");
 
         // Create element
-        XmlChoiceComponent component = new XmlChoiceComponent();
+        ChoiceComponent component = new ChoiceComponent();
 
         // Read sub elements
-        List<XmlAnswer> answers = new ArrayList<XmlAnswer>();
+        List<Answer> answers = new ArrayList<Answer>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -333,19 +366,19 @@ public class XmlParser {
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private XmlAnswer parseAnswer(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private Answer parseAnswer(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, "answer");
 
         // Create element
-        XmlAnswer answer = new XmlAnswer();
+        Answer answer = new Answer();
 
         // Read attributes
-        String text = parser.getAttributeValue(null, "text");
+        String value = parser.getAttributeValue(null, "value");
         String correct = parser.getAttributeValue(null, "correct");
 
         // Fill element
-        if (text != null)
-            answer.setText(text);
+        if (value != null)
+            answer.setValue(value);
         if (correct != null)
             answer.setCorrect(Boolean.parseBoolean(correct));
 

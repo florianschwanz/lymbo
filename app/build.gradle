@@ -20,6 +20,7 @@ repositories {
     maven {
         url "http://maven.interoberlin.de"
     }
+    maven { url 'http://clinker.47deg.com/nexus/content/groups/public' }
 }
 
 android {
@@ -209,4 +210,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.+'
     compile 'com.android.support:cardview-v7:21.0.+'
     compile 'com.android.support:recyclerview-v7:21.0.+'
+    // Used for animation
+    compile ('com.fortysevendeg.swipelistview:swipelistview:1.0-SNAPSHOT@aar') {
+        transitive = true
+    }
 }

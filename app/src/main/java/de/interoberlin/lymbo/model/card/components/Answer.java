@@ -1,15 +1,14 @@
 package de.interoberlin.lymbo.model.card.components;
 
-public class XmlAnswer {
-    private String text = "";
+public class Answer {
+    private String value = "";
     private boolean correct = false;
 
     // --------------------
     // Constructors
     // --------------------
 
-    public XmlAnswer () {
-
+    public Answer() {
     }
 
     // --------------------
@@ -20,12 +19,12 @@ public class XmlAnswer {
     // Getters / Setters
     // --------------------
 
-    public String getText() {
-        return text;
+    public String getValue() {
+        return value;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public boolean isCorrect() {

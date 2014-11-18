@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import de.interoberlin.lymbo.model.Displayable;
 
-public class XmlTextComponent implements Displayable {
+public class XmlTitleComponent implements Displayable {
     private String value = "";
     private XmlTextType type;
 
@@ -15,7 +15,8 @@ public class XmlTextComponent implements Displayable {
     // Constructor
     // --------------------
 
-    public XmlTextComponent() {
+    public XmlTitleComponent() {
+
     }
 
     // --------------------

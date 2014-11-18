@@ -179,12 +179,12 @@ public class XmlWriter
 				{
 					case NORMAL:
 					{
-						appendTag("text", t.getText());
+						appendTag("text", t.getValue());
 						break;
 					}
 					case CODE:
 					{
-						appendTag("code", t.getText());
+						appendTag("code", t.getValue());
 						break;
 					}
 					default:

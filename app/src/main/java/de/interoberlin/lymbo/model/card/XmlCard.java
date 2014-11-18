@@ -3,6 +3,7 @@ package de.interoberlin.lymbo.model.card;
 public class XmlCard {
     private int id;
     private String title = "";
+    private String subtitle = "";
     private String hint = "";
     private String color = "#FFFFFF";
     private XmlSide front;
@@ -49,6 +50,14 @@ public class XmlCard {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
     }
 
     public String getHint() {

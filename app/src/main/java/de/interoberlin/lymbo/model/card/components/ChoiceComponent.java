@@ -1,18 +1,23 @@
 package de.interoberlin.lymbo.model.card.components;
 
+import android.app.Activity;
+import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class XmlChoiceComponent implements de.interoberlin.lymbo.model.Displayable {
-    private List<XmlAnswer> answers = new ArrayList<XmlAnswer>();
+import de.interoberlin.lymbo.model.Displayable;
+
+public class ChoiceComponent implements Displayable {
+    private List<Answer> answers = new ArrayList<Answer>();
 
     // --------------------
     // Constructor
     // --------------------
 
-    public XmlChoiceComponent() {
+    public ChoiceComponent() {
     }
 
     // --------------------
@@ -20,7 +25,7 @@ public class XmlChoiceComponent implements de.interoberlin.lymbo.model.Displayab
     // --------------------
 
     @Override
-    public View getView() {
+    public View getView(Context c, Activity a, ViewGroup parent) {
         return null;
     }
 
@@ -28,11 +33,11 @@ public class XmlChoiceComponent implements de.interoberlin.lymbo.model.Displayab
     // Getters / Setters
     // --------------------
 
-    public List<XmlAnswer> getAnswers() {
+    public List<Answer> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<XmlAnswer> answers) {
+    public void setAnswers(List<Answer> answers) {
         this.answers = answers;
     }
 }
