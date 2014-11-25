@@ -21,7 +21,7 @@ import de.interoberlin.lymbo.model.card.XmlLymbo;
 import de.interoberlin.lymbo.model.persistence.XmlParser;
 import de.interoberlin.mate.lib.model.Log;
 
-public class LymboController extends Application {
+public class LymbosController extends Application {
     private static Context context;
 
     private static Collection<File> lymboFiles;
@@ -29,18 +29,18 @@ public class LymboController extends Application {
 
     private static final String LYMBO_FILE_EXTENSION = ".lymbo";
 
-    private static LymboController instance;
+    private static LymbosController instance;
 
     // --------------------
     // Constructors
     // --------------------
 
-    public LymboController() {
+    public LymbosController() {
     }
 
-    public static LymboController getInstance() {
+    public static LymbosController getInstance() {
         if (instance == null) {
-            instance = new LymboController();
+            instance = new LymbosController();
         }
 
         return instance;

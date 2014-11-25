@@ -14,15 +14,15 @@ import android.widget.Toast;
 import com.fortysevendeg.swipelistview.SwipeListView;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.LymbosController;
-import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
+import de.interoberlin.lymbo.controller.CardsController;
+import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 
-public class LymbosActivity extends BaseActivity implements DisplayDialogFragment.OnCompleteListener {
+public class CardsActivity extends BaseActivity implements DisplayDialogFragment.OnCompleteListener {
     // Controllers
-    LymbosController lymbosController = LymbosController.getInstance();
+    CardsController cardsController = CardsController.getInstance();
 
     // Context and Activity
     private static Context c;
@@ -30,7 +30,9 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
 
     // Views
     private DrawerLayout drawer;
+    // private static RecyclerView rv;
     private SwipeListView slv;
+    private RecyclerView.Adapter lymbosAdapter;
     private RecyclerView.LayoutManager lm;
 
     // --------------------
@@ -50,7 +52,7 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
         c = getApplicationContext();
 
         SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
-        slv.setAdapter(new LymbosListAdapter(this, R.layout.stack, lymbosController.getLymbos()));
+        slv.setAdapter(new CardsListAdapter(this, this, R.layout.card, cardsController.getCards()));
     }
 
     public void onResume() {
@@ -74,12 +76,12 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_log: {
-                Intent i = new Intent(LymbosActivity.this, LogActivity.class);
+                Intent i = new Intent(CardsActivity.this, LogActivity.class);
                 startActivity(i);
                 break;
             }
             case R.id.menu_about: {
-                Intent i = new Intent(LymbosActivity.this, AboutActivity.class);
+                Intent i = new Intent(CardsActivity.this, AboutActivity.class);
                 Bundle b = new Bundle();
                 b.putString("flavor", "interoberlin");
                 i.putExtras(b);

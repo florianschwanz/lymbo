@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 
 import java.util.Collections;
 
-import de.interoberlin.lymbo.controller.LymboController;
+import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.controller.SplashController;
 import de.interoberlin.lymbo.view.activities.LymbosActivity;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
@@ -20,7 +20,7 @@ import de.interoberlin.lymbo.view.controls.RobotoTextView;
 public class SplashActivity extends Activity {
     // Controllers
     SplashController splashController = SplashController.getInstance();
-    LymboController lymboController = LymboController.getInstance();
+    LymbosController lymbosController = LymbosController.getInstance();
 
     // Activity
     private static Activity activity;
@@ -73,7 +73,7 @@ public class SplashActivity extends Activity {
 
                 int i = 0;
 
-                while (lymboController.getLymboFiles().isEmpty()) {
+                while (lymbosController.getLymboFiles().isEmpty()) {
                     uiMessage(splashController.getMessages().get(i++));
 
                     try {
@@ -83,7 +83,7 @@ public class SplashActivity extends Activity {
                     }
                 }
 
-                uiMessage("Found " + lymboController.getLymboFiles().size() + " lymbo files");
+                uiMessage("Found " + lymbosController.getLymboFiles().size() + " lymbo files");
 
                 try {
                     sleep(1000);

@@ -1,6 +1,7 @@
 package de.interoberlin.lymbo.view.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,20 +13,32 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.XmlLymbo;
+import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.activities.LymbosActivity;
 
 public class LymbosListAdapter extends ArrayAdapter<XmlLymbo> {
+    Context c;
+
+    // Controllers
+    CardsController cardsController = CardsController.getInstance();
+
+
     // --------------------
     // Constructors
     // --------------------
 
     public LymbosListAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
+
+        this.c = context;
     }
 
     public LymbosListAdapter(Context context, int resource, List<XmlLymbo> items) {
         super(context, resource, items);
+
+        this.c = context;
     }
 
     // --------------------
@@ -38,7 +51,6 @@ public class LymbosListAdapter extends ArrayAdapter<XmlLymbo> {
         vi = LayoutInflater.from(getContext());
         CardView cv = (CardView) vi.inflate(R.layout.stack, null);
 
-
         TextView tvTitle = (TextView) cv.findViewById(R.id.tvTitle);
         TextView tvSubtitle = (TextView) cv.findViewById(R.id.tvSubtitle);
         ImageView ivDiscard = (ImageView) cv.findViewById(R.id.ivDiscard);
@@ -48,10 +60,19 @@ public class LymbosListAdapter extends ArrayAdapter<XmlLymbo> {
         ImageView ivHint = (ImageView) cv.findViewById(R.id.ivHint);
         ImageView ivLogo = (ImageView) cv.findViewById(R.id.ivLogo);
 
-
         final XmlLymbo lymbo = getItem(position);
         tvTitle.setText(lymbo.getTitle());
         tvSubtitle.setText(lymbo.getSubtitle());
+
+        tvTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cardsController.setLymbo(lymbo);
+                cardsController.init();
+                Intent openStartingPoint = new Intent(((LymbosActivity) c), CardsActivity.class);
+                ((LymbosActivity) c).startActivity(openStartingPoint);
+            }
+        });
 
         ivDiscard.setOnClickListener(new View.OnClickListener() {
             @Override

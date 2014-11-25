@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.interoberlin.lymbo" >
+    package="de.interoberlin.lymbo">
 
     <application
-        android:name="de.interoberlin.lymbo.controller.LymboController"
+        android:name=".controller.LymbosController"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".SplashActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,19 +20,20 @@
         <activity
             android:name="de.interoberlin.mate.lib.view.LogActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="de.interoberlin.mate.lib.view.AboutActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light">
-        </activity>
+            android:theme="@android:style/Theme.Holo.Light"></activity>
         <activity
             android:name=".view.activities.LymbosActivity"
             android:label="@string/app_name"
-            android:parentActivityName="de.interoberlin.lymbo.SplashActivity">
-        </activity>
+            android:parentActivityName="de.interoberlin.lymbo.SplashActivity"></activity>
+        <activity
+            android:name=".view.activities.CardsActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="de.interoberlin.lymbo.SplashActivity"></activity>
     </application>
 
 </manifest>
