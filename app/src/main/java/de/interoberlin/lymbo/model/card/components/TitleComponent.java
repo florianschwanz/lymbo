@@ -11,7 +11,7 @@ import android.widget.TextView;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.Displayable;
 
-public class XmlTitleComponent implements Displayable {
+public class TitleComponent implements Displayable {
     private String value = "";
     private XmlTextType type;
 
@@ -19,8 +19,7 @@ public class XmlTitleComponent implements Displayable {
     // Constructor
     // --------------------
 
-    public XmlTitleComponent() {
-
+    public TitleComponent() {
     }
 
     // --------------------

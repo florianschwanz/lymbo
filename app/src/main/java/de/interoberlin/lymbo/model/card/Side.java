@@ -5,14 +5,14 @@ import java.util.List;
 
 import de.interoberlin.lymbo.model.Displayable;
 
-public class XmlSide {
+public class Side {
     private List<Displayable> components = new ArrayList<Displayable>();
 
     // -------------------------
     // Constructors
     // -------------------------
 
-    public XmlSide() {
+    public Side() {
     }
 
     // -------------------------

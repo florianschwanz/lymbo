@@ -11,30 +11,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.model.Displayable;
-import de.interoberlin.lymbo.model.card.XmlCard;
-import de.interoberlin.lymbo.model.card.XmlLymbo;
-import de.interoberlin.lymbo.model.card.XmlSide;
+import de.interoberlin.lymbo.model.card.Card;
+import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 import de.interoberlin.lymbo.model.card.components.HintComponent;
 import de.interoberlin.lymbo.model.card.components.ImageComponent;
 import de.interoberlin.lymbo.model.card.components.XmlTextComponent;
 import de.interoberlin.lymbo.model.card.components.XmlTitleComponent;
+import de.interoberlin.mate.lib.model.Log;
 
-public class XmlParser {
-    private static XmlParser instance;
+public class LymboParser {
+    private static LymboParser instance;
 
     // --------------------
     // Constructors
     // --------------------
 
-    private XmlParser() {
+    private LymboParser() {
 
     }
 
-    public static XmlParser getInstance() {
+    public static LymboParser getInstance() {
         if (instance == null) {
-            instance = new XmlParser();
+            instance = new LymboParser();
         }
 
         return instance;
@@ -52,7 +53,7 @@ public class XmlParser {
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    public XmlLymbo parse(InputStream in) throws XmlPullParserException, IOException {
+    public Lymbo parse(InputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -72,12 +73,13 @@ public class XmlParser {
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private XmlLymbo parseLymbo(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private Lymbo parseLymbo(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.trace("parseLymbo()");
         String name;
         parser.require(XmlPullParser.START_TAG, null, "lymbo");
 
         // Create element
-        XmlLymbo lymbo = new XmlLymbo();
+        Lymbo lymbo = new Lymbo();
 
         // Read attributes
         String title = parser.getAttributeValue(null, "title");
@@ -87,10 +89,11 @@ public class XmlParser {
         String author = parser.getAttributeValue(null, "author");
 
         // Read sub elements
-        List<XmlCard> cards = new ArrayList<XmlCard>();
+        List<Card> cards = new ArrayList<Card>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
+                Log.trace("parseLymbo() continue");
                 continue;
             }
 
@@ -98,9 +101,14 @@ public class XmlParser {
 
             if (name.equals("card")) {
                 cards.add(parseCard(parser));
-            } else {
+            } else if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            /*
+            else {
                 skip(parser);
             }
+            */
         }
 
         // Fill element
@@ -115,7 +123,7 @@ public class XmlParser {
         if (author != null)
             lymbo.setAuthor(author);
 
-            lymbo.setCards(cards);
+        lymbo.setCards(cards);
 
         return lymbo;
     }
@@ -128,12 +136,13 @@ public class XmlParser {
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private XmlCard parseCard(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private Card parseCard(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.trace("parseCard()");
         String name;
         parser.require(XmlPullParser.START_TAG, null, "card");
 
         // Create element
-        XmlCard card = new XmlCard();
+        Card card = new Card();
 
         // Read attributes
         String title = parser.getAttributeValue(null, "title");
@@ -142,11 +151,12 @@ public class XmlParser {
         String color = parser.getAttributeValue(null, "color");
 
         // Read sub elements
-        XmlSide front = null;
-        XmlSide back = null;
+        Side front = null;
+        Side back = null;
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
+                Log.trace("parseCard() continue");
                 continue;
             }
 
@@ -186,12 +196,13 @@ public class XmlParser {
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private XmlSide parseSide(XmlPullParser parser, String tag) throws XmlPullParserException, IOException {
-        String name;
+    private Side parseSide(XmlPullParser parser, String tag) throws XmlPullParserException, IOException {
+        Log.trace("parseSide()");
+        String name = null;
         parser.require(XmlPullParser.START_TAG, null, tag);
 
         // Create element
-        XmlSide side = new XmlSide();
+        Side side = new Side();
 
         // Read sub elements
         List<Displayable> components = new ArrayList<Displayable>();
@@ -200,7 +211,9 @@ public class XmlParser {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
+
             name = parser.getName();
+            Log.trace("name : " + name);
 
             if (name.equals("title")) {
                 components.add(parseTitleComponent(parser));
@@ -212,7 +225,7 @@ public class XmlParser {
                 components.add(parseImageComponent(parser));
             } else if (name.equals("choice")) {
                 components.add(parseChoiceComponent(parser));
-            } else {
+            }  else {
                 skip(parser);
             }
         }
@@ -233,6 +246,7 @@ public class XmlParser {
      * @throws java.io.IOException
      */
     private XmlTitleComponent parseTitleComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.trace("parseTitleComponent()");
         parser.require(XmlPullParser.START_TAG, null, "title");
 
         // Create element
@@ -257,6 +271,7 @@ public class XmlParser {
      * @throws java.io.IOException
      */
     private XmlTextComponent parseTextComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.trace("parseTextComponent()");
         parser.require(XmlPullParser.START_TAG, null, "text");
 
         // Create element
@@ -281,6 +296,7 @@ public class XmlParser {
      * @throws java.io.IOException
      */
     private HintComponent parseHintComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.trace("parseHintComponent()");
         parser.require(XmlPullParser.START_TAG, null, "hint");
 
         // Create element
@@ -305,6 +321,7 @@ public class XmlParser {
      * @throws java.io.IOException
      */
     private ImageComponent parseImageComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.trace("parseImageComponent()");
         parser.require(XmlPullParser.START_TAG, null, "image");
 
         // Create element
@@ -329,6 +346,7 @@ public class XmlParser {
      * @throws java.io.IOException
      */
     private ChoiceComponent parseChoiceComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.trace("parseChoiceComponent()");
         String name;
         parser.require(XmlPullParser.START_TAG, null, "choice");
 
@@ -367,6 +385,7 @@ public class XmlParser {
      * @throws java.io.IOException
      */
     private Answer parseAnswer(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.trace("parseAnswer()");
         parser.require(XmlPullParser.START_TAG, null, "answer");
 
         // Create element
@@ -393,7 +412,9 @@ public class XmlParser {
      * @throws java.io.IOException
      */
     private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.trace("skip()");
         if (parser.getEventType() != XmlPullParser.START_TAG) {
+            Log.trace("throw new IllegalStateException()");
             throw new IllegalStateException();
         }
         int depth = 1;

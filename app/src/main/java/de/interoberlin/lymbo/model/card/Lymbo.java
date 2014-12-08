@@ -17,19 +17,19 @@ import de.interoberlin.lymbo.view.activities.LymbosActivity;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
 
-public class XmlLymbo implements Displayable {
+public class Lymbo implements Displayable {
     private String title = "";
     private String subtitle = "";
     private String hint = "";
     private String image = "";
     private String author = "";
-    private List<XmlCard> cards;
+    private List<Card> cards;
 
     // -------------------------
     // Constructors
     // -------------------------
 
-    public XmlLymbo() {
+    public Lymbo() {
     }
 
     // -------------------------
@@ -150,11 +150,11 @@ public class XmlLymbo implements Displayable {
         this.author = author;
     }
 
-    public List<XmlCard> getCards() {
+    public List<Card> getCards() {
         return cards;
     }
 
-    public void setCards(List<XmlCard> cards) {
+    public void setCards(List<Card> cards) {
         this.cards = cards;
     }
 }

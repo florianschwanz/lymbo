@@ -1,0 +1,16 @@
+<lymbo
+ title="Sample Lymbo"
+ subtitle="This is just a test">
+<card>
+<front>
+<title
+ value="HUhu">
+</title>
+</front>
+</card>
+<card>
+</card>
+<card>
+</card>
+
+</lymbo>

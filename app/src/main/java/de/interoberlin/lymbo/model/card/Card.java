@@ -1,6 +1,6 @@
 package de.interoberlin.lymbo.model.card;
 
-public class XmlCard {
+public class Card {
     private int id;
     private String title = "";
     private String subtitle = "";
@@ -13,18 +13,18 @@ public class XmlCard {
     // Constructors
     // -------------------------
 
-    public XmlCard() {
+    public Card() {
 
     }
 
-    public XmlCard(int id, String title, String color, XmlSide front) {
+    public Card(int id, String title, String color, XmlSide front) {
         this.id = id;
         this.title = title;
         this.color = color;
         this.front = front;
     }
 
-    public XmlCard(int id, String title, String color, XmlSide front, XmlSide back) {
+    public Card(int id, String title, String color, XmlSide front, XmlSide back) {
         this.id = id;
         this.title = title;
         this.color = color;
