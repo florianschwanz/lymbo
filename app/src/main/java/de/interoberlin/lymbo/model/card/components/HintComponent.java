@@ -23,7 +23,7 @@ public class HintComponent implements Displayable {
 
     @Override
     public View getView(Context c, Activity a, ViewGroup parent) {
-        return null;
+        return new View(c);
     }
 
     // --------------------

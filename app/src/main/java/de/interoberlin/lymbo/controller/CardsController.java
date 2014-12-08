@@ -4,12 +4,12 @@ package de.interoberlin.lymbo.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.interoberlin.lymbo.model.card.XmlCard;
-import de.interoberlin.lymbo.model.card.XmlLymbo;
+import de.interoberlin.lymbo.model.card.Card;
+import de.interoberlin.lymbo.model.card.Lymbo;
 
 public class CardsController {
-    private static XmlLymbo lymbo;
-    private static List<XmlCard> cards = new ArrayList<XmlCard>();
+    private static Lymbo lymbo;
+    private static List<Card> cards = new ArrayList<Card>();
 
     private static CardsController instance;
 
@@ -47,19 +47,19 @@ public class CardsController {
     // Getters / Setters
     // --------------------
 
-    public static XmlLymbo getLymbo() {
+    public static Lymbo getLymbo() {
         return lymbo;
     }
 
-    public static void setLymbo(XmlLymbo lymbo) {
+    public static void setLymbo(Lymbo lymbo) {
         CardsController.lymbo = lymbo;
     }
 
-    public static List<XmlCard> getCards() {
+    public static List<Card> getCards() {
         return cards;
     }
 
-    public static void setCards(List<XmlCard> cards) {
+    public static void setCards(List<Card> cards) {
         CardsController.cards = cards;
     }
 }

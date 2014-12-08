@@ -1,16 +1,17 @@
 <lymbo
  title="Sample Lymbo"
  subtitle="This is just a test">
-<card>
-<front>
-<title
- value="HUhu">
-</title>
-</front>
-</card>
-<card>
-</card>
-<card>
-</card>
-
+	<card>
+		<front>
+			<title value="Card 1" />
+			<text value="Lorem ipsum" />
+			<hint value="This is a hint" />
+		</front>
+	</card>
+	<card>
+		<front>
+			<title value="Card 2" />
+			<text value="dolor sit amet" />
+		</front>
+	</card>
 </lymbo>

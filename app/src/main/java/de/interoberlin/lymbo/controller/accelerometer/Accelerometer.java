@@ -9,11 +9,7 @@ import android.view.Surface;
 
 import java.util.Observable;
 
-import de.interoberlin.sugarmonkey.controller.Simulation;
-import de.interoberlin.sugarmonkey.view.activities.examples.InteroberlinActivity;
-import de.interoberlin.sugarmonkey.view.activities.examples.LevelActivity;
-import de.interoberlin.sugarmonkey.view.activities.examples.LymboActivity;
-import de.interoberlin.sugarmonkey.view.activities.examples.StomachionActivity;
+import de.interoberlin.lymbo.SplashActivity;
 
 public class Accelerometer extends Observable implements SensorEventListener {
     private Activity activity;
@@ -25,12 +21,8 @@ public class Accelerometer extends Observable implements SensorEventListener {
     private static Accelerometer instance;
 
     private Accelerometer(Activity activity) {
-        if (activity instanceof LymboActivity)
-            accelerometer = ((LymboActivity) activity).getSensorManager().getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        if (activity instanceof InteroberlinActivity)
-            accelerometer = ((InteroberlinActivity) activity).getSensorManager().getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        if (activity instanceof StomachionActivity)
-            accelerometer = ((StomachionActivity) activity).getSensorManager().getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if (activity instanceof SplashActivity)
+            accelerometer = ((SplashActivity) activity).getSensorManager().getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         this.activity = activity;
 
@@ -46,32 +38,16 @@ public class Accelerometer extends Observable implements SensorEventListener {
     }
 
     public void start() {
-        if (activity instanceof LymboActivity) {
-            LymboActivity.uiToast("Accelerometer started");
-            ((LymboActivity) activity).getSensorManager().registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
-        }
-        if (activity instanceof InteroberlinActivity) {
-            InteroberlinActivity.uiToast("Accelerometer started");
-            ((InteroberlinActivity) activity).getSensorManager().registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
-        }
-        if (activity instanceof StomachionActivity) {
-            StomachionActivity.uiToast("Accelerometer started");
-            ((StomachionActivity) activity).getSensorManager().registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+        if (activity instanceof SplashActivity) {
+            SplashActivity.uiToast("Accelerometer started");
+            ((SplashActivity) activity).getSensorManager().registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
         }
     }
 
     public void stop() {
-        if (activity instanceof LymboActivity) {
-            LymboActivity.uiToast("Accelerometer stopped");
-            ((LymboActivity) activity).getSensorManager().unregisterListener(this);
-        }
-        if (activity instanceof LevelActivity) {
-            LevelActivity.uiToast("Accelerometer stopped");
-            ((LevelActivity) activity).getSensorManager().unregisterListener(this);
-        }
-        if (activity instanceof StomachionActivity) {
-            StomachionActivity.uiToast("Accelerometer stopped");
-            ((StomachionActivity) activity).getSensorManager().unregisterListener(this);
+        if (activity instanceof SplashActivity) {
+            SplashActivity.uiToast("Accelerometer stopped");
+            ((SplashActivity) activity).getSensorManager().unregisterListener(this);
         }
     }
 
@@ -81,58 +57,8 @@ public class Accelerometer extends Observable implements SensorEventListener {
             return;
         }
 
-        if (activity instanceof LymboActivity) {
-            switch (((LymboActivity) activity).getDisplay().getRotation()) {
-                case Surface.ROTATION_0: {
-                    sensorX = event.values[0];
-                    sensorY = -event.values[1];
-                    break;
-                }
-                case Surface.ROTATION_90: {
-                    sensorX = -event.values[1];
-                    sensorY = -event.values[0];
-                    break;
-                }
-                case Surface.ROTATION_180: {
-                    sensorX = -event.values[0];
-                    sensorY = event.values[1];
-                    break;
-                }
-                case Surface.ROTATION_270: {
-                    sensorX = event.values[1];
-                    sensorY = event.values[0];
-                    break;
-                }
-            }
-        }
-
-        if (activity instanceof InteroberlinActivity) {
-            switch (((InteroberlinActivity) activity).getDisplay().getRotation()) {
-                case Surface.ROTATION_0: {
-                    sensorX = event.values[0];
-                    sensorY = -event.values[1];
-                    break;
-                }
-                case Surface.ROTATION_90: {
-                    sensorX = -event.values[1];
-                    sensorY = -event.values[0];
-                    break;
-                }
-                case Surface.ROTATION_180: {
-                    sensorX = -event.values[0];
-                    sensorY = event.values[1];
-                    break;
-                }
-                case Surface.ROTATION_270: {
-                    sensorX = event.values[1];
-                    sensorY = event.values[0];
-                    break;
-                }
-            }
-        }
-
-        if (activity instanceof StomachionActivity) {
-            switch (((StomachionActivity) activity).getDisplay().getRotation()) {
+        if (activity instanceof SplashActivity) {
+            switch (((SplashActivity) activity).getDisplay().getRotation()) {
                 case Surface.ROTATION_0: {
                     sensorX = event.values[0];
                     sensorY = -event.values[1];
@@ -160,17 +86,9 @@ public class Accelerometer extends Observable implements SensorEventListener {
 
         notifyObservers(new AccelerationEvent(sensorX, sensorY));
 
-        if (activity instanceof LymboActivity) {
-            LymboActivity.uiUpdate();
-            LymboActivity.uiDraw();
-        }
-
-        if (activity instanceof InteroberlinActivity) {
-            InteroberlinActivity.uiUpdate();
-        }
-
-        if (activity instanceof StomachionActivity) {
-            StomachionActivity.uiUpdate();
+        if (activity instanceof SplashActivity) {
+            SplashActivity.uiUpdate();
+            SplashActivity.uiDraw();
         }
     }
 

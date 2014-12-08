@@ -7,25 +7,23 @@ import android.os.Environment;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.interoberlin.lymbo.model.card.XmlLymbo;
-import de.interoberlin.lymbo.model.persistence.XmlParser;
+import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.persistence.LymboLoader;
 import de.interoberlin.mate.lib.model.Log;
 
 public class LymbosController extends Application {
     private static Context context;
 
     private static Collection<File> lymboFiles;
-    private static List<XmlLymbo> lymbos;
+    private static List<Lymbo> lymbos;
 
     private static final String LYMBO_FILE_EXTENSION = ".lymbo";
 
@@ -81,7 +79,7 @@ public class LymbosController extends Application {
         // lymboFiles = findFiles(LYMBO_FILE_EXTENSION);
 
         lymboFiles = new ArrayList<File>();
-        lymboFiles.add(new File("/storage/emulated/0/Interoberlin/lymbo/java_oca.lymbo"));
+        lymboFiles.add(new File("/storage/emulated/0/Interoberlin/lymbo/huhu.lymbo"));
         // lymboFiles.add(new File("/storage/emulated/0/Interoberlin/lymbo/java_oca2.lymbo"));
     }
 
@@ -100,19 +98,19 @@ public class LymbosController extends Application {
      * Converts lymbo files into lymbo objects
      */
     private void getLymbosFromFiles() {
-        lymbos = new ArrayList<XmlLymbo>();
+        lymbos = new ArrayList<Lymbo>();
 
-        if (lymboFiles != null) {
-            for (File f : lymboFiles) {
-                try {
-                    lymbos.add(XmlParser.getInstance().parse(new FileInputStream(f)));
-                } catch (FileNotFoundException fnfe) {
-                    Log.error(fnfe.toString());
-                } catch (XmlPullParserException xppe) {
-                    Log.error(xppe.toString());
-                } catch (IOException ioe) {
-                    Log.error(ioe.toString());
-                }
+        // Add lymbos from assets
+        lymbos.add(LymboLoader.getLymboFromAsset(context, "sample.lymbo"));
+
+        // Add lymbos from file system
+        for (File f : lymboFiles) {
+            try {
+                lymbos.add(LymboLoader.getLymboFromFile(new FileInputStream(f)));
+                Log.debug("Found lymbo " + f.getName());
+            } catch (FileNotFoundException e) {
+                Log.error(e.toString());
+                e.printStackTrace();
             }
         }
     }
@@ -151,11 +149,11 @@ public class LymbosController extends Application {
         this.lymboFiles = lymboFiles;
     }
 
-    public List<XmlLymbo> getLymbos() {
+    public List<Lymbo> getLymbos() {
         return lymbos;
     }
 
-    public void setLymbos(List<XmlLymbo> lymbos) {
+    public void setLymbos(List<Lymbo> lymbos) {
         this.lymbos = lymbos;
     }
 }

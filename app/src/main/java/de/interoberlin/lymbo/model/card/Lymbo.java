@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
@@ -33,21 +34,21 @@ public class Lymbo implements Displayable {
     }
 
     // -------------------------
-    // Constructors
+    // Methods
     // -------------------------
 
     @Override
     public View getView(Context c, final Activity a, ViewGroup parent) {
         CardView v = (CardView) a.getLayoutInflater().inflate(R.layout.stack, null);
 
-        TextView  tvTitle = (TextView) v.findViewById(R.id.tvTitle);
-        TextView  tvSubtitle = (TextView) v.findViewById(R.id.tvSubtitle);
+        TextView tvTitle = (TextView) v.findViewById(R.id.tvTitle);
+        TextView tvSubtitle = (TextView) v.findViewById(R.id.tvSubtitle);
         ImageView ivDiscard = (ImageView) v.findViewById(R.id.ivDiscard);
-        ImageView  ivEdit = (ImageView) v.findViewById(R.id.ivEdit);
-        ImageView  ivShare = (ImageView) v.findViewById(R.id.ivShare);
+        ImageView ivEdit = (ImageView) v.findViewById(R.id.ivEdit);
+        ImageView ivShare = (ImageView) v.findViewById(R.id.ivShare);
         ImageView ivUpload = (ImageView) v.findViewById(R.id.ivUpload);
         ImageView ivHint = (ImageView) v.findViewById(R.id.ivHint);
-        ImageView  ivLogo = (ImageView) v.findViewById(R.id.ivLogo);
+        ImageView ivLogo = (ImageView) v.findViewById(R.id.ivLogo);
 
         tvTitle.setText(getTitle());
         tvSubtitle.setText(getSubtitle());
@@ -55,28 +56,28 @@ public class Lymbo implements Displayable {
         ivDiscard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LymbosActivity.uiToast("Not yet implemented");
+                LymbosActivity.uiToast(a.getResources().getString(R.string.not_yet_implemented));
             }
         });
 
         ivEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LymbosActivity.uiToast("Not yet implemented");
+                LymbosActivity.uiToast(a.getResources().getString(R.string.not_yet_implemented));
             }
         });
 
         ivShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LymbosActivity.uiToast("Not yet implemented");
+                LymbosActivity.uiToast(a.getResources().getString(R.string.not_yet_implemented));
             }
         });
 
         ivUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LymbosActivity.uiToast("Not yet implemented");
+                LymbosActivity.uiToast(a.getResources().getString(R.string.not_yet_implemented));
             }
         });
 
@@ -97,7 +98,7 @@ public class Lymbo implements Displayable {
         ivLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LymbosActivity.uiToast("Not yet implemented");
+                LymbosActivity.uiToast(a.getResources().getString(R.string.not_yet_implemented));
             }
         });
 
@@ -116,7 +117,6 @@ public class Lymbo implements Displayable {
         this.title = title;
     }
 
-
     public String getSubtitle() {
         return subtitle;
     }
@@ -124,7 +124,6 @@ public class Lymbo implements Displayable {
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
     }
-
 
     public String getHint() {
         return hint;
@@ -156,5 +155,13 @@ public class Lymbo implements Displayable {
 
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+    public void addCard(Card card) {
+        if (cards == null) {
+            cards = new ArrayList<Card>();
+        }
+
+        cards.add(card);
     }
 }

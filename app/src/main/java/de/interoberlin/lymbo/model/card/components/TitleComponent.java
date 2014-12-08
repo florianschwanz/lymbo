@@ -13,13 +13,16 @@ import de.interoberlin.lymbo.model.Displayable;
 
 public class TitleComponent implements Displayable {
     private String value = "";
-    private XmlTextType type;
 
     // --------------------
-    // Constructor
+    // Constructors
     // --------------------
 
     public TitleComponent() {
+    }
+
+    public TitleComponent(String value) {
+        this.value = value;
     }
 
     // --------------------
@@ -47,13 +50,4 @@ public class TitleComponent implements Displayable {
     public void setValue(String value) {
         this.value = value;
     }
-
-    public XmlTextType getType() {
-        return type;
-    }
-
-    public void setType(XmlTextType type) {
-        this.type = type;
-    }
-
 }

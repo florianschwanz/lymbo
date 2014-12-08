@@ -3,15 +3,18 @@ package de.interoberlin.lymbo.model.persistence;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
+import de.interoberlin.lymbo.model.Displayable;
+import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
+import de.interoberlin.lymbo.model.card.components.TitleComponent;
 
 /**
  * This class can be used to write a lymbo object into an xml file
- *
- * @author Florian
  */
 public class LymboWriter {
     private static StringBuilder result;
@@ -43,7 +46,104 @@ public class LymboWriter {
     }
 
     /**
-     * Adds a value between to tags
+     * Appends the lymbo root element to the xml
+     *
+     * @param tag
+     * @param lymbo
+     */
+    private static void appendLymbo(String tag, Lymbo lymbo) {
+        Map<String, String> attributes = new HashMap<String, String>();
+        attributes.put("title", lymbo.getTitle());
+        attributes.put("subtitle", lymbo.getSubtitle());
+        attributes.put("hint", lymbo.getHint());
+        attributes.put("image", lymbo.getImage());
+        attributes.put("author", lymbo.getAuthor());
+
+        addStartTag(tag, attributes);
+
+        for (Card card : lymbo.getCards()) {
+            appendCard("card", card);
+        }
+
+        addEndTag(tag);
+    }
+
+    /**
+     * Appends a card to the xml
+     *
+     * @param tag
+     * @param card
+     */
+    private static void appendCard(String tag, Card card) {
+        Map<String, String> attributes = new HashMap<String, String>();
+        attributes.put("id", String.valueOf(card.getId()));
+
+        addStartTag(tag, attributes);
+
+        if (card.getFront() != null)
+            appendSide("front", card.getFront());
+
+        if (card.getBack() != null)
+            appendSide("back", card.getFront());
+
+        addEndTag(tag);
+    }
+
+    /**
+     * Appends a side (front or back) to the xml
+     *
+     * @param tag
+     * @param side
+     */
+    private static void appendSide(String tag, Side side) {
+        Map<String, String> attributes = new HashMap<String, String>();
+        attributes.put("color", side.getColor());
+
+        addStartTag(tag, attributes);
+
+        for (Displayable component : side.getComponents()) {
+            if (component instanceof TitleComponent) {
+                appendTitleComponent("title", (TitleComponent) component);
+            } else if (component instanceof TextComponent) {
+                appendTextComponent("text", (TextComponent) component);
+            }
+        }
+
+        addEndTag(tag);
+    }
+
+    /**
+     * Appends a title component
+     *
+     * @param tag
+     * @param component
+     */
+    private static void appendTitleComponent(String tag, TitleComponent component) {
+        Map<String, String> attributes = new HashMap<String, String>();
+        attributes.put("value", component.getValue());
+
+        addTag(tag, attributes);
+    }
+
+    // --------------------
+    // Methods - helper
+    // --------------------
+
+    /**
+     * Appends a text component
+     *
+     * @param tag
+     * @param component
+     */
+    private static void appendTextComponent(String tag, TextComponent component) {
+        Map<String, String> attributes = new HashMap<String, String>();
+        attributes.put("value", component.getValue());
+
+        addTag(tag, attributes);
+    }
+
+    /**
+     * Adds a value between two tags
      *
      * @param value
      */
@@ -58,6 +158,45 @@ public class LymboWriter {
      */
     private static void addStartTag(String tag) {
         result.append("\n<" + tag + ">");
+    }
+
+    /**
+     * Adds a start tag
+     *
+     * @param tag
+     */
+    private static void addStartTag(String tag, Map<String, String> attributes) {
+        result.append("\n<" + tag);
+
+        for (Map.Entry<String, String> e : attributes.entrySet()) {
+            result.append("\n " + e.getKey() + "=\"" + e.getValue() + "\"");
+        }
+
+        result.append(">");
+    }
+
+    /**
+     * Adds a self-closing tag
+     *
+     * @param tag
+     */
+    private static void addTag(String tag) {
+        result.append("\n<" + tag + " />");
+    }
+
+    /**
+     * Adds a self-closing tag
+     *
+     * @param tag
+     */
+    private static void addTag(String tag, Map<String, String> attributes) {
+        result.append("\n<" + tag);
+
+        for (Map.Entry<String, String> e : attributes.entrySet()) {
+            result.append("\n " + e.getKey() + "=\"" + e.getValue() + "\"");
+        }
+
+        result.append(" />");
     }
 
     /**
@@ -80,121 +219,4 @@ public class LymboWriter {
         addValue(text);
         addEndTag(tag);
     }
-
-    /**
-     * Appends the lymbo root element to the xml
-     *
-     * @param tag
-     * @param lymbo
-     */
-    private static void appendLymbo(String tag, Lymbo lymbo) {
-        addStartTag(tag);
-
-        //appendTag("text", lymbo.getText().toString());
-        appendTag("image", lymbo.getImage().toString());
-        //appendStack("stack", lymbo.getStack());
-
-        addEndTag(tag);
-    }
-
-    /**
-     * Appends a stack to the xml
-     *
-     * @param tag
-     * @param stack
-     */
-    /*
-    private static void appendStack(String tag, XmlStack stack)
-	{
-		addStartTag(tag);
-
-		//for (XmlCard c : stack.getCards())
-		//{
-		//	appendCard("card", c);
-		//}
-
-		addEndTag(tag);
-	}
-    */
-
-    /**
-     * Appends a card to the xml
-     *
-     * @param tag
-     * @param card
-     */
-    /*
-	private static void appendCard(String tag, XmlCard card)
-	{
-		addStartTag(tag);
-
-		appendTag("title", card.getTitle());
-		appendSide("front", card.getFront());
-		appendSide("back", card.getBack());
-
-		addEndTag(tag);
-	}
-	*/
-
-    /**
-     * Appends a side (front or back) to the xml
-     *
-     * @param tag
-     * @param side
-     */
-    /*
-	private static void appendSide(String tag, XmlSide side)
-	{
-		addStartTag(tag);
-
-		appendTexts(side.getTexts());
-		appendTag("image", side.getImage());
-		appendTag("hint", side.getHint());
-		appendChoices("choices", side.getChoices());
-		addEndTag(tag);
-	}
-	*/
-
-    /**
-     * Appends a text tag (text or code) to the xml file
-     */
-    private static void appendTexts(List<TextComponent> texts) {
-        if (texts != null) {
-            for (TextComponent t : texts) {
-
-                appendTag("text", t.getValue());
-                break;
-
-            }
-        }
-    }
-
-    /**
-     * Appends a choice tag (right or wrong) to the xml file
-     *
-     * @param tag
-     * @param choices
-     */
-    /*
-	private static void appendChoices(String tag, List<XmlChoice> choices)
-	{
-		if (choices != null)
-		{
-			// addStartTag(tag);
-
-			for (XmlChoice c : choices)
-			{
-				if (c.isRight())
-				{
-					appendTag("right", c.getText());
-				} else
-				{
-					appendTag("wrong", c.getText());
-				}
-			}
-
-			// addEndTag(tag);
-		}
-	}
-	*/
 }

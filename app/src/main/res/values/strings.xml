@@ -12,8 +12,11 @@
     <string name="menu_about">About</string>
     <string name="message">Message</string>
     <string name="okay">Okay</string>
+    <string name="no_hint">There is no hint</string>
+    <string name="not_yet_implemented">Not yet implemented</string>
     <string name="search_lymbo_files">Search lymbo files</string>
     <string name="share">Share</string>
+    <string name="text">Text</string>
     <string name="title">Title</string>
     <string name="upload">Upload</string>
 </resources>

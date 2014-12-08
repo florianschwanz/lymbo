@@ -18,8 +18,8 @@ import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 import de.interoberlin.lymbo.model.card.components.HintComponent;
 import de.interoberlin.lymbo.model.card.components.ImageComponent;
-import de.interoberlin.lymbo.model.card.components.XmlTextComponent;
-import de.interoberlin.lymbo.model.card.components.XmlTitleComponent;
+import de.interoberlin.lymbo.model.card.components.TextComponent;
+import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.mate.lib.model.Log;
 
 public class LymboParser {
@@ -30,7 +30,6 @@ public class LymboParser {
     // --------------------
 
     private LymboParser() {
-
     }
 
     public static LymboParser getInstance() {
@@ -76,6 +75,7 @@ public class LymboParser {
     private Lymbo parseLymbo(XmlPullParser parser) throws XmlPullParserException, IOException {
         Log.trace("parseLymbo()");
         String name;
+
         parser.require(XmlPullParser.START_TAG, null, "lymbo");
 
         // Create element
@@ -93,7 +93,7 @@ public class LymboParser {
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
-                Log.trace("parseLymbo() continue");
+                Log.trace("parseCard() continue");
                 continue;
             }
 
@@ -101,14 +101,9 @@ public class LymboParser {
 
             if (name.equals("card")) {
                 cards.add(parseCard(parser));
-            } else if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-            /*
-            else {
+            } else {
                 skip(parser);
             }
-            */
         }
 
         // Fill element
@@ -145,10 +140,8 @@ public class LymboParser {
         Card card = new Card();
 
         // Read attributes
-        String title = parser.getAttributeValue(null, "title");
-        String subtitle = parser.getAttributeValue(null, "subtitle");
-        String hint = parser.getAttributeValue(null, "hint");
-        String color = parser.getAttributeValue(null, "color");
+
+        // Nothing to do here
 
         // Read sub elements
         Side front = null;
@@ -172,14 +165,6 @@ public class LymboParser {
         }
 
         // Fill element
-        if (title != null)
-            card.setTitle(title);
-        if (subtitle != null)
-            card.setSubtitle(subtitle);
-        if (hint != null)
-            card.setHint(hint);
-        if (color != null)
-            card.setColor(color);
         if (front != null)
             card.setFront(front);
         if (back != null)
@@ -198,7 +183,7 @@ public class LymboParser {
      */
     private Side parseSide(XmlPullParser parser, String tag) throws XmlPullParserException, IOException {
         Log.trace("parseSide()");
-        String name = null;
+        String name;
         parser.require(XmlPullParser.START_TAG, null, tag);
 
         // Create element
@@ -225,7 +210,7 @@ public class LymboParser {
                 components.add(parseImageComponent(parser));
             } else if (name.equals("choice")) {
                 components.add(parseChoiceComponent(parser));
-            }  else {
+            } else {
                 skip(parser);
             }
         }
@@ -245,15 +230,22 @@ public class LymboParser {
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private XmlTitleComponent parseTitleComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private TitleComponent parseTitleComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
         Log.trace("parseTitleComponent()");
         parser.require(XmlPullParser.START_TAG, null, "title");
 
         // Create element
-        XmlTitleComponent component = new XmlTitleComponent();
+        TitleComponent component = new TitleComponent();
 
         // Read attributes
         String value = parser.getAttributeValue(null, "value");
+
+        // Read sub elements
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+        }
 
         // Fill element
         if (value != null)
@@ -270,15 +262,22 @@ public class LymboParser {
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private XmlTextComponent parseTextComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private TextComponent parseTextComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
         Log.trace("parseTextComponent()");
         parser.require(XmlPullParser.START_TAG, null, "text");
 
         // Create element
-        XmlTextComponent component = new XmlTextComponent();
+        TextComponent component = new TextComponent();
 
         // Read attributes
         String value = parser.getAttributeValue(null, "value");
+
+        // Read sub elements
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+        }
 
         // Fill element
         if (value != null)
@@ -305,6 +304,13 @@ public class LymboParser {
         // Read attributes
         String value = parser.getAttributeValue(null, "value");
 
+        // Read sub elements
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+        }
+
         // Fill element
         if (value != null)
             component.setValue(value);
@@ -329,6 +335,13 @@ public class LymboParser {
 
         // Read attributes
         String image = parser.getAttributeValue(null, "image");
+
+        // Read sub elements
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+        }
 
         // Fill element
         if (image != null)
@@ -394,6 +407,13 @@ public class LymboParser {
         // Read attributes
         String value = parser.getAttributeValue(null, "value");
         String correct = parser.getAttributeValue(null, "correct");
+
+        // Read sub elements
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+        }
 
         // Fill element
         if (value != null)

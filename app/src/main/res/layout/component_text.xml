@@ -11,10 +11,12 @@
 
     <de.interoberlin.lymbo.view.controls.RobotoTextView
         roboto:typeface="roboto_regular"
-        android:id="@+id/tvTitle"
-        style="@style/CardTitle"
+        android:id="@+id/tvText"
+        style="@style/CardText"
+        android:ellipsize="end"
+        android:maxLines="4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.50"
-        android:text="@string/title" />
+        android:text="@string/text" />
 </LinearLayout>

@@ -14,11 +14,11 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.card.XmlLymbo;
+import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.activities.LymbosActivity;
 
-public class LymbosListAdapter extends ArrayAdapter<XmlLymbo> {
+public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
     Context c;
 
     // Controllers
@@ -35,7 +35,7 @@ public class LymbosListAdapter extends ArrayAdapter<XmlLymbo> {
         this.c = context;
     }
 
-    public LymbosListAdapter(Context context, int resource, List<XmlLymbo> items) {
+    public LymbosListAdapter(Context context, int resource, List<Lymbo> items) {
         super(context, resource, items);
 
         this.c = context;
@@ -60,7 +60,7 @@ public class LymbosListAdapter extends ArrayAdapter<XmlLymbo> {
         ImageView ivHint = (ImageView) cv.findViewById(R.id.ivHint);
         ImageView ivLogo = (ImageView) cv.findViewById(R.id.ivLogo);
 
-        final XmlLymbo lymbo = getItem(position);
+        final Lymbo lymbo = getItem(position);
         tvTitle.setText(lymbo.getTitle());
         tvSubtitle.setText(lymbo.getSubtitle());
 
