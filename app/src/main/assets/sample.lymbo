@@ -6,6 +6,21 @@
 			<title value="Card 1" />
 			<text value="Lorem ipsum" />
 			<hint value="This is a hint" />
+			<choice
+                type="multi">
+                <answer
+                    correct="false"
+                    value="A Package statements are optional" />
+                <answer
+                    correct="false"
+                    value="B Package statements are limited to one per source file" />
+                <answer
+                    correct="true"
+                    value="C Standard Java coding convention for package names reverses the domain name of the organization or group creating the package" />
+                <answer
+                    correct="false"
+                    value="D The package names beginning with javas.* and javaw.* are reserved" />
+            </choice>
 		</front>
 	</card>
 	<card>

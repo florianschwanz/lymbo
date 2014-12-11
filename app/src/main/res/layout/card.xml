@@ -16,58 +16,62 @@
         android:padding="8dp">
 
         <LinearLayout
-            android:id="@+id/llComponents"
+            android:id="@+id/llWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="16dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llComponents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="16dp" />
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="4dp"
-                android:background="@color/stroke" />
+                android:layout_height="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:id="@+id/llIconbar"
-                android:orientation="horizontal">
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/llCustomIcons"
-                    android:gravity="left"
-                    android:orientation="horizontal">
-
-
-                </LinearLayout>
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/stroke" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:gravity="right">
+                    android:baselineAligned="false"
+                    android:id="@+id/llIconbar"
+                    android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/ivHint"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:contentDescription="@string/hint"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_about" />
+                        android:id="@+id/llCustomIcons"
+                        android:gravity="left"
+                        android:orientation="horizontal" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:gravity="right">
+
+                        <ImageView
+                            android:id="@+id/ivHint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/hint"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_about" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
