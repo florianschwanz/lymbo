@@ -14,9 +14,11 @@ import android.widget.LinearLayout;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.components.HintComponent;
+import de.interoberlin.lymbo.model.card.components.SVGComponent;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
@@ -94,4 +96,19 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
         return cv;
     }
+
+    public void resume() {
+        for (Card card : CardsController.getCards()) {
+            for (Displayable d : card.getFront().getComponents()) {
+                if (d instanceof SVGComponent) {
+                    ((SVGComponent) d).resume();
+                }
+            }
+        }
+    }
+
+    public void pause() {
+
+    }
+
 }

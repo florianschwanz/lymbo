@@ -18,9 +18,12 @@ import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 import de.interoberlin.lymbo.model.card.components.HintComponent;
 import de.interoberlin.lymbo.model.card.components.ImageComponent;
+import de.interoberlin.lymbo.model.card.components.SVGComponent;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.mate.lib.model.Log;
+import de.interoberlin.sauvignon.lib.controller.parser.SvgParser;
+import de.interoberlin.sauvignon.lib.model.svg.SVG;
 
 public class LymboParser {
     private static LymboParser instance;
@@ -189,6 +192,9 @@ public class LymboParser {
         // Create element
         Side side = new Side();
 
+        // Read attributes
+        String color = parser.getAttributeValue(null, "color");
+
         // Read sub elements
         List<Displayable> components = new ArrayList<Displayable>();
 
@@ -206,10 +212,12 @@ public class LymboParser {
                 components.add(parseTextComponent(parser));
             } else if (name.equals("hint")) {
                 components.add(parseHintComponent(parser));
-            } else if (name.equals("image")) {
-                components.add(parseImageComponent(parser));
             } else if (name.equals("choice")) {
                 components.add(parseChoiceComponent(parser));
+            } else if (name.equals("svg")) {
+                components.add(parseSVGComponent(parser, color));
+            } else if (name.equals("image")) {
+                components.add(parseImageComponent(parser));
             } else {
                 skip(parser);
             }
@@ -239,6 +247,8 @@ public class LymboParser {
 
         // Read attributes
         String value = parser.getAttributeValue(null, "value");
+        String lines = parser.getAttributeValue(null, "lines");
+        String gravity = parser.getAttributeValue(null, "gravity");
 
         // Read sub elements
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -250,6 +260,10 @@ public class LymboParser {
         // Fill element
         if (value != null)
             component.setValue(value);
+        if (lines != null)
+            component.setLines(Integer.parseInt(lines));
+        if (gravity != null)
+            component.setGravity(gravity);
 
         return component;
     }
@@ -271,6 +285,8 @@ public class LymboParser {
 
         // Read attributes
         String value = parser.getAttributeValue(null, "value");
+        String lines = parser.getAttributeValue(null, "lines");
+        String gravity = parser.getAttributeValue(null, "gravity");
 
         // Read sub elements
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -282,6 +298,10 @@ public class LymboParser {
         // Fill element
         if (value != null)
             component.setValue(value);
+        if (lines != null)
+            component.setLines(Integer.parseInt(lines));
+        if (gravity != null)
+            component.setGravity(gravity);
 
         return component;
     }
@@ -422,6 +442,39 @@ public class LymboParser {
             answer.setCorrect(Boolean.parseBoolean(correct));
 
         return answer;
+    }
+
+    /**
+     * Returns an svg component
+     *
+     * @param parser the XmlPullParser
+     * @return xmlSide
+     * @throws org.xmlpull.v1.XmlPullParserException
+     * @throws java.io.IOException
+     */
+    private SVGComponent parseSVGComponent(XmlPullParser parser, String color) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, null, "svg");
+
+        // Create element
+        SVGComponent component = new SVGComponent();
+        SVG svg = SvgParser.getInstance().parseSVG(parser);
+
+        // Read attributes
+
+        // Read sub elements
+        /*
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+        }
+        */
+
+        // Fill element
+        if (svg != null)
+            component.setSVG(svg);
+
+        return component;
     }
 
     /**

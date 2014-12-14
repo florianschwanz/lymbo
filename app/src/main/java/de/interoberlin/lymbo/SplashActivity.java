@@ -182,7 +182,11 @@ public class SplashActivity extends Activity {
         }
     }
 
-    public static void uiInit() {
+    public void uiInit() {
+        // splashController.setOffsetX(Simulation.getDataX());
+        // splashController.setOffsetY(Simulation.getDataY());
+        splashController.setOffsetX(0.0F);
+        splashController.setOffsetY(0.0F);
     }
 
     public static void uiMessage(final String message) {
@@ -212,8 +216,6 @@ public class SplashActivity extends Activity {
                         if (e instanceof SVGRect) {
                             float x = Simulation.getRawX() * (e.getzIndex() - svg.getMaxZindex() / 2) * -5;
                             float y = Simulation.getRawY() * (e.getzIndex() - svg.getMaxZindex() / 2) * -5;
-
-                            System.out.println("DEBUG " + svg.getMaxZindex());
 
                             e.getAnimationSets().clear();
                             e.setAnimationTransform(new SVGTransformTranslate(x, y));

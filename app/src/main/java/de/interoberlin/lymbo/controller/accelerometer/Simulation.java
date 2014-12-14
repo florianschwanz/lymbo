@@ -5,6 +5,8 @@ import android.app.Activity;
 import java.util.Observable;
 import java.util.Observer;
 
+import de.interoberlin.lymbo.controller.SplashController;
+
 public class Simulation implements Observer {
     private static Simulation instance;
 
@@ -50,8 +52,8 @@ public class Simulation implements Observer {
         float sensibilityX = 1.0f;
         float sensibilityY = 1.0f;
 
-        float offsetX = 0.0f;
-        float offsetY = 0.0f;
+        float offsetX = SplashController.getOffsetX();
+        float offsetY = SplashController.getOffsetY();
 
         // Retrieve values from observed AccelerationEvent
         rawX = normalize(dataX - offsetX, sensibilityX);

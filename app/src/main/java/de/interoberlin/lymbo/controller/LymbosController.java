@@ -68,6 +68,8 @@ public class LymbosController extends Application {
         if (lymbos == null) {
             findLymboFiles();
             getLymbosFromFiles();
+
+            getLymbosFromAssets();
         }
     }
 
@@ -100,9 +102,6 @@ public class LymbosController extends Application {
     private void getLymbosFromFiles() {
         lymbos = new ArrayList<Lymbo>();
 
-        // Add lymbos from assets
-        lymbos.add(LymboLoader.getLymboFromAsset(context, "sample.lymbo"));
-
         // Add lymbos from file system
         for (File f : lymboFiles) {
             try {
@@ -113,6 +112,12 @@ public class LymbosController extends Application {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void getLymbosFromAssets() {
+        lymbos.add(LymboLoader.getLymboFromAsset(context, "learn.lymbo"));
+        lymbos.add(LymboLoader.getLymboFromAsset(context, "quiz.lymbo"));
+        lymbos.add(LymboLoader.getLymboFromAsset(context, "svg.lymbo"));
     }
 
     public boolean checkStorage() {

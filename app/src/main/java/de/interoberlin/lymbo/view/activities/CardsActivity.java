@@ -32,7 +32,8 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     private DrawerLayout drawer;
     // private static RecyclerView rv;
     private SwipeListView slv;
-    private RecyclerView.Adapter lymbosAdapter;
+
+    private CardsListAdapter cardsAdapter;
     private RecyclerView.LayoutManager lm;
 
     // --------------------
@@ -52,13 +53,24 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
         c = getApplicationContext();
 
         SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
-        slv.setAdapter(new CardsListAdapter(this, this, R.layout.card, cardsController.getCards()));
+        cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
+
+        slv.setAdapter(cardsAdapter);
+        slv.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_DISMISS);
+        slv.setSwipeActionRight(SwipeListView.SWIPE_ACTION_DISMISS);
     }
 
     public void onResume() {
         super.onResume();
         clear();
         draw();
+        cardsAdapter.resume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        cardsAdapter.pause();
     }
 
     @Override

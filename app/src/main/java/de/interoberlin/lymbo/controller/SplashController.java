@@ -11,6 +11,9 @@ public class SplashController {
 
     private static SplashController instance;
 
+    private static float offsetX = 0F;
+    private static float offsetY = 0F;
+
     // --------------------
     // Singleton
     // --------------------
@@ -40,13 +43,28 @@ public class SplashController {
     // Getters / Setter
     // --------------------
 
-    public List<String> getMessages()
-    {
+    public List<String> getMessages() {
         return this.messages;
     }
 
-    public void setMessages(ArrayList<String> messages)
-    {
+    public void setMessages(ArrayList<String> messages) {
         this.messages = messages;
     }
+
+    public static float getOffsetX() {
+        return offsetX;
+    }
+
+    public static void setOffsetX(float offsetX) {
+        SplashController.offsetX = offsetX;
+    }
+
+    public static float getOffsetY() {
+        return offsetY;
+    }
+
+    public static void setOffsetY(float offsetY) {
+        SplashController.offsetY = offsetY;
+    }
+
 }

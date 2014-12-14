@@ -1,0 +1,11 @@
+<lymbo
+ title="Learn"
+ subtitle="This is a learning demo">
+	<card>
+		<front>
+			<title
+			    value="Te amo."
+			    gravity="center" />
+		</front>
+	</card>
+</lymbo>
