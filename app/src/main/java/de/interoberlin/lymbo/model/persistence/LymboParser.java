@@ -50,20 +50,20 @@ public class LymboParser {
     /**
      * Parses xml file an returns a map
      *
-     * @param in InputStream
+     * @param is
      * @return xmlLymbo
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    public Lymbo parse(InputStream in) throws XmlPullParserException, IOException {
+    public Lymbo parse(InputStream is) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(in, null);
+            parser.setInput(is, null);
             parser.nextTag();
             return parseLymbo(parser);
         } finally {
-            in.close();
+            is.close();
         }
     }
 

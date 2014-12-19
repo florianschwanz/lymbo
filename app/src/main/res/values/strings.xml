@@ -6,10 +6,13 @@
     <string name="click_to_continue">Click on screen to continue</string>
     <string name="discard">Discard</string>
     <string name="edit">Edit</string>
+    <string name="flip">Flip</string>
     <string name="hint">Hint</string>
     <string name="logo">Logo</string>
+    <string name="menu_add">Add</string>
     <string name="menu_log">Log</string>
     <string name="menu_about">About</string>
+    <string name="menu_save">Save</string>
     <string name="message">Message</string>
     <string name="okay">Okay</string>
     <string name="no_hint">There is no hint</string>

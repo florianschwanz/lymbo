@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_gravity="center"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="18dp"
     card_view:cardCornerRadius="2dp">
@@ -16,47 +16,54 @@
         android:padding="8dp">
 
         <LinearLayout
-            android:id="@+id/llWrapper"
+            android:id="@+id/llWrapperFront"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/llComponents"
+                android:id="@+id/llComponentsFront"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:minHeight="@dimen/min_card_height"
                 android:paddingBottom="16dp" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/llBottomFront"
                 android:layout_alignParentBottom="true"
                 android:orientation="vertical">
 
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="14dp"
                     android:background="@color/stroke" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:id="@+id/llIconbar"
+                    android:baselineAligned="true"
+                    android:id="@+id/llIconbarFront"
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/llCustomIcons"
+                        android:id="@+id/llCustomIconsFront"
                         android:gravity="left"
-                        android:orientation="horizontal" />
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/ivFlipFront"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/flip"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_action_screen_rotation" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -79,9 +86,64 @@
 
     <RelativeLayout
         android:id="@+id/back"
-        android:tag="back"
+        android:tag="front"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"></RelativeLayout>
+        android:padding="8dp">
+
+        <LinearLayout
+            android:id="@+id/llWrapperBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llComponentsBack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:minHeight="@dimen/min_card_height"
+                android:paddingBottom="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/llBottomBack"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@color/stroke" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:id="@+id/llIconbarBack"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/llCustomIconsBack"
+                        android:gravity="left"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/ivFlipBack"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/flip"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_action_screen_rotation" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>

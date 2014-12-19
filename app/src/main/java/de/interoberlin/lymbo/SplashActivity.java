@@ -13,7 +13,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +22,7 @@ import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.controller.SplashController;
 import de.interoberlin.lymbo.controller.accelerometer.Simulation;
 import de.interoberlin.lymbo.view.activities.LymbosActivity;
+import de.interoberlin.mate.lib.util.Toaster;
 import de.interoberlin.sauvignon.lib.controller.loader.SvgLoader;
 import de.interoberlin.sauvignon.lib.model.svg.SVG;
 import de.interoberlin.sauvignon.lib.model.svg.elements.AGeometric;
@@ -39,7 +39,9 @@ public class SplashActivity extends Activity {
     private static Context context;
     private static Activity activity;
 
-    private static LinearLayout llBackground;
+    // Views
+    private static LinearLayout llSVG;
+    private static LinearLayout llLogo;
     private static TextView tvMessage;
 
     private static SensorManager sensorManager;
@@ -61,12 +63,16 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        // Register
+        Toaster.register(this, context);
+
         // Get activity and context
         activity = this;
         context = getApplicationContext();
 
         // Load layout
-        llBackground = (LinearLayout) findViewById(R.id.llBackground);
+        llSVG = (LinearLayout) findViewById(R.id.llSVG);
+        llLogo = (LinearLayout) findViewById(R.id.llLogo);
         tvMessage = (TextView) findViewById(R.id.tvMessage);
 
         // Get instances of managers
@@ -75,7 +81,6 @@ public class SplashActivity extends Activity {
         display = windowManager.getDefaultDisplay();
 
         svg = SvgLoader.getSVGFromAsset(context, "lymbo.svg");
-
         panel = new SVGPanel(activity);
         panel.setSVG(svg);
         panel.setBackgroundColor(new SVGPaint(255, 208, 227, 153));
@@ -85,6 +90,7 @@ public class SplashActivity extends Activity {
                 if (ready) {
                     Intent openStartingPoint = new Intent(SplashActivity.this, LymbosActivity.class);
                     startActivity(openStartingPoint);
+                    finish();
                 }
             }
         });
@@ -92,11 +98,11 @@ public class SplashActivity extends Activity {
         ivLogo = new ImageView(activity);
         ivLogo.setImageDrawable(loadFromAssets("lymbo.png"));
 
-        // Add surface view
-        llBackground.addView(panel, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        llBackground.addView(ivLogo, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        // Add views
+        llSVG.addView(panel, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        llLogo.addView(ivLogo, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-        // Initialize
+        // Initialize UI
         uiInit();
 
         Thread timer = new Thread() {
@@ -115,13 +121,11 @@ public class SplashActivity extends Activity {
                     e.printStackTrace();
                 }
 
-                int i = 0;
-
                 while (lymbosController.getLymboFiles().isEmpty()) {
-                    uiMessage(splashController.getMessages().get(i++));
+                    uiMessage(splashController.getRandomMessage());
 
                     try {
-                        sleep(500);
+                        sleep(5000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -147,8 +151,6 @@ public class SplashActivity extends Activity {
         super.onResume();
         panel.resume();
 
-        draw();
-
         Simulation.getInstance(activity).start();
     }
 
@@ -170,9 +172,6 @@ public class SplashActivity extends Activity {
     // Methods
     // --------------------
 
-    public static void draw() {
-    }
-
     private Drawable loadFromAssets(String image) {
         try {
             InputStream is = getAssets().open(image);
@@ -183,13 +182,11 @@ public class SplashActivity extends Activity {
     }
 
     public void uiInit() {
-        // splashController.setOffsetX(Simulation.getDataX());
-        // splashController.setOffsetY(Simulation.getDataY());
         splashController.setOffsetX(0.0F);
-        splashController.setOffsetY(0.0F);
+        splashController.setOffsetY(-7.0F);
     }
 
-    public static void uiMessage(final String message) {
+    public static void uiMessage(final int message) {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -198,7 +195,7 @@ public class SplashActivity extends Activity {
         });
     }
 
-    public static void uiMessage(final int message) {
+    public static void uiMessage(final String message) {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -214,8 +211,10 @@ public class SplashActivity extends Activity {
                 synchronized (svg) {
                     for (AGeometric e : svg.getAllSubElements()) {
                         if (e instanceof SVGRect) {
-                            float x = Simulation.getRawX() * (e.getzIndex() - svg.getMaxZindex() / 2) * -5;
-                            float y = Simulation.getRawY() * (e.getzIndex() - svg.getMaxZindex() / 2) * -5;
+                            float x = Simulation.getRawX() * (e.getzIndex() - svg.getMaxZindex() / 2) * -1.2F;
+                            float y = Simulation.getRawY() * (e.getzIndex() - svg.getMaxZindex() / 2) * -1.2F;
+
+                            System.out.println("X " + Simulation.getRawX() + " Y " + Simulation.getRawY());
 
                             e.getAnimationSets().clear();
                             e.setAnimationTransform(new SVGTransformTranslate(x, y));
@@ -226,24 +225,6 @@ public class SplashActivity extends Activity {
         });
 
         t.start();
-    }
-
-    public static void uiDraw() {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                draw();
-            }
-        });
-    }
-
-    public static void uiToast(final String message) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     // --------------------

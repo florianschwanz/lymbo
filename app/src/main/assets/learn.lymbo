@@ -4,8 +4,13 @@
 	<card>
 		<front>
 			<title
-			    value="Te amo."
+			    value="te amo"
 			    gravity="center" />
 		</front>
+		<back>
+            <title
+                value="ich mag dich"
+                gravity="center" />
+		</back>
 	</card>
 </lymbo>

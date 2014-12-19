@@ -42,4 +42,8 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected void setActionBarIcon(int iconRes) {
         toolbar.setNavigationIcon(iconRes);
     }
+
+    protected void setDisplayHomeAsUpEnabled(boolean enabled) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
+    }
 }

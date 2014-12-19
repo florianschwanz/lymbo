@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.fortysevendeg.swipelistview.SwipeListView;
 
@@ -41,6 +40,7 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setActionBarIcon(R.drawable.ic_ab_drawer);
+        setDisplayHomeAsUpEnabled(false);
 
         drawer = (DrawerLayout) findViewById(R.id.dl);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
@@ -51,6 +51,7 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
 
         SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
         slv.setAdapter(new LymbosListAdapter(this, R.layout.stack, lymbosController.getLymbos()));
+        slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
     }
 
     public void onResume() {
@@ -66,7 +67,7 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity, menu);
+        getMenuInflater().inflate(R.menu.activity_lymbos, menu);
         return true;
     }
 
@@ -161,15 +162,6 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
     }
 
     public void draw() {
-    }
-
-    public static void uiToast(final String message) {
-        a.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(c, message, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     public void uiRefresh() {

@@ -68,7 +68,6 @@ public class LymbosController extends Application {
         if (lymbos == null) {
             findLymboFiles();
             getLymbosFromFiles();
-
             getLymbosFromAssets();
         }
     }
@@ -82,6 +81,7 @@ public class LymbosController extends Application {
 
         lymboFiles = new ArrayList<File>();
         lymboFiles.add(new File("/storage/emulated/0/Interoberlin/lymbo/huhu.lymbo"));
+        lymboFiles.add(new File("/storage/emulated/0/Interoberlin/lymbo/saved.lymbo"));
         // lymboFiles.add(new File("/storage/emulated/0/Interoberlin/lymbo/java_oca2.lymbo"));
     }
 
@@ -105,11 +105,12 @@ public class LymbosController extends Application {
         // Add lymbos from file system
         for (File f : lymboFiles) {
             try {
-                lymbos.add(LymboLoader.getLymboFromFile(new FileInputStream(f)));
+                Lymbo l = LymboLoader.getLymboFromFile(new FileInputStream(f));
+                l.setPath(f.getAbsolutePath());
+                lymbos.add(l);
                 Log.debug("Found lymbo " + f.getName());
-            } catch (FileNotFoundException e) {
-                Log.error(e.toString());
-                e.printStackTrace();
+            } catch (FileNotFoundException fnfe) {
+                Log.error(fnfe.toString());
             }
         }
     }

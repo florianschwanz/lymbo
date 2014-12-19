@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
+
+    <de.interoberlin.lymbo.view.controls.RobotoEditText
+        roboto:typeface="roboto_regular"
+        android:id="@+id/tvText"
+        style="@style/CardText"
+        android:ellipsize="end"
+        android:maxLines="4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.50"
+        android:text="@string/text" />
+</LinearLayout>

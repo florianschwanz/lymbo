@@ -14,11 +14,13 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.Displayable;
-import de.interoberlin.lymbo.view.activities.LymbosActivity;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
+import de.interoberlin.mate.lib.util.Toaster;
 
 public class Lymbo implements Displayable {
+    private String path;
+
     private String title = "";
     private String subtitle = "";
     private String hint = "";
@@ -56,28 +58,28 @@ public class Lymbo implements Displayable {
         ivDiscard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LymbosActivity.uiToast(a.getResources().getString(R.string.not_yet_implemented));
+                Toaster.add(a.getResources().getString(R.string.not_yet_implemented));
             }
         });
 
         ivEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LymbosActivity.uiToast(a.getResources().getString(R.string.not_yet_implemented));
+                Toaster.add(a.getResources().getString(R.string.not_yet_implemented));
             }
         });
 
         ivShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LymbosActivity.uiToast(a.getResources().getString(R.string.not_yet_implemented));
+                Toaster.add(a.getResources().getString(R.string.not_yet_implemented));
             }
         });
 
         ivUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LymbosActivity.uiToast(a.getResources().getString(R.string.not_yet_implemented));
+                Toaster.add(a.getResources().getString(R.string.not_yet_implemented));
             }
         });
 
@@ -98,7 +100,7 @@ public class Lymbo implements Displayable {
         ivLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LymbosActivity.uiToast(a.getResources().getString(R.string.not_yet_implemented));
+                Toaster.add(a.getResources().getString(R.string.not_yet_implemented));
             }
         });
 
@@ -108,6 +110,14 @@ public class Lymbo implements Displayable {
     // -------------------------
     // Getters / Setters
     // -------------------------
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     public String getTitle() {
         return title;

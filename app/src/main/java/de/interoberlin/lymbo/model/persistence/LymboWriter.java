@@ -121,13 +121,11 @@ public class LymboWriter {
     private static void appendTitleComponent(String tag, TitleComponent component) {
         Map<String, String> attributes = new HashMap<String, String>();
         attributes.put("value", component.getValue());
+        attributes.put("lines", new Integer(component.getLines()).toString());
+        attributes.put("gravity", component.getGravity());
 
         addTag(tag, attributes);
     }
-
-    // --------------------
-    // Methods - helper
-    // --------------------
 
     /**
      * Appends a text component
@@ -138,9 +136,16 @@ public class LymboWriter {
     private static void appendTextComponent(String tag, TextComponent component) {
         Map<String, String> attributes = new HashMap<String, String>();
         attributes.put("value", component.getValue());
+        attributes.put("value", component.getValue());
+        attributes.put("lines", new Integer(component.getLines()).toString());
+        attributes.put("gravity", component.getGravity());
 
         addTag(tag, attributes);
     }
+
+    // --------------------
+    // Methods - helper
+    // --------------------
 
     /**
      * Adds a value between two tags
@@ -169,7 +174,9 @@ public class LymboWriter {
         result.append("\n<" + tag);
 
         for (Map.Entry<String, String> e : attributes.entrySet()) {
-            result.append("\n " + e.getKey() + "=\"" + e.getValue() + "\"");
+            if (e.getValue() != null) {
+                result.append("\n " + e.getKey() + "=\"" + e.getValue() + "\"");
+            }
         }
 
         result.append(">");
@@ -193,7 +200,9 @@ public class LymboWriter {
         result.append("\n<" + tag);
 
         for (Map.Entry<String, String> e : attributes.entrySet()) {
-            result.append("\n " + e.getKey() + "=\"" + e.getValue() + "\"");
+            if (e.getValue() != null) {
+                result.append("\n " + e.getKey() + "=\"" + e.getValue() + "\"");
+            }
         }
 
         result.append(" />");

@@ -7,17 +7,21 @@
     android:id="@+id/container">
 
     <LinearLayout
-        android:id="@+id/llBackground"
+        android:id="@+id/llSVG"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-    </LinearLayout>
+        android:orientation="horizontal" />
+
+    <LinearLayout
+        android:id="@+id/llLogo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" />
 
     <LinearLayout
         android:id="@+id/llText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom"
         android:orientation="horizontal">
 
         <de.interoberlin.lymbo.view.controls.RobotoTextView

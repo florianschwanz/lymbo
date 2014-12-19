@@ -17,6 +17,7 @@ import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.activities.LymbosActivity;
+import de.interoberlin.mate.lib.util.Toaster;
 
 public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
     Context c;
@@ -77,28 +78,28 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         ivDiscard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LymbosActivity.uiToast("Not yet implemented");
+                Toaster.add("Not yet implemented");
             }
         });
 
         ivEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LymbosActivity.uiToast("Not yet implemented");
+                Toaster.add("Not yet implemented");
             }
         });
 
         ivShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LymbosActivity.uiToast("Not yet implemented");
+                Toaster.add("Not yet implemented");
             }
         });
 
         ivUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LymbosActivity.uiToast("Not yet implemented");
+                Toaster.add("Not yet implemented");
             }
         });
 
@@ -121,7 +122,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         ivLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LymbosActivity.uiToast("Not yet implemented");
+                Toaster.add("Not yet implemented");
             }
         });
 

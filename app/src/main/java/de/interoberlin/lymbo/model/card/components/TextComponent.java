@@ -14,8 +14,8 @@ import de.interoberlin.lymbo.model.Displayable;
 
 public class TextComponent implements Displayable {
     private String value = "";
-    private int lines;
-    private String gravity;
+    private int lines = 1;
+    private String gravity = "left";
 
     // --------------------
     // Constructors

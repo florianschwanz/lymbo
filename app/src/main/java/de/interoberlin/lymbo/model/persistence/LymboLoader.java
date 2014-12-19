@@ -4,6 +4,8 @@ import android.content.Context;
 
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -16,12 +18,12 @@ public class LymboLoader {
      * Loads a Lymbo object from a given file inside assets
      *
      * @param c
-     * @param svgPath
+     * @param lymboPath
      * @return
      */
-    public static Lymbo getLymboFromAsset(Context c, String svgPath) {
+    public static Lymbo getLymboFromAsset(Context c, String lymboPath) {
         try {
-            InputStream inputStream = c.getAssets().open(svgPath);
+            InputStream inputStream = c.getAssets().open(lymboPath);
             Lymbo l = getLymboFromFile(inputStream);
             inputStream.close();
             return l;
