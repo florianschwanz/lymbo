@@ -106,16 +106,10 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         ivHint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*
-                DisplayDialogFragment displayDialogFragment = new DisplayDialogFragment();
-                Bundle b = new Bundle();
-                b.putCharSequence("type", EDialogType.HINT.toString());
-                b.putCharSequence("title", a.getResources().getString(R.string.hint));
-                b.putCharSequence("message", lymbo.getHint());
-
-                displayDialogFragment.setArguments(b);
-                displayDialogFragment.show(a.getFragmentManager(), "okay");
-                */
+                if (lymbo.getPath() != null)
+                    Toaster.add(lymbo.getPath());
+                else
+                    Toaster.add("lymbo stack from assets");
             }
         });
 

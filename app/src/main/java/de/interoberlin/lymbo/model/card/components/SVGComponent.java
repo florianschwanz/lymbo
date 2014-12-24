@@ -62,6 +62,11 @@ public class SVGComponent implements Displayable {
         return llSVGComponent;
     }
 
+    @Override
+    public View getEditableView(Context c, final Activity a, ViewGroup parent) {
+        return new View(c);
+    }
+
     public void resume() {
         if (panel != null) {
             panel.resume();

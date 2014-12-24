@@ -26,6 +26,11 @@ public class ImageComponent implements Displayable {
         return null;
     }
 
+    @Override
+    public View getEditableView(Context c, final Activity a, ViewGroup parent) {
+        return new View(c);
+    }
+
     // --------------------
     // Getters / Setters
     // --------------------

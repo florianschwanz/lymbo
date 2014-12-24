@@ -1,4 +1,8 @@
 <resources>
+    <dimen name="list_text_size">16sp</dimen>
+    <dimen name="list_item_height">48dip</dimen>
+
+
     <dimen name="min_card_height">80dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->

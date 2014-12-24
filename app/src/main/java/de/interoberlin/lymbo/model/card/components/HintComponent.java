@@ -26,6 +26,11 @@ public class HintComponent implements Displayable {
         return new View(c);
     }
 
+    @Override
+    public View getEditableView(Context c, final Activity a, ViewGroup parent) {
+        return new View(c);
+    }
+
     // --------------------
     // Getters / Setters
     // --------------------

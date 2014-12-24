@@ -2,6 +2,7 @@ package de.interoberlin.lymbo.view.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.Gravity;
@@ -17,11 +18,12 @@ import android.widget.RelativeLayout;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.CardsController;
+import de.interoberlin.lymbo.controller.ComponentsController;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.components.HintComponent;
-import de.interoberlin.lymbo.model.card.components.SVGComponent;
+import de.interoberlin.lymbo.view.activities.CardsActivity;
+import de.interoberlin.lymbo.view.activities.EditCardActivity;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
 import de.interoberlin.mate.lib.util.Toaster;
@@ -29,6 +31,9 @@ import de.interoberlin.mate.lib.util.Toaster;
 public class CardsListAdapter extends ArrayAdapter<Card> {
     Context c;
     Activity a;
+
+    // Controllers
+    ComponentsController componentsController = ComponentsController.getInstance();
 
     // --------------------
     // Constructors
@@ -63,7 +68,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         final LinearLayout llComponentsFront = (LinearLayout) cv.findViewById(R.id.llComponentsFront);
         final LinearLayout llBottomFront = (LinearLayout) cv.findViewById(R.id.llBottomFront);
         final ImageView ivFlipFront = (ImageView) cv.findViewById(R.id.ivFlipFront);
-        final ImageView ivHint = (ImageView) cv.findViewById(R.id.ivHint);
+        final ImageView ivEditFront = (ImageView) cv.findViewById(R.id.ivEditFront);
+        final ImageView ivHintFront = (ImageView) cv.findViewById(R.id.ivHint);
 
         // Load back views
         final LinearLayout llComponentsBack = (LinearLayout) cv.findViewById(R.id.llComponentsBack);
@@ -101,7 +107,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
         if (hint != null) {
             final String hintText = hint;
-            ivHint.setOnClickListener(new View.OnClickListener() {
+            ivHintFront.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DisplayDialogFragment displayDialogFragment = new DisplayDialogFragment();
@@ -112,11 +118,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
                     displayDialogFragment.setArguments(b);
                     displayDialogFragment.show(a.getFragmentManager(), "okay");
-
                 }
             });
         } else {
-            remove(llBottomFront);
+            remove(ivHintFront);
         }
 
         remove(llBottomBack);
@@ -124,6 +129,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         // Default visibility : front
         front.setVisibility(View.VISIBLE);
         back.setVisibility(View.INVISIBLE);
+
+        // Add actions
 
         front.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,21 +150,16 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             }
         });
 
-        return cv;
-    }
-
-    public void resume() {
-        for (Card card : CardsController.getCards()) {
-            for (Displayable d : card.getFront().getComponents()) {
-                if (d instanceof SVGComponent) {
-                    ((SVGComponent) d).resume();
-                }
+        ivEditFront.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                componentsController.setCard(card);
+                Intent openStartingPoint = new Intent(((CardsActivity) c), EditCardActivity.class);
+                ((CardsActivity) c).startActivity(openStartingPoint);
             }
-        }
-    }
+        });
 
-    public void pause() {
-
+        return cv;
     }
 
     private void remove(View v) {

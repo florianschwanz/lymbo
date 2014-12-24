@@ -6,11 +6,17 @@
 			<title
 			    value="te amo"
 			    gravity="center" />
+			<title
+			    value="y tu"
+			    gravity="center" />
 		</front>
 		<back>
             <title
                 value="ich mag dich"
                 gravity="center" />
+                            <title
+                                value="und du?"
+                                gravity="center" />
 		</back>
 	</card>
 </lymbo>

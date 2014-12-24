@@ -16,6 +16,7 @@ import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
+import de.interoberlin.lymbo.model.card.components.ChoiceType;
 import de.interoberlin.lymbo.model.card.components.HintComponent;
 import de.interoberlin.lymbo.model.card.components.ImageComponent;
 import de.interoberlin.lymbo.model.card.components.SVGComponent;
@@ -386,6 +387,9 @@ public class LymboParser {
         // Create element
         ChoiceComponent component = new ChoiceComponent();
 
+        // Read attributes
+        String type = parser.getAttributeValue(null, "type");
+
         // Read sub elements
         List<Answer> answers = new ArrayList<Answer>();
 
@@ -403,6 +407,8 @@ public class LymboParser {
         }
 
         // Fill element
+        if (type != null)
+            component.setChoiceType(parseChoiceType(type));
         if (!answers.isEmpty())
             component.setAnswers(answers);
 
@@ -475,6 +481,22 @@ public class LymboParser {
             component.setSVG(svg);
 
         return component;
+    }
+
+    /**
+     * Returns a choice type
+     *
+     * @param type
+     * @return
+     */
+    private ChoiceType parseChoiceType(String type) {
+        if (type.equalsIgnoreCase("multiple")) {
+            return ChoiceType.MULTIPLE;
+        } else if (type.equalsIgnoreCase("single")) {
+            return ChoiceType.SINGLE;
+        } else {
+            return null;
+        }
     }
 
     /**

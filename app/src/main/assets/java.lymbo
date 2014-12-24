@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lymbo
+ title="Java OCA"
+ subtitle="Test questions for Java OCA test"
+ hint="Test questions for Java OCA test"
+ image=""
+ author="Flo">
+	<card>
+        <front>
+			<title
+				value="1 Understand packages" />
+			<text
+				value="Which statement is not true about package statements" />
+			<hint
+				value="Consider the package names java.util and javax.swing" />
+			<choice>
+				<answer
+					value="A Package statements are optional"
+					correct="false" />
+				<answer
+					value="B Package statements are limited to one per source file"
+					correct="false"/>
+				<answer
+					value="C Standard Java coding convention for package names reverses the domain name of the organization or group creating package"
+					correct="false" />
+				<answer
+					value="D The package names beginning with javas.* and javaw.* are reserved"
+					correct="true" />
+			</choice>
+        </front>
+        <back>
+            <result />
+            <text
+				value="D. D is correct because the statement is false. Package names beginning with javas.* and javaw.* are NOT reserved and can be freely used. However, the package names beginning with java.* and javax.* ARE reserved. A, B and C are incorrect answers because they are all true statements and the question was looking for the false statement." />
+        </back>
+	</card>
+</lymbo>

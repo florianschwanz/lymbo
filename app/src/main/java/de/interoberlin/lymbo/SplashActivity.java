@@ -63,7 +63,7 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // Register
+        // Register on toaster
         Toaster.register(this, context);
 
         // Get activity and context
@@ -121,11 +121,29 @@ public class SplashActivity extends Activity {
                     e.printStackTrace();
                 }
 
-                while (lymbosController.getLymboFiles().isEmpty()) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        lymbosController.setLoading(true);
+                        try {
+                            sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        lymbosController.load();
+                    }
+                }).start();
+
+                System.out.println("lymbosController.isLoading() " + lymbosController.isLoading());
+
+                while (lymbosController.isLoading()) {
+
+                    System.out.println("lymbosController.isLoading() " + lymbosController.isLoading());
+
                     uiMessage(splashController.getRandomMessage());
 
                     try {
-                        sleep(5000);
+                        sleep(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -213,8 +231,6 @@ public class SplashActivity extends Activity {
                         if (e instanceof SVGRect) {
                             float x = Simulation.getRawX() * (e.getzIndex() - svg.getMaxZindex() / 2) * -1.2F;
                             float y = Simulation.getRawY() * (e.getzIndex() - svg.getMaxZindex() / 2) * -1.2F;
-
-                            System.out.println("X " + Simulation.getRawX() + " Y " + Simulation.getRawY());
 
                             e.getAnimationSets().clear();
                             e.setAnimationTransform(new SVGTransformTranslate(x, y));

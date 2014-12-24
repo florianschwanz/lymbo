@@ -107,6 +107,11 @@ public class Lymbo implements Displayable {
         return v;
     }
 
+    @Override
+    public View getEditableView(Context c, final Activity a, ViewGroup parent) {
+        return new View(c);
+    }
+
     // -------------------------
     // Getters / Setters
     // -------------------------

@@ -16,6 +16,7 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
+import de.interoberlin.mate.lib.util.Toaster;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 
@@ -24,8 +25,8 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
     LymbosController lymbosController = LymbosController.getInstance();
 
     // Context and Activity
-    private static Context c;
-    private static Activity a;
+    private static Context context;
+    private static Activity activity;
 
     // Views
     private DrawerLayout drawer;
@@ -42,12 +43,15 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(false);
 
+        // Register on toaster
+        Toaster.register(this, context);
+
         drawer = (DrawerLayout) findViewById(R.id.dl);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
 
         // Get activity and context for further use
-        a = this;
-        c = getApplicationContext();
+        activity = this;
+        context = getApplicationContext();
 
         SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
         slv.setAdapter(new LymbosListAdapter(this, R.layout.stack, lymbosController.getLymbos()));
@@ -84,6 +88,11 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
                 Bundle b = new Bundle();
                 b.putString("flavor", "interoberlin");
                 i.putExtras(b);
+                startActivity(i);
+                break;
+            }
+            case R.id.menu_add: {
+                Intent i = new Intent(LymbosActivity.this, EditCardActivity.class);
                 startActivity(i);
                 break;
             }
@@ -165,7 +174,7 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
     }
 
     public void uiRefresh() {
-        a.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 clear();

@@ -4,18 +4,16 @@
     xmlns:roboto="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
     android:gravity="center_vertical"
     android:paddingLeft="8dp"
     android:paddingRight="8dp">
 
-    <EditText
-        android:id="@+id/etText"
-        style="@style/CardText"
-        android:ellipsize="end"
-        android:maxLines="4"
+    <TextView
+        android:id="@+id/etTitle"
+        style="@style/CardTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="22sp"
         android:layout_weight="0.50"
-        android:text="@string/text" />
+        android:text="@string/title" />
 </LinearLayout>

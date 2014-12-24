@@ -17,6 +17,7 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.Displayable;
 
 public class ChoiceComponent implements Displayable {
+    private ChoiceType type = ChoiceType.MULTIPLE;
     private List<Answer> answers = new ArrayList<Answer>();
 
     // --------------------
@@ -57,9 +58,22 @@ public class ChoiceComponent implements Displayable {
         return tlChoices;
     }
 
+    @Override
+    public View getEditableView(Context c, final Activity a, ViewGroup parent) {
+        return new View(c);
+    }
+
     // --------------------
     // Getters / Setters
     // --------------------
+
+    public ChoiceType getChoiceType() {
+        return type;
+    }
+
+    public void setChoiceType(ChoiceType type) {
+        this.type = type;
+    }
 
     public List<Answer> getAnswers() {
         return answers;

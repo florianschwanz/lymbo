@@ -4,21 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.fortysevendeg.swipelistview.SwipeListView;
 
-import java.io.File;
-
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.LymbosController;
-import de.interoberlin.lymbo.model.persistence.LymboWriter;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
+import de.interoberlin.mate.lib.util.Toaster;
 
 public class CardsActivity extends BaseActivity implements DisplayDialogFragment.OnCompleteListener {
     // Controllers
@@ -26,16 +23,14 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     LymbosController lymbosController = LymbosController.getInstance();
 
     // Context and Activity
-    private static Context c;
-    private static Activity a;
+    private static Context context;
+    private static Activity activity;
 
     // Views
     private DrawerLayout drawer;
-    // private static RecyclerView rv;
     private SwipeListView slv;
 
     private CardsListAdapter cardsAdapter;
-    private RecyclerView.LayoutManager lm;
 
     // --------------------
     // Methods - Lifecycle
@@ -46,16 +41,19 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
         super.onCreate(savedInstanceState);
         setActionBarIcon(R.drawable.ic_ab_drawer);
 
+        // Register on toaster
+        Toaster.register(this, context);
+
         drawer = (DrawerLayout) findViewById(R.id.dl);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
 
         // Get activity and context for further use
-        a = this;
-        c = getApplicationContext();
+        activity = this;
+        context = getApplicationContext();
 
-        SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
+        // Get list view and add adapter
+        slv = (SwipeListView) findViewById(R.id.slv);
         cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
-
         slv.setAdapter(cardsAdapter);
         slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
     }
@@ -63,13 +61,11 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     public void onResume() {
         super.onResume();
         clear();
-        cardsAdapter.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        cardsAdapter.pause();
     }
 
     @Override
@@ -86,8 +82,12 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_save: {
-                LymboWriter.writeXml(cardsController.getLymbo(), new File("/storage/emulated/0/Interoberlin/lymbo/saved.lymbo"));
+            case R.id.menu_add: {
+                cardsController.addCard();
+                cardsController.save();
+                cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
+                slv.setAdapter(cardsAdapter);
+
                 break;
             }
         }
@@ -128,7 +128,7 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     }
 
     public void uiRefresh() {
-        a.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 clear();

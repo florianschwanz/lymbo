@@ -26,6 +26,7 @@ public class LymbosController extends Application {
     private static List<Lymbo> lymbos;
 
     private static final String LYMBO_FILE_EXTENSION = ".lymbo";
+    private boolean loading = false;
 
     private static LymbosController instance;
 
@@ -34,6 +35,7 @@ public class LymbosController extends Application {
     // --------------------
 
     public LymbosController() {
+        init();
     }
 
     public static LymbosController getInstance() {
@@ -52,8 +54,6 @@ public class LymbosController extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
-
-        init();
     }
 
     // --------------------
@@ -64,12 +64,17 @@ public class LymbosController extends Application {
         return context;
     }
 
-    private void init() {
-        if (lymbos == null) {
-            findLymboFiles();
-            getLymbosFromFiles();
-            getLymbosFromAssets();
-        }
+    public void init() {
+        lymbos = new ArrayList<>();
+        lymboFiles = new ArrayList<>();
+    }
+
+    public void load() {
+        loading = true;
+        getLymbosFromAssets();
+        findLymboFiles();
+        getLymbosFromFiles();
+        loading = false;
     }
 
     /**
@@ -78,11 +83,6 @@ public class LymbosController extends Application {
     private void findLymboFiles() {
         Log.trace("LymboController.findLymboFiles()");
         // lymboFiles = findFiles(LYMBO_FILE_EXTENSION);
-
-        lymboFiles = new ArrayList<File>();
-        lymboFiles.add(new File("/storage/emulated/0/Interoberlin/lymbo/huhu.lymbo"));
-        lymboFiles.add(new File("/storage/emulated/0/Interoberlin/lymbo/saved.lymbo"));
-        // lymboFiles.add(new File("/storage/emulated/0/Interoberlin/lymbo/java_oca2.lymbo"));
     }
 
     /**
@@ -100,8 +100,6 @@ public class LymbosController extends Application {
      * Converts lymbo files into lymbo objects
      */
     private void getLymbosFromFiles() {
-        lymbos = new ArrayList<Lymbo>();
-
         // Add lymbos from file system
         for (File f : lymboFiles) {
             try {
@@ -116,9 +114,8 @@ public class LymbosController extends Application {
     }
 
     private void getLymbosFromAssets() {
-        lymbos.add(LymboLoader.getLymboFromAsset(context, "learn.lymbo"));
-        lymbos.add(LymboLoader.getLymboFromAsset(context, "quiz.lymbo"));
-        lymbos.add(LymboLoader.getLymboFromAsset(context, "svg.lymbo"));
+        // lymbos.add(LymboLoader.getLymboFromAsset(context, "learn.lymbo"));
+        lymbos.add(LymboLoader.getLymboFromAsset(context, "java.lymbo"));
     }
 
     public boolean checkStorage() {
@@ -161,5 +158,13 @@ public class LymbosController extends Application {
 
     public void setLymbos(List<Lymbo> lymbos) {
         this.lymbos = lymbos;
+    }
+
+    public boolean isLoading() {
+        return loading;
+    }
+
+    public void setLoading(boolean loading) {
+        this.loading = loading;
     }
 }

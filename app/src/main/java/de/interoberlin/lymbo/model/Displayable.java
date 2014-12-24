@@ -8,4 +8,6 @@ import android.view.ViewGroup;
 public interface Displayable {
 
     public View getView(Context c, final Activity a, ViewGroup parent);
+
+    public View getEditableView(Context c, final Activity a, ViewGroup parent);
 }

@@ -1,11 +1,14 @@
 package de.interoberlin.lymbo.controller;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.Side;
+import de.interoberlin.lymbo.model.persistence.LymboWriter;
 
 public class CardsController {
     private static Lymbo lymbo;
@@ -42,6 +45,27 @@ public class CardsController {
             cards = lymbo.getCards();
         }
     }
+
+    /**
+     * Adds a card with an empty front and an empty back
+     */
+    public void addCard() {
+        Card card = new Card();
+        card.setFront(new Side());
+        card.setBack(new Side());
+        cards.add(card);
+    }
+
+    /**
+     * Writes lymbo object into file
+     * (only if lymbo is on file system)
+     */
+    public void save() {
+        if (lymbo.getPath() != null) {
+            LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
+        }
+    }
+
 
     // --------------------
     // Getters / Setters

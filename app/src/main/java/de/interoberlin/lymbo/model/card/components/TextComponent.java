@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -47,6 +48,25 @@ public class TextComponent implements Displayable {
             tvText.setGravity(Gravity.CENTER);
         if (gravity.equalsIgnoreCase("right"))
             tvText.setGravity(Gravity.RIGHT);
+
+        return llTextComponent;
+    }
+
+    @Override
+    public View getEditableView(Context c, Activity a, ViewGroup parent) {
+        LayoutInflater li = LayoutInflater.from(c);
+        LinearLayout llTextComponent = (LinearLayout) li.inflate(R.layout.component_text_edit, null);
+
+        EditText etTitle = (EditText) llTextComponent.findViewById(R.id.etText);
+        etTitle.setText(value);
+
+        etTitle.setLines(lines);
+        if (gravity.equalsIgnoreCase("left"))
+            etTitle.setGravity(Gravity.LEFT);
+        if (gravity.equalsIgnoreCase("center"))
+            etTitle.setGravity(Gravity.CENTER);
+        if (gravity.equalsIgnoreCase("right"))
+            etTitle.setGravity(Gravity.RIGHT);
 
         return llTextComponent;
     }

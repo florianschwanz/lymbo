@@ -32,6 +32,6 @@
             swipe:swipeOffsetRight="0dp"
             android:layout_below="@id/toolbar"
             android:padding="10dp" />
-        />
+
     </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>

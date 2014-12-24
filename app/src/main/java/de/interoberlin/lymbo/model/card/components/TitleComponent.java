@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.Displayable;
+import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class TitleComponent implements Displayable {
     private String value = "";
@@ -37,18 +38,37 @@ public class TitleComponent implements Displayable {
         LayoutInflater li = LayoutInflater.from(c);
         LinearLayout llTitleComponent = (LinearLayout) li.inflate(R.layout.component_title, null);
 
-        TextView tvTitle = (TextView) llTitleComponent.findViewById(R.id.tvTitle);
-        tvTitle.setText(value);
+        RobotoTextView rtvTitle = (RobotoTextView) llTitleComponent.findViewById(R.id.tvTitle);
+        rtvTitle.setText(value);
 
-        tvTitle.setLines(lines);
+        rtvTitle.setLines(lines);
         if (gravity.equalsIgnoreCase("left"))
-            tvTitle.setGravity(Gravity.LEFT);
+            rtvTitle.setGravity(Gravity.LEFT);
         if (gravity.equalsIgnoreCase("center"))
-            tvTitle.setGravity(Gravity.CENTER);
+            rtvTitle.setGravity(Gravity.CENTER);
         if (gravity.equalsIgnoreCase("right"))
-            tvTitle.setGravity(Gravity.RIGHT);
+            rtvTitle.setGravity(Gravity.RIGHT);
 
         return llTitleComponent;
+    }
+
+    @Override
+    public View getEditableView(Context c, Activity a, ViewGroup parent) {
+        LayoutInflater li = LayoutInflater.from(c);
+        LinearLayout llTitleComponent = (LinearLayout) li.inflate(R.layout.component_title_edit, null);
+
+        TextView etTitle = (TextView) llTitleComponent.findViewById(R.id.etTitle);
+        etTitle.setText(value);
+
+        etTitle.setLines(lines);
+        if (gravity.equalsIgnoreCase("left"))
+            etTitle.setGravity(Gravity.LEFT);
+        if (gravity.equalsIgnoreCase("center"))
+            etTitle.setGravity(Gravity.CENTER);
+        if (gravity.equalsIgnoreCase("right"))
+            etTitle.setGravity(Gravity.RIGHT);
+
+        return etTitle;
     }
 
     // --------------------
