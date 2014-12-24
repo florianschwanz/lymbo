@@ -19,6 +19,7 @@ import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 import de.interoberlin.lymbo.model.card.components.ChoiceType;
 import de.interoberlin.lymbo.model.card.components.HintComponent;
 import de.interoberlin.lymbo.model.card.components.ImageComponent;
+import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.model.card.components.SVGComponent;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
@@ -219,6 +220,8 @@ public class LymboParser {
                 components.add(parseSVGComponent(parser, color));
             } else if (name.equals("image")) {
                 components.add(parseImageComponent(parser));
+            } else if (name.equals("result")) {
+                components.add(parseResultComponent(parser));
             } else {
                 skip(parser);
             }
@@ -340,7 +343,36 @@ public class LymboParser {
     }
 
     /**
-     * Returns am image component
+     * Returns a result component
+     *
+     * @param parser the XmlPullParser
+     * @return xmlSide
+     * @throws org.xmlpull.v1.XmlPullParserException
+     * @throws java.io.IOException
+     */
+    private ResultComponent parseResultComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.trace("parseResultComponent()");
+        parser.require(XmlPullParser.START_TAG, null, "result");
+
+        // Create element
+        ResultComponent component = new ResultComponent();
+
+        // Read attributes : nothing to do here
+
+        // Read sub elements
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+        }
+
+        // Fill element
+
+        return component;
+    }
+
+    /**
+     * Returns a result component
      *
      * @param parser the XmlPullParser
      * @return xmlSide

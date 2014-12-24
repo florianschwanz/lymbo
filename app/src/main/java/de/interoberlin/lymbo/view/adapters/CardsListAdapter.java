@@ -21,6 +21,7 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.ComponentsController;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
+import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.HintComponent;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.activities.EditCardActivity;
@@ -58,7 +59,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     // --------------------
 
     @Override
-    public View getView(int position, View v, ViewGroup parent) {
+    public View getView(final int position, View v, ViewGroup parent) {
         LayoutInflater vi;
         vi = LayoutInflater.from(getContext());
         CardView cv = (CardView) vi.inflate(R.layout.card, null);
@@ -105,6 +106,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             }
         }
 
+        // Handle hint
         if (hint != null) {
             final String hintText = hint;
             ivHintFront.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +140,28 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 Toaster.add("Clicked on front");
                 front.setVisibility(View.INVISIBLE);
                 back.setVisibility(View.VISIBLE);
+
+                // Handle quiz card
+                if (getItem(position).getFront().containsChoice() && getItem(position).getBack().containsResult()) {
+                    // Default result : CORRECT
+                    getItem(position).getBack().getFirstResultComponent().setValue("CORRECT");
+
+                    for (Answer a : getItem(position).getFront().getFirstChoiceComponent().getAnswers()) {
+                        if (a.isCorrect() != a.isSelected()) {
+                            // At least on answer is wrong : WRONG
+                            getItem(position).getBack().getFirstResultComponent().setValue("WRONG");
+                            break;
+                        }
+                    }
+
+                    // Re-draw back components
+                    llComponentsBack.removeAllViews();
+                    if (getItem(position).getBack() != null) {
+                        for (Displayable d : getItem(position).getBack().getComponents()) {
+                            llComponentsBack.addView(d.getView(c, a, llComponentsBack));
+                        }
+                    }
+                }
             }
         });
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -37,11 +38,18 @@ public class ChoiceComponent implements Displayable {
         LayoutInflater li = LayoutInflater.from(c);
         TableLayout tlChoices = (TableLayout) li.inflate(R.layout.component_choice, null);
 
-        for (Answer answer : answers) {
+        for (final Answer answer : answers) {
             LinearLayout llAnswer = (LinearLayout) li.inflate(R.layout.component_answer, null);
 
             final CheckBox cb = (CheckBox) llAnswer.findViewById(R.id.cb);
             final TextView tvText = (TextView) llAnswer.findViewById(R.id.tvText);
+
+            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    answer.setSelected(b);
+                }
+            });
 
             tvText.setText(answer.getValue());
             tvText.setOnClickListener(new View.OnClickListener() {

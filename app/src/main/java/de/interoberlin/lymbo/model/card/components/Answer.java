@@ -3,6 +3,7 @@ package de.interoberlin.lymbo.model.card.components;
 public class Answer {
     private String value = "";
     private boolean correct = false;
+    private boolean selected = false;
 
     // --------------------
     // Constructors
@@ -33,5 +34,13 @@ public class Answer {
 
     public void setCorrect(boolean correct) {
         this.correct = correct;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

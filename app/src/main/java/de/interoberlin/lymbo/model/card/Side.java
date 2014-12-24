@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.model.Displayable;
+import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
+import de.interoberlin.lymbo.model.card.components.ResultComponent;
 
 public class Side {
     private String color = "#FFFFFF";
@@ -14,6 +16,50 @@ public class Side {
     // -------------------------
 
     public Side() {
+    }
+
+    // -------------------------
+    // Methods
+    // -------------------------
+
+    public boolean containsResult() {
+        for (Displayable d : getComponents()) {
+            if (d instanceof ResultComponent) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean containsChoice() {
+        for (Displayable d : getComponents()) {
+            if (d instanceof ChoiceComponent) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public ResultComponent getFirstResultComponent() {
+        for (Displayable d : getComponents()) {
+            if (d instanceof ResultComponent) {
+                return (ResultComponent) d;
+            }
+        }
+
+        return null;
+    }
+
+    public ChoiceComponent getFirstChoiceComponent() {
+        for (Displayable d : getComponents()) {
+            if (d instanceof ChoiceComponent) {
+                return (ChoiceComponent) d;
+            }
+        }
+
+        return null;
     }
 
     // -------------------------
