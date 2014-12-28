@@ -6,6 +6,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -120,6 +121,14 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             }
         });
 
+        if (lymbo.getPath() == null) {
+            remove(ivDiscard);
+        }
+
         return cv;
+    }
+
+    private void remove(View v) {
+        ((ViewManager) v.getParent()).removeView(v);
     }
 }

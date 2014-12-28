@@ -16,13 +16,15 @@ import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
-import de.interoberlin.lymbo.model.card.components.ChoiceType;
 import de.interoberlin.lymbo.model.card.components.HintComponent;
 import de.interoberlin.lymbo.model.card.components.ImageComponent;
 import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.model.card.components.SVGComponent;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
+import de.interoberlin.lymbo.model.card.enums.ChoiceType;
+import de.interoberlin.lymbo.model.card.enums.EGravity;
+import de.interoberlin.lymbo.model.card.enums.EStyle;
 import de.interoberlin.mate.lib.model.Log;
 import de.interoberlin.sauvignon.lib.controller.parser.SvgParser;
 import de.interoberlin.sauvignon.lib.model.svg.SVG;
@@ -52,7 +54,7 @@ public class LymboParser {
     /**
      * Parses xml file an returns a map
      *
-     * @param is
+     * @param is input stream representing lymbo file
      * @return xmlLymbo
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
@@ -94,7 +96,7 @@ public class LymboParser {
         String author = parser.getAttributeValue(null, "author");
 
         // Read sub elements
-        List<Card> cards = new ArrayList<Card>();
+        List<Card> cards = new ArrayList<>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -160,12 +162,15 @@ public class LymboParser {
 
             name = parser.getName();
 
-            if (name.equals("front")) {
-                front = parseSide(parser, "front");
-            } else if (name.equals("back")) {
-                back = parseSide(parser, "back");
-            } else {
-                skip(parser);
+            switch (name) {
+                case "front":
+                    front = parseSide(parser, "front");
+                    break;
+                case "back":
+                    back = parseSide(parser, "back");
+                    break;
+                default:
+                    skip(parser);
             }
         }
 
@@ -198,7 +203,7 @@ public class LymboParser {
         String color = parser.getAttributeValue(null, "color");
 
         // Read sub elements
-        List<Displayable> components = new ArrayList<Displayable>();
+        List<Displayable> components = new ArrayList<>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -208,22 +213,30 @@ public class LymboParser {
             name = parser.getName();
             Log.trace("name : " + name);
 
-            if (name.equals("title")) {
-                components.add(parseTitleComponent(parser));
-            } else if (name.equals("text")) {
-                components.add(parseTextComponent(parser));
-            } else if (name.equals("hint")) {
-                components.add(parseHintComponent(parser));
-            } else if (name.equals("choice")) {
-                components.add(parseChoiceComponent(parser));
-            } else if (name.equals("svg")) {
-                components.add(parseSVGComponent(parser, color));
-            } else if (name.equals("image")) {
-                components.add(parseImageComponent(parser));
-            } else if (name.equals("result")) {
-                components.add(parseResultComponent(parser));
-            } else {
-                skip(parser);
+            switch (name) {
+                case "title":
+                    components.add(parseTitleComponent(parser));
+                    break;
+                case "text":
+                    components.add(parseTextComponent(parser));
+                    break;
+                case "hint":
+                    components.add(parseHintComponent(parser));
+                    break;
+                case "choice":
+                    components.add(parseChoiceComponent(parser));
+                    break;
+                case "svg":
+                    components.add(parseSVGComponent(parser, color));
+                    break;
+                case "image":
+                    components.add(parseImageComponent(parser));
+                    break;
+                case "result":
+                    components.add(parseResultComponent(parser));
+                    break;
+                default:
+                    skip(parser);
             }
         }
 
@@ -255,19 +268,22 @@ public class LymboParser {
         String gravity = parser.getAttributeValue(null, "gravity");
 
         // Read sub elements
+        parser.next();
+        /*
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
         }
+        */
 
         // Fill element
         if (value != null)
             component.setValue(value);
         if (lines != null)
-            component.setLines(Integer.parseInt(lines));
+            component.setLines(parseLines(lines));
         if (gravity != null)
-            component.setGravity(gravity);
+            component.setGravity(parseGravity(gravity));
 
         return component;
     }
@@ -291,21 +307,27 @@ public class LymboParser {
         String value = parser.getAttributeValue(null, "value");
         String lines = parser.getAttributeValue(null, "lines");
         String gravity = parser.getAttributeValue(null, "gravity");
+        String style = parser.getAttributeValue(null, "style");
 
         // Read sub elements
+        parser.next();
+        /*
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
         }
+        */
 
         // Fill element
         if (value != null)
             component.setValue(value);
         if (lines != null)
-            component.setLines(Integer.parseInt(lines));
+            component.setLines(parseLines(lines));
         if (gravity != null)
-            component.setGravity(gravity);
+            component.setGravity(parseGravity(gravity));
+        if (style != null)
+            component.setStyle(parseStyle(style));
 
         return component;
     }
@@ -329,11 +351,14 @@ public class LymboParser {
         String value = parser.getAttributeValue(null, "value");
 
         // Read sub elements
+        parser.next();
+        /*
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
         }
+        */
 
         // Fill element
         if (value != null)
@@ -360,11 +385,14 @@ public class LymboParser {
         // Read attributes : nothing to do here
 
         // Read sub elements
+        parser.next();
+        /*
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
         }
+        */
 
         // Fill element
 
@@ -390,11 +418,14 @@ public class LymboParser {
         String image = parser.getAttributeValue(null, "image");
 
         // Read sub elements
+        parser.next();
+        /*
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
         }
+        */
 
         // Fill element
         if (image != null)
@@ -423,7 +454,7 @@ public class LymboParser {
         String type = parser.getAttributeValue(null, "type");
 
         // Read sub elements
-        List<Answer> answers = new ArrayList<Answer>();
+        List<Answer> answers = new ArrayList<>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -467,11 +498,14 @@ public class LymboParser {
         String correct = parser.getAttributeValue(null, "correct");
 
         // Read sub elements
+        parser.next();
+        /*
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
         }
+        */
 
         // Fill element
         if (value != null)
@@ -511,6 +545,8 @@ public class LymboParser {
         // Fill element
         if (svg != null)
             component.setSVG(svg);
+        if (color != null)
+            component.setColor(color);
 
         return component;
     }
@@ -518,8 +554,8 @@ public class LymboParser {
     /**
      * Returns a choice type
      *
-     * @param type
-     * @return
+     * @param type string value representing choice type
+     * @return choice type
      */
     private ChoiceType parseChoiceType(String type) {
         if (type.equalsIgnoreCase("multiple")) {
@@ -530,6 +566,54 @@ public class LymboParser {
             return null;
         }
     }
+
+    /**
+     * Returns a line count
+     *
+     * @param lines string value representing line count
+     * @return line count
+     */
+    private int parseLines(String lines) {
+        try {
+            return Integer.parseInt(lines) > 0 ? Integer.parseInt(lines) : 0;
+        } catch (NumberFormatException nfe) {
+            Log.error(nfe.toString());
+            return 0;
+        }
+    }
+
+    /**
+     * Returns a gravity
+     *
+     * @param gravity string value representing gravity
+     * @return gravity
+     */
+    private EGravity parseGravity(String gravity) {
+        if (gravity.equalsIgnoreCase("left")) {
+            return EGravity.LEFT;
+        } else if (gravity.equalsIgnoreCase("center")) {
+            return EGravity.CENTER;
+        } else if (gravity.equalsIgnoreCase("right")) {
+            return EGravity.RIGHT;
+        } else {
+            return EGravity.LEFT;
+        }
+    }
+
+    /**
+     * Returns a text style
+     *
+     * @param style string value representing style
+     * @return text style
+     */
+    private EStyle parseStyle(String style) {
+        if (style.equalsIgnoreCase("code")) {
+            return EStyle.CODE;
+        } else {
+            return EStyle.NORMAL;
+        }
+    }
+
 
     /**
      * Skips a tag that does not fit

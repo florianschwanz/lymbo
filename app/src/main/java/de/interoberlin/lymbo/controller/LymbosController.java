@@ -115,6 +115,7 @@ public class LymbosController extends Application {
 
     private void getLymbosFromAssets() {
         // lymbos.add(LymboLoader.getLymboFromAsset(context, "learn.lymbo"));
+        lymbos.add(LymboLoader.getLymboFromAsset(context, "demo.lymbo"));
         lymbos.add(LymboLoader.getLymboFromAsset(context, "java.lymbo"));
     }
 

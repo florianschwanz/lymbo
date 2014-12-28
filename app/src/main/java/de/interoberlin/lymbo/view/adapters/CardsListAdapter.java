@@ -22,7 +22,9 @@ import de.interoberlin.lymbo.controller.ComponentsController;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.components.Answer;
+import de.interoberlin.lymbo.model.card.enums.EComponent;
 import de.interoberlin.lymbo.model.card.components.HintComponent;
+import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.activities.EditCardActivity;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
@@ -142,14 +144,14 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 back.setVisibility(View.VISIBLE);
 
                 // Handle quiz card
-                if (getItem(position).getFront().containsChoice() && getItem(position).getBack().containsResult()) {
+                if (getItem(position).getFront().contains(EComponent.CHOICE) && getItem(position).getBack().containsResult()) {
                     // Default result : CORRECT
-                    getItem(position).getBack().getFirstResultComponent().setValue("CORRECT");
+                    ((ResultComponent) getItem(position).getBack().getFirst(EComponent.RESULT)).setValue("CORRECT");
 
                     for (Answer a : getItem(position).getFront().getFirstChoiceComponent().getAnswers()) {
                         if (a.isCorrect() != a.isSelected()) {
                             // At least on answer is wrong : WRONG
-                            getItem(position).getBack().getFirstResultComponent().setValue("WRONG");
+                            ((ResultComponent) getItem(position).getBack().getFirst(EComponent.RESULT)).setValue("WRONG");
                             break;
                         }
                     }

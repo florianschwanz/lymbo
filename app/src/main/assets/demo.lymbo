@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lymbo
+ title="Demo"
+ subtitle="Test questions for Java OCA test"
+ hint="Test questions for Java OCA test"
+ image=""
+ author="Flo">
+	<card>
+        <front>
+			<title
+				value="Code style" />
+            <text
+                value="This is a code sample" />
+			<text
+				value="float x = y + z;"
+				style="code"/>
+        </front>
+        <back>
+        </back>
+	</card>
+</lymbo>

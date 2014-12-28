@@ -16,6 +16,7 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.Displayable;
+import de.interoberlin.lymbo.model.card.enums.ChoiceType;
 
 public class ChoiceComponent implements Displayable {
     private ChoiceType type = ChoiceType.MULTIPLE;

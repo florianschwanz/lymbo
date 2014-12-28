@@ -11,12 +11,13 @@ import android.widget.TextView;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.Displayable;
+import de.interoberlin.lymbo.model.card.enums.EGravity;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class TitleComponent implements Displayable {
     private String value = "";
-    private int lines = 1;
-    private String gravity = "left";
+    private int lines = 0;
+    private EGravity gravity = EGravity.LEFT;
 
     // --------------------
     // Constructors
@@ -38,16 +39,22 @@ public class TitleComponent implements Displayable {
         LayoutInflater li = LayoutInflater.from(c);
         LinearLayout llTitleComponent = (LinearLayout) li.inflate(R.layout.component_title, null);
 
-        RobotoTextView rtvTitle = (RobotoTextView) llTitleComponent.findViewById(R.id.tvTitle);
-        rtvTitle.setText(value);
+        RobotoTextView tvTitle = (RobotoTextView) llTitleComponent.findViewById(R.id.tvTitle);
 
-        rtvTitle.setLines(lines);
-        if (gravity.equalsIgnoreCase("left"))
-            rtvTitle.setGravity(Gravity.LEFT);
-        if (gravity.equalsIgnoreCase("center"))
-            rtvTitle.setGravity(Gravity.CENTER);
-        if (gravity.equalsIgnoreCase("right"))
-            rtvTitle.setGravity(Gravity.RIGHT);
+        // Attribute : value
+        tvTitle.setText(value);
+
+        // Attribute : lines
+        if (lines != 0)
+            tvTitle.setLines(lines);
+
+        // Attribute : gravity
+        if (gravity == EGravity.LEFT)
+            tvTitle.setGravity(Gravity.LEFT);
+        else if (gravity == EGravity.CENTER)
+            tvTitle.setGravity(Gravity.CENTER);
+        else if (gravity == EGravity.RIGHT)
+            tvTitle.setGravity(Gravity.END);
 
         return llTitleComponent;
     }
@@ -58,15 +65,8 @@ public class TitleComponent implements Displayable {
         LinearLayout llTitleComponent = (LinearLayout) li.inflate(R.layout.component_title_edit, null);
 
         TextView etTitle = (TextView) llTitleComponent.findViewById(R.id.etTitle);
-        etTitle.setText(value);
 
-        etTitle.setLines(lines);
-        if (gravity.equalsIgnoreCase("left"))
-            etTitle.setGravity(Gravity.LEFT);
-        if (gravity.equalsIgnoreCase("center"))
-            etTitle.setGravity(Gravity.CENTER);
-        if (gravity.equalsIgnoreCase("right"))
-            etTitle.setGravity(Gravity.RIGHT);
+        etTitle.setText(value);
 
         return etTitle;
     }
@@ -91,11 +91,11 @@ public class TitleComponent implements Displayable {
         this.lines = lines;
     }
 
-    public String getGravity() {
+    public EGravity getGravity() {
         return gravity;
     }
 
-    public void setGravity(String gravity) {
+    public void setGravity(EGravity gravity) {
         this.gravity = gravity;
     }
 }

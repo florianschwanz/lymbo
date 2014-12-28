@@ -122,7 +122,7 @@ public class LymboWriter {
         Map<String, String> attributes = new HashMap<String, String>();
         attributes.put("value", component.getValue());
         attributes.put("lines", new Integer(component.getLines()).toString());
-        attributes.put("gravity", component.getGravity());
+        attributes.put("gravity", component.getGravity().toString());
 
         addTag(tag, attributes);
     }
@@ -138,7 +138,7 @@ public class LymboWriter {
         attributes.put("value", component.getValue());
         attributes.put("value", component.getValue());
         attributes.put("lines", new Integer(component.getLines()).toString());
-        attributes.put("gravity", component.getGravity());
+        attributes.put("gravity", component.getGravity().toString() );
 
         addTag(tag, attributes);
     }

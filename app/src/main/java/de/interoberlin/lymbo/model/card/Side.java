@@ -5,7 +5,13 @@ import java.util.List;
 
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
+import de.interoberlin.lymbo.model.card.enums.EComponent;
+import de.interoberlin.lymbo.model.card.components.HintComponent;
+import de.interoberlin.lymbo.model.card.components.ImageComponent;
 import de.interoberlin.lymbo.model.card.components.ResultComponent;
+import de.interoberlin.lymbo.model.card.components.SVGComponent;
+import de.interoberlin.lymbo.model.card.components.TextComponent;
+import de.interoberlin.lymbo.model.card.components.TitleComponent;
 
 public class Side {
     private String color = "#FFFFFF";
@@ -32,9 +38,18 @@ public class Side {
         return false;
     }
 
-    public boolean containsChoice() {
+    // TITLE,TEXT,HINT,IMAGE,CHOICE,RESULT,SVG;
+
+
+    public boolean contains(EComponent component) {
         for (Displayable d : getComponents()) {
-            if (d instanceof ChoiceComponent) {
+            if ((component == EComponent.TITLE && d instanceof TitleComponent) ||
+                    (component == EComponent.TEXT && d instanceof TextComponent) ||
+                    (component == EComponent.HINT && d instanceof HintComponent) ||
+                    (component == EComponent.IMAGE && d instanceof ImageComponent) ||
+                    (component == EComponent.CHOICE && d instanceof ChoiceComponent) ||
+                    (component == EComponent.RESULT && d instanceof ResultComponent) ||
+                    (component == EComponent.SVG && d instanceof SVGComponent)) {
                 return true;
             }
         }
@@ -42,10 +57,16 @@ public class Side {
         return false;
     }
 
-    public ResultComponent getFirstResultComponent() {
+    public Displayable getFirst(EComponent component) {
         for (Displayable d : getComponents()) {
-            if (d instanceof ResultComponent) {
-                return (ResultComponent) d;
+            if ((component == EComponent.TITLE && d instanceof TitleComponent) ||
+                    (component == EComponent.TEXT && d instanceof TextComponent) ||
+                    (component == EComponent.HINT && d instanceof HintComponent) ||
+                    (component == EComponent.IMAGE && d instanceof ImageComponent) ||
+                    (component == EComponent.CHOICE && d instanceof ChoiceComponent) ||
+                    (component == EComponent.RESULT && d instanceof ResultComponent) ||
+                    (component == EComponent.SVG && d instanceof SVGComponent)) {
+                return d;
             }
         }
 

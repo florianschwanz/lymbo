@@ -4,8 +4,6 @@ import android.content.Context;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -45,8 +43,10 @@ public class LymboLoader {
         try {
             return LymboParser.getInstance().parse(is);
         } catch (XmlPullParserException e) {
+            Log.error(e.toString());
             e.printStackTrace();
         } catch (IOException e) {
+            Log.error(e.toString());
             e.printStackTrace();
         }
 
