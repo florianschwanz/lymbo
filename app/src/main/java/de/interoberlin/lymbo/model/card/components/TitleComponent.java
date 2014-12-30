@@ -19,6 +19,8 @@ public class TitleComponent implements Displayable {
     private int lines = 0;
     private EGravity gravity = EGravity.LEFT;
 
+    private boolean flip = false;
+
     // --------------------
     // Constructors
     // --------------------
@@ -97,5 +99,13 @@ public class TitleComponent implements Displayable {
 
     public void setGravity(EGravity gravity) {
         this.gravity = gravity;
+    }
+
+    public boolean isFlip() {
+        return flip;
+    }
+
+    public void setFlip(boolean flip) {
+        this.flip = flip;
     }
 }

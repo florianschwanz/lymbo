@@ -5,17 +5,19 @@ import java.util.List;
 
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
-import de.interoberlin.lymbo.model.card.enums.EComponent;
 import de.interoberlin.lymbo.model.card.components.HintComponent;
 import de.interoberlin.lymbo.model.card.components.ImageComponent;
 import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.model.card.components.SVGComponent;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
+import de.interoberlin.lymbo.model.card.enums.EComponent;
 
 public class Side {
     private String color = "#FFFFFF";
-    private List<Displayable> components = new ArrayList<Displayable>();
+    private List<Displayable> components = new ArrayList<>();
+
+    private boolean flip = false;
 
     // -------------------------
     // Constructors
@@ -27,19 +29,6 @@ public class Side {
     // -------------------------
     // Methods
     // -------------------------
-
-    public boolean containsResult() {
-        for (Displayable d : getComponents()) {
-            if (d instanceof ResultComponent) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    // TITLE,TEXT,HINT,IMAGE,CHOICE,RESULT,SVG;
-
 
     public boolean contains(EComponent component) {
         for (Displayable d : getComponents()) {
@@ -73,16 +62,6 @@ public class Side {
         return null;
     }
 
-    public ChoiceComponent getFirstChoiceComponent() {
-        for (Displayable d : getComponents()) {
-            if (d instanceof ChoiceComponent) {
-                return (ChoiceComponent) d;
-            }
-        }
-
-        return null;
-    }
-
     // -------------------------
     // Getters / Setters
     // -------------------------
@@ -105,9 +84,17 @@ public class Side {
 
     public void addComponent(Displayable displayable) {
         if (components == null) {
-            components = new ArrayList<Displayable>();
+            components = new ArrayList<>();
         }
 
         components.add(displayable);
+    }
+
+    public boolean isFlip() {
+        return flip;
+    }
+
+    public void setFlip(boolean flip) {
+        this.flip = flip;
     }
 }

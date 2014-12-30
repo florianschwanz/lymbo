@@ -42,55 +42,82 @@ public class DisplayDialogFragment extends DialogFragment {
         Bundle b = getArguments();
 
         // Determine type
-        if (b.getString("type").equals("CREATE_STACK")) {
-            type = EDialogType.CREATE_STACK;
-        } else if (b.getString("type").equals("CHANGE_STACK")) {
-            type = EDialogType.CHANGE_STACK;
-        } else if (b.getString("type").equals("DISCARD_STACK")) {
-            type = EDialogType.DISCARD_STACK;
-        } else if (b.getString("type").equals("DISCARD_CARD")) {
-            type = EDialogType.DISCARD_CARD;
-        } else if (b.getString("type").equals("HINT")) {
-            type = EDialogType.HINT;
+        switch (b.getString("type")) {
+            case "CREATE_STACK":
+                type = EDialogType.CREATE_STACK;
+                break;
+            case "CHANGE_STACK":
+                type = EDialogType.CHANGE_STACK;
+                break;
+            case "DISCARD_STACK":
+                type = EDialogType.DISCARD_STACK;
+                break;
+            case "DISCARD_CARD":
+                type = EDialogType.DISCARD_CARD;
+                break;
+            case "HINT":
+                type = EDialogType.HINT;
+                break;
+            case "WARNING":
+                type = EDialogType.WARNING;
+                break;
         }
 
         builder.setView(v);
         builder.setTitle((String) b.get("title"));
         builder.setMessage((String) b.get("message"));
 
-        // Add action listeners
-        builder.setPositiveButton(R.string.okay, new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dismiss();
-
-                switch (type) {
-                    case HINT: {
+        // Add positive button
+        switch (type) {
+            case HINT: {
+                builder.setPositiveButton(R.string.okay, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         ocListener.onHintDialogComplete();
-                        break;
+                        dismiss();
                     }
-                    case DISCARD_CARD: {
+                });
+                break;
+            }
+            case DISCARD_CARD: {
+                builder.setPositiveButton(R.string.okay, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         ocListener.onDiscardCardDialogComplete();
-                        break;
+                        dismiss();
                     }
-                    case DISCARD_STACK: {
-                        ocListener.onDiscardStackDialogComplete();
-                        break;
-                    }
-                    default: {
-                        break;
-                    }
-                }
-
+                });
+                break;
             }
-        });
-
-        builder.setNegativeButton(R.string.cancel, new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dismiss();
+            default: {
+                builder.setPositiveButton(R.string.okay, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dismiss();
+                    }
+                });
+                break;
             }
-        });
+        }
+
+
+        // Add negative button
+        switch (type) {
+            case DISCARD_CARD:
+            case DISCARD_STACK:
+            case DOWNLOAD_BLOB: {
+                builder.setNegativeButton(R.string.cancel, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dismiss();
+                    }
+                });
+                break;
+            }
+            default: {
+                break;
+            }
+        }
 
         return builder.create();
     }
@@ -106,14 +133,17 @@ public class DisplayDialogFragment extends DialogFragment {
         super.onPause();
     }
 
-    // --------------------
-    // Callback interfaces
-    // --------------------
+// --------------------
+// Callback interfaces
+// --------------------
 
     public static interface OnCompleteListener {
         public abstract void onHintDialogComplete();
+
         public abstract void onDiscardStackDialogComplete();
+
         public abstract void onDiscardCardDialogComplete();
+
     }
 
     public void onAttach(Activity activity) {

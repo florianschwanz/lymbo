@@ -12,7 +12,7 @@ import de.interoberlin.lymbo.model.persistence.LymboWriter;
 
 public class CardsController {
     private static Lymbo lymbo;
-    private static List<Card> cards = new ArrayList<Card>();
+    private static List<Card> cards = new ArrayList<>();
 
     private static CardsController instance;
 
@@ -71,19 +71,19 @@ public class CardsController {
     // Getters / Setters
     // --------------------
 
-    public static Lymbo getLymbo() {
+    public Lymbo getLymbo() {
         return lymbo;
     }
 
-    public static void setLymbo(Lymbo lymbo) {
+    public void setLymbo(Lymbo lymbo) {
         CardsController.lymbo = lymbo;
     }
 
-    public static List<Card> getCards() {
+    public List<Card> getCards() {
         return cards;
     }
 
-    public static void setCards(List<Card> cards) {
+    public void setCards(List<Card> cards) {
         CardsController.cards = cards;
     }
 }

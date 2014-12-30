@@ -5,23 +5,14 @@ public class Card {
     private Side front;
     private Side back;
 
+    private boolean flip = true;
+    private boolean edit = false;
+
     // -------------------------
     // Constructors
     // -------------------------
 
     public Card() {
-
-    }
-
-    public Card(int id, Side front) {
-        this.id = id;
-        this.front = front;
-    }
-
-    public Card(int id, Side front, Side back) {
-        this.id = id;
-        this.front = front;
-        this.back = back;
     }
 
     // -------------------------
@@ -50,5 +41,21 @@ public class Card {
 
     public void setBack(Side back) {
         this.back = back;
+    }
+
+    public boolean isFlip() {
+        return flip;
+    }
+
+    public void setFlip(boolean flip) {
+        this.flip = flip;
+    }
+
+    public boolean isEdit() {
+        return edit;
+    }
+
+    public void setEdit(boolean edit) {
+        this.edit = edit;
     }
 }

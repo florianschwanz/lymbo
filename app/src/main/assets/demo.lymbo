@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lymbo
  title="Demo"
- subtitle="Test questions for Java OCA test"
- hint="Test questions for Java OCA test"
+ subtitle="This is just a demo stack"
+ hint="This is just a demo stack"
  image=""
  author="Flo">
 	<card>
@@ -16,6 +16,32 @@
 				style="code"/>
         </front>
         <back>
+        </back>
+	</card>
+	<card>
+            <front>
+    			<title
+    				value="This title causes a flip"
+    			    flip="true" />
+            </front>
+            <back>
+                <title
+                	value="This title as well"
+                	flip="true" />
+            </back>
+    </card>
+    <card>
+        <front>
+            <title value="Title Front" />
+			<text
+				value="Only this text causes a flip"
+			    flip="true" />
+        </front>
+        <back>
+            <title value="Title Back" />
+            <text
+            	value="This text as well"
+            	flip="true" />
         </back>
 	</card>
 </lymbo>

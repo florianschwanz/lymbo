@@ -22,8 +22,8 @@ import de.interoberlin.mate.lib.model.Log;
 public class LymbosController extends Application {
     private static Context context;
 
-    private static Collection<File> lymboFiles;
-    private static List<Lymbo> lymbos;
+    private Collection<File> lymboFiles;
+    private List<Lymbo> lymbos;
 
     private static final String LYMBO_FILE_EXTENSION = ".lymbo";
     private boolean loading = false;
@@ -88,8 +88,8 @@ public class LymbosController extends Application {
     /**
      * Finds all files that match a certain pattern on the internal storage
      *
-     * @param pattern
-     * @return
+     * @param pattern file extension
+     * @return Collection of files
      */
     public Collection<File> findFiles(String pattern) {
         Log.trace("LymboController.findFiles()");
@@ -120,22 +120,28 @@ public class LymbosController extends Application {
     }
 
     public boolean checkStorage() {
-        boolean externalStorageAvailable = false;
-        boolean externalStorageWriteable = false;
+        boolean externalStorageAvailable;
+        boolean externalStorageWriteable;
 
         String state = Environment.getExternalStorageState();
 
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            // We can read and write the media
-            externalStorageAvailable = externalStorageWriteable = true;
-        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            // We can only read the media
-            externalStorageAvailable = true;
-            externalStorageWriteable = false;
-        } else {
-            // Something else is wrong. It may be one of many other states, but
-            // all we need to know is we can neither read nor write
-            externalStorageAvailable = externalStorageWriteable = false;
+        switch (state) {
+            case Environment.MEDIA_MOUNTED: {
+                // We can read and write the media
+                externalStorageAvailable = externalStorageWriteable = true;
+                break;
+            }
+            case Environment.MEDIA_MOUNTED_READ_ONLY: {
+                // We can only read the media
+                externalStorageAvailable = true;
+                externalStorageWriteable = false;
+                break;
+            }
+            default: {
+                // Something else is wrong. It may be one of many other states, but
+                // all we need to know is we can neither read nor write
+                externalStorageAvailable = externalStorageWriteable = false;
+            }
         }
 
         return externalStorageAvailable && externalStorageWriteable;

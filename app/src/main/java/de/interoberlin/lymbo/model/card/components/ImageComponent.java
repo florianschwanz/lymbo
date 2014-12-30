@@ -10,6 +10,8 @@ import de.interoberlin.lymbo.model.Displayable;
 public class ImageComponent implements Displayable {
     private String image;
 
+    private boolean flip = false;
+
     // --------------------
     // Constructor
     // --------------------
@@ -41,5 +43,13 @@ public class ImageComponent implements Displayable {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public boolean isFlip() {
+        return flip;
+    }
+
+    public void setFlip(boolean flip) {
+        this.flip = flip;
     }
 }

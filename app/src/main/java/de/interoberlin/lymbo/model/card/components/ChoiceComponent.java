@@ -20,7 +20,7 @@ import de.interoberlin.lymbo.model.card.enums.ChoiceType;
 
 public class ChoiceComponent implements Displayable {
     private ChoiceType type = ChoiceType.MULTIPLE;
-    private List<Answer> answers = new ArrayList<Answer>();
+    private List<Answer> answers = new ArrayList<>();
 
     // --------------------
     // Constructor
@@ -45,6 +45,7 @@ public class ChoiceComponent implements Displayable {
             final CheckBox cb = (CheckBox) llAnswer.findViewById(R.id.cb);
             final TextView tvText = (TextView) llAnswer.findViewById(R.id.tvText);
 
+            cb.setChecked(answer.isSelected());
             cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

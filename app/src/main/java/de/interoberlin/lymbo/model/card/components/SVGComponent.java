@@ -16,17 +16,15 @@ import de.interoberlin.sauvignon.lib.view.SVGPanel;
 public class SVGComponent implements Displayable {
     private String color = "#FFFFFF";
     private SVG svg = null;
-    SVGPanel panel;
+    private SVGPanel panel;
+
+    private boolean flip = false;
 
     // --------------------
     // Constructors
     // --------------------
 
     public SVGComponent() {
-    }
-
-    public SVGComponent(SVG svg) {
-        this.svg = svg;
     }
 
     // --------------------
@@ -67,19 +65,6 @@ public class SVGComponent implements Displayable {
         return new View(c);
     }
 
-    public void resume() {
-        if (panel != null) {
-            panel.resume();
-        }
-    }
-
-    public void pause() {
-        if (panel != null) {
-            panel.pause();
-        }
-    }
-
-
     // --------------------
     // Getters / Setters
     // --------------------
@@ -98,5 +83,13 @@ public class SVGComponent implements Displayable {
 
     public void setSVG(SVG svg) {
         this.svg = svg;
+    }
+
+    public boolean isFlip() {
+        return flip;
+    }
+
+    public void setFlip(boolean flip) {
+        this.flip = flip;
     }
 }

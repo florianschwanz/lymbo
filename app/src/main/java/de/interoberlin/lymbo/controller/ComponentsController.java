@@ -49,11 +49,11 @@ public class ComponentsController {
     // Getters / Setters
     // --------------------
 
-    public static Card getCard() {
+    public Card getCard() {
         return card;
     }
 
-    public static void setCard(Card card) {
+    public void setCard(Card card) {
         ComponentsController.card = card;
     }
 
@@ -61,15 +61,15 @@ public class ComponentsController {
         return componentsFront;
     }
 
-    public static void setComponentsFront(List<Displayable> componentsFront) {
+    public void setComponentsFront(List<Displayable> componentsFront) {
         ComponentsController.componentsFront = componentsFront;
     }
 
-    public static List<Displayable> getComponentsBack() {
+    public List<Displayable> getComponentsBack() {
         return componentsBack;
     }
 
-    public static void setComponentsBack(List<Displayable> componentsBack) {
+    public void setComponentsBack(List<Displayable> componentsBack) {
         ComponentsController.componentsBack = componentsBack;
     }
 }

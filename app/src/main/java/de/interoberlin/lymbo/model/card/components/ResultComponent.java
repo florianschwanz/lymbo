@@ -13,18 +13,15 @@ import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class ResultComponent implements Displayable {
     private String value = "";
-    private int lines = 1;
     private String gravity = "left";
+
+    private boolean flip = false;
 
     // --------------------
     // Constructors
     // --------------------
 
     public ResultComponent() {
-    }
-
-    public ResultComponent(String value) {
-        this.value = value;
     }
 
     // --------------------
@@ -59,19 +56,19 @@ public class ResultComponent implements Displayable {
         this.value = value;
     }
 
-    public int getLines() {
-        return lines;
-    }
-
-    public void setLines(int lines) {
-        this.lines = lines;
-    }
-
     public String getGravity() {
         return gravity;
     }
 
     public void setGravity(String gravity) {
         this.gravity = gravity;
+    }
+
+    public boolean isFlip() {
+        return flip;
+    }
+
+    public void setFlip(boolean flip) {
+        this.flip = flip;
     }
 }

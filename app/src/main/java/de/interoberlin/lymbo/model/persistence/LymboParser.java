@@ -147,8 +147,8 @@ public class LymboParser {
         Card card = new Card();
 
         // Read attributes
-
-        // Nothing to do here
+        String flip = parser.getAttributeValue(null, "flip");
+        String edit = parser.getAttributeValue(null, "edit");
 
         // Read sub elements
         Side front = null;
@@ -179,6 +179,10 @@ public class LymboParser {
             card.setFront(front);
         if (back != null)
             card.setBack(back);
+        if (flip != null)
+            card.setFlip(Boolean.parseBoolean(flip));
+        if (edit != null)
+            card.setEdit(Boolean.parseBoolean(edit));
 
         return card;
     }
@@ -201,6 +205,7 @@ public class LymboParser {
 
         // Read attributes
         String color = parser.getAttributeValue(null, "color");
+        String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
         List<Displayable> components = new ArrayList<>();
@@ -243,6 +248,8 @@ public class LymboParser {
         // Fill element
         if (!components.isEmpty())
             side.setComponents(components);
+        if (flip != null)
+            side.setFlip(Boolean.parseBoolean(flip));
 
         return side;
     }
@@ -266,6 +273,7 @@ public class LymboParser {
         String value = parser.getAttributeValue(null, "value");
         String lines = parser.getAttributeValue(null, "lines");
         String gravity = parser.getAttributeValue(null, "gravity");
+        String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
         parser.next();
@@ -284,6 +292,8 @@ public class LymboParser {
             component.setLines(parseLines(lines));
         if (gravity != null)
             component.setGravity(parseGravity(gravity));
+        if (flip != null)
+            component.setFlip(Boolean.parseBoolean(flip));
 
         return component;
     }
@@ -308,6 +318,7 @@ public class LymboParser {
         String lines = parser.getAttributeValue(null, "lines");
         String gravity = parser.getAttributeValue(null, "gravity");
         String style = parser.getAttributeValue(null, "style");
+        String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
         parser.next();
@@ -328,6 +339,8 @@ public class LymboParser {
             component.setGravity(parseGravity(gravity));
         if (style != null)
             component.setStyle(parseStyle(style));
+        if (flip != null)
+            component.setFlip(Boolean.parseBoolean(flip));
 
         return component;
     }
@@ -382,7 +395,8 @@ public class LymboParser {
         // Create element
         ResultComponent component = new ResultComponent();
 
-        // Read attributes : nothing to do here
+        // Read attributes
+        String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
         parser.next();
@@ -395,6 +409,8 @@ public class LymboParser {
         */
 
         // Fill element
+        if (flip != null)
+            component.setFlip(Boolean.parseBoolean(flip));
 
         return component;
     }
@@ -416,6 +432,7 @@ public class LymboParser {
 
         // Read attributes
         String image = parser.getAttributeValue(null, "image");
+        String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
         parser.next();
@@ -430,6 +447,8 @@ public class LymboParser {
         // Fill element
         if (image != null)
             component.setImage(image);
+        if (flip != null)
+            component.setFlip(Boolean.parseBoolean(flip));
 
         return component;
     }
@@ -532,6 +551,7 @@ public class LymboParser {
         SVG svg = SvgParser.getInstance().parseSVG(parser);
 
         // Read attributes
+        String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
         /*
@@ -547,6 +567,8 @@ public class LymboParser {
             component.setSVG(svg);
         if (color != null)
             component.setColor(color);
+        if (flip != null)
+            component.setFlip(Boolean.parseBoolean(flip));
 
         return component;
     }

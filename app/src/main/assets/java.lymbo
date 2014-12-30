@@ -1,417 +1,445 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<lymbo
- title="Java OCA"
- subtitle="Test questions for Java OCA test"
- hint="Test questions for Java OCA test"
- image=""
- author="Flo">
-	<card>
-        <front>
-			<title
-				value="1 Understand packages" />
-			<text
-				value="Which statement is not true about package statements" />
-			<hint
-				value="Consider the package names java.util and javax.swing" />
-			<choice>
-				<answer
-					value="A Package statements are optional" />
-				<answer
-					value="B Package statements are limited to one per source file" />
-				<answer
-					value="C Standard Java coding convention for package names reverses the domain name of the organization or group creating package" />
-				<answer
-					value="D The package names beginning with javas.* and javaw.* are reserved"
-					correct="true" />
-			</choice>
-        </front>
-        <back>
-            <result />
-            <text
-				value="D. D is correct because the statement is false. Package names beginning with javas.* and javaw.* are NOT reserved and can be freely used. However, the package names beginning with java.* and javax.* ARE reserved. A, B and C are incorrect answers because they are all true statements and the question was looking for the false statement." />
-        </back>
-	</card>
-	<card>
-        <front>
-			<title
-				value="2 Understand packages" />
-			<text
-				value="Which statement represents a valid statement that will allow for the inclusion of classes from the java.util.package?" />
-			<hint
-				value="Consider valid java keyword" />
-            <choice
-				type="multiple" >
-				<answer
-					value="A import java.util;" />
-				<answer
-					value="B import java.util.*;"
-					correct="true" />
-				<answer
-					value="C #include java.util;" />
-				<answer
-					value="D #java.util.*;" />
-			</choice>
-        </front>
-        <back>
-            <text
-				value="B. To include all of the classes in the java.util package, the import statement is used, followed by the package name, including an asterisk. A, C, and D are incorrect. A is incorrect because the import statement must specify a class directly, or in this case all of the classes with the asterisk wildcard. C is incorrect because of the exclusion of the asterisk wildcard, along with the use of an invalid #include keyword. D is incorrect because of the invalid #include keyword, which is unique to the C and C++ programming languages." />
-		</back>
-	</card>
-	<card>
-        <front>
-			<title
-				value="7 Understand package-derived classes" />
-			<text
-				value="Of the following packages, which contain classes for building a graphical interface? (Choose all that apply)" />
-			<hint
-				value="Rule out the packages with obvious names. Packages for graphical interfaces have names that make the least sense" />
-            <choice
-				type="multiple" >
-				<answer
-					value="A java.awt"
-					correct="true" />
-				<answer
-					value="B java.io" />
-				<answer
-					value="C java.net" />
-				<answer
-					value="D javax.swing" />
-				<answer
-					value="E java.util" />
-			</choice>
-        </front>
-        <back>
-            <text
-				value="A and D. Swing and AWT are the two Java graphical toolkits and are included in the java.awt and javax.swing packages." />
-			<text
-				value="B, C and E are incorrect. B is incorrect because java.io is used for input and output type jobs. C is incorrect because java.net used for network connections. E is incorrect because the java.util package contains classes such as Vector, arrayList, Random, and many more, but no classes for building a GUI" />
-		</back>
-	</card>
-	<card>
-        <front>
-			<title
-				value="19 Understand fundamental operators" />
-			<text
-				value="Given the following code segment, what would be the output?" />
-			<text
-				value="int value1 = 5;"
-				style="code" />
-			<text
-				value="int value2 = 7"
-				style="code"/>
-			<text
-				value="boolean bool1 = true;"
-				style="code" />
-			<text
-				value="boolean bool2 = false;"
-				style="code" />
-			<text
-				value="if (bool1 &quot;&quot; (( value1 &lt; value2) || bool2 &quot;&quot; !(bool2)) {"
-				style="code" />
-			<text
-				value="  System.out.println(&quot;Result set one&quot;);"
-				style="code" />
-			<text
-				value="}"
-				style="code" />
-			<text
-				value="else {"
-				style="code" />
-			<text
-				value="  System.out.println(&quot;Result set two&quot;);"
-				style="code" />
-			<text
-				value="}"
-				style="code" />
-			<hint
-				value="Start from the innermost parentheses and work outward, but also consider short-circuit operators." />
-            <choice
-				type="multiple" >
-				<answer
-					value="A Result set one"
-					correct="true" />
-				<answer
-					value="B Result set two" />
-			</choice>
-        </front>
-        <back>
-            <text
-				value="A. The expression in the if statement evaluates to true. This expression is actually easier than it looks considering that bool1 is on the left side of a short-circuit operator" />
-			<text
-				value="B is incorrect" />
-		</back>
-	</card>
-<card>
-        <front>
-			<title
-				value="25 Use string objects an their methods" />
-			<text
-				value="Given the following code segment testing the equality of two strings, what will be printed?" />
-			<text
-				value="String string = &quot;Dollar bill&quot;"
-				style="code" />
-			<text
-				value="string.replace(&quot;Dollar bill&quot;, &quot;Silver dollar&quot;);"
-				style="code" />
-			<text
-				value="if(&quot;Dollar bill&quot;.equals(string)) {"
-				style="code" />
-			<text
-				value="System.out.println(&quot;I have a dollar bill&quot;);"
-				style="code" />
-			<text
-				value="} else {"
-				style="code" />
-			<text
-				value="System.out.println(&quot;I have a silver dollar&quot;);"
-				style="code" />
-			<text
-				value="}"
-				style="code" />
-			<hint
-				value="Since strings are immutable, consider the effect from the absence of an assignment in line 2" />
-            <choice
-				type="multiple" >
-				<answer
-					value="A I have a dollar bill"
-					correct="true" />
-				<answer
-					value="B I have a silver dollar" />
-				<answer
-					value="C The code will not compile because of an error a line 2" />
-				<answer
-					value="C The code will not compile because of an error a line 3" />
-			</choice>
-        </front>
-        <back>
-            <text
-				value="A. Strings are immutable, so the statement at lien 2 does not affect the string; it's as if nothing ever happened. Explicitly overwriting the value of the string object would have changed the result: string = string.replace(&quot;Dollar&quot;, &quot;Silver dollar&quot;); B, C and D are incorrect. B because the condition results in true. C and D are incorrect because the code compiles fine." />
-        </back>
-	</card>
-	<card>
-        <front>
-			<title
-				value="44" />
-			<text
-				value="Class variables, also known as static fields, have only one instance in existence. Following standing naming conventions, which answer represents a class variable?" />
-			<hint
-				value="The class name is used in conjunction with the static variable name to reference it" />
-            <choice
-				type="multiple" >
-				<answer
-					value="A variableName" />
-				<answer
-					value="B VariableName"  />
-				<answer
-					value="C ClassName:variableName" />
-				<answer
-					value="D ClassName.variableName"
-					correct="true" />
-			</choice>
-        </front>
-        <back>
-            <text
-				value="D. Class (static) variables are referenced by the class name and variable name, delieated by a period" />
-        </back>
-	</card>
-	<card>
-        <front>
-			<title
-				value="51 Understand variable scope" />
-			<text
-				value="What type of variable would be used to store the state of an object?" />
-			<hint
-				value="The name of the variable gives a clue as to where it should be used" />
-            <choice
-				type="multiple" >
-				<answer
-					value="A Local variable" />
-				<answer
-					value="B Method parameter" />
-				<answer
-					value="C Instance variable"
-					correct="true" />
-				<answer
-					value="D Object variable" />
-			</choice>
-        </front>
-        <back>
-            <text
-				value="C. Instance variables retain their value for the life of the object." />
-			<text
-				value="A, B and D are incorrect because a local variable is used for temporary items and stays in scope only until the block of code it is declared in is exited. B is incorrect because method parameters are the variables passed to a method as arguments. They are in scope inly for that method. D is incorrect because the object variable does not exist." />
-        </back>
-	</card>
-	<card>
-        <front>
-			<title
-				value="57" />
-			<text
-				value="Given the following simple code segment, what is being used in regards to the Color.BLACK object relating to the Cat object" />
-            <choice
-				type="multiple" >
-				<answer
-					value="Containment" />
-				<answer
-					value="Realization" />
-				<answer
-					value="Dependency"
-					correct="true" />
-				<answer
-					value="Navigability" />
-			</choice>
-        </front>
-        <back>
-            <text
-				value="The right answer is Dependency" />
-        </back>
-	</card>
-	<card>
-        <front>
-			<title
-				value="72 Understanding encapsulation principles" />
-			<text
-				value="What access modifier, if any, should be used on all instance variables unless there is a particular reason not to use it?" />
-			<hint
-				value="Instance variables should always use the most restrictive modifier possible" />
-            <choice
-				type="multiple" >
-				<answer
-					value="A public" />
-				<answer
-					value="B private"
-					correct="true" />
-				<answer
-					value="C protected" />
-				<answer
-					value="D package-private (default)" />
-			</choice>
-        </front>
-        <back>
-            <text
-				value="B. instance variables should have the most restrictive modifier, which is private. A, C and D are incorrect. All of these access modifiers, including the default access level, are less restrictive than private" />
-        </back>
-	</card>
-	<card>
-        <front>
-			<title
-				value="81 Understand Polymorphism" />
-			<text
-				value="Polymorphism allows an object to be referred to as ________ . (Choose all that apply)" />
-            <choice
-				type="multiple" >
-				<answer
-					value="A Any base class it extends"
-					correct="true" />
-				<answer
-					value="B An interface that is implemented"
-					correct="true" />
-				<answer
-					value="C A primitive data type" />
-				<answer
-					value="D An instance variable" />
-				<answer
-					value="E Any subclass that extends it" />
-			</choice>
-        </front>
-        <back>
-            <text
-				value="A and B. Polymorphism allow an object it be referenced by a more general data type. A more general data type is either a base class it has extended or an interface it has implemented. C, D and E are incorrect. C and D are incorrect because an instance variable is a type of variable and has nothing to do with polymorphism. E is not correct because polymorphism cannot work when moving to more specific objects." />
-        </back>
-	</card>
+<lymbo title="Java OCA" subtitle="Test questions for Java OCA test" hint="Test questions for Java OCA test" image="" author="Flo">
 	<card>
 		<front>
-			<title
-				value="83 Understand polymorphism" />
-			<text
-				value="What can be said about the following code?" />
-			<text
-				value="public interface Audible {...}"
-				style="code" />
-			<text
-				value="public class Stereo implements Audible {...}"
-				style="code" />
-			<text
-				value="public class Computer implements Audible {...}"
-				style="code" />
-			<text
-				value="public class AudioSource(){"
-				style="code" />
-			<text
-				value=" public void startPlaying(Audible sound){...}"
-				style="code" />
-			<text
-				value="}"
-				style="code" />
-			<hint
-				value="Look carefully at the parameters of the startPlaying method." />
+			<title value="1 Understand packages"/>
+			<text value="Which statement is not true about package statements"/>
+			<hint value="Consider the package names java.util and javax.swing"/>
 			<choice>
-				<answer
-					value="A Audible is the base class for the Stereo and Computer classes" />
-				<answer
-					value="B The startPlaying code should be changed so it uses polymorphism" />
-				<answer
-					value="C Object is not a base class for the AudioSource class" />
-				<answer
-					value="D The startPlaying method is using the design principle of &quot;programming to an interface&quot;"
-					correct="true" />
+				<answer value="A Package statements are optional"/>
+				<answer value="B Package statements are limited to one per source file"/>
+				<answer value="C Standard Java coding convention for package names reverses the domain name of the organization or group creating package"/>
+				<answer value="D The package names beginning with javas.* and javaw.* are reserved" correct="true"/>
 			</choice>
 		</front>
 		<back>
-			<text
-				value="D. This is an example of programming to an interface. The startPlaying method will except as a an argument any object the implements the audible interface" />
-			<text
-				value="A, B, and C are incorrect. A is incorrect because Audible is an interface, not a class. B is incorrect because this exmaple is already using polymorphism. C is incorrect because Object is the implied base class for all objects." />
+			<result/>
+			<text value="D. D is correct because the statement is false. Package names beginning with javas.* and javaw.* are NOT reserved and can be freely used. However, the package names beginning with java.* and javax.* ARE reserved. A, B and C are incorrect answers because they are all true statements and the question was looking for the false statement."/>
 		</back>
 	</card>
 	<card>
-        <front>
-			<title
-				value="86 Recognize common exceptions" />
-			<text
-				value="Identify the statement that correctly orient the exceptions to the superclass. (Choose all that apply)" />
-			<hint
-				value="IllegalArgumentException and IndexOutOfBoundException are direct subclasses to RuntimeException" />
-			<choice>
-				<answer
-					value="A public" />
-				<answer
-					value="B private"
-					correct="true" />
-				<answer
-					value="C protected" />
-				<answer
-					value="D package-private (default)" />
-			</choice>
-        </front>
-        <back>
-            <text
-				value="B. instance variables should have the most restrictive modifier, which is private. A, C and D are incorrect. All of these access modifiers, including the default access level, are less restrictive than private" />
-        </back>
-	</card>
-	<card>
 		<front>
-			<title
-				value="90" />
-			<text
-				value="Which of the following code fragments will throw a NumberFormatException?" />
-			<hint
-				value="The incorrect answers include a NullPointerException, an ArithmeticException and a ClassCastException" />
-			<choice>
-				<answer
-					value="A Integer.parseInt(&quot;INVALID&quot;);"
-					correct="true" />
-				<answer
-					value="B int e = (2/0);" />
-				<answer
-					value="C Object x = new Float(&quot;1.0&quot;); Double d = (Double) x;" />
-				<answer
-					value="D String s = null; int i = s.length();" />
+			<title value="2 Understand packages"/>
+			<text value="Which statement represents a valid statement that will allow for the inclusion of classes from the java.util.package?"/>
+			<hint value="Consider valid java keyword"/>
+			<choice type="multiple">
+				<answer value="A import java.util;"/>
+				<answer value="B import java.util.*;" correct="true"/>
+				<answer value="C #include java.util;"/>
+				<answer value="D #java.util.*;"/>
 			</choice>
 		</front>
 		<back>
-			<text
-				value="" />
+			<result/>
+			<text value="B. To include all of the classes in the java.util package, the import statement is used, followed by the package name, including an asterisk. A, C, and D are incorrect. A is incorrect because the import statement must specify a class directly, or in this case all of the classes with the asterisk wildcard. C is incorrect because of the exclusion of the asterisk wildcard, along with the use of an invalid #include keyword. D is incorrect because of the invalid #include keyword, which is unique to the C and C++ programming languages."/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="7 Understand package-derived classes"/>
+			<text value="Of the following packages, which contain classes for building a graphical interface? (Choose all that apply)"/>
+			<hint value="Rule out the packages with obvious names. Packages for graphical interfaces have names that make the least sense"/>
+			<choice type="multiple">
+				<answer value="A java.awt" correct="true"/>
+				<answer value="B java.io"/>
+				<answer value="C java.net"/>
+				<answer value="D javax.swing"/>
+				<answer value="E java.util"/>
+			</choice>
+		</front>
+		<back>
+			<result/>
+			<text value="A and D. Swing and AWT are the two Java graphical toolkits and are included in the java.awt and javax.swing packages."/>
+			<text value="B, C and E are incorrect. B is incorrect because java.io is used for input and output type jobs. C is incorrect because java.net used for network connections. E is incorrect because the java.util package contains classes such as Vector, arrayList, Random, and many more, but no classes for building a GUI"/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="9 Understand Packages"/>
+			<text value="You have created a set of classes for your company and would like to include them in a package. Which one of the following would be a valid package name?"/>
+			<hint value="Look for the answer that uses invalid names or characters."/>
+			<choice type="multiple">
+				<answer value="A your company name"/>
+				<answer value="B cm.your company name"/>
+				<answer value="C java.your company name"/>
+				<answer value="D java.your_company_name"/>
+				<answer value="E com.your_company_name" correct="true"/>
+			</choice>
+		</front>
+		<back>
+			<text value="E. A package name should be your reverse domain name."/>
+			<text value="A, B, C, and D are incorrect. A, B, and C are incorrect because they contain spaces that are not valid characters in package names. C and D are incorrect because java* is reserved for official Java packages."/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="10 Compile and Interpret Java Code"/>
+			<text value="What is the result of running the following command:"/>
+			<text value="javac Simulator.java" style="code"/>
+			<hint value="javac is the Java compiler."/>
+			<choice type="multiple">
+				<answer value="A The simulator program would be executed"/>
+				<answer value="B A bytecode file Simulator.class would be created" correct="true"/>
+				<answer value="C A bytecode file Simulator.java would be created"/>
+				<answer value="D An error would be displayed because this is the wrong syntax"/>
+			</choice>
+		</front>
+		<back>
+			<text value="B. javac is the Java compiler. It is used to compile a Java source file into a bytecode file. A bytecode filename has the .class extension."/>
+			<text value="A, C, and D are incorrect.  A is incorrect because the Java compiler will not interpret/execute the application. C is incorrect because the Java compiler does not generate Java source code. D is incorrect because there is nothing incorrect with the given syntax."/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="19 Understand fundamental operators"/>
+			<text value="Given the following code segment, what would be the output?"/>
+			<text value="int value1 = 5;" style="code"/>
+			<text value="int value2 = 7" style="code"/>
+			<text value="boolean bool1 = true;" style="code"/>
+			<text value="boolean bool2 = false;" style="code"/>
+			<text value="if (bool1 &quot;&quot; (( value1 &lt; value2) || bool2 &quot;&quot; !(bool2)) {" style="code"/>
+			<text value="  System.out.println(&quot;Result set one&quot;);" style="code"/>
+			<text value="}" style="code"/>
+			<text value="else {" style="code"/>
+			<text value="  System.out.println(&quot;Result set two&quot;);" style="code"/>
+			<text value="}" style="code"/>
+			<hint value="Start from the innermost parentheses and work outward, but also consider short-circuit operators."/>
+			<choice type="multiple">
+				<answer value="A Result set one" correct="true"/>
+				<answer value="B Result set two"/>
+			</choice>
+		</front>
+		<back>
+			<result/>
+			<text value="A. The expression in the if statement evaluates to true. This expression is actually easier than it looks considering that bool1 is on the left side of a short-circuit operator"/>
+			<text value="B is incorrect"/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="25 Use string objects an their methods"/>
+			<text value="Given the following code segment testing the equality of two strings, what will be printed?"/>
+			<text value="String string = &quot;Dollar bill&quot;" style="code"/>
+			<text value="string.replace(&quot;Dollar bill&quot;, &quot;Silver dollar&quot;);" style="code"/>
+			<text value="if(&quot;Dollar bill&quot;.equals(string)) {" style="code"/>
+			<text value="System.out.println(&quot;I have a dollar bill&quot;);" style="code"/>
+			<text value="} else {" style="code"/>
+			<text value="System.out.println(&quot;I have a silver dollar&quot;);" style="code"/>
+			<text value="}" style="code"/>
+			<hint value="Since strings are immutable, consider the effect from the absence of an assignment in line 2"/>
+			<choice type="multiple">
+				<answer value="A I have a dollar bill" correct="true"/>
+				<answer value="B I have a silver dollar"/>
+				<answer value="C The code will not compile because of an error a line 2"/>
+				<answer value="C The code will not compile because of an error a line 3"/>
+			</choice>
+		</front>
+		<back>
+			<text value="A. Strings are immutable, so the statement at lien 2 does not affect the string; it's as if nothing ever happened. Explicitly overwriting the value of the string object would have changed the result: string = string.replace(&quot;Dollar&quot;, &quot;Silver dollar&quot;); B, C and D are incorrect. B because the condition results in true. C and D are incorrect because the code compiles fine."/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="27 Understand Operator Precedence"/>
+			<text value="Given:"/>
+			<text value="System.out.println(&quot;A&quot; + 1 + (1 + 1) + 1);" style="code"/>
+			<text value="What will print"/>
+			<hint value="Association for the string concatenation operator is left to right."/>
+			<choice type="multiple">
+				<answer value="A A1111"/>
+				<answer value="B A121" correct="true"/>
+				<answer value="C A13"/>
+				<answer value="D A31"/>
+				<answer value="E Compilation error"/>
+			</choice>
+		</front>
+		<back>
+			<text value=". Precedence occurs first with the enclosed 1+1 equation. The evaluation then continues at the beginning of the expression with the string, and each value after the string is appended as a string, resulting in A121."/>
+			<text value="A, C, and D are incorrect because the resultant output is A121. E is incorrect because there is no compilation error."/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="32 Use String Objects and Their Methods"/>
+			<text value="Which of the following string classes create mutable strings? (Choose all that apply.)"/>
+			<hint value="Two of the answer choices are mutable."/>
+			<choice type="multiple">
+				<answer value="String"/>
+				<answer value="StringBuffer" correct="true"/>
+				<answer value="StringBuilder" correct="true"/>
+			</choice>
+		</front>
+		<back>
+			<text value="B and C. Both the StringBuffer class and StringBuilder class create strings that are mutable."/>
+			<text value="A is incorrect. The String class creates immutable strings."/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="34 Understand Primitives, Enumerations, and Objects"/>
+			<text value="Which of the statements are correct? (Choose all that apply.)"/>
+			<hint value="Consider each data type and the number. Recall the rules for what makes a number a particular type."/>
+			<choice type="multiple">
+				<answer value="A 3.0 is a valid literal for an int"/>
+				<answer value="B 3.0 is a valid literal for a float"/>
+				<answer value="C 3 is a valid literal for an int" correct="true"/>
+				<answer value="D 3 is a valid literal for an float" correct="true"/>
+				<answer value="E 3f is a valid literal for an int"/>
+				<answer value="F 3f is a valid literal for an float" correct="true"/>
+			</choice>
+		</front>
+		<back>
+			<text value="C, D, and F. C is correct because an int is used to store an integer number. D is correct because the compiler will automatically convert 3 to a floating-point number. F is also correct because when an f is appended to a number, it implies that that number is a floating-point number, even if it dies not hava a decimal."/>
+			<text value="A, B, and E are incorrect. A is incorrect because an in int cannot store a decimal number. B is incorrect because 3.0f would be a valid literal for a float, but 3.0 would not (the compiler treats 3.0 as a double). E is incorrect because an int cannot have f appended to it."/>
+		</back>
+	</card>
+
+	<card>
+		<front>
+			<title value="35 Understand Primitive, Enumerations and Objects"/>
+			<text value="What literal values are acceptable to use with the boolean primitive?"/>
+			<hint value="The null value is used with objects."/>
+			<choice type="multiple">
+				<answer value="A true and false" correct="true"/>
+				<answer value="B true, false, and null"/>
+				<answer value="C true, false, TRUE, and FALSE"/>
+				<answer value="D TRUE and FALSE"/>
+			</choice>
+		</front>
+		<back>
+			<text value="A. Valid literal values for the boolean primitive include true and false."/>
+			<text value="B, C, and D are incorrect. TRUE, FALSE, and null are all invalid literals for the boolean primitive. The null value is a valid literal for the Boolean wrapper class."/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="40 Use Primitives, Enumerations, and Objects"/>
+			<text value="Which of the following statements contain literal values? (Choose all that apply)"/>
+			<hint value="Remember that a literal value is not represented as a variable."/>
+			<choice type="multiple">
+				<answer value="A int maxHorsePower = 170;" correct="true"/>
+				<answer value="B float currentHorsePower = (float) maxHorsePower;"/>
+				<answer value="C float idleHorsePower = ((float) currentHorsePower) / 10 );" correct="true"/>
+				<answer value="D System.out.println(&quot;Current HP: &quot; + currentHorsePower);" correct="true"/>
+			</choice>
+		</front>
+		<back>
+			<text value="A, C, and D. The 170 in A, the 10 in C, and the &quot;Current HP: &quot; in D are all literals."/>
+			<text value="B is incorrect because this statement does not contain any values that are literals."/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="44"/>
+			<text value="Class variables, also known as static fields, have only one instance in existence. Following standing naming conventions, which answer represents a class variable?"/>
+			<hint value="The class name is used in conjunction with the static variable name to reference it"/>
+			<choice type="multiple">
+				<answer value="A variableName"/>
+				<answer value="B VariableName"/>
+				<answer value="C ClassName:variableName"/>
+				<answer value="D ClassName.variableName" correct="true"/>
+			</choice>
+		</front>
+		<back>
+			<result/>
+			<text value="D. Class (static) variables are referenced by the class name and variable name, deleted by a period"/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="51 Understand variable scope"/>
+			<text value="What type of variable would be used to store the state of an object?"/>
+			<hint value="The name of the variable gives a clue as to where it should be used"/>
+			<choice type="multiple">
+				<answer value="A Local variable"/>
+				<answer value="B Method parameter"/>
+				<answer value="C Instance variable" correct="true"/>
+				<answer value="D Object variable"/>
+			</choice>
+		</front>
+		<back>
+			<result/>
+			<text value="C. Instance variables retain their value for the life of the object."/>
+			<text value="A, B and D are incorrect because a local variable is used for temporary items and stays in scope only until the block of code it is declared in is exited. B is incorrect because method parameters are the variables passed to a method as arguments. They are in scope inly for that method. D is incorrect because the object variable does not exist."/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="57"/>
+			<text value="Given the following simple code segment, what is being used in regards to the Color.BLACK object relating to the Cat object"/>
+			<choice type="multiple">
+				<answer value="Containment"/>
+				<answer value="Realization"/>
+				<answer value="Dependency" correct="true"/>
+				<answer value="Navigability"/>
+			</choice>
+		</front>
+		<back>
+			<result/>
+			<text value="The right answer is Dependency"/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="72 Understanding encapsulation principles"/>
+			<text value="What access modifier, if any, should be used on all instance variables unless there is a particular reason not to use it?"/>
+			<hint value="Instance variables should always use the most restrictive modifier possible"/>
+			<choice type="multiple">
+				<answer value="A public"/>
+				<answer value="B private" correct="true"/>
+				<answer value="C protected"/>
+				<answer value="D package-private (default)"/>
+			</choice>
+		</front>
+		<back>
+			<result/>
+			<text value="B. instance variables should have the most restrictive modifier, which is private. A, C and D are incorrect. All of these access modifiers, including the default access level, are less restrictive than private"/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="73 Advanced Use of Classes with Inheritance and Encapsulation"/>
+			<text value="What is the correct method signature for class Z if it uses interface A?"/>
+			<hint value="Interfaces cannot be inherited from."/>
+			<choice type="multiple">
+				<answer value="A public class Z inherits A {...}"/>
+
+				<answer value="B public class Z extends A {...}"/>
+
+				<answer value="C public class Z implements A {...}" correct="true"/>
+
+				<answer value="D public class Z uses A {...}"/>
+			</choice>
+		</front>
+		<back>
+			<text value="C. An interface is implemented."/>
+			<text value="A, B, and D are incorrect. A and D are incorrect because inherits and uses are made-up terms. B is incorrect because extends is used for classes, not interfaces."/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="74 Understand Polymorphism"/>
+			<text value="Which object-oriented principle is represented in the following declaration?"/>
+			<text value="List&lt;String&gt; = new ArrayList&lt;String&gt;();" style="code"/>
+			<hint value="Consider how ArrayList and List relate."/>
+			<choice type="multiple">
+				<answer value="A Encapsulation"/>
+				<answer value="B Data abstraction"/>
+				<answer value="C Information Hiding"/>
+				<answer value="D Polymorphism" correct="true"/>
+			</choice>
+		</front>
+		<back>
+			<text value="D. The code example is polymorphic."/>
+			<text value="A, B, and C are incorrect. Encapsulation, data abstraction, and information hiding are not represented in the code example."/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="80 Understand Polymorphism"/>
+			<text value="What are the design benefits of using ploymorphism? (Choose all that apply)"/>
+			<hint value="Polymorphism allows classes to be substituted by general types"/>
+			<choice type="multiple">
+				<answer value="A Objects can be generalized as return types and method parameters" correct="true"/>
+				<answer value="B Less code needs to be written"/>
+				<answer value="C Superclasses and subclasses can be used interchangeably"/>
+				<answer value="D Polymorphism allows code to work with many different types of classes that all share some commonality, sich as implementing the same interface" corect="true"/>
+			</choice>
+		</front>
+		<back>
+			<text value="A and D. A is correct because polymorphism allows objects to act as other objects. The other objects are more general forms of the original object. D is correct because polymorphism also allows different classes that share some common functionality to be treated the same. They must all implement the same interface."/>
+			<text value="B and C are incorrect. B is incorrect because less code may be required, but this is not always the case. C is incorrect because objects can be referenced only in their more general form. An object cannot be used as a more specific object that extends it later."/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="81 Understand Polymorphism"/>
+			<text value="Polymorphism allows an object to be referred to as ________ . (Choose all that apply)"/>
+			<choice type="multiple">
+				<answer value="A Any base class it extends" correct="true"/>
+				<answer value="B An interface that is implemented" correct="true"/>
+				<answer value="C A primitive data type"/>
+				<answer value="D An instance variable"/>
+				<answer value="E Any subclass that extends it"/>
+			</choice>
+		</front>
+		<back>
+			<result/>
+			<text value="A and B. Polymorphism allow an object it be referenced by a more general data type. A more general data type is either a base class it has extended or an interface it has implemented. C, D and E are incorrect. C and D are incorrect because an instance variable is a type of variable and has nothing to do with polymorphism. E is not correct because polymorphism cannot work when moving to more specific objects."/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="83 Understand polymorphism"/>
+			<text value="What can be said about the following code?"/>
+			<text value="public interface Audible {...}" style="code"/>
+			<text value="public class Stereo implements Audible {...}" style="code"/>
+			<text value="public class Computer implements Audible {...}" style="code"/>
+			<text value="public class AudioSource(){" style="code"/>
+			<text value=" public void startPlaying(Audible sound){...}" style="code"/>
+			<text value="}" style="code"/>
+			<hint value="Look carefully at the parameters of the startPlaying method."/>
+			<choice>
+				<answer value="A Audible is the base class for the Stereo and Computer classes"/>
+				<answer value="B The startPlaying code should be changed so it uses polymorphism"/>
+				<answer value="C Object is not a base class for the AudioSource class"/>
+				<answer value="D The startPlaying method is using the design principle of &quot;programming to an interface&quot;" correct="true"/>
+			</choice>
+		</front>
+		<back>
+			<result/>
+			<text value="D. This is an example of programming to an interface. The startPlaying method will except as a an argument any object the implements the audible interface"/>
+			<text value="A, B, and C are incorrect. A is incorrect because Audible is an interface, not a class. B is incorrect because this exmaple is already using polymorphism. C is incorrect because Object is the implied base class for all objects."/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="86 Recognize common exceptions"/>
+			<text value="Identify the statement that correctly orient the exceptions to the superclass. (Choose all that apply)"/>
+			<hint value="IllegalArgumentException and IndexOutOfBoundException are direct subclasses to RuntimeException"/>
+			<choice>
+				<answer value="A public"/>
+				<answer value="B private" correct="true"/>
+				<answer value="C protected"/>
+				<answer value="D package-private (default)"/>
+			</choice>
+		</front>
+		<back>
+			<result/>
+			<text value="B. instance variables should have the most restrictive modifier, which is private. A, C and D are incorrect. All of these access modifiers, including the default access level, are less restrictive than private"/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="89 Recognize Common Exceptions"/>
+			<text value="Both the getMessage and toString methods return information about exceptions that are caught. Which method returns the basic information as well as the class name of the exception?"/>
+			<hint value="&gt;You may be most familiar with the printStackTrace() method, which returns the basic information, the class name, and a stack trace."/>
+			<choice type="multiple">
+				<answer value="A getMessage()"/>
+				<answer value="B toString()" correct="true"/>
+				<answer value="C getData()"/>
+				<answer value="D toOutput()"/>
+			</choice>
+		</front>
+		<back>
+			<text value="B. The toString method returns the basic information of an exception being caught as well as the class name-for example, &quot;java.io.FileNotFoundException: ... (The filename, directory name, or volume label syntax is incorrect)&quot;. A, C and D are incorrect. A is incorrect because the getMessage method returns only the basic information of an exception being caught, not the class name-for example, &quot;... (The filename, directory name, or volume label syntax is incorrect)&quot;.  C is incorrect because there is no getData method.  D is incorrect because there is no toOuput method."/>
+		</back>
+	</card>
+	<card>
+		<front>
+			<title value="90"/>
+			<text value="Which of the following code fragments will throw a NumberFormatException?"/>
+			<hint value="The incorrect answers include a NullPointerException, an ArithmeticException and a ClassCastException"/>
+			<choice>
+				<answer value="A Integer.parseInt(&quot;INVALID&quot;);" correct="true"/>
+				<answer value="B int e = (2/0);"/>
+				<answer value="C Object x = new Float(&quot;1.0&quot;); Double d = (Double) x;"/>
+				<answer value="D String s = null; int i = s.length();"/>
+			</choice>
+		</front>
+		<back>
+			<result/>
+			<text value=""/>
 		</back>
 	</card>
 </lymbo>
