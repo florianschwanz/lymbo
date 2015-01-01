@@ -59,132 +59,137 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
     @Override
     public View getView(final int position, View v, ViewGroup parent) {
-        LayoutInflater vi;
-        vi = LayoutInflater.from(getContext());
-        CardView cv = (CardView) vi.inflate(R.layout.card, null);
         final Card card = getItem(position);
 
-        // Load views : front
-        final LinearLayout front = (LinearLayout) cv.findViewById(R.id.front);
-        final LinearLayout back = (LinearLayout) cv.findViewById(R.id.back);
-        final LinearLayout llComponentsFront = (LinearLayout) cv.findViewById(R.id.llComponentsFront);
-        final LinearLayout llComponentsBack = (LinearLayout) cv.findViewById(R.id.llComponentsBack);
+        if (card.isVisible()) {
+            LayoutInflater vi;
+            vi = LayoutInflater.from(getContext());
+            CardView cv = (CardView) vi.inflate(R.layout.card, null);
 
-        // Load views : bottom bar
-        final LinearLayout llBottom = (LinearLayout) cv.findViewById(R.id.llBottom);
-        final ImageView ivFlip = (ImageView) cv.findViewById(R.id.ivFlip);
-        final ImageView ivEdit = (ImageView) cv.findViewById(R.id.ivEdit);
-        final ImageView ivHint = (ImageView) cv.findViewById(R.id.ivHint);
+            // Load views : front
+            final LinearLayout front = (LinearLayout) cv.findViewById(R.id.front);
+            final LinearLayout back = (LinearLayout) cv.findViewById(R.id.back);
+            final LinearLayout llComponentsFront = (LinearLayout) cv.findViewById(R.id.llComponentsFront);
+            final LinearLayout llComponentsBack = (LinearLayout) cv.findViewById(R.id.llComponentsBack);
 
-        // Add components : front
-        if (card.getFront() != null) {
-            for (Displayable d : card.getFront().getComponents()) {
-                View component = d.getView(c, a, llComponentsFront);
-                llComponentsFront.addView(component);
+            // Load views : bottom bar
+            final LinearLayout llBottom = (LinearLayout) cv.findViewById(R.id.llBottom);
+            final ImageView ivFlip = (ImageView) cv.findViewById(R.id.ivFlip);
+            final ImageView ivEdit = (ImageView) cv.findViewById(R.id.ivEdit);
+            final ImageView ivHint = (ImageView) cv.findViewById(R.id.ivHint);
 
-                if ((d instanceof TitleComponent && ((TitleComponent) d).isFlip()) ||
-                        (d instanceof TextComponent && ((TextComponent) d).isFlip()) ||
-                        (d instanceof ImageComponent && ((ImageComponent) d).isFlip()) ||
-                        (d instanceof ResultComponent && ((ResultComponent) d).isFlip()) ||
-                        (d instanceof SVGComponent && ((SVGComponent) d).isFlip())
-                        ) {
-                    component.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            flipToBack(card, front, back, llComponentsFront);
-                        }
-                    });
+            // Add components : front
+            if (card.getFront() != null) {
+                for (Displayable d : card.getFront().getComponents()) {
+                    View component = d.getView(c, a, llComponentsFront);
+                    llComponentsFront.addView(component);
 
-                }
-            }
-        }
+                    if ((d instanceof TitleComponent && ((TitleComponent) d).isFlip()) ||
+                            (d instanceof TextComponent && ((TextComponent) d).isFlip()) ||
+                            (d instanceof ImageComponent && ((ImageComponent) d).isFlip()) ||
+                            (d instanceof ResultComponent && ((ResultComponent) d).isFlip()) ||
+                            (d instanceof SVGComponent && ((SVGComponent) d).isFlip())
+                            ) {
+                        component.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                flipToBack(card, front, back, llComponentsFront);
+                            }
+                        });
 
-        // Add components : back
-        if (card.getBack() != null) {
-            for (Displayable d : card.getBack().getComponents()) {
-                View component = d.getView(c, a, llComponentsBack);
-                llComponentsBack.addView(component);
-
-                if ((d instanceof TitleComponent && ((TitleComponent) d).isFlip()) ||
-                        (d instanceof TextComponent && ((TextComponent) d).isFlip()) ||
-                        (d instanceof ImageComponent && ((ImageComponent) d).isFlip()) ||
-                        (d instanceof ResultComponent && ((ResultComponent) d).isFlip()) ||
-                        (d instanceof SVGComponent && ((SVGComponent) d).isFlip())
-                        ) {
-                    component.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            flipToFront(card, front, back, llComponentsFront);
-                        }
-                    });
-
-                }
-            }
-        }
-
-        // Default visibility
-        front.setVisibility(View.VISIBLE);
-        back.setVisibility(View.INVISIBLE);
-
-        // Center vertically
-        llComponentsFront.setGravity(Gravity.CENTER_VERTICAL);
-        llComponentsBack.setGravity(Gravity.CENTER_VERTICAL);
-
-        // Action : flip
-        if (card.isFlip()) {
-            ivFlip.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (frontVisible) {
-                        flipToBack(card, front, back, llComponentsBack);
-                    } else {
-                        flipToFront(card, front, back, llComponentsFront);
                     }
                 }
-            });
-        } else {
-            remove(ivFlip);
-        }
+            }
 
-        // Action : edit
-        if (card.isEdit()) {
-            ivEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    componentsController.setCard(card);
-                    Intent openStartingPoint = new Intent(c, EditCardActivity.class);
-                    c.startActivity(openStartingPoint);
+            // Add components : back
+            if (card.getBack() != null) {
+                for (Displayable d : card.getBack().getComponents()) {
+                    View component = d.getView(c, a, llComponentsBack);
+                    llComponentsBack.addView(component);
+
+                    if ((d instanceof TitleComponent && ((TitleComponent) d).isFlip()) ||
+                            (d instanceof TextComponent && ((TextComponent) d).isFlip()) ||
+                            (d instanceof ImageComponent && ((ImageComponent) d).isFlip()) ||
+                            (d instanceof ResultComponent && ((ResultComponent) d).isFlip()) ||
+                            (d instanceof SVGComponent && ((SVGComponent) d).isFlip())
+                            ) {
+                        component.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                flipToFront(card, front, back, llComponentsFront);
+                            }
+                        });
+
+                    }
                 }
-            });
+            }
+
+            // Default visibility
+            front.setVisibility(View.VISIBLE);
+            back.setVisibility(View.INVISIBLE);
+
+            // Center vertically
+            llComponentsFront.setGravity(Gravity.CENTER_VERTICAL);
+            llComponentsBack.setGravity(Gravity.CENTER_VERTICAL);
+
+            // Action : flip
+            if (card.isFlip()) {
+                ivFlip.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (frontVisible) {
+                            flipToBack(card, front, back, llComponentsBack);
+                        } else {
+                            flipToFront(card, front, back, llComponentsFront);
+                        }
+                    }
+                });
+            } else {
+                remove(ivFlip);
+            }
+
+            // Action : edit
+            if (card.isEdit()) {
+                ivEdit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        componentsController.setCard(card);
+                        Intent openStartingPoint = new Intent(c, EditCardActivity.class);
+                        c.startActivity(openStartingPoint);
+                    }
+                });
+            } else {
+                remove(ivEdit);
+            }
+
+            // Action : hint
+            if (card.getFront().contains(EComponent.HINT) && frontVisible) {
+                ivHint.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DisplayDialogFragment displayDialogFragment = new DisplayDialogFragment();
+                        Bundle b = new Bundle();
+                        b.putCharSequence("type", EDialogType.HINT.toString());
+                        b.putCharSequence("title", a.getResources().getString(R.string.hint));
+                        b.putCharSequence("message", ((HintComponent) card.getFront().getFirst(EComponent.HINT)).getValue());
+
+                        displayDialogFragment.setArguments(b);
+                        displayDialogFragment.show(a.getFragmentManager(), "okay");
+                    }
+                });
+            } else {
+                remove(ivHint);
+            }
+
+            // Remove bottom bar if unnecessary
+            if (!card.isFlip() && !card.isEdit() && card.getFront().contains(EComponent.HINT)) {
+                remove(llBottom);
+            }
+
+            return cv;
         } else {
-            remove(ivEdit);
+            return new View(c);
         }
-
-        // Action : hint
-        if (card.getFront().contains(EComponent.HINT) && frontVisible) {
-            ivHint.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DisplayDialogFragment displayDialogFragment = new DisplayDialogFragment();
-                    Bundle b = new Bundle();
-                    b.putCharSequence("type", EDialogType.HINT.toString());
-                    b.putCharSequence("title", a.getResources().getString(R.string.hint));
-                    b.putCharSequence("message", ((HintComponent) card.getFront().getFirst(EComponent.HINT)).getValue());
-
-                    displayDialogFragment.setArguments(b);
-                    displayDialogFragment.show(a.getFragmentManager(), "okay");
-                }
-            });
-        } else {
-            remove(ivHint);
-        }
-
-        // Remove bottom bar if unnecessary
-        if (!card.isFlip() && !card.isEdit() && card.getFront().contains(EComponent.HINT)) {
-            remove(llBottom);
-        }
-
-        return cv;
     }
 
     private void flipToBack(final Card card, final LinearLayout front, final LinearLayout back, final LinearLayout visible) {

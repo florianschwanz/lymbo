@@ -13,7 +13,9 @@
     <string name="menu_add">Add Card</string>
     <string name="menu_log">Log</string>
     <string name="menu_about">About</string>
+    <string name="menu_refresh">Refresh</string>
     <string name="menu_save">Save</string>
+    <string name="menu_shuffle">Shuffle</string>
     <string name="message">Message</string>
     <string name="okay">Okay</string>
     <string name="no_hint">There is no hint</string>

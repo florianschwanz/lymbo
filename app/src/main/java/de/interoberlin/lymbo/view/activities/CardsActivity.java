@@ -8,11 +8,16 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.fortysevendeg.swipelistview.BaseSwipeListViewListener;
 import com.fortysevendeg.swipelistview.SwipeListView;
+
+import java.util.Collections;
+import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.LymbosController;
+import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.mate.lib.util.Toaster;
@@ -30,6 +35,7 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     private DrawerLayout drawer;
     private SwipeListView slv;
 
+    private List<Card> cards = cardsController.getCards();
     private CardsListAdapter cardsAdapter;
 
     // --------------------
@@ -53,14 +59,56 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
 
         // Get list view and add adapter
         slv = (SwipeListView) findViewById(R.id.slv);
-        cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
+        cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cards);
         slv.setAdapter(cardsAdapter);
-        slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
+        slv.setSwipeMode(SwipeListView.SWIPE_MODE_BOTH);
+
+        slv.setSwipeListViewListener(new BaseSwipeListViewListener() {
+            @Override
+            public void onOpened(int position, boolean toRight) {
+            }
+
+            @Override
+            public void onClosed(int position, boolean fromRight) {
+            }
+
+            @Override
+            public void onListChanged() {
+            }
+
+            @Override
+            public void onMove(int position, float x) {
+            }
+
+            @Override
+            public void onStartOpen(int position, int action, boolean right) {
+            }
+
+            @Override
+            public void onStartClose(int position, boolean right) {
+            }
+
+            @Override
+            public void onClickFrontView(int position) {
+            }
+
+            @Override
+            public void onClickBackView(int position) {
+            }
+
+            @Override
+            public void onDismiss(int[] reverseSortedPositions) {
+                for (int position : reverseSortedPositions) {
+                    cards.get(position).setVisible(false);
+                }
+                cardsAdapter.notifyDataSetChanged();
+            }
+
+        });
     }
 
     public void onResume() {
         super.onResume();
-        clear();
     }
 
     @Override
@@ -87,7 +135,18 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
                 cardsController.save();
                 cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
                 slv.setAdapter(cardsAdapter);
-
+                break;
+            }
+            case R.id.menu_shuffle: {
+                Collections.shuffle(cards);
+                cardsAdapter.notifyDataSetChanged();
+                break;
+            }
+            case R.id.menu_refresh: {
+                for (Card c : cards) {
+                    c.setVisible(true);
+                }
+                cardsAdapter.notifyDataSetChanged();
                 break;
             }
         }
@@ -122,21 +181,6 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     protected int getLayoutResource() {
         return R.layout.activity_lymbos;
     }
-
-    private static void clear() {
-        // rv.removeAllViews();
-    }
-
-    public void uiRefresh() {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                clear();
-            }
-        });
-    }
-
-
 
     /*
     @Override

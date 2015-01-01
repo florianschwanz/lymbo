@@ -8,6 +8,8 @@ public class Card {
     private boolean flip = true;
     private boolean edit = false;
 
+    private boolean visible = true;
+
     // -------------------------
     // Constructors
     // -------------------------
@@ -57,5 +59,13 @@ public class Card {
 
     public void setEdit(boolean edit) {
         this.edit = edit;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }
