@@ -149,7 +149,7 @@ public class Lymbo implements Displayable {
      * @return
      */
     public List<Tag> getChapters() {
-        List<Tag> chapters = new ArrayList<>();
+        List<Tag> chapters = new ArrayList<Tag>();
 
         for (Card c : getCards()) {
             if (c.getChapter() != null && !containsTag(chapters, c.getChapter())) {

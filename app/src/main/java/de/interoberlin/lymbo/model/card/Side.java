@@ -84,7 +84,7 @@ public class Side {
 
     public void addComponent(Displayable displayable) {
         if (components == null) {
-            components = new ArrayList<>();
+            components = new ArrayList<Displayable>();
         }
 
         components.add(displayable);

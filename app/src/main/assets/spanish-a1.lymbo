@@ -38,20 +38,20 @@
 		</front>
 	</card>
 	
-	<card chapter="1 Viaje al español"><front><title value="die Kulturen"/></front><back><title value="las culturas"/></back></card>
-	<card chapter="1 Viaje al español" tags="lugares"><front><title value="Maya Ruinen"/></front><back><title value="ruinas mayas"/></back></card>
-	<card chapter="1 Viaje al español" tags="lugares"><front><title value="die Katedrale von Palma"/></front><back><title value="la catedral de Palma"/></back></card>
-	<card chapter="1 Viaje al español" tags="lugares"><front><title value="das Prado Museum"/></front><back><title value="el museo del Prado"/></back></card>
-	<card chapter="1 Viaje al español" tags="lugares"><front><title value="die Ruinen von Machu Pichu"/></front><back><title value="las ruinas de Machu Pichu"/></back></card>
-	<card chapter="1 Viaje al español" tags="comida"><front><title value="Kaffee"/></front><back><title value="café"/></back></card>
-	<card chapter="1 Viaje al español" tags="comida"><front><title value="Schokolade"/></front><back><title value="chocolate"/></back></card>
-	<card chapter="1 Viaje al español" tags="comida"><front><title value="Kaktus"/></front><back><title value="cactus"/></back></card>
-	<card chapter="1 Viaje al español" tags="comida"><front><title value="Sangria"/></front><back><title value="sangría"/></back></card>
-	<card chapter="1 Viaje al español"><front><title value="Musik"/></front><back><title value="música"/></back></card>
-	<card chapter="1 Viaje al español"><front><title value="Flamenco"/></front><back><title value="flamenco"/></back></card>
-	<card chapter="1 Viaje al español" tags="instrumentos"><front><title value="Gitarre"/></front><back><title value="guitarra"/></back></card>
-	<card chapter="1 Viaje al español"><front><title value="Kondor"/></front><back><title value="cóndor"/></back></card>
-	<card chapter="1 Viaje al español" tags="comida"><front><title value="Paella"/></front><back><title value="paella"/></back></card>
-	<card chapter="1 Viaje al español" tags="comida"><front><title value="Tacos"/></front><back><title value="tacos"/></back></card>
-	<card chapter="1 Viaje al español" tags="lugares"><front><title value="Pampa"/></front><back><title value="pampa"/></back></card>
+	<card chapter="1 Viaje al español"><front><title value="die Kulturen" gravity="center"/></front><back><title value="las culturas" gravity="center"/></back></card>
+	<card chapter="1 Viaje al español" tags="lugares"><front><title value="die Maya Ruinen" gravity="center"/></front><back><title value="ruinas mayas" gravity="center"/></back></card>
+	<card chapter="1 Viaje al español" tags="lugares"><front><title value="die Katedrale von Palma" gravity="center"/></front><back><title value="la catedral de Palma" gravity="center"/></back></card>
+	<card chapter="1 Viaje al español" tags="lugares"><front><title value="das Prado Museum" gravity="center"/></front><back><title value="el museo del Prado" gravity="center"/></back></card>
+	<card chapter="1 Viaje al español" tags="lugares"><front><title value="die Ruinen von Machu Pichu" gravity="center"/></front><back><title value="las ruinas de Machu Pichu" gravity="center"/></back></card>
+	<card chapter="1 Viaje al español" tags="comida"><front><title value="der Kaffee" gravity="center"/></front><back><title value="café" gravity="center"/></back></card>
+	<card chapter="1 Viaje al español" tags="comida"><front><title value="die Schokolade" gravity="center"/></front><back><title value="chocolate" gravity="center"/></back></card>
+	<card chapter="1 Viaje al español" tags="comida"><front><title value="der Kaktus" gravity="center"/></front><back><title value="cactus" gravity="center"/></back></card>
+	<card chapter="1 Viaje al español" tags="comida"><front><title value="Sangria" gravity="center"/></front><back><title value="sangría" gravity="center"/></back></card>
+	<card chapter="1 Viaje al español"><front><title value="die Musik" gravity="center"/></front><back><title value="música" gravity="center"/></back></card>
+	<card chapter="1 Viaje al español"><front><title value="der Flamenco" gravity="center"/></front><back><title value="flamenco" gravity="center"/></back></card>
+	<card chapter="1 Viaje al español" tags="instrumentos"><front><title value="die Gitarre" gravity="center"/></front><back><title value="guitarra" gravity="center"/></back></card>
+	<card chapter="1 Viaje al español"><front><title value="der Kondor" gravity="center"/></front><back><title value="cóndor" gravity="center"/></back></card>
+	<card chapter="1 Viaje al español" tags="comida"><front><title value="die Paella" gravity="center"/></front><back><title value="la paella" gravity="center"/></back></card>
+	<card chapter="1 Viaje al español" tags="comida"><front><title value="die Tacos" gravity="center"/></front><back><title value="los tacos" gravity="center"/></back></card>
+	<card chapter="1 Viaje al español" tags="lugares"><front><title value="die Pampa" gravity="center"/></front><back><title value="la pampa" gravity="center"/></back></card>
 </lymbo>
