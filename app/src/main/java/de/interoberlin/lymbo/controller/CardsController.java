@@ -66,6 +66,13 @@ public class CardsController {
         }
     }
 
+    /**
+     * Renames a lymbo file so that it will not be found anymore
+     */
+    public void discard() {
+        new File(lymbo.getPath()).renameTo(new File(lymbo.getPath() + ".removed"));
+    }
+
 
     // --------------------
     // Getters / Setters

@@ -13,10 +13,12 @@ import android.view.ViewManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Space;
 
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.ComponentsController;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
@@ -38,6 +40,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     Activity a;
 
     // Controllers
+    CardsController cardsController = CardsController.getInstance();
     ComponentsController componentsController = ComponentsController.getInstance();
 
     private boolean frontVisible = true;
@@ -61,7 +64,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     public View getView(final int position, View v, ViewGroup parent) {
         final Card card = getItem(position);
 
-        if (card.isVisible()) {
+        if (!card.isDiscarded() && card.matchesChapter(cardsController.getLymbo().getChapters())&& card.matchesTag(cardsController.getLymbo().getTags())) {
+            // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
             CardView cv = (CardView) vi.inflate(R.layout.card, null);
@@ -188,7 +192,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
             return cv;
         } else {
-            return new View(c);
+            Space s = new Space(c);
+            s.setVisibility(View.GONE);
+            return s;
         }
     }
 

@@ -8,12 +8,14 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Side;
+import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 import de.interoberlin.lymbo.model.card.components.HintComponent;
@@ -150,6 +152,9 @@ public class LymboParser {
         String flip = parser.getAttributeValue(null, "flip");
         String edit = parser.getAttributeValue(null, "edit");
 
+        String chapter = parser.getAttributeValue(null, "chapter");
+        String tags = parser.getAttributeValue(null, "tags");
+
         // Read sub elements
         Side front = null;
         Side back = null;
@@ -179,6 +184,10 @@ public class LymboParser {
             card.setFront(front);
         if (back != null)
             card.setBack(back);
+        if (chapter != null)
+            card.setChapter(parseTag(chapter));
+        if (tags != null)
+            card.setTags(parseTags(tags));
         if (flip != null)
             card.setFlip(Boolean.parseBoolean(flip));
         if (edit != null)
@@ -620,6 +629,34 @@ public class LymboParser {
         } else {
             return EGravity.LEFT;
         }
+    }
+
+    /**
+     * Returns a tag
+     *
+     * @param tagString string value representing a tag
+     * @return list of tags
+     */
+    private Tag parseTag(String tagString) {
+        return new Tag(tagString);
+    }
+
+    /**
+     * Returns a list of tags
+     *
+     * @param tagString space separated string value containing tags
+     * @return list of tags
+     */
+    private List<Tag> parseTags(String tagString) {
+        String[] tags = tagString.split(" ");
+        List<String> tagNames = Arrays.asList(tags);
+        List<Tag> tagList = new ArrayList<Tag>();
+
+        for (String t : tagNames) {
+            tagList.add(new Tag(t));
+        }
+
+        return tagList;
     }
 
     /**

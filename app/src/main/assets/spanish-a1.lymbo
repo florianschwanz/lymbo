@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lymbo title="Con gusto" subtitle="Spanisch A1" hint="Spanisch A1" image="" author="Flo">
+	<card>
+		<front>
+			<title value="1a Palabras españolas"/>
+			<text value="culturas antiguas"/>
+			<text value="ruinas mayas"/>
+			<text value="la catedral de Palma"/>
+			<text value="el museo del Prado"/>
+			<text value="las ruinas de Machu Pichu"/>
+			<text value="café"/>
+			<text value="chocolate"/>
+			<text value="cactus"/>
+			<text value="sangría"/>
+			<text value="música"/>
+			<text value="flamenco"/>
+			<text value="guitarra"/>
+			<text value="cóndor"/>
+			<text value="paella"/>
+			<text value="tacos"/>
+			<text value="pampa"/>
+		</front>
+	</card>
+	<card chapter="1 Viaje al español">
+		<front>
+			<title value="Numeros"/>
+			<text value="0 cero"/>
+			<text value="1 uno"/>
+			<text value="2 dos"/>
+			<text value="3 tres"/>
+			<text value="4 cuatro"/>
+			<text value="5 cinco"/>
+			<text value="6 seis"/>
+			<text value="7 siete"/>
+			<text value="8 ocho"/>
+			<text value="9 neuve"/>
+			<text value="10 diez"/>
+		</front>
+	</card>
+	
+	<card chapter="1 Viaje al español"><front><title value="die Kulturen"/></front><back><title value="las culturas"/></back></card>
+	<card chapter="1 Viaje al español" tags="lugares"><front><title value="Maya Ruinen"/></front><back><title value="ruinas mayas"/></back></card>
+	<card chapter="1 Viaje al español" tags="lugares"><front><title value="die Katedrale von Palma"/></front><back><title value="la catedral de Palma"/></back></card>
+	<card chapter="1 Viaje al español" tags="lugares"><front><title value="das Prado Museum"/></front><back><title value="el museo del Prado"/></back></card>
+	<card chapter="1 Viaje al español" tags="lugares"><front><title value="die Ruinen von Machu Pichu"/></front><back><title value="las ruinas de Machu Pichu"/></back></card>
+	<card chapter="1 Viaje al español" tags="comida"><front><title value="Kaffee"/></front><back><title value="café"/></back></card>
+	<card chapter="1 Viaje al español" tags="comida"><front><title value="Schokolade"/></front><back><title value="chocolate"/></back></card>
+	<card chapter="1 Viaje al español" tags="comida"><front><title value="Kaktus"/></front><back><title value="cactus"/></back></card>
+	<card chapter="1 Viaje al español" tags="comida"><front><title value="Sangria"/></front><back><title value="sangría"/></back></card>
+	<card chapter="1 Viaje al español"><front><title value="Musik"/></front><back><title value="música"/></back></card>
+	<card chapter="1 Viaje al español"><front><title value="Flamenco"/></front><back><title value="flamenco"/></back></card>
+	<card chapter="1 Viaje al español" tags="instrumentos"><front><title value="Gitarre"/></front><back><title value="guitarra"/></back></card>
+	<card chapter="1 Viaje al español"><front><title value="Kondor"/></front><back><title value="cóndor"/></back></card>
+	<card chapter="1 Viaje al español" tags="comida"><front><title value="Paella"/></front><back><title value="paella"/></back></card>
+	<card chapter="1 Viaje al español" tags="comida"><front><title value="Tacos"/></front><back><title value="tacos"/></back></card>
+	<card chapter="1 Viaje al español" tags="lugares"><front><title value="Pampa"/></front><back><title value="pampa"/></back></card>
+</lymbo>

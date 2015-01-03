@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
@@ -110,6 +112,71 @@ public class Lymbo implements Displayable {
     @Override
     public View getEditableView(Context c, final Activity a, ViewGroup parent) {
         return new View(c);
+    }
+
+    /**
+     * Returns a list of all tags used in this lymbo
+     *
+     * @return
+     */
+    public List<Tag> getTags() {
+        List<Tag> tags = new ArrayList<>();
+
+        for (Card c : getCards()) {
+            for (Tag t : c.getTags()) {
+                if (!containsTag(tags, t)) {
+                    tags.add(t);
+                }
+            }
+        }
+
+        Collections.sort(tags, new Comparator<Tag>() {
+            @Override
+            public int compare(Tag t1, Tag t2) {
+
+                return t1.getName().compareTo(t2.getName());
+            }
+        });
+
+        tags.add(0, new Tag("< no tag >"));
+
+        return tags;
+    }
+
+    /**
+     * Returns a list of all chapters used in this lymbo
+     *
+     * @return
+     */
+    public List<Tag> getChapters() {
+        List<Tag> chapters = new ArrayList<>();
+
+        for (Card c : getCards()) {
+            if (c.getChapter() != null && !containsTag(chapters, c.getChapter())) {
+                chapters.add(c.getChapter());
+            }
+        }
+
+        Collections.sort(chapters, new Comparator<Tag>() {
+            @Override
+            public int compare(Tag t1, Tag t2) {
+
+                return t1.getName().compareTo(t2.getName());
+            }
+        });
+
+        chapters.add(0, new Tag("< no chapter >"));
+
+        return chapters;
+    }
+
+    private boolean containsTag(List<Tag> tags, Tag tag) {
+        for (Tag t : tags) {
+            if (t.getName().equalsIgnoreCase(tag.getName()))
+                return true;
+        }
+
+        return false;
     }
 
     // -------------------------

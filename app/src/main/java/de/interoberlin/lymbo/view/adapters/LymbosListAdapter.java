@@ -17,7 +17,6 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
-import de.interoberlin.lymbo.view.activities.LymbosActivity;
 import de.interoberlin.mate.lib.util.Toaster;
 
 public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
@@ -31,12 +30,6 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
     // Constructors
     // --------------------
 
-    public LymbosListAdapter(Context context, int textViewResourceId) {
-        super(context, textViewResourceId);
-
-        this.c = context;
-    }
-
     public LymbosListAdapter(Context context, int resource, List<Lymbo> items) {
         super(context, resource, items);
 
@@ -49,10 +42,14 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
+        final Lymbo lymbo = getItem(position);
+
+        // Layout inflater
         LayoutInflater vi;
         vi = LayoutInflater.from(getContext());
         CardView cv = (CardView) vi.inflate(R.layout.stack, null);
 
+        // Load views
         TextView tvTitle = (TextView) cv.findViewById(R.id.tvTitle);
         TextView tvSubtitle = (TextView) cv.findViewById(R.id.tvSubtitle);
         ImageView ivDiscard = (ImageView) cv.findViewById(R.id.ivDiscard);
@@ -62,57 +59,85 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         ImageView ivHint = (ImageView) cv.findViewById(R.id.ivHint);
         ImageView ivLogo = (ImageView) cv.findViewById(R.id.ivLogo);
 
-        final Lymbo lymbo = getItem(position);
+        // Set values
         tvTitle.setText(lymbo.getTitle());
         tvSubtitle.setText(lymbo.getSubtitle());
 
-        tvTitle.setOnClickListener(new View.OnClickListener() {
+        // Action : open cards view
+        cv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cardsController.setLymbo(lymbo);
                 cardsController.init();
-                Intent openStartingPoint = new Intent(((LymbosActivity) c), CardsActivity.class);
-                ((LymbosActivity) c).startActivity(openStartingPoint);
+                Intent openStartingPoint = new Intent(c, CardsActivity.class);
+                c.startActivity(openStartingPoint);
             }
         });
 
-        ivDiscard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toaster.add("Not yet implemented");
-            }
-        });
+        // Action : discard
+        if (lymbo.getPath() != null) {
+            ivDiscard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    cardsController.setLymbo(lymbo);
+                    cardsController.discard();
+                    notifyDataSetChanged();
+                }
+            });
+        } else {
+            remove(ivDiscard);
+        }
 
-        ivEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toaster.add("Not yet implemented");
-            }
-        });
+        // Action : edit
+        if (lymbo.getPath() != null) {
+            ivEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toaster.add("Not yet implemented");
+                }
+            });
+        } else {
+            remove(ivEdit);
+        }
 
-        ivShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toaster.add("Not yet implemented");
-            }
-        });
+        // Action : edit
+        if (lymbo.getPath() != null) {
+            ivShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toaster.add("Not yet implemented");
+                }
+            });
+        } else {
+            remove(ivShare);
+        }
 
-        ivUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toaster.add("Not yet implemented");
-            }
-        });
+        // Action : upload
+        if (lymbo.getPath() != null) {
+            ivUpload.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toaster.add("Not yet implemented");
+                }
+            });
+        } else {
+            remove(ivUpload);
+        }
 
-        ivHint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (lymbo.getPath() != null)
-                    Toaster.add(lymbo.getPath());
-                else
-                    Toaster.add("lymbo stack from assets");
-            }
-        });
+        // Action : path
+        if (lymbo.getPath() != null) {
+            ivHint.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (lymbo.getPath() != null)
+                        Toaster.add(lymbo.getPath());
+                    else
+                        Toaster.add("lymbo stack from assets");
+                }
+            });
+        } else {
+            remove(ivHint);
+        }
 
         ivLogo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,10 +145,6 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 Toaster.add("Not yet implemented");
             }
         });
-
-        if (lymbo.getPath() == null) {
-            remove(ivDiscard);
-        }
 
         return cv;
     }

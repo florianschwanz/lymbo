@@ -1,20 +1,54 @@
 package de.interoberlin.lymbo.model.card;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Card {
     private int id;
     private Side front;
     private Side back;
 
+    private Tag chapter;
+    private List<Tag> tags = new ArrayList<>();
+
     private boolean flip = true;
     private boolean edit = false;
 
-    private boolean visible = true;
+    private boolean discarded = false;
 
     // -------------------------
     // Constructors
     // -------------------------
 
     public Card() {
+    }
+
+
+    public boolean matchesChapter(List<Tag> cs) {
+        for (Tag c : cs) {
+            if (chapter == null && c.getName().equals("< no chapter >")) {
+                return true;
+            } else if (chapter.getName().equals(c.getName()) && c.isChecked()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean matchesTag(List<Tag> ts) {
+        for (Tag t : ts) {
+            if (tags.isEmpty()) {
+                if (t.getName().equals("< no tag >"))
+                    return true;
+            } else {
+                for (Tag tag : tags) {
+                    if (t.getName().equals(tag.getName()) && t.isChecked())
+                        return true;
+                }
+            }
+        }
+        return false;
     }
 
     // -------------------------
@@ -45,6 +79,22 @@ public class Card {
         this.back = back;
     }
 
+    public Tag getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(Tag chapter) {
+        this.chapter = chapter;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
     public boolean isFlip() {
         return flip;
     }
@@ -61,11 +111,11 @@ public class Card {
         this.edit = edit;
     }
 
-    public boolean isVisible() {
-        return visible;
+    public boolean isDiscarded() {
+        return discarded;
     }
 
-    public void setVisible(boolean visible) {
-        this.visible = visible;
+    public void setDiscarded(boolean discarded) {
+        this.discarded = discarded;
     }
 }

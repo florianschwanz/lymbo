@@ -19,10 +19,12 @@ import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
+import de.interoberlin.lymbo.view.dialogfragments.CheckboxDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
 import de.interoberlin.mate.lib.util.Toaster;
 
-public class CardsActivity extends BaseActivity implements DisplayDialogFragment.OnCompleteListener {
+public class CardsActivity extends BaseActivity implements DisplayDialogFragment.OnCompleteListener, CheckboxDialogFragment.OnLabelSelectedListener {
     // Controllers
     CardsController cardsController = CardsController.getInstance();
     LymbosController lymbosController = LymbosController.getInstance();
@@ -99,7 +101,7 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
             @Override
             public void onDismiss(int[] reverseSortedPositions) {
                 for (int position : reverseSortedPositions) {
-                    cards.get(position).setVisible(false);
+                    cards.get(position).setDiscarded(true);
                 }
                 cardsAdapter.notifyDataSetChanged();
             }
@@ -144,10 +146,19 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
             }
             case R.id.menu_refresh: {
                 for (Card c : cards) {
-                    c.setVisible(true);
+                    c.setDiscarded(false);
                 }
                 cardsAdapter.notifyDataSetChanged();
                 break;
+            }
+            case R.id.menu_label: {
+                CheckboxDialogFragment checkboxDialogFragment = new CheckboxDialogFragment();
+
+                Bundle b = new Bundle();
+                b.putCharSequence("type", EDialogType.SELECT_LABEL.toString());
+
+                checkboxDialogFragment.setArguments(b);
+                checkboxDialogFragment.show(getFragmentManager(), "okay");
             }
         }
 
@@ -171,6 +182,11 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     @Override
     public void onDiscardCardDialogComplete() {
 
+    }
+
+    @Override
+    public void onLabelSelected() {
+        cardsAdapter.notifyDataSetChanged();
     }
 
     // --------------------
