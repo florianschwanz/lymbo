@@ -20,7 +20,7 @@ import de.interoberlin.lymbo.model.card.enums.ChoiceType;
 
 public class ChoiceComponent implements Displayable {
     private ChoiceType type = ChoiceType.MULTIPLE;
-    private List<Answer> answers = new ArrayList<>();
+    private List<Answer> answers = new ArrayList<Answer>();
 
     // --------------------
     // Constructor

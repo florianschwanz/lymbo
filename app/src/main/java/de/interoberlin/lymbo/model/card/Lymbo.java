@@ -120,7 +120,7 @@ public class Lymbo implements Displayable {
      * @return
      */
     public List<Tag> getTags() {
-        List<Tag> tags = new ArrayList<>();
+        List<Tag> tags = new ArrayList<Tag>();
 
         for (Card c : getCards()) {
             for (Tag t : c.getTags()) {

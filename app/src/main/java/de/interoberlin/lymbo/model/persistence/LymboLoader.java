@@ -42,7 +42,10 @@ public class LymboLoader {
     public static Lymbo getLymboFromFile(InputStream is) {
         try {
             return LymboParser.getInstance().parse(is);
-        } catch (XmlPullParserException | IOException e) {
+        } catch (XmlPullParserException e) {
+            Log.error(e.toString());
+            e.printStackTrace();
+        } catch (IOException e) {
             Log.error(e.toString());
             e.printStackTrace();
         }

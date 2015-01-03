@@ -9,7 +9,7 @@ public class Card {
     private Side back;
 
     private Tag chapter;
-    private List<Tag> tags = new ArrayList<>();
+    private List<Tag> tags = new ArrayList<Tag>();
 
     private boolean flip = true;
     private boolean edit = false;

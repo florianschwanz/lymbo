@@ -12,7 +12,7 @@ import de.interoberlin.lymbo.model.persistence.LymboWriter;
 
 public class CardsController {
     private static Lymbo lymbo;
-    private static List<Card> cards = new ArrayList<>();
+    private static List<Card> cards = new ArrayList<Card>();
 
     private static CardsController instance;
 

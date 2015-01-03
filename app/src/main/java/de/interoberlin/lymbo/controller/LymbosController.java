@@ -65,8 +65,8 @@ public class LymbosController extends Application {
     }
 
     public void init() {
-        lymbos = new ArrayList<>();
-        lymboFiles = new ArrayList<>();
+        lymbos = new ArrayList<Lymbo>();
+        lymboFiles = new ArrayList<File>();
     }
 
     public void load() {

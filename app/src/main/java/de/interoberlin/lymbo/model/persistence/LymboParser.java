@@ -98,7 +98,7 @@ public class LymboParser {
         String author = parser.getAttributeValue(null, "author");
 
         // Read sub elements
-        List<Card> cards = new ArrayList<>();
+        List<Card> cards = new ArrayList<Card>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -217,7 +217,7 @@ public class LymboParser {
         String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
-        List<Displayable> components = new ArrayList<>();
+        List<Displayable> components = new ArrayList<Displayable>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -482,7 +482,7 @@ public class LymboParser {
         String type = parser.getAttributeValue(null, "type");
 
         // Read sub elements
-        List<Answer> answers = new ArrayList<>();
+        List<Answer> answers = new ArrayList<Answer>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
