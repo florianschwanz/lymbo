@@ -653,7 +653,9 @@ public class LymboParser {
         List<Tag> tagList = new ArrayList<Tag>();
 
         for (String t : tagNames) {
-            tagList.add(new Tag(t));
+            if (!t.trim().equals("")) {
+                tagList.add(new Tag(t));
+            }
         }
 
         return tagList;

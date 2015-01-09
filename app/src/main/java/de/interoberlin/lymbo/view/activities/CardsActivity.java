@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -58,6 +59,10 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
         // Get activity and context for further use
         activity = this;
         context = getApplicationContext();
+    }
+
+    public void onResume() {
+        super.onResume();
 
         // Get list view and add adapter
         slv = (SwipeListView) findViewById(R.id.slv);
@@ -111,10 +116,6 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
         });
     }
 
-    public void onResume() {
-        super.onResume();
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -166,6 +167,38 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
 
         return true;
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            slv.smoothScrollToPosition(slv.getLastVisiblePosition() + 1);
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            slv.smoothScrollToPosition(getFirst() - 1);
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish();
+        }
+
+        return false;
+    }
+
+    private int getFirst() {
+        int first = slv.getFirstVisiblePosition();
+        if (slv.getChildAt(0).getTop() < 0)
+            first++;
+
+        return first;
+    }
+
+    private int getLast() {
+        int last = slv.getChildCount() - 1;
+        if (slv.getChildAt(last).getBottom() > slv.getHeight())
+            last--;
+
+        return last;
+    }
+
 
     // --------------------
     // Methods - Callbacks
