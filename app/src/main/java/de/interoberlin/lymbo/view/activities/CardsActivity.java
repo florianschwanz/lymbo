@@ -171,7 +171,7 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            slv.smoothScrollToPosition(slv.getLastVisiblePosition() + 1);
+            slv.smoothScrollToPosition(getFirst() + 2);
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
             slv.smoothScrollToPosition(getFirst() - 1);
@@ -190,15 +190,6 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
 
         return first;
     }
-
-    private int getLast() {
-        int last = slv.getChildCount() - 1;
-        if (slv.getChildAt(last).getBottom() > slv.getHeight())
-            last--;
-
-        return last;
-    }
-
 
     // --------------------
     // Methods - Callbacks
