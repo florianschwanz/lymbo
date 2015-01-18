@@ -52,7 +52,6 @@ public class Lymbo implements Displayable {
         ImageView ivShare = (ImageView) v.findViewById(R.id.ivShare);
         ImageView ivUpload = (ImageView) v.findViewById(R.id.ivUpload);
         ImageView ivHint = (ImageView) v.findViewById(R.id.ivHint);
-        ImageView ivLogo = (ImageView) v.findViewById(R.id.ivLogo);
 
         tvTitle.setText(getTitle());
         tvSubtitle.setText(getSubtitle());
@@ -96,13 +95,6 @@ public class Lymbo implements Displayable {
 
                 displayDialogFragment.setArguments(b);
                 displayDialogFragment.show(a.getFragmentManager(), "okay");
-            }
-        });
-
-        ivLogo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toaster.add(a.getResources().getString(R.string.not_yet_implemented));
             }
         });
 

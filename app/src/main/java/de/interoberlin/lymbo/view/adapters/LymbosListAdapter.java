@@ -2,6 +2,8 @@ package de.interoberlin.lymbo.view.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import java.util.List;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.util.Base64BitmapConverter;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.mate.lib.util.Toaster;
 
@@ -50,6 +53,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         LinearLayout ll = (LinearLayout) vi.inflate(R.layout.stack, null);
 
         // Load views
+        ImageView ivImage = (ImageView) ll.findViewById(R.id.ivImage);
         TextView tvTitle = (TextView) ll.findViewById(R.id.tvTitle);
         TextView tvSubtitle = (TextView) ll.findViewById(R.id.tvSubtitle);
         ImageView ivDiscard = (ImageView) ll.findViewById(R.id.ivDiscard);
@@ -57,11 +61,17 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         ImageView ivShare = (ImageView) ll.findViewById(R.id.ivShare);
         ImageView ivUpload = (ImageView) ll.findViewById(R.id.ivUpload);
         ImageView ivHint = (ImageView) ll.findViewById(R.id.ivHint);
-        ImageView ivLogo = (ImageView) ll.findViewById(R.id.ivLogo);
 
         // Set values
-        tvTitle.setText(lymbo.getTitle());
-        tvSubtitle.setText(lymbo.getSubtitle());
+        if (lymbo.getImage() != null) {
+            Bitmap b = Base64BitmapConverter.decodeBase64(lymbo.getImage());
+            BitmapDrawable bd = new BitmapDrawable(b);
+            ivImage.setBackgroundDrawable(bd);
+        }
+        if (lymbo.getTitle() != null)
+            tvTitle.setText(lymbo.getTitle());
+        if (lymbo.getSubtitle() != null)
+            tvSubtitle.setText(lymbo.getSubtitle());
 
         // Action : open cards view
         ll.setOnClickListener(new View.OnClickListener() {
@@ -138,13 +148,6 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         } else {
             remove(ivHint);
         }
-
-        ivLogo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toaster.add("Not yet implemented");
-            }
-        });
 
         return ll;
     }

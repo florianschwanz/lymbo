@@ -404,7 +404,7 @@ public class LymboParser {
         ImageComponent component = new ImageComponent();
 
         // Read attributes
-        String image = parser.getAttributeValue(null, "image");
+        String value = parser.getAttributeValue(null, "value");
         String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
@@ -418,8 +418,8 @@ public class LymboParser {
         */
 
         // Fill element
-        if (image != null)
-            component.setImage(image);
+        if (value != null)
+            component.setValue(value);
         if (flip != null)
             component.setFlip(Boolean.parseBoolean(flip));
 
