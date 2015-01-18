@@ -77,6 +77,7 @@ public class LymboWriter {
     private static void appendCard(String tag, Card card) {
         Map<String, String> attributes = new HashMap<String, String>();
         attributes.put("id", String.valueOf(card.getId()));
+        attributes.put("hint", card.getHint());
 
         addStartTag(tag, attributes);
 

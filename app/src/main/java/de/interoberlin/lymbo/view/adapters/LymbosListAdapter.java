@@ -2,13 +2,13 @@ package de.interoberlin.lymbo.view.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -47,24 +47,24 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         // Layout inflater
         LayoutInflater vi;
         vi = LayoutInflater.from(getContext());
-        CardView cv = (CardView) vi.inflate(R.layout.stack, null);
+        LinearLayout ll = (LinearLayout) vi.inflate(R.layout.stack, null);
 
         // Load views
-        TextView tvTitle = (TextView) cv.findViewById(R.id.tvTitle);
-        TextView tvSubtitle = (TextView) cv.findViewById(R.id.tvSubtitle);
-        ImageView ivDiscard = (ImageView) cv.findViewById(R.id.ivDiscard);
-        ImageView ivEdit = (ImageView) cv.findViewById(R.id.ivEdit);
-        ImageView ivShare = (ImageView) cv.findViewById(R.id.ivShare);
-        ImageView ivUpload = (ImageView) cv.findViewById(R.id.ivUpload);
-        ImageView ivHint = (ImageView) cv.findViewById(R.id.ivHint);
-        ImageView ivLogo = (ImageView) cv.findViewById(R.id.ivLogo);
+        TextView tvTitle = (TextView) ll.findViewById(R.id.tvTitle);
+        TextView tvSubtitle = (TextView) ll.findViewById(R.id.tvSubtitle);
+        ImageView ivDiscard = (ImageView) ll.findViewById(R.id.ivDiscard);
+        ImageView ivEdit = (ImageView) ll.findViewById(R.id.ivEdit);
+        ImageView ivShare = (ImageView) ll.findViewById(R.id.ivShare);
+        ImageView ivUpload = (ImageView) ll.findViewById(R.id.ivUpload);
+        ImageView ivHint = (ImageView) ll.findViewById(R.id.ivHint);
+        ImageView ivLogo = (ImageView) ll.findViewById(R.id.ivLogo);
 
         // Set values
         tvTitle.setText(lymbo.getTitle());
         tvSubtitle.setText(lymbo.getSubtitle());
 
         // Action : open cards view
-        cv.setOnClickListener(new View.OnClickListener() {
+        ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cardsController.setLymbo(lymbo);
@@ -146,7 +146,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             }
         });
 
-        return cv;
+        return ll;
     }
 
     private void remove(View v) {

@@ -8,6 +8,7 @@ public class Card {
     private Side front;
     private Side back;
 
+    private String hint;
     private Tag chapter;
     private List<Tag> tags = new ArrayList<Tag>();
 
@@ -77,6 +78,14 @@ public class Card {
 
     public void setBack(Side back) {
         this.back = back;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
     }
 
     public Tag getChapter() {

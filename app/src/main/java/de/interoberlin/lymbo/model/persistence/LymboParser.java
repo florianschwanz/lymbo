@@ -18,7 +18,6 @@ import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
-import de.interoberlin.lymbo.model.card.components.HintComponent;
 import de.interoberlin.lymbo.model.card.components.ImageComponent;
 import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.model.card.components.SVGComponent;
@@ -152,6 +151,7 @@ public class LymboParser {
         String flip = parser.getAttributeValue(null, "flip");
         String edit = parser.getAttributeValue(null, "edit");
 
+        String hint = parser.getAttributeValue(null, "hint");
         String chapter = parser.getAttributeValue(null, "chapter");
         String tags = parser.getAttributeValue(null, "tags");
 
@@ -184,6 +184,8 @@ public class LymboParser {
             card.setFront(front);
         if (back != null)
             card.setBack(back);
+        if (hint != null)
+            card.setHint(hint);
         if (chapter != null)
             card.setChapter(parseTag(chapter));
         if (tags != null)
@@ -233,9 +235,6 @@ public class LymboParser {
                     break;
                 case "text":
                     components.add(parseTextComponent(parser));
-                    break;
-                case "hint":
-                    components.add(parseHintComponent(parser));
                     break;
                 case "choice":
                     components.add(parseChoiceComponent(parser));
@@ -350,41 +349,6 @@ public class LymboParser {
             component.setStyle(parseStyle(style));
         if (flip != null)
             component.setFlip(Boolean.parseBoolean(flip));
-
-        return component;
-    }
-
-    /**
-     * Returns am hint component
-     *
-     * @param parser the XmlPullParser
-     * @return xmlSide
-     * @throws org.xmlpull.v1.XmlPullParserException
-     * @throws java.io.IOException
-     */
-    private HintComponent parseHintComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
-        Log.trace("parseHintComponent()");
-        parser.require(XmlPullParser.START_TAG, null, "hint");
-
-        // Create element
-        HintComponent component = new HintComponent();
-
-        // Read attributes
-        String value = parser.getAttributeValue(null, "value");
-
-        // Read sub elements
-        parser.next();
-        /*
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-        }
-        */
-
-        // Fill element
-        if (value != null)
-            component.setValue(value);
 
         return component;
     }

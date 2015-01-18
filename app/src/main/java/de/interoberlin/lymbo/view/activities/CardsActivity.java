@@ -68,9 +68,10 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
         slv = (SwipeListView) findViewById(R.id.slv);
         cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cards);
         slv.setAdapter(cardsAdapter);
-        slv.setSwipeMode(SwipeListView.SWIPE_MODE_BOTH);
+        slv.setSwipeMode(SwipeListView.SWIPE_MODE_RIGHT);
         slv.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_DISMISS);
         slv.setSwipeActionRight(SwipeListView.SWIPE_ACTION_DISMISS);
+        slv.setSwipeOpenOnLongPress(false);
 
         slv.setSwipeListViewListener(new BaseSwipeListViewListener() {
             @Override

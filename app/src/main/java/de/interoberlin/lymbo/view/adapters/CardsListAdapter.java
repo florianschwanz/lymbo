@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,6 @@ import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
-import de.interoberlin.lymbo.model.card.components.HintComponent;
 import de.interoberlin.lymbo.model.card.components.ImageComponent;
 import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.model.card.components.SVGComponent;
@@ -68,19 +66,19 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            CardView cv = (CardView) vi.inflate(R.layout.card, null);
+            LinearLayout ll = (LinearLayout) vi.inflate(R.layout.card, null);
 
             // Load views : front
-            final LinearLayout front = (LinearLayout) cv.findViewById(R.id.front);
-            final LinearLayout back = (LinearLayout) cv.findViewById(R.id.back);
-            final LinearLayout llComponentsFront = (LinearLayout) cv.findViewById(R.id.llComponentsFront);
-            final LinearLayout llComponentsBack = (LinearLayout) cv.findViewById(R.id.llComponentsBack);
+            final LinearLayout front = (LinearLayout) ll.findViewById(R.id.front);
+            final LinearLayout back = (LinearLayout) ll.findViewById(R.id.back);
+            final LinearLayout llComponentsFront = (LinearLayout) ll.findViewById(R.id.llComponentsFront);
+            final LinearLayout llComponentsBack = (LinearLayout) ll.findViewById(R.id.llComponentsBack);
 
             // Load views : bottom bar
-            final LinearLayout llBottom = (LinearLayout) cv.findViewById(R.id.llBottom);
-            final ImageView ivFlip = (ImageView) cv.findViewById(R.id.ivFlip);
-            final ImageView ivEdit = (ImageView) cv.findViewById(R.id.ivEdit);
-            final ImageView ivHint = (ImageView) cv.findViewById(R.id.ivHint);
+            final LinearLayout llBottom = (LinearLayout) ll.findViewById(R.id.llBottom);
+            final ImageView ivFlip = (ImageView) ll.findViewById(R.id.ivFlip);
+            final ImageView ivEdit = (ImageView) ll.findViewById(R.id.ivEdit);
+            final ImageView ivHint = (ImageView) ll.findViewById(R.id.ivHint);
 
             // Add components : front
             if (card.getFront() != null) {
@@ -128,7 +126,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 }
             }
 
-            // Default visibility
             front.setVisibility(View.VISIBLE);
             back.setVisibility(View.INVISIBLE);
 
@@ -167,7 +164,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             }
 
             // Action : hint
-            if (card.getFront().contains(EComponent.HINT) && frontVisible) {
+            if (card.getHint() != null && frontVisible) {
                 ivHint.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -175,7 +172,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                         Bundle b = new Bundle();
                         b.putCharSequence("type", EDialogType.HINT.toString());
                         b.putCharSequence("title", a.getResources().getString(R.string.hint));
-                        b.putCharSequence("message", ((HintComponent) card.getFront().getFirst(EComponent.HINT)).getValue());
+                        b.putCharSequence("message", card.getHint());
 
                         displayDialogFragment.setArguments(b);
                         displayDialogFragment.show(a.getFragmentManager(), "okay");
@@ -186,11 +183,11 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             }
 
             // Remove bottom bar if unnecessary
-            if (!card.isFlip() && !card.isEdit() && card.getFront().contains(EComponent.HINT)) {
+            if (!card.isFlip() && !card.isEdit() && card.getHint() == null) {
                 remove(llBottom);
             }
 
-            return cv;
+            return ll;
         } else {
             Space s = new Space(c);
             s.setVisibility(View.GONE);

@@ -1,123 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view"
-    android:layout_gravity="center"
-    android:layout_width="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
-    android:layout_margin="20dp"
-    card_view:cardCornerRadius="2dp">
+    android:layout_width="wrap_content"
+    android:padding="10dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        card_view:cardCornerRadius="2dp">
 
-        <RelativeLayout
-            android:id="@+id/main"
-            android:tag="front"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp">
-
-            <!-- Front -->
-            <LinearLayout
-                android:id="@+id/front"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <!-- Front components -->
-                <LinearLayout
-                    android:id="@+id/llComponentsFront"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:minHeight="@dimen/min_card_height"
-                    android:paddingBottom="16dp" />
-
-            </LinearLayout>
-
-            <!-- Back -->
-            <LinearLayout
-                android:id="@+id/back"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <!-- Back components -->
-                <LinearLayout
-                    android:id="@+id/llComponentsBack"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:minHeight="@dimen/min_card_height"
-                    android:paddingBottom="16dp" />
-            </LinearLayout>
-        </RelativeLayout>
-
-        <!-- Bottom bar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/llBottom"
-            android:layout_alignParentBottom="true"
             android:orientation="vertical">
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="14dp"
-                android:background="@color/stroke" />
+            <RelativeLayout
+                android:id="@+id/main"
+                android:tag="front"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
 
+                <!-- Front -->
+                <LinearLayout
+                    android:id="@+id/front"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Front components -->
+                    <LinearLayout
+                        android:id="@+id/llComponentsFront"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:minHeight="@dimen/min_card_height"
+                        android:paddingBottom="16dp" />
+
+                </LinearLayout>
+
+                <!-- Back -->
+                <LinearLayout
+                    android:id="@+id/back"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Back components -->
+                    <LinearLayout
+                        android:id="@+id/llComponentsBack"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:minHeight="@dimen/min_card_height"
+                        android:paddingBottom="16dp" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <!-- Bottom bar -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:baselineAligned="true"
-                android:id="@+id/llIconbarFront"
-                android:orientation="horizontal">
+                android:id="@+id/llBottom"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/llCustomIconsFront"
-                    android:gravity="left"
-                    android:orientation="horizontal">
-
-                    <!-- Edit -->
-                    <ImageView
-                        android:id="@+id/ivEdit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/edit"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_action_edit" />
-                </LinearLayout>
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@color/stroke" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:gravity="right">
-                    <!-- Hint -->
-                    <ImageView
-                        android:id="@+id/ivHint"
+                    android:baselineAligned="true"
+                    android:id="@+id/llIconbarFront"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:contentDescription="@string/hint"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_about" />
-                    <!-- Flip -->
-                    <ImageView
-                        android:id="@+id/ivFlip"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/llCustomIconsFront"
+                        android:gravity="left"
+                        android:orientation="horizontal">
+
+                        <!-- Edit -->
+                        <ImageView
+                            android:id="@+id/ivEdit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/edit"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_action_edit" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:contentDescription="@string/flip"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_action_screen_rotation" />
+                        android:layout_weight="0.5"
+                        android:gravity="right">
+                        <!-- Hint -->
+                        <ImageView
+                            android:id="@+id/ivHint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/hint"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_about" />
+                        <!-- Flip -->
+                        <ImageView
+                            android:id="@+id/ivFlip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/flip"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_action_screen_rotation" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-</android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

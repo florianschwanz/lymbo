@@ -11,7 +11,9 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,7 +28,10 @@ public class LymbosController extends Application {
     private List<Lymbo> lymbos;
 
     private static final String LYMBO_FILE_EXTENSION = ".lymbo";
-    private boolean loading = false;
+    private static final String LYMBO_DIR = "Interoberlin/lymbo";
+    private boolean loaded = false;
+
+    private List<String> assets = new ArrayList<String>();
 
     private static LymbosController instance;
 
@@ -70,19 +75,19 @@ public class LymbosController extends Application {
     }
 
     public void load() {
-        loading = true;
         getLymbosFromAssets();
         findLymboFiles();
         getLymbosFromFiles();
-        loading = false;
+
+        loaded = true;
     }
 
     /**
      * Finds all files having the extension .lymbo
      */
     private void findLymboFiles() {
-        Log.trace("LymboController.findLymboFiles()");
-        // lymboFiles = findFiles(LYMBO_FILE_EXTENSION);
+        Log.trace("LymbosController.findLymboFiles()");
+        lymboFiles = findFiles(LYMBO_FILE_EXTENSION);
     }
 
     /**
@@ -92,8 +97,12 @@ public class LymbosController extends Application {
      * @return Collection of files
      */
     public Collection<File> findFiles(String pattern) {
-        Log.trace("LymboController.findFiles()");
-        return FileUtils.listFiles(Environment.getExternalStorageDirectory(), new RegexFileFilter(".*" + pattern), TrueFileFilter.TRUE);
+        Log.trace("LymbosController.findFiles()");
+        if (checkStorage()) {
+            return FileUtils.listFiles(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_DIR), new RegexFileFilter(".*" + pattern), TrueFileFilter.TRUE);
+        } else {
+            return new ArrayList<File>();
+        }
     }
 
     /**
@@ -113,13 +122,26 @@ public class LymbosController extends Application {
         }
     }
 
+    /**
+     * Adds lymbos from assets
+     */
     private void getLymbosFromAssets() {
-        lymbos.add(LymboLoader.getLymboFromAsset(context, "spanish-a1.lymbo"));
-        lymbos.add(LymboLoader.getLymboFromAsset(context, "demo.lymbo"));
-        lymbos.add(LymboLoader.getLymboFromAsset(context, "java.lymbo"));
+        try {
+            for (String asset : Arrays.asList(context.getAssets().list(""))) {
+                if (asset.endsWith(LYMBO_FILE_EXTENSION)) {
+                    lymbos.add(LymboLoader.getLymboFromAsset(context, asset));
+                }
+            }
+        } catch (IOException ioe) {
+            Log.fatal(ioe.toString());
+        }
     }
 
-    public boolean checkStorage() {
+    /**
+     * Checks if storage is available
+     * @return
+     */
+    private boolean checkStorage() {
         boolean externalStorageAvailable;
         boolean externalStorageWriteable;
 
@@ -167,11 +189,11 @@ public class LymbosController extends Application {
         this.lymbos = lymbos;
     }
 
-    public boolean isLoading() {
-        return loading;
+    public boolean isLoaded() {
+        return loaded;
     }
 
-    public void setLoading(boolean loading) {
-        this.loading = loading;
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
     }
 }

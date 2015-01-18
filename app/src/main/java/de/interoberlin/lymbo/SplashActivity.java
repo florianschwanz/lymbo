@@ -52,8 +52,6 @@ public class SplashActivity extends Activity {
     private static SVGPanel panel;
     private static ImageView ivLogo;
 
-    private static boolean ready = false;
-
     // --------------------
     // Methods - Lifecycle
     // --------------------
@@ -87,7 +85,7 @@ public class SplashActivity extends Activity {
         panel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ready) {
+                if (lymbosController.isLoaded()) {
                     Intent openStartingPoint = new Intent(SplashActivity.this, LymbosActivity.class);
                     startActivity(openStartingPoint);
                     finish();
@@ -105,51 +103,27 @@ public class SplashActivity extends Activity {
         // Initialize UI
         uiInit();
 
+        // Initial message
+        tvMessage.setText(R.string.search_lymbo_files);
+
         Thread timer = new Thread() {
             public void run() {
-                tvMessage.setText(R.string.search_lymbo_files);
-
                 splashController.loadMessages();
+                lymbosController.load();
 
                 Collections.shuffle(splashController.getMessages());
 
-                uiMessage(splashController.getMessages().get(0));
+                showMessage(splashController.getMessages().get(0));
 
-                try {
-                    sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        lymbosController.setLoading(true);
-                        try {
-                            sleep(2000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        lymbosController.load();
-                    }
-                }).start();
-
-                System.out.println("lymbosController.isLoading() " + lymbosController.isLoading());
-
-                while (lymbosController.isLoading()) {
-
-                    System.out.println("lymbosController.isLoading() " + lymbosController.isLoading());
-
-                    uiMessage(splashController.getRandomMessage());
-
+                while (!lymbosController.isLoaded()) {
                     try {
-                        sleep(2000);
+                        sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
 
-                uiMessage("Found " + lymbosController.getLymboFiles().size() + " lymbo files");
+                showMessage("Found " + lymbosController.getLymboFiles().size() + " lymbo files");
 
                 try {
                     sleep(1000);
@@ -157,9 +131,7 @@ public class SplashActivity extends Activity {
                     e.printStackTrace();
                 }
 
-                uiMessage(R.string.click_to_continue);
-
-                ready = true;
+                showMessage(R.string.click_to_continue);
             }
         };
         timer.start();
@@ -204,7 +176,7 @@ public class SplashActivity extends Activity {
         splashController.setOffsetY(-7.0F);
     }
 
-    public static void uiMessage(final int message) {
+    public static void showMessage(final int message) {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -213,7 +185,7 @@ public class SplashActivity extends Activity {
         });
     }
 
-    public static void uiMessage(final String message) {
+    public static void showMessage(final String message) {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {

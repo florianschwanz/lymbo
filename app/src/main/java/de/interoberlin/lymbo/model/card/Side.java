@@ -5,7 +5,6 @@ import java.util.List;
 
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
-import de.interoberlin.lymbo.model.card.components.HintComponent;
 import de.interoberlin.lymbo.model.card.components.ImageComponent;
 import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.model.card.components.SVGComponent;
@@ -34,7 +33,6 @@ public class Side {
         for (Displayable d : getComponents()) {
             if ((component == EComponent.TITLE && d instanceof TitleComponent) ||
                     (component == EComponent.TEXT && d instanceof TextComponent) ||
-                    (component == EComponent.HINT && d instanceof HintComponent) ||
                     (component == EComponent.IMAGE && d instanceof ImageComponent) ||
                     (component == EComponent.CHOICE && d instanceof ChoiceComponent) ||
                     (component == EComponent.RESULT && d instanceof ResultComponent) ||
@@ -50,7 +48,6 @@ public class Side {
         for (Displayable d : getComponents()) {
             if ((component == EComponent.TITLE && d instanceof TitleComponent) ||
                     (component == EComponent.TEXT && d instanceof TextComponent) ||
-                    (component == EComponent.HINT && d instanceof HintComponent) ||
                     (component == EComponent.IMAGE && d instanceof ImageComponent) ||
                     (component == EComponent.CHOICE && d instanceof ChoiceComponent) ||
                     (component == EComponent.RESULT && d instanceof ResultComponent) ||

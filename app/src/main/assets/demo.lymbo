@@ -5,6 +5,59 @@
  hint="This is just a demo stack"
  image=""
  author="Flo">
+      <card>
+  		<front>
+  		    <title value="Lorem ipsum"/>
+  		    <text value="Lorem ipsum"/>
+  			<choice>
+  				<answer value="A Ay"/>
+  				<answer value="B Bee"/>
+  				<answer value="C Zee"/>
+  				<answer value="D Dee" correct="true"/>
+  			</choice>
+  			<text value="Lorem ipsum"/>
+  		</front>
+  		<back>
+  			<result/>
+  			<text value="D. D is correct."/>
+  		</back>
+  	</card>
+<card>
+  		<front>
+  		    <title value="Lorem ipsum"/>
+  		    <text value="Lorem ipsum"/>
+  		    <hint value="Think about it"/>
+  			<choice>
+  				<answer value="A Ay"/>
+  				<answer value="B Bee"/>
+  				<answer value="C Zee"/>
+  				<answer value="D Dee" correct="true"/>
+  			</choice>
+  			<text value="Lorem ipsum"/>
+  		</front>
+  		<back>
+  			<result/>
+  			<text value="D. D is correct."/>
+  		</back>
+  	</card>
+     <card>
+ 		<front>
+ 			<title value="Demo"/>
+ 			<text value="Lorem ipsum"/>
+ 			<hint value="Think about it"/>
+ 			<choice>
+ 				<answer value="A Ay"/>
+ 				<answer value="B Bee"/>
+ 				<answer value="C Zee"/>
+ 				<answer value="D Dee" correct="true"/>
+ 			</choice>
+ 			<text value="It ain't that hard"/>
+ 		</front>
+ 		<back>
+ 			<result/>
+ 			<text value="D. D is correct."/>
+ 		</back>
+ 	</card>
 	<card>
         <front>
 			<title
