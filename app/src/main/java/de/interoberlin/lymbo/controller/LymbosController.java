@@ -85,7 +85,7 @@ public class LymbosController extends Application {
      */
     private void findLymboFiles() {
         Log.trace("LymbosController.findLymboFiles()");
-        lymboFiles = findFiles(LYMBO_FILE_EXTENSION, LYMBO_DIR);
+        lymboFiles = findFiles(LYMBO_FILE_EXTENSION);
     }
 
     /**
