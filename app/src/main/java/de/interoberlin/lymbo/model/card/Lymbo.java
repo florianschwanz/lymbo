@@ -125,12 +125,9 @@ public class Lymbo implements Displayable {
         Collections.sort(tags, new Comparator<Tag>() {
             @Override
             public int compare(Tag t1, Tag t2) {
-
                 return t1.getName().compareTo(t2.getName());
             }
         });
-
-        tags.add(0, new Tag("< no tag >"));
 
         return tags;
     }
@@ -152,12 +149,9 @@ public class Lymbo implements Displayable {
         Collections.sort(chapters, new Comparator<Tag>() {
             @Override
             public int compare(Tag t1, Tag t2) {
-
                 return t1.getName().compareTo(t2.getName());
             }
         });
-
-        chapters.add(0, new Tag("< no chapter >"));
 
         return chapters;
     }

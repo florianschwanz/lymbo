@@ -91,11 +91,6 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
                 startActivity(i);
                 break;
             }
-            case R.id.menu_add: {
-                Intent i = new Intent(LymbosActivity.this, EditCardActivity.class);
-                startActivity(i);
-                break;
-            }
             /*
             case R.id.menu_add: {
                 InputDialogFragment inputDialogFragment = new InputDialogFragment();

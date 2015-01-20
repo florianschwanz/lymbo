@@ -3,6 +3,7 @@ package de.interoberlin.lymbo.view.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -40,6 +41,8 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
 
     private List<Card> cards = cardsController.getCards();
     private CardsListAdapter cardsAdapter;
+
+    private int VIBRATION_DURATION = 50;
 
     // --------------------
     // Methods - Lifecycle
@@ -136,6 +139,7 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            /*
             case R.id.menu_add: {
                 cardsController.addCard();
                 cardsController.save();
@@ -143,12 +147,15 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
                 slv.setAdapter(cardsAdapter);
                 break;
             }
+            */
             case R.id.menu_shuffle: {
+                ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
                 Collections.shuffle(cards);
                 cardsAdapter.notifyDataSetChanged();
                 break;
             }
             case R.id.menu_refresh: {
+                ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
                 for (Card c : cards) {
                     c.setDiscarded(false);
                 }
@@ -156,6 +163,7 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
                 break;
             }
             case R.id.menu_label: {
+                ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
                 CheckboxDialogFragment checkboxDialogFragment = new CheckboxDialogFragment();
 
                 Bundle b = new Bundle();

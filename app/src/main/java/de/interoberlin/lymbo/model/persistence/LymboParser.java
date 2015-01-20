@@ -186,10 +186,18 @@ public class LymboParser {
             card.setBack(back);
         if (hint != null)
             card.setHint(hint);
-        if (chapter != null)
+        if (chapter != null) {
             card.setChapter(parseTag(chapter));
-        if (tags != null)
+        } else {
+            card.setChapter(new Tag("< no chapter >"));
+        }
+        if (tags != null) {
             card.setTags(parseTags(tags));
+        } else {
+            List<Tag> defaultTags = new ArrayList<Tag>();
+            defaultTags.add(new Tag("< no tag >"));
+            card.setTags(defaultTags);
+        }
         if (flip != null)
             card.setFlip(Boolean.parseBoolean(flip));
         if (edit != null)

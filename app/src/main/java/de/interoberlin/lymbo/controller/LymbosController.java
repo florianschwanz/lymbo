@@ -31,8 +31,6 @@ public class LymbosController extends Application {
     private static final String LYMBO_DIR = "Interoberlin/lymbo";
     private boolean loaded = false;
 
-    private List<String> assets = new ArrayList<String>();
-
     private static LymbosController instance;
 
     // --------------------
@@ -87,7 +85,7 @@ public class LymbosController extends Application {
      */
     private void findLymboFiles() {
         Log.trace("LymbosController.findLymboFiles()");
-        lymboFiles = findFiles(LYMBO_FILE_EXTENSION);
+        lymboFiles = findFiles(LYMBO_FILE_EXTENSION, LYMBO_DIR);
     }
 
     /**
@@ -97,9 +95,20 @@ public class LymbosController extends Application {
      * @return Collection of files
      */
     public Collection<File> findFiles(String pattern) {
+        return findFiles(pattern, "");
+    }
+
+    /**
+     * Finds all files that match a certain pattern in a specific directory on the internal storage
+     *
+     * @param pattern
+     * @param dir
+     * @return
+     */
+    public Collection<File> findFiles(String pattern, String dir) {
         Log.trace("LymbosController.findFiles()");
         if (checkStorage()) {
-            return FileUtils.listFiles(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_DIR), new RegexFileFilter(".*" + pattern), TrueFileFilter.TRUE);
+            return FileUtils.listFiles(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + dir), new RegexFileFilter(".*" + pattern), TrueFileFilter.TRUE);
         } else {
             return new ArrayList<File>();
         }
@@ -139,6 +148,7 @@ public class LymbosController extends Application {
 
     /**
      * Checks if storage is available
+     *
      * @return
      */
     private boolean checkStorage() {

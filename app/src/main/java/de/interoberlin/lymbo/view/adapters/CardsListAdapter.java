@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     CardsController cardsController = CardsController.getInstance();
     ComponentsController componentsController = ComponentsController.getInstance();
 
+    private int VIBRATION_DURATION = 50;
     private boolean frontVisible = true;
 
     // --------------------
@@ -196,6 +198,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     }
 
     private void flipToBack(final Card card, final LinearLayout front, final LinearLayout back, final LinearLayout visible) {
+        ((Vibrator) a.getSystemService(c.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+
         // If front contains choice component make sure that at least on answer is selected
         if (!checkAnswerSelected(card))
             return;
@@ -235,6 +239,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     }
 
     private void flipToFront(final Card card, final LinearLayout front, final LinearLayout back, final LinearLayout visible) {
+        ((Vibrator) a.getSystemService(c.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+
         // Switch visibility
         front.setVisibility(View.VISIBLE);
         back.setVisibility(View.INVISIBLE);
