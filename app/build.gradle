@@ -19,11 +19,12 @@ repositories {
     maven {
         url "http://maven.interoberlin.de"
     }
+    maven { url 'http://clinker.47deg.com/nexus/content/groups/public' }
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 21
+    buildToolsVersion "21.0.2"
 
     defaultConfig {
         applicationId groupId + '.' + artifactId
@@ -197,13 +198,6 @@ android.applicationVariants.all { variant ->
 
     // Tidy javadoc dir
     task "tidyJavadoc${variant.name}"(type: Delete) {
-        if (hasProperty("javadoc")) {
-            println "yes"
-        } else {
-            println "no"
-            //'Please specify your javadoc output dir using -Pjavadoc="/my/javadoc/dir"';
-        }
-
         delete new File(javadoc + '/' + groupId + '/' + artifactId);
     }
 
@@ -246,6 +240,17 @@ assembleRelease.dependsOn(copyPropertiesRelease)
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'de.interoberlin:sauvignon:0.1.0@aar'
-    compile 'de.interoberlin:mate:0.1.8@aar'
+    compile 'de.interoberlin:sauvignon:0.2.22@aar'
+    compile 'de.interoberlin:mate:0.2.10@aar'
+    // Used for file handling
+    compile 'commons-io:commons-io:2.4'
+    // Used for Material Design
+    compile 'com.squareup.picasso:picasso:2.3.4'
+    compile 'com.android.support:appcompat-v7:21.0.+'
+    compile 'com.android.support:cardview-v7:21.0.+'
+    compile 'com.android.support:recyclerview-v7:21.0.+'
+    // Used for animation
+    compile ('com.fortysevendeg.swipelistview:swipelistview:1.0-SNAPSHOT@aar') {
+        transitive = true
+    }
 }
