@@ -9,7 +9,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.1.0'
     }
 }
 
@@ -65,10 +65,6 @@ def apkName = 'app-release'
 def apkTargetName = artifactId + '-' + versionMajor + '.' + versionMinor + '.' + versionPatch
 def description = "git log --format=%B -n 1".execute().text.trim()
 
-def fdroidRepos = ["Dev", "Release"];
-def fdroidRepoDev = System.getenv("FDROID_REPO_DEV")
-def fdroidRepoRelease = System.getenv("FDROID_REPO_RELEASE")
-
 task copyPropertiesDebug(type: Copy) {
     from '../gradle.properties'
     into 'build/intermediates/assets/debug'
@@ -79,19 +75,19 @@ task copyPropertiesRelease(type: Copy) {
     into 'build/intermediates/assets/Release'
 }
 
+// --------------------
+// Fdroid
+// --------------------
+
+ext.fdroidDir = project.hasProperty('fdroid') ? project.getProperty('fdroid') : null
+
+def fdroidRepos = ["Dev", "Release"];
+
 fdroidRepos.each { r ->
-    def repo
-    if (r.equals("Dev")) {
-        repo = fdroidRepoDev
-    } else if (r.equals("Release")) {
-        repo = fdroidRepoRelease
-    }
-
-    def manifestFile = file(repo + '/../metadata/' + groupId + '.' + artifactId + '.txt')
-
     // Run update command
     task "publishFdroid${r}"(type: Exec, dependsOn: "updateMetadata${r}") {
-        workingDir repo + '/..'
+        onlyIf { project.hasProperty('fdroid') }
+        workingDir fdroidDir + '/..'
         commandLine './fdroid'
         args 'update'
 
@@ -103,7 +99,8 @@ fdroidRepos.each { r ->
 
     // Update fdroid meta
     task "updateMetadata${r}"(type: Exec, dependsOn: "writeMetadata${r}") {
-        workingDir repo + '/..'
+        onlyIf { project.hasProperty('fdroid') }
+        workingDir fdroidDir + '/..'
         commandLine './fdroid'
         args 'rewritemeta'
 
@@ -115,7 +112,10 @@ fdroidRepos.each { r ->
 
     // Write into metadata
     task "writeMetadata${r}"(dependsOn: "tidy${r}") {
-        if (repo != null) {
+        onlyIf { project.hasProperty('fdroid') }
+        if (fdroidDir != null) {
+            def manifestFile = file(fdroidDir + '/../metadata/' + groupId + '.' + artifactId + '.txt')
+
             def patternLicense = Pattern.compile("License:.*")
             def manifestText = manifestFile.getText()
             def matcherLicense = patternLicense.matcher(manifestText)
@@ -176,8 +176,9 @@ fdroidRepos.each { r ->
 
     // Copy artifact to fdroid repo
     task "copy${r}"(type: Copy, dependsOn: "tidy${r}") {
+        onlyIf { project.hasProperty('fdroid') }
         from 'build/outputs/apk/' + apkName + '.apk'
-        into repo
+        into fdroidDir
 
         rename { String fileName ->
             fileName.replace(apkName, apkTargetName)
@@ -186,7 +187,8 @@ fdroidRepos.each { r ->
 
     // Tidy fdroid repo
     task "tidy${r}"(type: Delete) {
-        delete repo + '/' + apkTargetName + '.apk'
+        onlyIf { project.hasProperty('fdroid') }
+        delete fdroidDir + '/' + apkTargetName + '.apk'
     }
 }
 
@@ -194,20 +196,20 @@ fdroidRepos.each { r ->
 // Javadoc
 // --------------------
 
-android.applicationVariants.all { variant ->
+ext.javadocDir = project.hasProperty('javadoc') ? project.getProperty('javadoc') : project.path + 'javadoc'
 
+android.applicationVariants.all { variant ->
     // Tidy javadoc dir
     task "tidyJavadoc${variant.name}"(type: Delete) {
-        delete new File(javadoc + '/' + groupId + '/' + artifactId);
+        delete new File(javadocDir + '/' + groupId + '/' + artifactId);
     }
 
     task "publishJavadoc${variant.name}"(type: Javadoc, dependsOn: "tidyJavadoc${variant.name}") {
-
         title = artifactId.capitalize()
         description = ''
         source = variant.javaCompile.source
         classpath = files(variant.javaCompile.classpath.files, project.android.getBootClasspath())
-        destinationDir = new File(javadoc + '/' + groupId + '/' + artifactId)
+        destinationDir = new File(javadocDir + '/' + groupId + '/' + artifactId)
         options {
             links "http://docs.oracle.com/javase/7/docs/api/"
             linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
@@ -240,8 +242,8 @@ assembleRelease.dependsOn(copyPropertiesRelease)
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'de.interoberlin:sauvignon:0.2.22@aar'
-    compile 'de.interoberlin:mate:0.2.10@aar'
+    compile 'de.interoberlin:sauvignon:0.2.23@aar'
+    compile 'de.interoberlin:mate:0.2.14@aar'
     // Used for file handling
     compile 'commons-io:commons-io:2.4'
     // Used for Material Design
