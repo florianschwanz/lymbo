@@ -22,6 +22,8 @@ repositories {
     maven { url 'http://clinker.47deg.com/nexus/content/groups/public' }
 }
 
+ext.versionPatch = project.hasProperty('patch') ? project.getProperty('patch') : versionPatch
+
 android {
     compileSdkVersion 21
     buildToolsVersion "21.0.2"
@@ -30,11 +32,8 @@ android {
         applicationId groupId + '.' + artifactId
         minSdkVersion 15
         targetSdkVersion 19
-        versionCode System.getenv("BUILD_NUMBER") as Integer ?: 9999
-        if (System.getenv("BUILD_NUMBER") != null)
-            versionName versionMajor + "." + versionMinor + "." + System.getenv("BUILD_NUMBER")
-        else
-            versionName versionMajor + "." + versionMinor + "." + versionPatch
+        versionCode versionPatch as Integer ?: 0
+        versionName versionMajor + "." + versionMinor + "." + versionPatch
     }
 
     signingConfigs {
@@ -56,14 +55,10 @@ android {
     }
 }
 
-if (System.getenv("BUILD_NUMBER") != null)
-    versionPatch = System.getenv("BUILD_NUMBER")
-if (System.getenv("GIT_COMMIT") != null)
-    versionPatch = versionPatch + '.' + System.getenv("GIT_COMMIT").substring(0, 8)
-
+def version = versionMajor + '.' + versionMinor + '.' + versionPatch
 def apkName = 'app-release'
-def apkTargetName = artifactId + '-' + versionMajor + '.' + versionMinor + '.' + versionPatch
-def description = "git log --format=%B -n 1".execute().text.trim()
+def apkNameMaven = artifactId + '-' + version
+def apkNameFrdoid = (System.getenv("GIT_COMMIT") == null) ? apkNameMaven : apkNameMaven + '.' + System.getenv("GIT_COMMIT").substring(0, 8)
 
 task copyPropertiesDebug(type: Copy) {
     from '../gradle.properties'
@@ -80,116 +75,113 @@ task copyPropertiesRelease(type: Copy) {
 // --------------------
 
 ext.fdroidDir = project.hasProperty('fdroid') ? project.getProperty('fdroid') : null
+ext.fdroidMessage = project.hasProperty('message') ? project.getProperty('message') : "git log --format=%B -n 1".execute().text.trim()
 
-def fdroidRepos = ["Dev", "Release"];
+// Run update command
+task publishFdroid(type: Exec, dependsOn: "updateMetadata") {
+    onlyIf { project.hasProperty('fdroid') }
+    workingDir fdroidDir + '/..'
+    commandLine './fdroid'
+    args 'update'
 
-fdroidRepos.each { r ->
-    // Run update command
-    task "publishFdroid${r}"(type: Exec, dependsOn: "updateMetadata${r}") {
-        onlyIf { project.hasProperty('fdroid') }
-        workingDir fdroidDir + '/..'
-        commandLine './fdroid'
-        args 'update'
-
-        standardOutput = new ByteArrayOutputStream()
-        ext.output = {
-            return standardOutput.toString()
-        }
+    standardOutput = new ByteArrayOutputStream()
+    ext.output = {
+        return standardOutput.toString()
     }
+}
 
-    // Update fdroid meta
-    task "updateMetadata${r}"(type: Exec, dependsOn: "writeMetadata${r}") {
-        onlyIf { project.hasProperty('fdroid') }
-        workingDir fdroidDir + '/..'
-        commandLine './fdroid'
-        args 'rewritemeta'
+// Update fdroid meta
+task updateMetadata(type: Exec, dependsOn: "writeMetadata") {
+    onlyIf { project.hasProperty('fdroid') }
+    workingDir fdroidDir + '/..'
+    commandLine './fdroid'
+    args 'rewritemeta'
 
-        standardOutput = new ByteArrayOutputStream()
-        ext.output = {
-            return standardOutput.toString()
-        }
+    standardOutput = new ByteArrayOutputStream()
+    ext.output = {
+        return standardOutput.toString()
     }
+}
 
-    // Write into metadata
-    task "writeMetadata${r}"(dependsOn: "tidy${r}") {
-        onlyIf { project.hasProperty('fdroid') }
-        if (fdroidDir != null) {
-            def manifestFile = file(fdroidDir + '/../metadata/' + groupId + '.' + artifactId + '.txt')
+// Write into metadata
+task writeMetadata(dependsOn: "copy") {
+    onlyIf { project.hasProperty('fdroid') }
+    if (fdroidDir != null) {
+        def manifestFile = file(fdroidDir + '/../metadata/' + groupId + '.' + artifactId + '.txt')
 
-            def patternLicense = Pattern.compile("License:.*")
-            def manifestText = manifestFile.getText()
-            def matcherLicense = patternLicense.matcher(manifestText)
-            matcherLicense.find()
-            def manifestContent = matcherLicense.replaceAll("License:" + license)
-            manifestFile.write(manifestContent)
+        def patternLicense = Pattern.compile("License:.*")
+        def manifestText = manifestFile.getText()
+        def matcherLicense = patternLicense.matcher(manifestText)
+        matcherLicense.find()
+        def manifestContent = matcherLicense.replaceAll("License:" + license)
+        manifestFile.write(manifestContent)
 
-            def patternWebsite = Pattern.compile("Web Site:.*")
-            manifestText = manifestFile.getText()
-            def matcherWebsite = patternWebsite.matcher(manifestText)
-            matcherWebsite.find()
-            manifestContent = matcherWebsite.replaceAll("Web Site:" + website)
-            manifestFile.write(manifestContent)
+        def patternWebsite = Pattern.compile("Web Site:.*")
+        manifestText = manifestFile.getText()
+        def matcherWebsite = patternWebsite.matcher(manifestText)
+        matcherWebsite.find()
+        manifestContent = matcherWebsite.replaceAll("Web Site:" + website)
+        manifestFile.write(manifestContent)
 
-            def patternSourcecode = Pattern.compile("Source Code:.*")
-            manifestText = manifestFile.getText()
-            def matcherSourcecode = patternSourcecode.matcher(manifestText)
-            matcherSourcecode.find()
-            manifestContent = matcherSourcecode.replaceAll("Source Code:" + sourcecode)
-            manifestFile.write(manifestContent)
+        def patternSourcecode = Pattern.compile("Source Code:.*")
+        manifestText = manifestFile.getText()
+        def matcherSourcecode = patternSourcecode.matcher(manifestText)
+        matcherSourcecode.find()
+        manifestContent = matcherSourcecode.replaceAll("Source Code:" + sourcecode)
+        manifestFile.write(manifestContent)
 
-            def patternIssuetracker = Pattern.compile("Issue Tracker:.*")
-            manifestText = manifestFile.getText()
-            def matcherIssuetracker = patternIssuetracker.matcher(manifestText)
-            matcherIssuetracker.find()
-            manifestContent = matcherIssuetracker.replaceAll("Issue Tracker:" + issuetracker)
-            manifestFile.write(manifestContent)
+        def patternIssuetracker = Pattern.compile("Issue Tracker:.*")
+        manifestText = manifestFile.getText()
+        def matcherIssuetracker = patternIssuetracker.matcher(manifestText)
+        matcherIssuetracker.find()
+        manifestContent = matcherIssuetracker.replaceAll("Issue Tracker:" + issuetracker)
+        manifestFile.write(manifestContent)
 
-            def patternSummary = Pattern.compile("Summary:.*")
-            manifestText = manifestFile.getText()
-            def matcherSummary = patternSummary.matcher(manifestText)
-            matcherSummary.find()
-            manifestContent = matcherSummary.replaceAll("Summary:" + summary)
-            manifestFile.write(manifestContent)
+        def patternSummary = Pattern.compile("Summary:.*")
+        manifestText = manifestFile.getText()
+        def matcherSummary = patternSummary.matcher(manifestText)
+        matcherSummary.find()
+        manifestContent = matcherSummary.replaceAll("Summary:" + summary)
+        manifestFile.write(manifestContent)
 
-            def patternDescription = Pattern.compile("Description:.*")
-            manifestText = manifestFile.getText()
-            def matcherDescription = patternDescription.matcher(manifestText)
-            matcherDescription.find()
-            manifestContent = matcherDescription.replaceAll('Description:\n* \'\'\'' + versionMajor + '.' + versionMinor + '.' + System.getenv("BUILD_NUMBER") + '\'\'\' ' + description)
-            manifestFile.write(manifestContent)
+        def patternDescription = Pattern.compile("Description:.*")
+        manifestText = manifestFile.getText()
+        def matcherDescription = patternDescription.matcher(manifestText)
+        matcherDescription.find()
+        manifestContent = matcherDescription.replaceAll('Description:\n* \'\'\'' + versionMajor + '.' + versionMinor + '.' + versionPatch + '\'\'\' ' + fdroidMessage)
+        manifestFile.write(manifestContent)
 
-            def patternCurrentVersion = Pattern.compile("Current Version:.*")
-            manifestText = manifestFile.getText()
-            def matcherCurrentVersion = patternCurrentVersion.matcher(manifestText)
-            matcherCurrentVersion.find()
-            manifestContent = matcherCurrentVersion.replaceAll('Current Version: ' + versionMajor + "." + versionMinor + "." + System.getenv("BUILD_NUMBER") + "." + System.getenv("GIT_COMMIT"))
-            manifestFile.write(manifestContent)
+        def patternCurrentVersion = Pattern.compile("Current Version:.*")
+        manifestText = manifestFile.getText()
+        def matcherCurrentVersion = patternCurrentVersion.matcher(manifestText)
+        matcherCurrentVersion.find()
+        manifestContent = matcherCurrentVersion.replaceAll('Current Version: ' + versionMajor + "." + versionMinor + "." + versionPatch)
+        manifestFile.write(manifestContent)
 
-            def patternCurrentVersionCode = Pattern.compile("Current Version Code:.*")
-            manifestText = manifestFile.getText()
-            def matcherCurrentVersionCode = patternCurrentVersionCode.matcher(manifestText)
-            matcherCurrentVersionCode.find()
-            manifestContent = matcherCurrentVersionCode.replaceAll('Current Version Code: ' + System.getenv("BUILD_NUMBER"))
-            manifestFile.write(manifestContent)
-        }
+        def patternCurrentVersionCode = Pattern.compile("Current Version Code:.*")
+        manifestText = manifestFile.getText()
+        def matcherCurrentVersionCode = patternCurrentVersionCode.matcher(manifestText)
+        matcherCurrentVersionCode.find()
+        manifestContent = matcherCurrentVersionCode.replaceAll('Current Version Code: ' + System.getenv("BUILD_NUMBER"))
+        manifestFile.write(manifestContent)
     }
+}
 
-    // Copy artifact to fdroid repo
-    task "copy${r}"(type: Copy, dependsOn: "tidy${r}") {
-        onlyIf { project.hasProperty('fdroid') }
-        from 'build/outputs/apk/' + apkName + '.apk'
-        into fdroidDir
+// Copy artifact to fdroid repo
+task "copy"(type: Copy, dependsOn: "tidy") {
+    onlyIf { project.hasProperty('fdroid') }
+    from 'build/outputs/apk/' + apkName + '.apk'
+    into fdroidDir
 
-        rename { String fileName ->
-            fileName.replace(apkName, apkTargetName)
-        }
+    rename { String fileName ->
+        fileName.replace(apkName, apkNameFrdoid)
     }
+}
 
-    // Tidy fdroid repo
-    task "tidy${r}"(type: Delete) {
-        onlyIf { project.hasProperty('fdroid') }
-        delete fdroidDir + '/' + apkTargetName + '.apk'
-    }
+// Tidy fdroid repo
+task tidy(type: Delete) {
+    onlyIf { project.hasProperty('fdroid') }
+    delete fdroidDir + '/' + apkNameFrdoid + '.apk'
 }
 
 // --------------------
@@ -206,7 +198,7 @@ android.applicationVariants.all { variant ->
 
     task "publishJavadoc${variant.name}"(type: Javadoc, dependsOn: "tidyJavadoc${variant.name}") {
         title = artifactId.capitalize()
-        description = ''
+        description = summary
         source = variant.javaCompile.source
         classpath = files(variant.javaCompile.classpath.files, project.android.getBootClasspath())
         destinationDir = new File(javadocDir + '/' + groupId + '/' + artifactId)
@@ -230,9 +222,7 @@ uploadArchives {
             pom.groupId = groupId
             pom.artifactId = artifactId
             if (System.getenv("BUILD_NUMBER") != null)
-                pom.version = versionMajor + '.' + versionMinor + '.' + System.getenv("BUILD_NUMBER")
-            else
-                pom.version = versionMajor + '.' + versionMinor + '.' + versionPatch
+            pom.version = versionMajor + '.' + versionMinor + '.' + versionPatch
         }
     }
 }
