@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
@@ -32,6 +34,8 @@ import de.interoberlin.sauvignon.lib.model.svg.SVG;
 
 public class LymboParser {
     private static LymboParser instance;
+
+    private Map<String, String> defaults = new HashMap<>();
 
     // --------------------
     // Constructors
@@ -96,8 +100,26 @@ public class LymboParser {
         String image = parser.getAttributeValue(null, "image");
         String author = parser.getAttributeValue(null, "author");
 
+        // Read attributes - default
+        parseDefault(parser, "cardFlip");
+        parseDefault(parser, "cardEdit");
+        parseDefault(parser, "sideColor");
+        parseDefault(parser, "sideFlip");
+        parseDefault(parser, "titleLines");
+        parseDefault(parser, "titleGravity");
+        parseDefault(parser, "titleFlip");
+        parseDefault(parser, "textLines");
+        parseDefault(parser, "textGravity");
+        parseDefault(parser, "textStyle");
+        parseDefault(parser, "textFlip");
+        parseDefault(parser, "resultFlip");
+        parseDefault(parser, "imageFlip");
+        parseDefault(parser, "choiceType");
+        parseDefault(parser, "svgColor");
+        parseDefault(parser, "svgFlip");
+
         // Read sub elements
-        List<Card> cards = new ArrayList<Card>();
+        List<Card> cards = new ArrayList<>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -129,6 +151,12 @@ public class LymboParser {
         lymbo.setCards(cards);
 
         return lymbo;
+    }
+
+    private void parseDefault(XmlPullParser parser, String attribute) {
+        String value = parser.getAttributeValue(null, "default:" + attribute);
+        if (value != null)
+            defaults.put(attribute, value);
     }
 
     /**
@@ -194,7 +222,7 @@ public class LymboParser {
         if (tags != null) {
             card.setTags(parseTags(tags));
         } else {
-            List<Tag> defaultTags = new ArrayList<Tag>();
+            List<Tag> defaultTags = new ArrayList<>();
             defaultTags.add(new Tag("< no tag >"));
             card.setTags(defaultTags);
         }
@@ -227,7 +255,7 @@ public class LymboParser {
         String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
-        List<Displayable> components = new ArrayList<Displayable>();
+        List<Displayable> components = new ArrayList<>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -264,8 +292,14 @@ public class LymboParser {
         // Fill element
         if (!components.isEmpty())
             side.setComponents(components);
+        if (color != null)
+            side.setColor(color);
+        else if (defaults.containsKey("sideColor"))
+            side.setColor(defaults.get("sideColor"));
         if (flip != null)
             side.setFlip(Boolean.parseBoolean(flip));
+        else if (defaults.containsKey("sideFlip"))
+            side.setFlip(Boolean.parseBoolean(defaults.get("sideFlip")));
 
         return side;
     }
@@ -306,10 +340,16 @@ public class LymboParser {
             component.setValue(value);
         if (lines != null)
             component.setLines(parseLines(lines));
+        else if (defaults.containsKey("titleLines"))
+            component.setLines(parseLines(defaults.get("titleLines")));
         if (gravity != null)
             component.setGravity(parseGravity(gravity));
+        else if (defaults.containsKey("titleGravity"))
+            component.setGravity(parseGravity(defaults.get("titleGravity")));
         if (flip != null)
             component.setFlip(Boolean.parseBoolean(flip));
+        else if (defaults.containsKey("titleFlip"))
+            component.setFlip(Boolean.parseBoolean(defaults.get("titleFlip")));
 
         return component;
     }
@@ -351,12 +391,20 @@ public class LymboParser {
             component.setValue(value);
         if (lines != null)
             component.setLines(parseLines(lines));
+        else if (defaults.containsKey("textLines"))
+            component.setLines(parseLines(defaults.get("textLines")));
         if (gravity != null)
             component.setGravity(parseGravity(gravity));
+        else if (defaults.containsKey("textGravity"))
+            component.setGravity(parseGravity(defaults.get("textGravity")));
         if (style != null)
             component.setStyle(parseStyle(style));
+        else if (defaults.containsKey("textStyle"))
+            component.setStyle(parseStyle(defaults.get("textStyle")));
         if (flip != null)
             component.setFlip(Boolean.parseBoolean(flip));
+        else if (defaults.containsKey("textFlip"))
+            component.setFlip(Boolean.parseBoolean(defaults.get("textFlip")));
 
         return component;
     }
@@ -392,6 +440,8 @@ public class LymboParser {
         // Fill element
         if (flip != null)
             component.setFlip(Boolean.parseBoolean(flip));
+        else if (defaults.containsKey("resultFlip"))
+            component.setFlip(Boolean.parseBoolean(defaults.get("resultFlip")));
 
         return component;
     }
@@ -430,6 +480,8 @@ public class LymboParser {
             component.setValue(value);
         if (flip != null)
             component.setFlip(Boolean.parseBoolean(flip));
+        else if (defaults.containsKey("imageFlip"))
+            component.setFlip(Boolean.parseBoolean(defaults.get("imageFlip")));
 
         return component;
     }
@@ -454,7 +506,7 @@ public class LymboParser {
         String type = parser.getAttributeValue(null, "type");
 
         // Read sub elements
-        List<Answer> answers = new ArrayList<Answer>();
+        List<Answer> answers = new ArrayList<>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -472,6 +524,8 @@ public class LymboParser {
         // Fill element
         if (type != null)
             component.setChoiceType(parseChoiceType(type));
+        else if (defaults.containsKey("choiceType"))
+            component.setChoiceType(parseChoiceType(defaults.get("choiceType")));
         if (!answers.isEmpty())
             component.setAnswers(answers);
 
@@ -548,8 +602,12 @@ public class LymboParser {
             component.setSVG(svg);
         if (color != null)
             component.setColor(color);
+        else if (defaults.containsKey("svgColor"))
+            component.setColor(defaults.get("svgColor"));
         if (flip != null)
             component.setFlip(Boolean.parseBoolean(flip));
+        else if (defaults.containsKey("svgFlip"))
+            component.setFlip(Boolean.parseBoolean(defaults.get("svgFlip")));
 
         return component;
     }
@@ -622,7 +680,7 @@ public class LymboParser {
     private List<Tag> parseTags(String tagString) {
         String[] tags = tagString.split(" ");
         List<String> tagNames = Arrays.asList(tags);
-        List<Tag> tagList = new ArrayList<Tag>();
+        List<Tag> tagList = new ArrayList<>();
 
         for (String t : tagNames) {
             if (!t.trim().equals("")) {

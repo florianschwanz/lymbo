@@ -4,7 +4,10 @@
  subtitle="This is just a demo stack"
  hint="This is just a demo stack"
  image=""
- author="Flo">
+ author="Flo"
+ textGravity="center"
+ default:textGravity="right"
+ >
       <card>
   		<front>
   		    <image
