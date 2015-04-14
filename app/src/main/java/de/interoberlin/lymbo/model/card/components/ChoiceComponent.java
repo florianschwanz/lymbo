@@ -20,7 +20,7 @@ import de.interoberlin.lymbo.model.card.enums.ChoiceType;
 
 public class ChoiceComponent implements Displayable {
     private ChoiceType type = ChoiceType.MULTIPLE;
-    private List<Answer> answers = new ArrayList<Answer>();
+    private List<Answer> answers = new ArrayList<>();
 
     // --------------------
     // Constructor
@@ -37,10 +37,10 @@ public class ChoiceComponent implements Displayable {
     public View getView(Context c, Activity a, ViewGroup parent) {
 
         LayoutInflater li = LayoutInflater.from(c);
-        TableLayout tlChoices = (TableLayout) li.inflate(R.layout.component_choice, null);
+        TableLayout tlChoices = (TableLayout) li.inflate(R.layout.component_choice, parent);
 
         for (final Answer answer : answers) {
-            LinearLayout llAnswer = (LinearLayout) li.inflate(R.layout.component_answer, null);
+            LinearLayout llAnswer = (LinearLayout) li.inflate(R.layout.component_answer, parent);
 
             final CheckBox cb = (CheckBox) llAnswer.findViewById(R.id.cb);
             final TextView tvText = (TextView) llAnswer.findViewById(R.id.tvText);

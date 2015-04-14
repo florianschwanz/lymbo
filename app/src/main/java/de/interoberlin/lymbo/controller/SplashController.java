@@ -2,13 +2,12 @@ package de.interoberlin.lymbo.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import de.interoberlin.lymbo.EMessage;
 
 public class SplashController {
 
-    private List<String> messages = new ArrayList<String>();
+    private List<String> messages = new ArrayList<>();
 
     private static SplashController instance;
 
@@ -35,14 +34,10 @@ public class SplashController {
     // --------------------
 
     public void loadMessages() {
-        this.messages = new ArrayList<String>();
+        this.messages = new ArrayList<>();
         for (int i = 0; i < EMessage.values().length; i++) {
             this.messages.add(EMessage.values()[i].getText());
         }
-    }
-
-    public String getRandomMessage() {
-        return this.messages.get(new Random().nextInt(messages.size()));
     }
 
     // --------------------
@@ -51,10 +46,6 @@ public class SplashController {
 
     public List<String> getMessages() {
         return this.messages;
-    }
-
-    public void setMessages(ArrayList<String> messages) {
-        this.messages = messages;
     }
 
     public static float getOffsetX() {

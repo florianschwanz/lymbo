@@ -13,8 +13,8 @@ public class Simulation implements Observer {
     private static final float MAX_VALUE = 10.0f;
     private static final float MIN_VALUE = -10.0f;
 
-    private static float MAX_FACTOR = 1.0f;
-    private static float MIN_FACTOR = 1.0f;
+    private static final float MAX_FACTOR = 1.0f;
+    private static final float MIN_FACTOR = 1.0f;
 
     // Data values
     private static float dataX = Float.MAX_VALUE;

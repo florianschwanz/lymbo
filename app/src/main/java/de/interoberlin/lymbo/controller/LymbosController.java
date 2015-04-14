@@ -68,8 +68,8 @@ public class LymbosController extends Application {
     }
 
     public void init() {
-        lymbos = new ArrayList<Lymbo>();
-        lymboFiles = new ArrayList<File>();
+        lymbos = new ArrayList<>();
+        lymboFiles = new ArrayList<>();
     }
 
     public void load() {
@@ -95,22 +95,22 @@ public class LymbosController extends Application {
      * @return Collection of files
      */
     public Collection<File> findFiles(String pattern) {
-        return findFiles(pattern, "");
+        return findFiles(pattern, LYMBO_DIR);
     }
 
     /**
      * Finds all files that match a certain pattern in a specific directory on the internal storage
      *
-     * @param pattern
-     * @param dir
-     * @return
+     * @param pattern pattern that files have to match
+     * @param dir directory to look for files
+     * @return collection of files
      */
     public Collection<File> findFiles(String pattern, String dir) {
         Log.trace("LymbosController.findFiles()");
         if (checkStorage()) {
             return FileUtils.listFiles(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + dir), new RegexFileFilter(".*" + pattern), TrueFileFilter.TRUE);
         } else {
-            return new ArrayList<File>();
+            return new ArrayList<>();
         }
     }
 
@@ -149,7 +149,7 @@ public class LymbosController extends Application {
     /**
      * Checks if storage is available
      *
-     * @return
+     * @return true if storage is available
      */
     private boolean checkStorage() {
         boolean externalStorageAvailable;
@@ -187,23 +187,11 @@ public class LymbosController extends Application {
         return lymboFiles;
     }
 
-    public void setLymboFiles(Collection<File> lymboFiles) {
-        this.lymboFiles = lymboFiles;
-    }
-
     public List<Lymbo> getLymbos() {
         return lymbos;
     }
 
-    public void setLymbos(List<Lymbo> lymbos) {
-        this.lymbos = lymbos;
-    }
-
     public boolean isLoaded() {
         return loaded;
-    }
-
-    public void setLoaded(boolean loaded) {
-        this.loaded = loaded;
     }
 }
