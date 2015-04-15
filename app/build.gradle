@@ -63,7 +63,7 @@ def apkNameFrdoid = (System.getenv("GIT_COMMIT") == null) ? apkNameMaven : apkNa
 task copyPropertiesDebug(type: Copy) {
     from '../gradle.properties'
     into 'build/intermediates/assets/debug'
-
+}
 
 task copyPropertiesRelease(type: Copy) {
     from '../gradle.properties'
