@@ -16,7 +16,6 @@
 
 package de.interoberlin.lymbo.view.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -44,11 +43,7 @@ public class EditCardActivity extends BaseActivity {
 
     // Context and Activity
     private static Context context;
-    private static Activity activity;
-
-    // Views
-    private DrawerLayout drawer;
-    ComponentsListView clv;
+    // private static Activity activity;
 
     ComponentsListAdapter componentsAdapter;
 
@@ -64,15 +59,15 @@ public class EditCardActivity extends BaseActivity {
         // Register on toaster
         Toaster.register(this, context);
 
-        drawer = (DrawerLayout) findViewById(R.id.dl);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
 
         // Get activity and context for further use
-        activity = this;
+        // activity = this;
         context = getApplicationContext();
 
         // Get list view and add adapter
-        clv = (ComponentsListView) findViewById(R.id.clvComponents);
+        ComponentsListView clv = (ComponentsListView) findViewById(R.id.clvComponents);
         componentsAdapter = new ComponentsListAdapter(this, this, 0, componentsController.getCard().getFront().getComponents());
         clv.setComponents(componentsController.getCard().getFront().getComponents());
         clv.setAdapter(componentsAdapter);

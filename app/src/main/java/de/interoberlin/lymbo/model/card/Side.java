@@ -14,7 +14,7 @@ import de.interoberlin.lymbo.model.card.enums.EComponent;
 
 public class Side {
     private String color = "#FFFFFF";
-    private List<Displayable> components = new ArrayList<Displayable>();
+    private List<Displayable> components = new ArrayList<>();
 
     private boolean flip = false;
 
@@ -81,7 +81,7 @@ public class Side {
 
     public void addComponent(Displayable displayable) {
         if (components == null) {
-            components = new ArrayList<Displayable>();
+            components = new ArrayList<>();
         }
 
         components.add(displayable);

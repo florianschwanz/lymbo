@@ -18,7 +18,6 @@ package de.interoberlin.lymbo.view.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -26,7 +25,6 @@ import android.widget.ArrayAdapter;
 import java.util.HashMap;
 import java.util.List;
 
-import de.interoberlin.lymbo.controller.ComponentsController;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
@@ -36,9 +34,9 @@ public class ComponentsListAdapter extends ArrayAdapter<Displayable> {
     Activity a;
 
     // Controllers
-    ComponentsController componentsController = ComponentsController.getInstance();
+    // ComponentsController componentsController = ComponentsController.getInstance();
 
-    HashMap<Displayable, Integer> idMap = new HashMap<Displayable, Integer>();
+    HashMap<Displayable, Integer> idMap = new HashMap<>();
 
     final int INVALID_ID = -1;
 
@@ -72,8 +70,8 @@ public class ComponentsListAdapter extends ArrayAdapter<Displayable> {
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
-        LayoutInflater vi;
-        vi = LayoutInflater.from(getContext());
+        // LayoutInflater vi;
+        // vi = LayoutInflater.from(getContext());
 
         if (getItem(position) instanceof TitleComponent || getItem(position) instanceof TextComponent) {
             return getItem(position).getEditableView(c, a, null);

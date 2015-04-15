@@ -27,7 +27,7 @@ public class RobotoEditText extends EditText {
     private final static int ROBOTO_CONDENSED_BOLD = 14;
     private final static int ROBOTO_CONDENSED_BOLD_ITALIC = 15;
 
-    private final static SparseArray<Typeface> mTypefaces = new SparseArray<Typeface>(16);
+    private final static SparseArray<Typeface> mTypefaces = new SparseArray<>(16);
 
     public RobotoEditText(Context context) {
         super(context);

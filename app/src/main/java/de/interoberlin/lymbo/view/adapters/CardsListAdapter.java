@@ -68,7 +68,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            LinearLayout ll = (LinearLayout) vi.inflate(R.layout.card, null);
+            LinearLayout ll = (LinearLayout) vi.inflate(R.layout.card, parent);
 
             // Load views : front
             final LinearLayout front = (LinearLayout) ll.findViewById(R.id.front);

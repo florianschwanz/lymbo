@@ -43,7 +43,7 @@ public class Lymbo implements Displayable {
 
     @Override
     public View getView(Context c, final Activity a, ViewGroup parent) {
-        CardView v = (CardView) a.getLayoutInflater().inflate(R.layout.stack, null);
+        CardView v = (CardView) a.getLayoutInflater().inflate(R.layout.stack, parent);
 
         TextView tvTitle = (TextView) v.findViewById(R.id.tvTitle);
         TextView tvSubtitle = (TextView) v.findViewById(R.id.tvSubtitle);
@@ -109,10 +109,10 @@ public class Lymbo implements Displayable {
     /**
      * Returns a list of all tags used in this lymbo
      *
-     * @return
+     * @return a list of tags
      */
     public List<Tag> getTags() {
-        List<Tag> tags = new ArrayList<Tag>();
+        List<Tag> tags = new ArrayList<>();
 
         for (Card c : getCards()) {
             for (Tag t : c.getTags()) {
@@ -135,10 +135,10 @@ public class Lymbo implements Displayable {
     /**
      * Returns a list of all chapters used in this lymbo
      *
-     * @return
+     * @return a list of tags representing the chapters found
      */
     public List<Tag> getChapters() {
-        List<Tag> chapters = new ArrayList<Tag>();
+        List<Tag> chapters = new ArrayList<>();
 
         for (Card c : getCards()) {
             if (c.getChapter() != null && !containsTag(chapters, c.getChapter())) {
@@ -227,7 +227,7 @@ public class Lymbo implements Displayable {
 
     public void addCard(Card card) {
         if (cards == null) {
-            cards = new ArrayList<Card>();
+            cards = new ArrayList<>();
         }
 
         cards.add(card);

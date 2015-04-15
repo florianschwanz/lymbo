@@ -10,7 +10,7 @@ public class Card {
 
     private String hint;
     private Tag chapter;
-    private List<Tag> tags = new ArrayList<Tag>();
+    private List<Tag> tags = new ArrayList<>();
 
     private boolean flip = true;
     private boolean edit = false;

@@ -1,11 +1,9 @@
 package de.interoberlin.lymbo.view.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,12 +24,7 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
 
     // Context and Activity
     private static Context context;
-    private static Activity activity;
-
-    // Views
-    private DrawerLayout drawer;
-    private SwipeListView slv;
-    private RecyclerView.LayoutManager lm;
+    // private static Activity activity;
 
     // --------------------
     // Methods - Lifecycle
@@ -46,11 +39,11 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
         // Register on toaster
         Toaster.register(this, context);
 
-        drawer = (DrawerLayout) findViewById(R.id.dl);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
 
         // Get activity and context for further use
-        activity = this;
+        // activity = this;
         context = getApplicationContext();
 
         SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
@@ -168,6 +161,7 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
     public void draw() {
     }
 
+    /*
     public void uiRefresh() {
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -177,6 +171,7 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
             }
         });
     }
+    */
 
 
 

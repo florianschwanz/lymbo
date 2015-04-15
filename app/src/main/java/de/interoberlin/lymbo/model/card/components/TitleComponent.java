@@ -39,7 +39,7 @@ public class TitleComponent implements Displayable {
     @Override
     public View getView(Context c, Activity a, ViewGroup parent) {
         LayoutInflater li = LayoutInflater.from(c);
-        LinearLayout llTitleComponent = (LinearLayout) li.inflate(R.layout.component_title, null);
+        LinearLayout llTitleComponent = (LinearLayout) li.inflate(R.layout.component_title, parent);
 
         RobotoTextView tvTitle = (RobotoTextView) llTitleComponent.findViewById(R.id.tvTitle);
 
@@ -52,7 +52,7 @@ public class TitleComponent implements Displayable {
 
         // Attribute : gravity
         if (gravity == EGravity.LEFT)
-            tvTitle.setGravity(Gravity.LEFT);
+            tvTitle.setGravity(Gravity.START);
         else if (gravity == EGravity.CENTER)
             tvTitle.setGravity(Gravity.CENTER);
         else if (gravity == EGravity.RIGHT)
@@ -64,7 +64,7 @@ public class TitleComponent implements Displayable {
     @Override
     public View getEditableView(Context c, Activity a, ViewGroup parent) {
         LayoutInflater li = LayoutInflater.from(c);
-        LinearLayout llTitleComponent = (LinearLayout) li.inflate(R.layout.component_title_edit, null);
+        LinearLayout llTitleComponent = (LinearLayout) li.inflate(R.layout.component_title_edit, parent);
 
         TextView etTitle = (TextView) llTitleComponent.findViewById(R.id.etTitle);
 

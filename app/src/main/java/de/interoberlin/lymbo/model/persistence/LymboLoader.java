@@ -15,7 +15,7 @@ public class LymboLoader {
     /**
      * Loads a Lymbo object from a given file inside assets
      *
-     * @param c Context
+     * @param c         Context
      * @param lymboPath path to lymbo file
      * @return Lymbo object
      */
@@ -42,10 +42,7 @@ public class LymboLoader {
     public static Lymbo getLymboFromFile(InputStream is) {
         try {
             return LymboParser.getInstance().parse(is);
-        } catch (XmlPullParserException e) {
-            Log.error(e.toString());
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (XmlPullParserException | IOException e) {
             Log.error(e.toString());
             e.printStackTrace();
         }

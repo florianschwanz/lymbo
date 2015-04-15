@@ -8,6 +8,9 @@ import java.util.Observer;
 import de.interoberlin.lymbo.controller.SplashController;
 
 public class Simulation implements Observer {
+    // Controllers
+    SplashController splashController = SplashController.getInstance();
+
     private static Simulation instance;
 
     private static final float MAX_VALUE = 10.0f;
@@ -52,8 +55,8 @@ public class Simulation implements Observer {
         float sensibilityX = 1.0f;
         float sensibilityY = 1.0f;
 
-        float offsetX = SplashController.getOffsetX();
-        float offsetY = SplashController.getOffsetY();
+        float offsetX = splashController.getOffsetX();
+        float offsetY = splashController.getOffsetY();
 
         // Retrieve values from observed AccelerationEvent
         rawX = normalize(dataX - offsetX, sensibilityX);

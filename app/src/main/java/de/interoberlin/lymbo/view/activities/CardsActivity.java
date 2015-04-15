@@ -1,6 +1,5 @@
 package de.interoberlin.lymbo.view.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -18,7 +17,6 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.CheckboxDialogFragment;
@@ -29,20 +27,19 @@ import de.interoberlin.mate.lib.util.Toaster;
 public class CardsActivity extends BaseActivity implements DisplayDialogFragment.OnCompleteListener, CheckboxDialogFragment.OnLabelSelectedListener {
     // Controllers
     CardsController cardsController = CardsController.getInstance();
-    LymbosController lymbosController = LymbosController.getInstance();
+    // LymbosController lymbosController = LymbosController.getInstance();
 
     // Context and Activity
     private static Context context;
-    private static Activity activity;
+    // private static Activity activity;
 
     // Views
-    private DrawerLayout drawer;
     private SwipeListView slv;
 
     private List<Card> cards = cardsController.getCards();
     private CardsListAdapter cardsAdapter;
 
-    private int VIBRATION_DURATION = 50;
+    private final int VIBRATION_DURATION = 50;
 
     // --------------------
     // Methods - Lifecycle
@@ -56,11 +53,11 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
         // Register on toaster
         Toaster.register(this, context);
 
-        drawer = (DrawerLayout) findViewById(R.id.dl);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
 
         // Get activity and context for further use
-        activity = this;
+        // activity = this;
         context = getApplicationContext();
     }
 

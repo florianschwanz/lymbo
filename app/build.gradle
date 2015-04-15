@@ -1,4 +1,4 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 apply plugin: 'maven'
 
 import java.util.regex.Pattern
@@ -26,11 +26,11 @@ ext.versionPatch = project.hasProperty('patch') ? project.getProperty('patch') :
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.0.2"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId groupId + '.' + artifactId
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 19
         versionCode versionPatch as Integer ?: 0
         versionName versionMajor + "." + versionMinor + "." + versionPatch

@@ -48,19 +48,19 @@ public class SplashController {
         return this.messages;
     }
 
-    public static float getOffsetX() {
+    public float getOffsetX() {
         return offsetX;
     }
 
-    public static void setOffsetX(float offsetX) {
+    public void setOffsetX(float offsetX) {
         SplashController.offsetX = offsetX;
     }
 
-    public static float getOffsetY() {
+    public float getOffsetY() {
         return offsetY;
     }
 
-    public static void setOffsetY(float offsetY) {
+    public void setOffsetY(float offsetY) {
         SplashController.offsetY = offsetY;
     }
 
