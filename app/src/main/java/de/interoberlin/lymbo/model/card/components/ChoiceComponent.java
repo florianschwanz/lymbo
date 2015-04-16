@@ -35,12 +35,11 @@ public class ChoiceComponent implements Displayable {
 
     @Override
     public View getView(Context c, Activity a, ViewGroup parent) {
-
         LayoutInflater li = LayoutInflater.from(c);
-        TableLayout tlChoices = (TableLayout) li.inflate(R.layout.component_choice, parent);
+        TableLayout tlChoices = (TableLayout) li.inflate(R.layout.component_choice, null);
 
         for (final Answer answer : answers) {
-            LinearLayout llAnswer = (LinearLayout) li.inflate(R.layout.component_answer, parent);
+            LinearLayout llAnswer = (LinearLayout) li.inflate(R.layout.component_answer, null);
 
             final CheckBox cb = (CheckBox) llAnswer.findViewById(R.id.cb);
             final TextView tvText = (TextView) llAnswer.findViewById(R.id.tvText);

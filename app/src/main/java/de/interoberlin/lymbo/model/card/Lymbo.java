@@ -22,6 +22,7 @@ import de.interoberlin.mate.lib.util.Toaster;
 
 public class Lymbo implements Displayable {
     private String path;
+    private boolean asset;
 
     private String title = "";
     private String subtitle = "";
@@ -43,7 +44,7 @@ public class Lymbo implements Displayable {
 
     @Override
     public View getView(Context c, final Activity a, ViewGroup parent) {
-        CardView v = (CardView) a.getLayoutInflater().inflate(R.layout.stack, parent);
+        CardView v = (CardView) a.getLayoutInflater().inflate(R.layout.stack, null);
 
         TextView tvTitle = (TextView) v.findViewById(R.id.tvTitle);
         TextView tvSubtitle = (TextView) v.findViewById(R.id.tvSubtitle);
@@ -175,6 +176,14 @@ public class Lymbo implements Displayable {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public boolean isAsset() {
+        return asset;
+    }
+
+    public void setAsset(boolean asset) {
+        this.asset = asset;
     }
 
     public String getTitle() {

@@ -34,7 +34,7 @@ public class SVGComponent implements Displayable {
     @Override
     public View getView(Context c, Activity a, ViewGroup parent) {
         LayoutInflater li = LayoutInflater.from(c);
-        LinearLayout llSVGComponent = (LinearLayout) li.inflate(R.layout.component_svg, parent);
+        LinearLayout llSVGComponent = (LinearLayout) li.inflate(R.layout.component_svg, null);
 
         if (svg != null) {
             panel = new SVGPanel(c);

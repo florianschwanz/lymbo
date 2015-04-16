@@ -50,7 +50,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         // Layout inflater
         LayoutInflater vi;
         vi = LayoutInflater.from(getContext());
-        LinearLayout ll = (LinearLayout) vi.inflate(R.layout.stack, parent);
+        LinearLayout ll = (LinearLayout) vi.inflate(R.layout.stack, null);
 
         // Load views
         ImageView ivImage = (ImageView) ll.findViewById(R.id.ivImage);

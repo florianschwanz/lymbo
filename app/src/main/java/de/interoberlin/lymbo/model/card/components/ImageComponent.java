@@ -33,7 +33,7 @@ public class ImageComponent implements Displayable {
     @Override
     public View getView(Context c, Activity a, ViewGroup parent) {
         LayoutInflater li = LayoutInflater.from(c);
-        LinearLayout llImageComponent = (LinearLayout) li.inflate(R.layout.component_image, parent);
+        LinearLayout llImageComponent = (LinearLayout) li.inflate(R.layout.component_image, null);
 
         ImageView ivImage = (ImageView) llImageComponent.findViewById(R.id.ivImage);
 

@@ -12,12 +12,15 @@ import android.view.MenuItem;
 import com.fortysevendeg.swipelistview.BaseSwipeListViewListener;
 import com.fortysevendeg.swipelistview.SwipeListView;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Card;
+import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.persistence.LymboLoader;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.CheckboxDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
@@ -27,7 +30,6 @@ import de.interoberlin.mate.lib.util.Toaster;
 public class CardsActivity extends BaseActivity implements DisplayDialogFragment.OnCompleteListener, CheckboxDialogFragment.OnLabelSelectedListener {
     // Controllers
     CardsController cardsController = CardsController.getInstance();
-    // LymbosController lymbosController = LymbosController.getInstance();
 
     // Context and Activity
     private static Context context;
@@ -36,10 +38,14 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     // Views
     private SwipeListView slv;
 
-    private List<Card> cards = cardsController.getCards();
+    // Model
+    private List<Card> cards;
     private CardsListAdapter cardsAdapter;
 
     private final int VIBRATION_DURATION = 50;
+
+    private final String BUNDLE_LYMBO_PATH = "lymbo_path";
+    private final String BUNDLE_ASSET = "asset";
 
     // --------------------
     // Methods - Lifecycle
@@ -48,13 +54,31 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            // Restore cards
+            Lymbo l = null;
+            if (savedInstanceState.getString(BUNDLE_LYMBO_PATH) != null) {
+                if (savedInstanceState.getBoolean(BUNDLE_ASSET)) {
+                    l = LymboLoader.getLymboFromAsset(getApplicationContext(), savedInstanceState.getString(BUNDLE_LYMBO_PATH));
+                } else {
+                    l = LymboLoader.getLymboFromFile(new File(savedInstanceState.getString(BUNDLE_LYMBO_PATH)));
+                }
+            }
+
+            cardsController.setLymbo(l);
+            cardsController.init();
+        }
+
+        if (cardsController.getLymbo() == null) {
+            finish();
+        }
+
         setActionBarIcon(R.drawable.ic_ab_drawer);
 
         // Register on toaster
         Toaster.register(this, context);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
-        drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
+
 
         // Get activity and context for further use
         // activity = this;
@@ -63,10 +87,14 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
 
     public void onResume() {
         super.onResume();
+        cards = cardsController.getCards();
+        cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cards);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
+        drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
 
         // Get list view and add adapter
         slv = (SwipeListView) findViewById(R.id.slv);
-        cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cards);
         slv.setAdapter(cardsAdapter);
         slv.setSwipeMode(SwipeListView.SWIPE_MODE_RIGHT);
         slv.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_DISMISS);
@@ -113,7 +141,6 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
                 }
                 cardsAdapter.notifyDataSetChanged();
             }
-
         });
     }
 
@@ -188,6 +215,15 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
 
         return false;
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString(BUNDLE_LYMBO_PATH, cardsController.getLymbo().getPath());
+        savedInstanceState.putBoolean(BUNDLE_ASSET, cardsController.getLymbo().isAsset());
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
 
     private int getFirst() {
         int first = slv.getFirstVisiblePosition();

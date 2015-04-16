@@ -10,8 +10,11 @@ import android.view.MenuItem;
 
 import com.fortysevendeg.swipelistview.SwipeListView;
 
+import java.util.List;
+
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.LymbosController;
+import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.mate.lib.util.Toaster;
@@ -26,6 +29,13 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
     private static Context context;
     // private static Activity activity;
 
+    // Views
+    private SwipeListView slv;
+
+    // Model
+    private List<Lymbo> lymbos;
+    private LymbosListAdapter lymbosAdapter;
+
     // --------------------
     // Methods - Lifecycle
     // --------------------
@@ -33,28 +43,33 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            lymbosController.init();
+            lymbosController.load();
+        }
+
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(false);
 
         // Register on toaster
         Toaster.register(this, context);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
-        drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
-
         // Get activity and context for further use
         // activity = this;
         context = getApplicationContext();
-
-        SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
-        slv.setAdapter(new LymbosListAdapter(this, R.layout.stack, lymbosController.getLymbos()));
-        slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
     }
 
     public void onResume() {
         super.onResume();
-        clear();
-        draw();
+        lymbos = lymbosController.getLymbos();
+        lymbosAdapter = new LymbosListAdapter(this, R.layout.stack, lymbos);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
+        drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
+
+        slv = (SwipeListView) findViewById(R.id.slv);
+        slv.setAdapter(lymbosAdapter);
+        slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
     }
 
     @Override
@@ -152,13 +167,6 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
     @Override
     protected int getLayoutResource() {
         return R.layout.activity_lymbos;
-    }
-
-    private static void clear() {
-        // rv.removeAllViews();
-    }
-
-    public void draw() {
     }
 
     /*

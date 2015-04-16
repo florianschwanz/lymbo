@@ -9,8 +9,6 @@ import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,7 +100,7 @@ public class LymbosController extends Application {
      * Finds all files that match a certain pattern in a specific directory on the internal storage
      *
      * @param pattern pattern that files have to match
-     * @param dir directory to look for files
+     * @param dir     directory to look for files
      * @return collection of files
      */
     public Collection<File> findFiles(String pattern, String dir) {
@@ -120,13 +118,10 @@ public class LymbosController extends Application {
     private void getLymbosFromFiles() {
         // Add lymbos from file system
         for (File f : lymboFiles) {
-            try {
-                Lymbo l = LymboLoader.getLymboFromFile(new FileInputStream(f));
-                l.setPath(f.getAbsolutePath());
+            Lymbo l = LymboLoader.getLymboFromFile(f);
+            if (l != null) {
                 lymbos.add(l);
                 Log.debug("Found lymbo " + f.getName());
-            } catch (FileNotFoundException fnfe) {
-                Log.error(fnfe.toString());
             }
         }
     }
@@ -138,7 +133,8 @@ public class LymbosController extends Application {
         try {
             for (String asset : Arrays.asList(context.getAssets().list(""))) {
                 if (asset.endsWith(LYMBO_FILE_EXTENSION)) {
-                    lymbos.add(LymboLoader.getLymboFromAsset(context, asset));
+                    Lymbo l = LymboLoader.getLymboFromAsset(context, asset);
+                    lymbos.add(l);
                 }
             }
         } catch (IOException ioe) {
