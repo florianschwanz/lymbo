@@ -227,8 +227,8 @@ uploadArchives {
     }
 }
 
-mergeDebugAssets.dependsOn(copyPropertiesDebug)
-mergeReleaseAssets.dependsOn(copyPropertiesRelease)
+assembleDebug.dependsOn(copyPropertiesDebug)
+assembleRelease.dependsOn(copyPropertiesRelease)
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
