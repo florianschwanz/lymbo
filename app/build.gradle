@@ -60,14 +60,29 @@ def apkName = 'app-release'
 def apkNameMaven = artifactId + '-' + version
 def apkNameFrdoid = (System.getenv("GIT_COMMIT") == null) ? apkNameMaven : apkNameMaven + '.' + System.getenv("GIT_COMMIT").substring(0, 8)
 
-task copyPropertiesDebug(type: Copy) {
+// --------------------
+// Properties injection
+// --------------------
+
+task copyPropertiesDebug(type: Copy, dependsOn: "injectProperties") {
     from '../gradle.properties'
     into 'src/main/assets'
 }
 
-task copyPropertiesRelease(type: Copy) {
+task copyPropertiesRelease(type: Copy, dependsOn: "injectProperties") {
     from '../gradle.properties'
     into 'src/main/assets'
+}
+
+task injectProperties() {
+    def propertiesFile = file('../gradle.properties')
+
+    def patternVersionPatch = Pattern.compile("versionPatch=.*")
+    def propertiesText = propertiesFile.getText()
+    def matcherVersionPatch = patternVersionPatch.matcher(propertiesText)
+    matcherVersionPatch.find()
+    def propertiesContent = matcherVersionPatch.replaceAll("versionPatch=" + versionPatch)
+    propertiesFile.write(propertiesContent)
 }
 
 // --------------------
