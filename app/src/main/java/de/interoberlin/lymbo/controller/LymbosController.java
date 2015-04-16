@@ -72,8 +72,8 @@ public class LymbosController extends Application {
 
     public void load() {
         getLymbosFromAssets();
-        // findLymboFiles();
-        // getLymbosFromFiles();
+        findLymboFiles();
+        getLymbosFromFiles();
 
         loaded = true;
     }

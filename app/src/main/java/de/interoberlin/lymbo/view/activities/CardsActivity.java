@@ -78,8 +78,6 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
         // Register on toaster
         Toaster.register(this, context);
 
-
-
         // Get activity and context for further use
         // activity = this;
         context = getApplicationContext();
