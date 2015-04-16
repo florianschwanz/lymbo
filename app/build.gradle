@@ -62,12 +62,12 @@ def apkNameFrdoid = (System.getenv("GIT_COMMIT") == null) ? apkNameMaven : apkNa
 
 task copyPropertiesDebug(type: Copy) {
     from '../gradle.properties'
-    into 'build/intermediates/assets/debug'
+    into 'src/main/assets'
 }
 
 task copyPropertiesRelease(type: Copy) {
     from '../gradle.properties'
-    into 'build/intermediates/assets/release'
+    into 'src/main/assets'
 }
 
 // --------------------
@@ -227,8 +227,8 @@ uploadArchives {
     }
 }
 
-assembleDebug.dependsOn(copyPropertiesDebug)
-assembleRelease.dependsOn(copyPropertiesRelease)
+mergeDebugAssets.dependsOn(copyPropertiesDebug)
+mergeReleaseAssets.dependsOn(copyPropertiesRelease)
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
