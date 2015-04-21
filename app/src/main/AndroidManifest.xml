@@ -44,6 +44,11 @@
             android:name=".view.activities.EditCardActivity"
             android:label="@string/title_activity_edit_card"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activities.LymbosStashActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".SplashActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

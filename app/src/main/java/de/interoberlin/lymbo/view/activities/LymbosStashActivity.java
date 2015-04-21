@@ -17,13 +17,13 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Lymbo;
-import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
+import de.interoberlin.lymbo.view.adapters.LymbosStashListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.mate.lib.util.Toaster;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 
-public class LymbosActivity extends BaseActivity implements DisplayDialogFragment.OnCompleteListener {
+public class LymbosStashActivity extends BaseActivity implements DisplayDialogFragment.OnCompleteListener {
     // Controllers
     LymbosController lymbosController = LymbosController.getInstance();
     CardsController cardsController = CardsController.getInstance();
@@ -37,7 +37,7 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
 
     // Model
     private List<Lymbo> lymbos;
-    private LymbosListAdapter lymbosAdapter;
+    private LymbosStashListAdapter lymbosStashAdapter;
 
     // --------------------
     // Methods - Lifecycle
@@ -63,14 +63,14 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
 
     public void onResume() {
         super.onResume();
-        lymbos = lymbosController.getLymbos();
-        lymbosAdapter = new LymbosListAdapter(activity, context, R.layout.stack, lymbos);
+        lymbos = lymbosController.getLymbosStashed();
+        lymbosStashAdapter = new LymbosStashListAdapter(activity, context, R.layout.stack_stash, lymbos);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
 
         slv = (SwipeListView) findViewById(R.id.slv);
-        slv.setAdapter(lymbosAdapter);
+        slv.setAdapter(lymbosStashAdapter);
         slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
     }
 
@@ -81,65 +81,26 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_lymbos, menu);
+        getMenuInflater().inflate(R.menu.activity_lymbos_stash, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_stash: {
-                Intent i = new Intent(LymbosActivity.this,LymbosStashActivity.class);
-                startActivity(i);
-                break;
-            }
             case R.id.menu_log: {
-                Intent i = new Intent(LymbosActivity.this, LogActivity.class);
+                Intent i = new Intent(LymbosStashActivity.this, LogActivity.class);
                 startActivity(i);
                 break;
             }
             case R.id.menu_about: {
-                Intent i = new Intent(LymbosActivity.this, AboutActivity.class);
+                Intent i = new Intent(LymbosStashActivity.this, AboutActivity.class);
                 Bundle b = new Bundle();
                 b.putString("flavor", "interoberlin");
                 i.putExtras(b);
                 startActivity(i);
                 break;
             }
-            /*
-            case R.id.menu_add: {
-                InputDialogFragment inputDialogFragment = new InputDialogFragment();
-                Bundle b = new Bundle();
-                b.putString("type", "CREATE_STACK");
-                b.putString("title", a.getResources().getString(R.string.txtNewStack));
-                b.putString("message", a.getResources().getString(R.string.txtChooseName));
-                b.putString("hint", "");
-
-                inputDialogFragment.setArguments(b);
-                inputDialogFragment.show(a.getFragmentManager(), "okay");
-
-                break;
-            }
-            case R.id.menu_refresh: {
-                findLymboFiles();
-                clear();
-                draw();
-                break;
-            }
-            case R.id.menu_download: {
-                InputDialogFragment inputDialogFragment = new InputDialogFragment();
-                Bundle b = new Bundle();
-                b.putString("type", "DOWNLOAD_BLOB");
-                b.putString("title", a.getResources().getString(R.string.txtDownloadFromBlob));
-                b.putString("message", a.getResources().getString(R.string.txtEnterBlobCode));
-                b.putString("hint", "");
-
-                inputDialogFragment.setArguments(b);
-                inputDialogFragment.show(a.getFragmentManager(), "okay");
-
-                break;
-            }
-            */
             default: {
                 return super.onOptionsItemSelected(item);
             }
@@ -154,22 +115,19 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
 
     @Override
     public void onHintDialogComplete() {
-
     }
 
     @Override
     public void onDiscardCardDialogComplete() {
-
     }
 
     @Override
     public void onStashStackDialogComplete() {
-        // Discards current lymbo
-        cardsController.stash();
     }
 
     @Override
     public void onRestoreStackDialogComplete() {
+        cardsController.restore();
     }
 
     // --------------------
@@ -178,18 +136,6 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.activity_lymbos;
+        return R.layout.activity_lymbos_stash;
     }
-
-    /*
-    public void uiRefresh() {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                clear();
-                draw();
-            }
-        });
-    }
-    */
 }

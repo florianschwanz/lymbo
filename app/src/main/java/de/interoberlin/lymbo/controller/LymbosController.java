@@ -22,12 +22,13 @@ import de.interoberlin.mate.lib.model.Log;
 public class LymbosController extends Application {
     private static Context context;
 
-    private Collection<File> lymboFiles;
     private List<Lymbo> lymbos;
+    private List<Lymbo> lymbosStashed;
 
     private static final String LYMBO_FILE_EXTENSION = ".lymbo";
-    private static final String LYMBO_DIR = "";
-    // private static final String LYMBO_DIR = "Interoberlin/lymbo";
+    private static final String LYMBO_FILE_EXTENSION_STASHED = ".lymbo.stashed";
+    // private static final String LYMBO_DIR = "";
+    private static final String LYMBO_DIR = "Interoberlin/lymbo";
     private boolean loaded = false;
 
     private static LymbosController instance;
@@ -68,23 +69,15 @@ public class LymbosController extends Application {
 
     public void init() {
         lymbos = new ArrayList<>();
-        lymboFiles = new ArrayList<>();
+        lymbosStashed = new ArrayList<>();
     }
 
     public void load() {
-        getLymbosFromAssets();
-        findLymboFiles();
-        getLymbosFromFiles();
+        lymbos.addAll(getLymbosFromAssets());
+        lymbos.addAll(getLymbosFromFiles(findFiles(LYMBO_FILE_EXTENSION)));
+        lymbosStashed.addAll(getLymbosFromFiles(findFiles(LYMBO_FILE_EXTENSION_STASHED)));
 
         loaded = true;
-    }
-
-    /**
-     * Finds all files having the extension .lymbo
-     */
-    private void findLymboFiles() {
-        Log.trace("LymbosController.findLymboFiles()");
-        lymboFiles = findFiles(LYMBO_FILE_EXTENSION);
     }
 
     /**
@@ -116,21 +109,27 @@ public class LymbosController extends Application {
     /**
      * Converts lymbo files into lymbo objects
      */
-    private void getLymbosFromFiles() {
+    private List<Lymbo> getLymbosFromFiles(Collection<File> files) {
+        List<Lymbo> lymbos = new ArrayList<>();
+
         // Add lymbos from file system
-        for (File f : lymboFiles) {
+        for (File f : files) {
             Lymbo l = LymboLoader.getLymboFromFile(f);
             if (l != null) {
                 lymbos.add(l);
                 Log.debug("Found lymbo " + f.getName());
             }
         }
+
+        return lymbos;
     }
 
     /**
      * Adds lymbos from assets
      */
-    private void getLymbosFromAssets() {
+    private List<Lymbo> getLymbosFromAssets() {
+        List<Lymbo> lymbos = new ArrayList<>();
+
         try {
             for (String asset : Arrays.asList(context.getAssets().list(""))) {
                 if (asset.endsWith(LYMBO_FILE_EXTENSION)) {
@@ -141,6 +140,8 @@ public class LymbosController extends Application {
         } catch (IOException ioe) {
             Log.fatal(ioe.toString());
         }
+
+        return lymbos;
     }
 
     /**
@@ -180,12 +181,12 @@ public class LymbosController extends Application {
     // Getters / Setters
     // --------------------
 
-    public Collection<File> getLymboFiles() {
-        return lymboFiles;
-    }
-
     public List<Lymbo> getLymbos() {
         return lymbos;
+    }
+
+    public List<Lymbo> getLymbosStashed() {
+        return lymbosStashed;
     }
 
     public boolean isLoaded() {

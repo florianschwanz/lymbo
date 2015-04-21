@@ -9,8 +9,11 @@ import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 
 public class CardsController {
-    private static Lymbo lymbo;
-    private static List<Card> cards = new ArrayList<>();
+    private Lymbo lymbo;
+    private List<Card> cards = new ArrayList<>();
+
+    private static final String LYMBO_FILE_EXTENSION = ".lymbo";
+    private static final String LYMBO_FILE_EXTENSION_STASHED = ".lymbo.stashed";
 
     private static CardsController instance;
 
@@ -59,10 +62,13 @@ public class CardsController {
     /**
      * Renames a lymbo file so that it will not be found anymore
      */
-    public void discard() {
-        new File(lymbo.getPath()).renameTo(new File(lymbo.getPath() + ".removed"));
+    public void stash() {
+        new File(lymbo.getPath()).renameTo(new File(lymbo.getPath().replace(LYMBO_FILE_EXTENSION, LYMBO_FILE_EXTENSION_STASHED)));
     }
 
+    public void restore() {
+        new File(lymbo.getPath()).renameTo(new File(lymbo.getPath().replace(LYMBO_FILE_EXTENSION_STASHED, LYMBO_FILE_EXTENSION)));
+    }
 
     // --------------------
     // Getters / Setters
@@ -73,7 +79,7 @@ public class CardsController {
     }
 
     public void setLymbo(Lymbo lymbo) {
-        CardsController.lymbo = lymbo;
+        this.lymbo = lymbo;
     }
 
     public List<Card> getCards() {

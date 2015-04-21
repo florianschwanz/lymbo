@@ -52,6 +52,12 @@ android {
         release {
             signingConfig signingConfigs.release
         }
+
+        debug {
+            versionNameSuffix ".debug"
+            applicationIdSuffix ".debug"
+        }
+
     }
 }
 

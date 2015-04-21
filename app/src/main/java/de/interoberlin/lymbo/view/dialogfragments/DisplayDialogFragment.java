@@ -49,11 +49,14 @@ public class DisplayDialogFragment extends DialogFragment {
             case "CHANGE_STACK":
                 type = EDialogType.CHANGE_STACK;
                 break;
-            case "DISCARD_STACK":
-                type = EDialogType.DISCARD_STACK;
+            case "STASH_STACK":
+                type = EDialogType.STASH_STACK;
                 break;
             case "DISCARD_CARD":
                 type = EDialogType.DISCARD_CARD;
+                break;
+            case "RESTORE_STACK":
+                type = EDialogType.RESTORE_STACK;
                 break;
             case "HINT":
                 type = EDialogType.HINT;
@@ -89,6 +92,26 @@ public class DisplayDialogFragment extends DialogFragment {
                 });
                 break;
             }
+            case STASH_STACK: {
+                builder.setPositiveButton(R.string.okay, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ocListener.onStashStackDialogComplete();
+                        dismiss();
+                    }
+                });
+                break;
+            }
+            case RESTORE_STACK: {
+                builder.setPositiveButton(R.string.okay, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ocListener.onRestoreStackDialogComplete();
+                        dismiss();
+                    }
+                });
+                break;
+            }
             default: {
                 builder.setPositiveButton(R.string.okay, new OnClickListener() {
                     @Override
@@ -104,7 +127,7 @@ public class DisplayDialogFragment extends DialogFragment {
         // Add negative button
         switch (type) {
             case DISCARD_CARD:
-            case DISCARD_STACK:
+            case STASH_STACK:
             case DOWNLOAD_BLOB: {
                 builder.setNegativeButton(R.string.cancel, new OnClickListener() {
                     @Override
@@ -129,7 +152,6 @@ public class DisplayDialogFragment extends DialogFragment {
 
     @Override
     public void onPause() {
-        // Call super
         super.onPause();
     }
 
@@ -139,11 +161,9 @@ public class DisplayDialogFragment extends DialogFragment {
 
     public static interface OnCompleteListener {
         public abstract void onHintDialogComplete();
-
-        public abstract void onDiscardStackDialogComplete();
-
+        public abstract void onStashStackDialogComplete();
+        public abstract void onRestoreStackDialogComplete();
         public abstract void onDiscardCardDialogComplete();
-
     }
 
     public void onAttach(Activity activity) {

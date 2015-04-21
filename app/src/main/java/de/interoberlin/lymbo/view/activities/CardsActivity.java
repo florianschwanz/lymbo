@@ -241,7 +241,12 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     }
 
     @Override
-    public void onDiscardStackDialogComplete() {
+    public void onStashStackDialogComplete() {
+
+    }
+
+    @Override
+    public void onRestoreStackDialogComplete() {
 
     }
 

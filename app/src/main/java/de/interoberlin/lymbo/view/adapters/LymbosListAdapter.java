@@ -1,9 +1,11 @@
 package de.interoberlin.lymbo.view.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +22,13 @@ import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
+import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
 import de.interoberlin.mate.lib.util.Toaster;
 
 public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
     Context c;
+    Activity a;
 
     // Controllers
     CardsController cardsController = CardsController.getInstance();
@@ -33,9 +38,9 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
     // Constructors
     // --------------------
 
-    public LymbosListAdapter(Context context, int resource, List<Lymbo> items) {
+    public LymbosListAdapter(Activity activity, Context context, int resource, List<Lymbo> items) {
         super(context, resource, items);
-
+        this.a = activity;
         this.c = context;
     }
 
@@ -84,13 +89,22 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             }
         });
 
-        // Action : discard
+        // Action : stash
         if (lymbo.getPath() != null) {
             ivDiscard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     cardsController.setLymbo(lymbo);
-                    cardsController.discard();
+
+                    DisplayDialogFragment inputDialogFragment = new DisplayDialogFragment();
+                    Bundle b = new Bundle();
+                    b.putString("type", EDialogType.STASH_STACK.toString());
+                    b.putString("title", c.getResources().getString(R.string.stash_stack));
+                    b.putString("message", c.getResources().getString(R.string.stash_stack_question));
+                    b.putString("hint", "");
+
+                    inputDialogFragment.setArguments(b);
+                    inputDialogFragment.show(a.getFragmentManager(), "okay");
                     notifyDataSetChanged();
                 }
             });
