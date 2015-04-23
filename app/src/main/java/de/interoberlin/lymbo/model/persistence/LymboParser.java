@@ -154,7 +154,7 @@ public class LymboParser {
     }
 
     private void parseDefault(XmlPullParser parser, String attribute) {
-        String value = parser.getAttributeValue(null, "default:" + attribute);
+        String value = parser.getAttributeValue(null, attribute);
         if (value != null)
             defaults.put(attribute, value);
     }
