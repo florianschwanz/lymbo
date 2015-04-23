@@ -48,7 +48,7 @@ public class Lymbo implements Displayable {
 
         TextView tvTitle = (TextView) v.findViewById(R.id.tvTitle);
         TextView tvSubtitle = (TextView) v.findViewById(R.id.tvSubtitle);
-        ImageView ivDiscard = (ImageView) v.findViewById(R.id.ivDiscard);
+        ImageView ivDiscard = (ImageView) v.findViewById(R.id.ivStash);
         ImageView ivEdit = (ImageView) v.findViewById(R.id.ivEdit);
         ImageView ivShare = (ImageView) v.findViewById(R.id.ivShare);
         ImageView ivUpload = (ImageView) v.findViewById(R.id.ivUpload);

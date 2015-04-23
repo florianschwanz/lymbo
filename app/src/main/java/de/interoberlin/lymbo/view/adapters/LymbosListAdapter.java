@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -24,15 +25,13 @@ import de.interoberlin.lymbo.util.Base64BitmapConverter;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
-import de.interoberlin.mate.lib.util.Toaster;
 
 public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
-    Context c;
-    Activity a;
+    private Context c;
+    private Activity a;
 
     // Controllers
-    CardsController cardsController = CardsController.getInstance();
-
+    private CardsController cardsController = CardsController.getInstance();
 
     // --------------------
     // Constructors
@@ -61,7 +60,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         ImageView ivImage = (ImageView) ll.findViewById(R.id.ivImage);
         TextView tvTitle = (TextView) ll.findViewById(R.id.tvTitle);
         TextView tvSubtitle = (TextView) ll.findViewById(R.id.tvSubtitle);
-        ImageView ivDiscard = (ImageView) ll.findViewById(R.id.ivDiscard);
+        ImageView ivStash = (ImageView) ll.findViewById(R.id.ivStash);
         ImageView ivEdit = (ImageView) ll.findViewById(R.id.ivEdit);
         ImageView ivShare = (ImageView) ll.findViewById(R.id.ivShare);
         ImageView ivUpload = (ImageView) ll.findViewById(R.id.ivUpload);
@@ -90,8 +89,8 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         });
 
         // Action : stash
-        if (lymbo.getPath() != null) {
-            ivDiscard.setOnClickListener(new View.OnClickListener() {
+        if (!lymbo.isAsset()) {
+            ivStash.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     cardsController.setLymbo(lymbo);
@@ -109,7 +108,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 }
             });
         } else {
-            remove(ivDiscard);
+            remove(ivStash);
         }
 
         // Action : edit
@@ -117,19 +116,19 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             ivEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toaster.add("Not yet implemented");
+                    Toast.makeText(c, R.string.not_yet_implemented, Toast.LENGTH_SHORT);
                 }
             });
         } else {
             remove(ivEdit);
         }
 
-        // Action : edit
+        // Action : share
         if (lymbo.getPath() != null) {
             ivShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toaster.add("Not yet implemented");
+                    Toast.makeText(c, R.string.not_yet_implemented, Toast.LENGTH_SHORT);
                 }
             });
         } else {
@@ -141,22 +140,19 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             ivUpload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toaster.add("Not yet implemented");
+                    Toast.makeText(c, R.string.not_yet_implemented, Toast.LENGTH_SHORT);
                 }
             });
         } else {
             remove(ivUpload);
         }
 
-        // Action : path
+        // Action : hint
         if (lymbo.getPath() != null) {
             ivHint.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (lymbo.getPath() != null)
-                        Toaster.add(lymbo.getPath());
-                    else
-                        Toaster.add("lymbo stack from assets");
+                    Toast.makeText(c, lymbo.getPath(), Toast.LENGTH_SHORT);
                 }
             });
         } else {

@@ -27,7 +27,6 @@ public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
     // Controllers
     CardsController cardsController = CardsController.getInstance();
 
-
     // --------------------
     // Constructors
     // --------------------

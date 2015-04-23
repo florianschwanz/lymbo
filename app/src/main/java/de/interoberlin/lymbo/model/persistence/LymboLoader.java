@@ -48,7 +48,7 @@ public class LymboLoader {
         try {
             Lymbo l = getLymboFromInputStream(new FileInputStream(f));
             l.setPath(f.getAbsolutePath());
-            l.setAsset(true);
+            l.setAsset(false);
             return l;
         } catch (FileNotFoundException e) {
             Log.error(e.toString());

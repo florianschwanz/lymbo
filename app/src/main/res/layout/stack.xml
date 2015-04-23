@@ -102,7 +102,7 @@
                         android:gravity="left">
 
                         <ImageView
-                            android:id="@+id/ivDiscard"
+                            android:id="@+id/ivStash"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/discard"

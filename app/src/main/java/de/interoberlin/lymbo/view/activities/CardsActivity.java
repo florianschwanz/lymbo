@@ -46,6 +46,7 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
 
     private final String BUNDLE_LYMBO_PATH = "lymbo_path";
     private final String BUNDLE_ASSET = "asset";
+    private final String BUNDLE_SCROLL_POS = "scroll_pos";
 
     // --------------------
     // Methods - Lifecycle
@@ -67,6 +68,8 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
 
             cardsController.setLymbo(l);
             cardsController.init();
+
+            slv.smoothScrollToPosition(savedInstanceState.getInt(BUNDLE_SCROLL_POS));
         }
 
         if (cardsController.getLymbo() == null) {
@@ -193,6 +196,7 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
 
                 checkboxDialogFragment.setArguments(b);
                 checkboxDialogFragment.show(getFragmentManager(), "okay");
+                break;
             }
         }
 
@@ -218,6 +222,7 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putString(BUNDLE_LYMBO_PATH, cardsController.getLymbo().getPath());
         savedInstanceState.putBoolean(BUNDLE_ASSET, cardsController.getLymbo().isAsset());
+        savedInstanceState.putInt(BUNDLE_SCROLL_POS, getFirst());
 
         super.onSaveInstanceState(savedInstanceState);
     }

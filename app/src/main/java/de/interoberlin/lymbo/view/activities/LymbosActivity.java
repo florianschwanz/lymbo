@@ -11,22 +11,18 @@ import android.view.MenuItem;
 
 import com.fortysevendeg.swipelistview.SwipeListView;
 
-import java.util.List;
-
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.LymbosController;
-import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
-import de.interoberlin.mate.lib.util.Toaster;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 
 public class LymbosActivity extends BaseActivity implements DisplayDialogFragment.OnCompleteListener {
     // Controllers
-    LymbosController lymbosController = LymbosController.getInstance();
-    CardsController cardsController = CardsController.getInstance();
+    private LymbosController lymbosController = LymbosController.getInstance();
+    private CardsController cardsController = CardsController.getInstance();
 
     // Context and Activity
     private static Context context;
@@ -36,7 +32,6 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
     private SwipeListView slv;
 
     // Model
-    private List<Lymbo> lymbos;
     private LymbosListAdapter lymbosAdapter;
 
     // --------------------
@@ -53,18 +48,14 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(false);
 
-        // Register on toaster
-        Toaster.register(this, context);
-
         // Get activity and context for further use
         activity = this;
-        context = getApplicationContext();
+        context = this;
     }
 
     public void onResume() {
         super.onResume();
-        lymbos = lymbosController.getLymbos();
-        lymbosAdapter = new LymbosListAdapter(activity, context, R.layout.stack, lymbos);
+        lymbosAdapter = new LymbosListAdapter(activity, context, R.layout.stack, lymbosController.getLymbos());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
@@ -89,7 +80,7 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_stash: {
-                Intent i = new Intent(LymbosActivity.this,LymbosStashActivity.class);
+                Intent i = new Intent(LymbosActivity.this, LymbosStashActivity.class);
                 startActivity(i);
                 break;
             }
@@ -164,8 +155,9 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
 
     @Override
     public void onStashStackDialogComplete() {
-        // Discards current lymbo
         cardsController.stash();
+        lymbosAdapter.notifyDataSetChanged();
+        slv.invalidateViews();
     }
 
     @Override

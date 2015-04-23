@@ -128,6 +128,8 @@ public class LymbosStashActivity extends BaseActivity implements DisplayDialogFr
     @Override
     public void onRestoreStackDialogComplete() {
         cardsController.restore();
+        lymbosStashAdapter.notifyDataSetChanged();
+        slv.invalidateViews();
     }
 
     // --------------------
