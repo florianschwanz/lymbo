@@ -31,6 +31,7 @@
     <string name="share">Share</string>
     <string name="stack_restored">Stack restored</string>
     <string name="stack_stashed">Stack stashed</string>
+    <string name="stash">Stash</string>
     <string name="stash_stack">Stash stack</string>
     <string name="stash_stack_question">Do you really want to stash this stack?</string>
     <string name="tags">Tags</string>

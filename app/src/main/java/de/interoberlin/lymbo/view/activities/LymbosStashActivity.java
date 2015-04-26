@@ -52,8 +52,9 @@ public class LymbosStashActivity extends BaseActivity implements SnackBar.OnMess
             lymbosController.load();
         }
 
+        setTitle(R.string.stash);
         setActionBarIcon(R.drawable.ic_ab_drawer);
-        setDisplayHomeAsUpEnabled(false);
+        setDisplayHomeAsUpEnabled(true);
 
         // Register on toaster
         Toaster.register(this, context);
