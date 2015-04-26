@@ -2,7 +2,6 @@ package de.interoberlin.lymbo.view.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,7 @@ import java.util.List;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Lymbo;
-import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
+import de.interoberlin.lymbo.view.activities.LymbosStashActivity;
 
 public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
     Context c;
@@ -67,17 +65,7 @@ public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
                 @Override
                 public void onClick(View view) {
                     cardsController.setLymbo(lymbo);
-
-                    DisplayDialogFragment inputDialogFragment = new DisplayDialogFragment();
-                    Bundle b = new Bundle();
-                    b.putString("type", EDialogType.RESTORE_STACK.toString());
-                    b.putString("title", c.getResources().getString(R.string.restore_stack));
-                    b.putString("message", c.getResources().getString(R.string.restore_stack_question));
-                    b.putString("hint", "");
-
-                    inputDialogFragment.setArguments(b);
-                    inputDialogFragment.show(a.getFragmentManager(), "okay");
-                    notifyDataSetChanged();
+                    ((LymbosStashActivity) a).restore();
                 }
             });
         } else {

@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.fortysevendeg.swipelistview.SwipeListView;
+import com.github.mrengineer13.snackbar.SnackBar;
 
 import java.util.List;
 
@@ -23,7 +25,7 @@ import de.interoberlin.mate.lib.util.Toaster;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 
-public class LymbosStashActivity extends BaseActivity implements DisplayDialogFragment.OnCompleteListener {
+public class LymbosStashActivity extends BaseActivity implements SnackBar.OnMessageClickListener, DisplayDialogFragment.OnCompleteListener {
     // Controllers
     LymbosController lymbosController = LymbosController.getInstance();
     CardsController cardsController = CardsController.getInstance();
@@ -37,7 +39,7 @@ public class LymbosStashActivity extends BaseActivity implements DisplayDialogFr
 
     // Model
     private List<Lymbo> lymbos;
-    private LymbosStashListAdapter lymbosStashAdapter;
+    private LymbosStashListAdapter lymbosStashedAdapter;
 
     // --------------------
     // Methods - Lifecycle
@@ -64,13 +66,13 @@ public class LymbosStashActivity extends BaseActivity implements DisplayDialogFr
     public void onResume() {
         super.onResume();
         lymbos = lymbosController.getLymbosStashed();
-        lymbosStashAdapter = new LymbosStashListAdapter(activity, context, R.layout.stack_stash, lymbos);
+        lymbosStashedAdapter = new LymbosStashListAdapter(activity, context, R.layout.stack_stash, lymbos);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
 
         slv = (SwipeListView) findViewById(R.id.slv);
-        slv.setAdapter(lymbosStashAdapter);
+        slv.setAdapter(lymbosStashedAdapter);
         slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
     }
 
@@ -109,6 +111,27 @@ public class LymbosStashActivity extends BaseActivity implements DisplayDialogFr
         return true;
     }
 
+    public void restore() {
+        cardsController.restore();
+        lymbosStashedAdapter.notifyDataSetChanged();
+        slv.invalidateViews();
+
+        new SnackBar.Builder(this)
+                .withOnClickListener(this)
+                .withMessageId(R.string.stack_restored)
+                .withActionMessageId(R.string.undo)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    @Override
+    public void onMessageClick(Parcelable token) {
+        cardsController.restore();
+        lymbosStashedAdapter.notifyDataSetChanged();
+        slv.invalidateViews();
+    }
+
     // --------------------
     // Methods - Callbacks
     // --------------------
@@ -119,17 +142,6 @@ public class LymbosStashActivity extends BaseActivity implements DisplayDialogFr
 
     @Override
     public void onDiscardCardDialogComplete() {
-    }
-
-    @Override
-    public void onStashStackDialogComplete() {
-    }
-
-    @Override
-    public void onRestoreStackDialogComplete() {
-        cardsController.restore();
-        lymbosStashAdapter.notifyDataSetChanged();
-        slv.invalidateViews();
     }
 
     // --------------------

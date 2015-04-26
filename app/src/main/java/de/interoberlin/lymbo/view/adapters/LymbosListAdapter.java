@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -23,8 +21,7 @@ import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
-import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
+import de.interoberlin.lymbo.view.activities.LymbosActivity;
 
 public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
     private Context c;
@@ -94,17 +91,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 @Override
                 public void onClick(View view) {
                     cardsController.setLymbo(lymbo);
-
-                    DisplayDialogFragment inputDialogFragment = new DisplayDialogFragment();
-                    Bundle b = new Bundle();
-                    b.putString("type", EDialogType.STASH_STACK.toString());
-                    b.putString("title", c.getResources().getString(R.string.stash_stack));
-                    b.putString("message", c.getResources().getString(R.string.stash_stack_question));
-                    b.putString("hint", "");
-
-                    inputDialogFragment.setArguments(b);
-                    inputDialogFragment.show(a.getFragmentManager(), "okay");
-                    notifyDataSetChanged();
+                    ((LymbosActivity) a).stash();
                 }
             });
         } else {
@@ -112,52 +99,54 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         }
 
         // Action : edit
-        if (lymbo.getPath() != null) {
+        /*if (!lymbo.isAsset()) {
             ivEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(c, R.string.not_yet_implemented, Toast.LENGTH_SHORT);
                 }
             });
-        } else {
+        } else {*/
             remove(ivEdit);
-        }
+        /*}*/
 
         // Action : share
-        if (lymbo.getPath() != null) {
+        /*if (lymbo.getPath() != null) {
             ivShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(c, R.string.not_yet_implemented, Toast.LENGTH_SHORT);
                 }
             });
-        } else {
+        } else {*/
             remove(ivShare);
-        }
+        /*}*/
 
         // Action : upload
-        if (lymbo.getPath() != null) {
+        /*
+        if (!lymbo.isAsset()) {
             ivUpload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(c, R.string.not_yet_implemented, Toast.LENGTH_SHORT);
                 }
             });
-        } else {
+        } else {*/
             remove(ivUpload);
-        }
+        /*}*/
 
         // Action : hint
-        if (lymbo.getPath() != null) {
+        /*
+        if (!lymbo.isAsset()) {
             ivHint.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(c, lymbo.getPath(), Toast.LENGTH_SHORT);
                 }
             });
-        } else {
+        } else {*/
             remove(ivHint);
-        }
+        /*}*/
 
         return ll;
     }

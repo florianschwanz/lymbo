@@ -9,164 +9,169 @@
         android:id="@+id/card_view"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         card_view:cardCornerRadius="2dp">
 
-        <RelativeLayout
-            android:id="@+id/front"
-            android:tag="front"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:padding="8dp">
-
-            <LinearLayout
-                android:id="@+id/ll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:id="@+id/ivImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:scaleType="centerCrop" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp">
-
-                    <de.interoberlin.lymbo.view.controls.RobotoTextView
-                        roboto:typeface="roboto_regular"
-                        android:id="@+id/tvTitle"
-                        style="@style/CardTitle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.50"
-                        android:text="@string/title" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/selectable_background_cardbank"
-                    android:gravity="center_vertical"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:paddingTop="8dp">
-
-                    <de.interoberlin.lymbo.view.controls.RobotoTextView
-                        roboto:typeface="roboto_regular"
-                        android:id="@+id/tvSubtitle"
-                        style="@style/CardText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:ellipsize="end"
-                        android:maxLines="4"
-                        android:text="@string/title" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:orientation="vertical">
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="4dp"
-                    android:background="@color/stroke" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="left">
-
-                        <ImageView
-                            android:id="@+id/ivStash"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:contentDescription="@string/discard"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_discard" />
-
-                        <ImageView
-                            android:id="@+id/ivEdit"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:contentDescription="@string/edit"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_action_edit" />
-
-                        <ImageView
-                            android:id="@+id/ivShare"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:contentDescription="@string/share"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_share" />
-
-                        <ImageView
-                            android:id="@+id/ivUpload"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:contentDescription="@string/upload"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_upload" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:gravity="right">
-
-                        <ImageView
-                            android:id="@+id/ivHint"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:contentDescription="@string/hint"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_about" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/ivLogo"
-                android:layout_width="@dimen/stack_image_height"
-                android:layout_height="@dimen/stack_image_height"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:contentDescription="@string/logo" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/back"
-            android:tag="back"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"></RelativeLayout>
+            android:orientation="vertical">
 
+            <RelativeLayout
+                android:id="@+id/front"
+                android:tag="front"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:id="@+id/ivImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:scaleType="centerCrop" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp">
+
+                        <de.interoberlin.lymbo.view.controls.RobotoTextView
+                            roboto:typeface="roboto_regular"
+                            android:id="@+id/tvTitle"
+                            style="@style/CardTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.50"
+                            android:text="@string/title" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/selectable_background_cardbank"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:paddingTop="8dp">
+
+                        <de.interoberlin.lymbo.view.controls.RobotoTextView
+                            roboto:typeface="roboto_regular"
+                            android:id="@+id/tvSubtitle"
+                            style="@style/CardText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:ellipsize="end"
+                            android:maxLines="4"
+                            android:text="@string/title" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="4dp"
+                        android:background="@color/stroke" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="left">
+
+                            <ImageView
+                                android:id="@+id/ivStash"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/discard"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_discard" />
+
+                            <ImageView
+                                android:id="@+id/ivEdit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/edit"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_action_edit" />
+
+                            <ImageView
+                                android:id="@+id/ivShare"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/share"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_share" />
+
+                            <ImageView
+                                android:id="@+id/ivUpload"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/upload"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_upload" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:gravity="right">
+
+                            <ImageView
+                                android:id="@+id/ivHint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/hint"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_about" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/ivLogo"
+                    android:layout_width="@dimen/stack_image_height"
+                    android:layout_height="@dimen/stack_image_height"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/logo" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/back"
+                android:tag="back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"></RelativeLayout>
+
+        </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

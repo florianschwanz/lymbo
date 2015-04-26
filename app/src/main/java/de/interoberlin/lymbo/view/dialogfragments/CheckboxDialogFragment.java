@@ -121,9 +121,6 @@ public class CheckboxDialogFragment extends DialogFragment {
             case "CHANGE_STACK":
                 type = EDialogType.CHANGE_STACK;
                 break;
-            case "DISCARD_STACK":
-                type = EDialogType.STASH_STACK;
-                break;
             case "DISCARD_CARD":
                 type = EDialogType.DISCARD_CARD;
                 break;

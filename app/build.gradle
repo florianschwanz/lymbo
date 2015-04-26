@@ -54,10 +54,8 @@ android {
         }
 
         debug {
-            versionNameSuffix ".debug"
-            applicationIdSuffix ".debug"
+            // versionNameSuffix ".debug"
         }
-
     }
 }
 
@@ -266,4 +264,5 @@ dependencies {
     compile('com.fortysevendeg.swipelistview:swipelistview:1.0-SNAPSHOT@aar') {
         transitive = true
     }
+    compile 'com.github.mrengineer13:snackbar:1.1.0'
 }

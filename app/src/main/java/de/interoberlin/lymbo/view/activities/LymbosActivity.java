@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.fortysevendeg.swipelistview.SwipeListView;
+import com.github.mrengineer13.snackbar.SnackBar;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
@@ -19,7 +21,7 @@ import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 
-public class LymbosActivity extends BaseActivity implements DisplayDialogFragment.OnCompleteListener {
+public class LymbosActivity extends BaseActivity implements SnackBar.OnMessageClickListener,  DisplayDialogFragment.OnCompleteListener {
     // Controllers
     private LymbosController lymbosController = LymbosController.getInstance();
     private CardsController cardsController = CardsController.getInstance();
@@ -139,6 +141,27 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
         return true;
     }
 
+    public void stash() {
+        cardsController.stash();
+        lymbosAdapter.notifyDataSetChanged();
+        slv.invalidateViews();
+
+        new SnackBar.Builder(this)
+                .withOnClickListener(this)
+                .withMessageId(R.string.stack_stashed)
+                .withActionMessageId(R.string.undo)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    @Override
+    public void onMessageClick(Parcelable token) {
+        cardsController.restore();
+        lymbosAdapter.notifyDataSetChanged();
+        slv.invalidateViews();
+    }
+
     // --------------------
     // Methods - Callbacks
     // --------------------
@@ -151,17 +174,6 @@ public class LymbosActivity extends BaseActivity implements DisplayDialogFragmen
     @Override
     public void onDiscardCardDialogComplete() {
 
-    }
-
-    @Override
-    public void onStashStackDialogComplete() {
-        cardsController.stash();
-        lymbosAdapter.notifyDataSetChanged();
-        slv.invalidateViews();
-    }
-
-    @Override
-    public void onRestoreStackDialogComplete() {
     }
 
     // --------------------
