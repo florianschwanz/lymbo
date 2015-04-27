@@ -27,8 +27,8 @@ public class LymbosController extends Application {
 
     private static final String LYMBO_FILE_EXTENSION = ".lymbo";
     private static final String LYMBO_FILE_EXTENSION_STASHED = ".lymbo.stashed";
-    // private static final String LYMBO_DIR = "";
-    private static final String LYMBO_DIR = "Interoberlin/lymbo";
+    private static final String LYMBO_DIR = "";
+    // private static final String LYMBO_DIR = "Interoberlin/lymbo";
     private boolean loaded = false;
 
     private static LymbosController instance;

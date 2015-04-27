@@ -128,7 +128,7 @@ public class LymbosStashActivity extends BaseActivity implements SnackBar.OnMess
 
     @Override
     public void onMessageClick(Parcelable token) {
-        cardsController.restore();
+        cardsController.stash();
         lymbosStashedAdapter.notifyDataSetChanged();
         slv.invalidateViews();
     }

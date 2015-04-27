@@ -141,6 +141,9 @@ public class LymbosActivity extends BaseActivity implements SnackBar.OnMessageCl
         return true;
     }
 
+    /**
+     * Invalidates the current lymbo
+     */
     public void stash() {
         cardsController.stash();
         lymbosAdapter.notifyDataSetChanged();

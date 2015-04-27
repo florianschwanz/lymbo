@@ -85,7 +85,7 @@ public class LymboWriter {
             appendSide("front", card.getFront());
 
         if (card.getBack() != null)
-            appendSide("back", card.getFront());
+            appendSide("back", card.getBack());
 
         addEndTag(tag);
     }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:theme="@style/Theme.AppCompat.Light.Dialog">
+
+    <de.interoberlin.lymbo.view.controls.RobotoEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/front"
+        android:id="@+id/retFront" />
+
+    <de.interoberlin.lymbo.view.controls.RobotoEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/back"
+        android:id="@+id/retBack" />
+
+</LinearLayout>

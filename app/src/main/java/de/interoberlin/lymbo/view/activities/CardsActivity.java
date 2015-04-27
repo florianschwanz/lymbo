@@ -8,6 +8,8 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.fortysevendeg.swipelistview.BaseSwipeListViewListener;
 import com.fortysevendeg.swipelistview.SwipeListView;
@@ -25,9 +27,10 @@ import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.CheckboxDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
+import de.interoberlin.lymbo.view.dialogfragments.SimpleCardDialogFragment;
 import de.interoberlin.mate.lib.util.Toaster;
 
-public class CardsActivity extends BaseActivity implements DisplayDialogFragment.OnCompleteListener, CheckboxDialogFragment.OnLabelSelectedListener {
+public class CardsActivity extends BaseActivity implements SimpleCardDialogFragment.OnCompleteListener ,DisplayDialogFragment.OnCompleteListener, CheckboxDialogFragment.OnLabelSelectedListener {
     // Controllers
     CardsController cardsController = CardsController.getInstance();
 
@@ -37,12 +40,11 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
 
     // Views
     private SwipeListView slv;
+    private ImageButton ibFab;
 
     // Model
     private List<Card> cards;
     private CardsListAdapter cardsAdapter;
-
-    private final int VIBRATION_DURATION = 50;
 
     private final String BUNDLE_LYMBO_PATH = "lymbo_path";
     private final String BUNDLE_ASSET = "asset";
@@ -68,8 +70,6 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
 
             cardsController.setLymbo(l);
             cardsController.init();
-
-            slv.smoothScrollToPosition(savedInstanceState.getInt(BUNDLE_SCROLL_POS));
         }
 
         if (cardsController.getLymbo() == null) {
@@ -143,6 +143,20 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
                 cardsAdapter.notifyDataSetChanged();
             }
         });
+
+        ibFab = (ImageButton) findViewById(R.id.fab);
+        ibFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SimpleCardDialogFragment simpleCardDialogFragment = new SimpleCardDialogFragment();
+                Bundle b = new Bundle();
+                b.putString("type", EDialogType.ADD_SIMPLE_CARD.toString());
+                b.putString("title", getResources().getString(R.string.add_card));
+
+                simpleCardDialogFragment.setArguments(b);
+                simpleCardDialogFragment.show(getFragmentManager(), "okay");
+            }
+        });
     }
 
     @Override
@@ -163,16 +177,9 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int VIBRATION_DURATION = 50;
+
         switch (item.getItemId()) {
-            /*
-            case R.id.menu_add: {
-                cardsController.addCard();
-                cardsController.save();
-                cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
-                slv.setAdapter(cardsAdapter);
-                break;
-            }
-            */
             case R.id.menu_shuffle: {
                 ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
                 Collections.shuffle(cards);
@@ -222,7 +229,6 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putString(BUNDLE_LYMBO_PATH, cardsController.getLymbo().getPath());
         savedInstanceState.putBoolean(BUNDLE_ASSET, cardsController.getLymbo().isAsset());
-        savedInstanceState.putInt(BUNDLE_SCROLL_POS, getFirst());
 
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -239,6 +245,14 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
     // --------------------
     // Methods - Callbacks
     // --------------------
+
+    @Override
+    public void onAddSimpleCard(String frontText, String backText) {
+        cardsController.addSimpleCard(frontText, backText);
+        cardsController.save();
+        cardsAdapter.notifyDataSetChanged();
+        slv.invalidateViews();
+    }
 
     @Override
     public void onHintDialogComplete() {
@@ -261,7 +275,7 @@ public class CardsActivity extends BaseActivity implements DisplayDialogFragment
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.activity_lymbos;
+        return R.layout.activity_cards;
     }
 
     /*

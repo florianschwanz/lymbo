@@ -7,6 +7,9 @@ import java.util.List;
 
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.components.TitleComponent;
+import de.interoberlin.lymbo.model.card.enums.EGravity;
+import de.interoberlin.lymbo.model.persistence.LymboWriter;
 
 public class CardsController {
     private Lymbo lymbo;
@@ -67,17 +70,29 @@ public class CardsController {
         lymbosController.getLymbosStashed().remove(lymbo);
     }
 
+    public void addSimpleCard(String frontText, String backText) {
+        TitleComponent front = new TitleComponent();
+        front.setValue(frontText);
+        front.setGravity(EGravity.CENTER);
+        TitleComponent back = new TitleComponent();
+        back.setGravity(EGravity.CENTER);
+        back.setValue(backText);
+
+        Card card = new Card();
+        card.getFront().addComponent(front);
+        card.getBack().addComponent(back);
+
+        cards.add(card);
+    }
+
     /**
      * Writes lymbo object into file
-     * (only if lymbo is on file system)
      */
-    /*
     public void save() {
         if (lymbo.getPath() != null) {
             LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
         }
     }
-    */
 
     // --------------------
     // Getters / Setters

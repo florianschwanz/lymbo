@@ -22,6 +22,8 @@ public class Card {
     // -------------------------
 
     public Card() {
+        front = new Side();
+        back = new Side();
     }
 
 
