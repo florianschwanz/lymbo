@@ -3,23 +3,23 @@
     <color name="colorPrimary">#A5CA3A</color>
     <color name="colorPrimaryDark">#9CBA36</color>
 
-    <color name="colorSecondary">@color/material_deep_teal_200</color>
-    <color name="colorSecondaryDark">@color/material_deep_teal_500</color>
+    <!--<color name="colorSecondary">@color/material_deep_teal_200</color>-->
+    <!--<color name="colorSecondaryDark">@color/material_deep_teal_500</color>-->
 
-    <color name="windowBackgroundColor">#333333</color>
-    <color name="black_translucent">#80000000</color>
+    <!--<color name="windowBackgroundColor">#333333</color>-->
+    <!--<color name="black_translucent">#80000000</color>-->
 
     <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
+    <!--<color name="black">#000000</color>-->
 
     <color name="background">#EEE</color>
 
     <color name="stroke">#dddddd</color>
-    <color name="text_light">#66000000</color>
+    <!--<color name="text_light">#66000000</color>-->
     <color name="card_text">#ff8d8d8d</color>
     <color name="card_title_text">#ff707070</color>
     <color name="card_light_text">#ffb5b5b5</color>
-    <color name="card_grid_text">#ff707070</color>
-    <color name="card_separator">#ffe5e5e5</color>
-    <color name="card_border">#ffdedede</color>
+    <!--<color name="card_grid_text">#ff707070</color>-->
+    <!--<color name="card_separator">#ffe5e5e5</color>-->
+    <!--<color name="card_border">#ffdedede</color>-->
 </resources>

@@ -57,6 +57,8 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Restore instance state
         if (savedInstanceState != null) {
             // Restore cards
             Lymbo l = null;

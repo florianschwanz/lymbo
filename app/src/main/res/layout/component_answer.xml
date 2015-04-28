@@ -22,7 +22,7 @@
         style="@style/CardText"
         android:ellipsize="end"
         android:maxLines="1"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.50"
         android:text="@string/text" />
