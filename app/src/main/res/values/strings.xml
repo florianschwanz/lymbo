@@ -2,7 +2,7 @@
 <resources>
 
     <string name="action_settings">Settings</string>
-    <!--<string name="add_card">Add card</string>-->
+    <string name="add_card">Add card</string>
     <string name="app_name">lymbo</string>
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
