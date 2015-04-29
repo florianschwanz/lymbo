@@ -42,7 +42,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     CardsController cardsController = CardsController.getInstance();
     ComponentsController componentsController = ComponentsController.getInstance();
 
-    private int VIBRATION_DURATION = 50;
+    private int VIBRATION_DURATION = 40;
     private boolean frontVisible = true;
 
     // --------------------
@@ -68,7 +68,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            LinearLayout ll = (LinearLayout) vi.inflate(R.layout.card, null);
+            LinearLayout ll = (LinearLayout) vi.inflate(R.layout.card, parent, false);
 
             // Load views : front
             final LinearLayout front = (LinearLayout) ll.findViewById(R.id.front);

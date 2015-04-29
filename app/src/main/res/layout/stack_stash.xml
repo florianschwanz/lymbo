@@ -29,16 +29,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp">
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp">
 
                     <de.interoberlin.lymbo.view.controls.RobotoTextView
                         roboto:typeface="roboto_regular"
@@ -56,8 +49,8 @@
                     android:background="@drawable/selectable_background_cardbank"
                     android:gravity="center_vertical"
                     android:paddingBottom="8dp"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
                     android:paddingTop="8dp">
 
                     <de.interoberlin.lymbo.view.controls.RobotoTextView
@@ -66,7 +59,7 @@
                         style="@style/CardText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
                         android:ellipsize="end"
                         android:maxLines="4"
                         android:text="@string/title" />
@@ -86,17 +79,10 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="left">
-
-                    </LinearLayout>
-
-                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:gravity="right">
+                        android:gravity="end">
 
                         <ImageView
                             android:id="@+id/ivUndo"
@@ -113,7 +99,7 @@
                 android:id="@+id/ivLogo"
                 android:layout_width="@dimen/stack_image_height"
                 android:layout_height="@dimen/stack_image_height"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:contentDescription="@string/logo" />
 
@@ -122,7 +108,7 @@
         <RelativeLayout
             android:id="@+id/back"
             android:tag="back"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="8dp"></RelativeLayout>
 

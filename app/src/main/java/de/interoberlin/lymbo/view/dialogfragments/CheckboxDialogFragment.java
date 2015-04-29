@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -46,8 +45,7 @@ public class CheckboxDialogFragment extends DialogFragment {
         Context c = getActivity();
 
         // Load layout
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View v = inflater.inflate(R.layout.dialogfragment_table, null);
+        final View v = View.inflate(c, R.layout.dialogfragment_table, null);
         final TableLayout tblChapters = (TableLayout) v.findViewById(R.id.tblChapters);
         final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
 

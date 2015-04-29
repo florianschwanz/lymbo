@@ -1,16 +1,16 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="item_width">192dp</dimen>
-    <dimen name="item_height">192dp</dimen>
+    <!-- <dimen name="item_width">192dp</dimen> -->
+    <!-- <dimen name="item_height">192dp</dimen> -->
     <dimen name="spacing_large">16dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <!-- Card -->
-    <integer name="num_cols">1</integer>
+    <!-- <integer name="num_cols">1</integer> -->
     <dimen name="card_padding">16.0dip</dimen>
     <dimen name="min_card_height">80dp</dimen>
-    <dimen name="stack_height">150dp</dimen>
+    <!-- <dimen name="stack_height">150dp</dimen> -->
     <dimen name="stack_image_height">100dp</dimen>
     <dimen name="card_small_text">14.0sp</dimen>
     <dimen name="card_large_text">25.0sp</dimen>
@@ -22,7 +22,7 @@
     <dimen name="fab_button_diameter">60dp</dimen>
     <dimen name="fab_button_margin_bottom">16dp</dimen>
     <dimen name="fab_button_margin_right">16dp</dimen>
-    <dimen name="elevation_low">1dp</dimen>
-    <dimen name="elevation_high">8dp</dimen>
+    <!-- <dimen name="elevation_low">1dp</dimen> -->
+    <!-- <dimen name="elevation_high">8dp</dimen> -->
 
 </resources>

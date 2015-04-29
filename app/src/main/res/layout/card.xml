@@ -109,7 +109,7 @@
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/hint"
                             android:padding="10dp"
-                            android:src="@drawable/ic_about" />
+                            android:src="@drawable/ic_action_about" />
                         <!-- Flip -->
                         <ImageView
                             android:id="@+id/ivFlip"

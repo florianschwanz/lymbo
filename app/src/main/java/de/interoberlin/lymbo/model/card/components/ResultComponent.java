@@ -31,7 +31,7 @@ public class ResultComponent implements Displayable {
     @Override
     public View getView(Context c, Activity a, ViewGroup parent) {
         LayoutInflater li = LayoutInflater.from(c);
-        LinearLayout llTitleComponent = (LinearLayout) li.inflate(R.layout.component_result, null);
+        LinearLayout llTitleComponent = (LinearLayout) li.inflate(R.layout.component_result, parent, false);
 
         RobotoTextView tvTitle = (RobotoTextView) llTitleComponent.findViewById(R.id.tvTitle);
         tvTitle.setText(value);

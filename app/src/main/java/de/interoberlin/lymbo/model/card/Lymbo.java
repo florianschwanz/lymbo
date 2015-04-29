@@ -44,7 +44,7 @@ public class Lymbo implements Displayable {
 
     @Override
     public View getView(Context c, final Activity a, ViewGroup parent) {
-        CardView v = (CardView) a.getLayoutInflater().inflate(R.layout.stack, null);
+        CardView v = (CardView) a.getLayoutInflater().inflate(R.layout.stack, parent, false);
 
         TextView tvTitle = (TextView) v.findViewById(R.id.tvTitle);
         TextView tvSubtitle = (TextView) v.findViewById(R.id.tvSubtitle);
@@ -232,13 +232,5 @@ public class Lymbo implements Displayable {
 
     public void setCards(List<Card> cards) {
         this.cards = cards;
-    }
-
-    public void addCard(Card card) {
-        if (cards == null) {
-            cards = new ArrayList<>();
-        }
-
-        cards.add(card);
     }
 }

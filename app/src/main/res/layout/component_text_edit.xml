@@ -10,6 +10,7 @@
     android:paddingRight="8dp">
 
     <EditText
+        android:labelFor="@+id/etText"
         android:id="@+id/etText"
         style="@style/CardText"
         android:ellipsize="end"

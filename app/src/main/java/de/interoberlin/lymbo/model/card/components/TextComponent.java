@@ -31,10 +31,6 @@ public class TextComponent implements Displayable {
     public TextComponent() {
     }
 
-    public TextComponent(String value) {
-        this.value = value;
-    }
-
     // --------------------
     // Methods
     // --------------------
@@ -42,7 +38,7 @@ public class TextComponent implements Displayable {
     @Override
     public View getView(Context c, Activity a, ViewGroup parent) {
         LayoutInflater li = LayoutInflater.from(c);
-        LinearLayout llTextComponent = (LinearLayout) li.inflate(R.layout.component_text, null);
+        LinearLayout llTextComponent = (LinearLayout) li.inflate(R.layout.component_text, parent, false);
 
         TextView tvText = (TextView) llTextComponent.findViewById(R.id.tvText);
 
@@ -71,7 +67,7 @@ public class TextComponent implements Displayable {
     @Override
     public View getEditableView(Context c, Activity a, ViewGroup parent) {
         LayoutInflater li = LayoutInflater.from(c);
-        LinearLayout llTextComponent = (LinearLayout) li.inflate(R.layout.component_text_edit, null);
+        LinearLayout llTextComponent = (LinearLayout) li.inflate(R.layout.component_text_edit, parent, false);
 
         EditText etTitle = (EditText) llTextComponent.findViewById(R.id.etText);
         etTitle.setText(value);

@@ -46,7 +46,7 @@ public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
         // Layout inflater
         LayoutInflater vi;
         vi = LayoutInflater.from(getContext());
-        LinearLayout ll = (LinearLayout) vi.inflate(R.layout.stack_stash, null);
+        LinearLayout ll = (LinearLayout) vi.inflate(R.layout.stack_stash, parent, false);
 
         // Load views
         TextView tvTitle = (TextView) ll.findViewById(R.id.tvTitle);

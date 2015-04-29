@@ -28,10 +28,6 @@ public class TitleComponent implements Displayable {
     public TitleComponent() {
     }
 
-    public TitleComponent(String value) {
-        this.value = value;
-    }
-
     // --------------------
     // Methods
     // --------------------
@@ -39,7 +35,7 @@ public class TitleComponent implements Displayable {
     @Override
     public View getView(Context c, Activity a, ViewGroup parent) {
         LayoutInflater li = LayoutInflater.from(c);
-        LinearLayout llTitleComponent = (LinearLayout) li.inflate(R.layout.component_title, null);
+        LinearLayout llTitleComponent = (LinearLayout) li.inflate(R.layout.component_title, parent, false);
 
         RobotoTextView tvTitle = (RobotoTextView) llTitleComponent.findViewById(R.id.tvTitle);
 
@@ -64,7 +60,7 @@ public class TitleComponent implements Displayable {
     @Override
     public View getEditableView(Context c, Activity a, ViewGroup parent) {
         LayoutInflater li = LayoutInflater.from(c);
-        LinearLayout llTitleComponent = (LinearLayout) li.inflate(R.layout.component_title_edit, null);
+        LinearLayout llTitleComponent = (LinearLayout) li.inflate(R.layout.component_title_edit, parent, false);
 
         TextView etTitle = (TextView) llTitleComponent.findViewById(R.id.etTitle);
 

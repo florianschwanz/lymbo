@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import de.interoberlin.lymbo.R;
@@ -32,9 +32,10 @@ public class DisplayDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Context c = getActivity();
+
         // Load layout
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View v = inflater.inflate(R.layout.dialogfragment, null);
+        final View v = View.inflate(c, R.layout.dialogfragment, null);
 
         // Load dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
