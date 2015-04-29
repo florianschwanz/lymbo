@@ -57,6 +57,9 @@ android {
             // versionNameSuffix ".debug"
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 def version = versionMajor + '.' + versionMinor + '.' + versionPatch
