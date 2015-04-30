@@ -17,6 +17,8 @@ import java.util.List;
 
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.persistence.LymboLoader;
+import de.interoberlin.lymbo.model.persistence.LymboLocation;
+import de.interoberlin.lymbo.model.persistence.LymboLocationDatasource;
 import de.interoberlin.mate.lib.model.Log;
 
 public class LymbosController extends Application {
@@ -27,9 +29,10 @@ public class LymbosController extends Application {
 
     private static final String LYMBO_FILE_EXTENSION = ".lymbo";
     private static final String LYMBO_FILE_EXTENSION_STASHED = ".lymbo.stashed";
-    // private static final String LYMBO_DIR = "";
-    private static final String LYMBO_DIR = "Interoberlin/lymbo";
+    private static final String LYMBO_DIR = "";
     private boolean loaded = false;
+
+    private LymboLocationDatasource datasource;
 
     private static LymbosController instance;
 
@@ -73,10 +76,41 @@ public class LymbosController extends Application {
     }
 
     public void load() {
-        lymbos.addAll(getLymbosFromAssets());
-        lymbos.addAll(getLymbosFromFiles(findFiles(LYMBO_FILE_EXTENSION)));
-        lymbosStashed.addAll(getLymbosFromFiles(findFiles(LYMBO_FILE_EXTENSION_STASHED)));
+        datasource = new LymboLocationDatasource(context);
+        datasource.open();
 
+        datasource.clear();
+
+        List<LymboLocation> locations = datasource.getAllLocations();
+
+        // Search in file system for lymbo files
+        // if (locations.isEmpty()) {
+            for (File l : findFiles(LYMBO_FILE_EXTENSION)) {
+                datasource.addLocation(l.getAbsolutePath(), 0);
+            }
+
+            for (File s : findFiles(LYMBO_FILE_EXTENSION_STASHED)) {
+                datasource.addLocation(s.getAbsolutePath(), 1);
+            }
+        // }
+
+        // Retrieve lymbo files from locations cache
+        Collection<File> lymboFiles = new ArrayList<>();
+        Collection<File> lymboFilesStashed = new ArrayList<>();
+
+        for (LymboLocation l : datasource.getAllLocations()) {
+            if (l.getStashed() == 0) {
+                lymboFiles.add(new File(l.getLocation()));
+            } else if (l.getStashed() == 1) {
+                lymboFilesStashed.add(new File(l.getLocation()));
+            }
+        }
+
+        lymbos.addAll(getLymbosFromAssets());
+        lymbos.addAll(getLymbosFromFiles(lymboFiles));
+        lymbosStashed.addAll(getLymbosFromFiles(lymboFilesStashed));
+
+        datasource.close();
         loaded = true;
     }
 
