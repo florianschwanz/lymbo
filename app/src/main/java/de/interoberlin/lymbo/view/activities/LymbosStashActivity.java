@@ -1,11 +1,11 @@
 package de.interoberlin.lymbo.view.activities;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,25 +21,23 @@ import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.view.adapters.LymbosStashListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
-import de.interoberlin.mate.lib.util.Toaster;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 
-public class LymbosStashActivity extends BaseActivity implements SnackBar.OnMessageClickListener, DisplayDialogFragment.OnCompleteListener {
+public class LymbosStashActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener, DisplayDialogFragment.OnCompleteListener {
     // Controllers
     LymbosController lymbosController = LymbosController.getInstance();
     CardsController cardsController = CardsController.getInstance();
 
-    // Context and Activity
-    private static Context context;
-    private static Activity activity;
-
     // Views
+    private SwipeRefreshLayout srl;
     private SwipeListView slv;
 
     // Model
     private List<Lymbo> lymbos;
     private LymbosStashListAdapter lymbosStashedAdapter;
+
+    private static final int REFRESH_DELAY = 10000;
 
     // --------------------
     // Methods - Lifecycle
@@ -53,21 +51,19 @@ public class LymbosStashActivity extends BaseActivity implements SnackBar.OnMess
         }
 
         setTitle(R.string.stash);
+
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(true);
 
-        // Register on toaster
-        Toaster.register(this, context);
-
-        // Get activity and context for further use
-        activity = this;
-        context = getApplicationContext();
+        srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        srl.setOnRefreshListener(this);
+        srl.setColorSchemeColors(R.color.colorPrimary, R.color.colorPrimaryDark);
     }
 
     public void onResume() {
         super.onResume();
         lymbos = lymbosController.getLymbosStashed();
-        lymbosStashedAdapter = new LymbosStashListAdapter(activity, context, R.layout.stack_stash, lymbos);
+        lymbosStashedAdapter = new LymbosStashListAdapter(this, this, R.layout.stack_stash, lymbos);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
@@ -110,6 +106,22 @@ public class LymbosStashActivity extends BaseActivity implements SnackBar.OnMess
         }
 
         return true;
+    }
+
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                srl.setRefreshing(false);
+
+                lymbosController.scan();
+                lymbosController.load();
+
+                lymbosStashedAdapter.notifyDataSetChanged();
+                slv.invalidateViews();
+            }
+        }, REFRESH_DELAY);
     }
 
     public void restore() {

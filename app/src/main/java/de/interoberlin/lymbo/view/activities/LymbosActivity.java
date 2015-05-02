@@ -1,11 +1,11 @@
 package de.interoberlin.lymbo.view.activities;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,20 +21,19 @@ import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 
-public class LymbosActivity extends BaseActivity implements SnackBar.OnMessageClickListener,  DisplayDialogFragment.OnCompleteListener {
+public class LymbosActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener, DisplayDialogFragment.OnCompleteListener {
     // Controllers
     private LymbosController lymbosController = LymbosController.getInstance();
     private CardsController cardsController = CardsController.getInstance();
 
-    // Context and Activity
-    private static Context context;
-    private static Activity activity;
-
     // Views
+    private SwipeRefreshLayout srl;
     private SwipeListView slv;
 
     // Model
     private LymbosListAdapter lymbosAdapter;
+
+    private static final int REFRESH_DELAY = 10000;
 
     // --------------------
     // Methods - Lifecycle
@@ -50,14 +49,14 @@ public class LymbosActivity extends BaseActivity implements SnackBar.OnMessageCl
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(false);
 
-        // Get activity and context for further use
-        activity = this;
-        context = this;
+        srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        srl.setOnRefreshListener(this);
+        srl.setColorSchemeColors(R.color.colorPrimary, R.color.colorPrimaryDark);
     }
 
     public void onResume() {
         super.onResume();
-        lymbosAdapter = new LymbosListAdapter(activity, context, R.layout.stack, lymbosController.getLymbos());
+        lymbosAdapter = new LymbosListAdapter(this, this, R.layout.stack, lymbosController.getLymbos());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
@@ -141,8 +140,24 @@ public class LymbosActivity extends BaseActivity implements SnackBar.OnMessageCl
         return true;
     }
 
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                srl.setRefreshing(false);
+
+                lymbosController.scan();
+                lymbosController.load();
+
+                lymbosAdapter.notifyDataSetChanged();
+                slv.invalidateViews();
+            }
+        }, REFRESH_DELAY);
+    }
+
     /**
-     * Invalidates the current lymbo
+     * Stashes the current lymbo
      */
     public void stash() {
         cardsController.stash();

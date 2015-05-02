@@ -75,24 +75,29 @@ public class LymbosController extends Application {
         lymbosStashed = new ArrayList<>();
     }
 
-    public void load() {
+    public void scan() {
         datasource = new LymboLocationDatasource(context);
         datasource.open();
 
         datasource.clear();
 
-        List<LymboLocation> locations = datasource.getAllLocations();
+        for (File l : findFiles(LYMBO_FILE_EXTENSION)) {
+            datasource.addLocation(l.getAbsolutePath(), 0);
+        }
 
-        // Search in file system for lymbo files
-        // if (locations.isEmpty()) {
-            for (File l : findFiles(LYMBO_FILE_EXTENSION)) {
-                datasource.addLocation(l.getAbsolutePath(), 0);
-            }
+        for (File s : findFiles(LYMBO_FILE_EXTENSION_STASHED)) {
+            datasource.addLocation(s.getAbsolutePath(), 1);
+        }
+    }
 
-            for (File s : findFiles(LYMBO_FILE_EXTENSION_STASHED)) {
-                datasource.addLocation(s.getAbsolutePath(), 1);
-            }
-        // }
+    public void load() {
+        datasource = new LymboLocationDatasource(context);
+        datasource.open();
+
+        // Scan for lymbo files if no files are known
+        if (datasource.getAllLocations().isEmpty()) {
+            scan();
+        }
 
         // Retrieve lymbo files from locations cache
         Collection<File> lymboFiles = new ArrayList<>();
@@ -106,12 +111,22 @@ public class LymbosController extends Application {
             }
         }
 
+        lymbos.clear();
         lymbos.addAll(getLymbosFromAssets());
         lymbos.addAll(getLymbosFromFiles(lymboFiles));
+
+        lymbosStashed.clear();
         lymbosStashed.addAll(getLymbosFromFiles(lymboFilesStashed));
 
         datasource.close();
         loaded = true;
+    }
+
+    public void changeLocation(String location, boolean stashed) {
+        datasource = new LymboLocationDatasource(context);
+        datasource.open();
+        datasource.changeLocation(location, stashed);
+        datasource.close();
     }
 
     /**

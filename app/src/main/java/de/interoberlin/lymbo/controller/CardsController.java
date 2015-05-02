@@ -59,6 +59,8 @@ public class CardsController {
         new File(lymbo.getPath()).renameTo(new File(lymbo.getPath().replace(LYMBO_FILE_EXTENSION, LYMBO_FILE_EXTENSION_STASHED)));
         lymbosController.getLymbos().remove(lymbo);
         lymbosController.getLymbosStashed().add(lymbo);
+
+        lymbosController.changeLocation(lymbo.getPath(), true);
     }
 
     /**
@@ -68,6 +70,8 @@ public class CardsController {
         new File(lymbo.getPath()).renameTo(new File(lymbo.getPath().replace(LYMBO_FILE_EXTENSION_STASHED, LYMBO_FILE_EXTENSION)));
         lymbosController.getLymbos().add(lymbo);
         lymbosController.getLymbosStashed().remove(lymbo);
+
+        lymbosController.changeLocation(lymbo.getPath(), false);
     }
 
     public void addSimpleCard(String frontText, String backText) {

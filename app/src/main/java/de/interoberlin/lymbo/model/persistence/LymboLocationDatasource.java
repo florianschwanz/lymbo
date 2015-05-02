@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Data source for SQLite database table LOCATION
+ */
 public class LymboLocationDatasource {
     private SQLiteDatabase database;
     private LymboLocationHelper dbHelper;
@@ -29,14 +32,39 @@ public class LymboLocationDatasource {
     // Methods
     // --------------------
 
+    /**
+     * Opens database connection
+     *
+     * @throws SQLException
+     */
     public void open() throws SQLException {
         database = dbHelper.getWritableDatabase();
     }
 
+    /**
+     * Closes database connection
+     */
     public void close() {
         dbHelper.close();
     }
 
+
+    /**
+     * Deletes all entries from table LOCATION
+     */
+    public void clear() {
+        for (LymboLocation l : getAllLocations()) {
+            deleteLocation(l);
+        }
+    }
+
+    /**
+     * Adds a new entry to table LOCATION
+     *
+     * @param location value of field location of the new entry
+     * @param stashed  value of field stashed of the new entry
+     * @return
+     */
     public LymboLocation addLocation(String location, int stashed) {
         ContentValues values = new ContentValues();
 
@@ -57,19 +85,33 @@ public class LymboLocationDatasource {
         return l;
     }
 
+    /**
+     * Deletes an entry identified by {@parm location}
+     *
+     * @param location entry identified by this location will be deleted
+     */
     public void deleteLocation(LymboLocation location) {
         long id = location.getId();
-        System.out.println("Comment deleted with id: " + id);
         database.delete(LymboLocationHelper.TABLE_LOCATION, LymboLocationHelper.COL_ID
                 + " = " + id, null);
     }
 
-    public void clear() {
-        for (LymboLocation l : getAllLocations()) {
-            deleteLocation(l);
-        }
+    /**
+     * Modifies the field STASHED of a location identified by {@param location} to {@param stashed}
+     *
+     * @param location entry identified by this location will be modified
+     * @param stashed  whether or nor the entry shall be marked as stashed
+     */
+    public void changeLocation(String location, boolean stashed) {
+        String statement = "UPDATE " + LymboLocationHelper.TABLE_LOCATION + " SET " + LymboLocationHelper.COL_STASHED + "='" + (stashed ? 1 : 0) + "' WHERE " + LymboLocationHelper.COL_LOCATION + "='" + location + "';";
+        database.execSQL(statement);
     }
 
+    /**
+     * Retrieves a list of all entries of table LOCATION
+     *
+     * @return list of LymboLocation objects
+     */
     public List<LymboLocation> getAllLocations() {
         List<LymboLocation> locations = new ArrayList<>();
 
@@ -82,8 +124,9 @@ public class LymboLocationDatasource {
             locations.add(location);
             cursor.moveToNext();
         }
-        // make sure to close the cursor
+
         cursor.close();
+
         return locations;
     }
 
