@@ -16,6 +16,8 @@ import java.util.Collection;
 import java.util.List;
 
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.util.Configuration;
+import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.model.persistence.LymboLoader;
 import de.interoberlin.mate.lib.model.Log;
 
@@ -25,10 +27,10 @@ public class LymbosController extends Application {
     private List<Lymbo> lymbos;
     private List<Lymbo> lymbosStashed;
 
-    private static final String LYMBO_FILE_EXTENSION = ".lymbo";
-    private static final String LYMBO_FILE_EXTENSION_STASHED = ".lymbo.stashed";
-    // private static final String LYMBO_DIR = "";
-    private static final String LYMBO_DIR = "Interoberlin/lymbo";
+    private static String LYMBO_FILE_EXTENSION;
+    private static String LYMBO_FILE_EXTENSION_STASHED;
+    private static String LYMBO_LOOKUP_PATH;
+
     private boolean loaded = false;
 
     private static LymbosController instance;
@@ -57,13 +59,17 @@ public class LymbosController extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
+
+        LYMBO_FILE_EXTENSION = Configuration.getProperty(this, EProperty.LYMBO_FILE_EXTENSION);
+        LYMBO_FILE_EXTENSION_STASHED = Configuration.getProperty(this, EProperty.LYMBO_FILE_EXTENSION_STASHED);
+        LYMBO_LOOKUP_PATH = Configuration.getProperty(this, EProperty.LYMBO_LOOKUP_PATH);
     }
 
     // --------------------
     // Methods
     // --------------------
 
-    public static Context getContext() {
+    public Context getContext() {
         return context;
     }
 
@@ -73,6 +79,8 @@ public class LymbosController extends Application {
     }
 
     public void load() {
+
+
         lymbos.addAll(getLymbosFromAssets());
         lymbos.addAll(getLymbosFromFiles(findFiles(LYMBO_FILE_EXTENSION)));
         lymbosStashed.addAll(getLymbosFromFiles(findFiles(LYMBO_FILE_EXTENSION_STASHED)));
@@ -87,7 +95,7 @@ public class LymbosController extends Application {
      * @return Collection of files
      */
     public Collection<File> findFiles(String pattern) {
-        return findFiles(pattern, LYMBO_DIR);
+        return findFiles(pattern, LYMBO_LOOKUP_PATH);
     }
 
     /**
