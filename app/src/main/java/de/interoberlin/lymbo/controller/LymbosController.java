@@ -80,8 +80,6 @@ public class LymbosController extends Application {
         datasource = new LymboLocationDatasource(context);
         datasource.open();
 
-        datasource.printLocations();
-
         for (File l : findFiles(LYMBO_FILE_EXTENSION)) {
             String location = l.getAbsolutePath();
 
@@ -101,8 +99,6 @@ public class LymbosController extends Application {
         if (datasource.getAllLocations().isEmpty()) {
             scan();
         }
-
-        datasource.printLocations();
 
         // Retrieve lymbo files from locations cache
         Collection<File> lymboFiles = new ArrayList<>();
@@ -130,13 +126,7 @@ public class LymbosController extends Application {
     public void changeLocation(String location, boolean stashed) {
         datasource = new LymboLocationDatasource(context);
         datasource.open();
-
-        datasource.printLocations();
-
         datasource.updateLocation(location, stashed);
-
-        datasource.printLocations();
-
         datasource.close();
     }
 
