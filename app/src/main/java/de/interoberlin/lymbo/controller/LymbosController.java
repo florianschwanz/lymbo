@@ -13,12 +13,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.model.persistence.LymboLoader;
+import de.interoberlin.lymbo.model.persistence.LymboLocation;
+import de.interoberlin.lymbo.model.persistence.LymboLocationDatasource;
+import de.interoberlin.lymbo.model.persistence.LymboLocationHelper;
 import de.interoberlin.mate.lib.model.Log;
 
 public class LymbosController extends Application {
@@ -28,10 +32,11 @@ public class LymbosController extends Application {
     private List<Lymbo> lymbosStashed;
 
     private static String LYMBO_FILE_EXTENSION;
-    private static String LYMBO_FILE_EXTENSION_STASHED;
     private static String LYMBO_LOOKUP_PATH;
 
     private boolean loaded = false;
+
+    private LymboLocationDatasource datasource;
 
     private static LymbosController instance;
 
@@ -61,7 +66,6 @@ public class LymbosController extends Application {
         context = this;
 
         LYMBO_FILE_EXTENSION = Configuration.getProperty(this, EProperty.LYMBO_FILE_EXTENSION);
-        LYMBO_FILE_EXTENSION_STASHED = Configuration.getProperty(this, EProperty.LYMBO_FILE_EXTENSION_STASHED);
         LYMBO_LOOKUP_PATH = Configuration.getProperty(this, EProperty.LYMBO_LOOKUP_PATH);
     }
 
@@ -78,14 +82,58 @@ public class LymbosController extends Application {
         lymbosStashed = new ArrayList<>();
     }
 
+    public void scan() {
+        datasource = new LymboLocationDatasource(context);
+        datasource.open();
+
+        for (File l : findFiles(LYMBO_FILE_EXTENSION)) {
+            String location = l.getAbsolutePath();
+
+            if (datasource.contains(LymboLocationHelper.COL_LOCATION, location)) {
+                datasource.updateLocation(location, new Date());
+            } else {
+                datasource.addLocation(location, 0);
+            }
+        }
+    }
+
     public void load() {
+        datasource = new LymboLocationDatasource(context);
+        datasource.open();
 
+        // Scan for lymbo files if no files are known
+        if (datasource.getAllLocations().isEmpty()) {
+            scan();
+        }
 
+        // Retrieve lymbo files from locations cache
+        Collection<File> lymboFiles = new ArrayList<>();
+        Collection<File> lymboFilesStashed = new ArrayList<>();
+
+        for (LymboLocation l : datasource.getAllLocations()) {
+            if (l.getStashed() == 0) {
+                lymboFiles.add(new File(l.getLocation()));
+            } else if (l.getStashed() == 1) {
+                lymboFilesStashed.add(new File(l.getLocation()));
+            }
+        }
+
+        lymbos.clear();
         lymbos.addAll(getLymbosFromAssets());
-        lymbos.addAll(getLymbosFromFiles(findFiles(LYMBO_FILE_EXTENSION)));
-        lymbosStashed.addAll(getLymbosFromFiles(findFiles(LYMBO_FILE_EXTENSION_STASHED)));
+        lymbos.addAll(getLymbosFromFiles(lymboFiles));
 
+        lymbosStashed.clear();
+        lymbosStashed.addAll(getLymbosFromFiles(lymboFilesStashed));
+
+        datasource.close();
         loaded = true;
+    }
+
+    public void changeLocation(String location, boolean stashed) {
+        datasource = new LymboLocationDatasource(context);
+        datasource.open();
+        datasource.updateLocation(location, stashed);
+        datasource.close();
     }
 
     /**
@@ -142,7 +190,9 @@ public class LymbosController extends Application {
             for (String asset : Arrays.asList(context.getAssets().list(""))) {
                 if (asset.endsWith(LYMBO_FILE_EXTENSION)) {
                     Lymbo l = LymboLoader.getLymboFromAsset(context, asset);
-                    lymbos.add(l);
+                    if (l != null) {
+                        lymbos.add(l);
+                    }
                 }
             }
         } catch (IOException ioe) {

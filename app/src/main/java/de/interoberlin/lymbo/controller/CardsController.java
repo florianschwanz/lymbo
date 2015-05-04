@@ -1,8 +1,5 @@
 package de.interoberlin.lymbo.controller;
 
-
-import android.content.Context;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,16 +9,10 @@ import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
 import de.interoberlin.lymbo.model.persistence.LymboWriter;
-import de.interoberlin.lymbo.util.Configuration;
-import de.interoberlin.lymbo.util.EProperty;
 
 public class CardsController {
     private Lymbo lymbo;
     private List<Card> cards = new ArrayList<>();
-
-    private static String LYMBO_FILE_EXTENSION;
-    private static String LYMBO_FILE_EXTENSION_STASHED;
-
     private LymbosController lymbosController = LymbosController.getInstance();
 
     private static CardsController instance;
@@ -47,9 +38,6 @@ public class CardsController {
     // --------------------
 
     public void init() {
-        LYMBO_FILE_EXTENSION = Configuration.getProperty(lymbosController.getContext(), EProperty.LYMBO_FILE_EXTENSION);
-        LYMBO_FILE_EXTENSION_STASHED = Configuration.getProperty(lymbosController.getContext(), EProperty.LYMBO_FILE_EXTENSION_STASHED);
-
         getCardsFromLymbo();
     }
 
@@ -63,18 +51,20 @@ public class CardsController {
      * Renames a lymbo file so that it will not be found anymore
      */
     public void stash() {
-        new File(lymbo.getPath()).renameTo(new File(lymbo.getPath().replace(LYMBO_FILE_EXTENSION, LYMBO_FILE_EXTENSION_STASHED)));
         lymbosController.getLymbos().remove(lymbo);
         lymbosController.getLymbosStashed().add(lymbo);
+
+        lymbosController.changeLocation(lymbo.getPath(), true);
     }
 
     /**
      * Renames a lymbo file so that it will be found again
      */
     public void restore() {
-        new File(lymbo.getPath()).renameTo(new File(lymbo.getPath().replace(LYMBO_FILE_EXTENSION_STASHED, LYMBO_FILE_EXTENSION)));
         lymbosController.getLymbos().add(lymbo);
         lymbosController.getLymbosStashed().remove(lymbo);
+
+        lymbosController.changeLocation(lymbo.getPath(), false);
     }
 
     public void addSimpleCard(String frontText, String backText) {

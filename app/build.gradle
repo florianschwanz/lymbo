@@ -31,7 +31,7 @@ android {
     defaultConfig {
         applicationId groupId + '.' + artifactId
         minSdkVersion 17
-        targetSdkVersion 19
+        targetSdkVersion 21
         versionCode versionPatch as Integer ?: 0
         versionName versionMajor + "." + versionMinor + "." + versionPatch
     }
