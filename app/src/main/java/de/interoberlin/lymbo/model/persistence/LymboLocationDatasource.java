@@ -48,6 +48,13 @@ public class LymboLocationDatasource {
         dbHelper.close();
     }
 
+    public boolean contains(String columnName, String value) {
+        Cursor cursor = database.query(LymboLocationHelper.TABLE_LOCATION,
+                allColumns, columnName + "='" + value + "'", null,
+                null, null, null);
+
+        return cursor.getCount() > 0;
+    }
 
     /**
      * Deletes all entries from table LOCATION
@@ -97,13 +104,24 @@ public class LymboLocationDatasource {
     }
 
     /**
-     * Modifies the field STASHED of a location identified by {@param location} to {@param stashed}
+     * Updates the field STASHED of a location identified by {@param location} to {@param stashed}
      *
      * @param location entry identified by this location will be modified
      * @param stashed  whether or nor the entry shall be marked as stashed
      */
-    public void changeLocation(String location, boolean stashed) {
+    public void updateLocation(String location, boolean stashed) {
         String statement = "UPDATE " + LymboLocationHelper.TABLE_LOCATION + " SET " + LymboLocationHelper.COL_STASHED + "='" + (stashed ? 1 : 0) + "' WHERE " + LymboLocationHelper.COL_LOCATION + "='" + location + "';";
+        database.execSQL(statement);
+    }
+
+    /**
+     * Updates the field DATE of a location identified by {@param location} to {@param date}
+     *
+     * @param location entry identified by this location will be modified
+     * @param date     new date
+     */
+    public void updateLocation(String location, Date date) {
+        String statement = "UPDATE " + LymboLocationHelper.TABLE_LOCATION + " SET " + LymboLocationHelper.COL_DATE + "='" + date.toString() + "' WHERE " + LymboLocationHelper.COL_LOCATION + "='" + location + "';";
         database.execSQL(statement);
     }
 

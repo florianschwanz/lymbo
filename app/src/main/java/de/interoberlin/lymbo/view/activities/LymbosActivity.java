@@ -33,7 +33,7 @@ public class LymbosActivity extends BaseActivity implements SwipeRefreshLayout.O
     // Model
     private LymbosListAdapter lymbosAdapter;
 
-    private static final int REFRESH_DELAY = 10000;
+    private static final int REFRESH_DELAY = 60000;
 
     // --------------------
     // Methods - Lifecycle
@@ -51,7 +51,7 @@ public class LymbosActivity extends BaseActivity implements SwipeRefreshLayout.O
 
         srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         srl.setOnRefreshListener(this);
-        srl.setColorSchemeColors(R.color.colorPrimary, R.color.colorPrimaryDark);
+        srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
     }
 
     public void onResume() {

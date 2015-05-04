@@ -26,10 +26,14 @@ public class LymboLoader {
         try {
             InputStream inputStream = c.getAssets().open(lymboPath);
             Lymbo l = getLymboFromInputStream(inputStream);
-            l.setPath(lymboPath);
-            l.setAsset(true);
-            inputStream.close();
-            return l;
+            if (l != null) {
+                l.setPath(lymboPath);
+                l.setAsset(true);
+                inputStream.close();
+                return l;
+            } else {
+                return null;
+            }
         } catch (IOException e) {
             Log.error(e.toString());
             e.printStackTrace();
@@ -47,9 +51,13 @@ public class LymboLoader {
     public static Lymbo getLymboFromFile(File f) {
         try {
             Lymbo l = getLymboFromInputStream(new FileInputStream(f));
-            l.setPath(f.getAbsolutePath());
-            l.setAsset(false);
-            return l;
+            if (l != null) {
+                l.setPath(f.getAbsolutePath());
+                l.setAsset(false);
+                return l;
+            } else {
+                return null;
+            }
         } catch (FileNotFoundException e) {
             Log.error(e.toString());
             e.printStackTrace();

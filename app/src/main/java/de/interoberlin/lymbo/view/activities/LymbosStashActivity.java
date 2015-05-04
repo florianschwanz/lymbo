@@ -37,7 +37,7 @@ public class LymbosStashActivity extends BaseActivity implements SwipeRefreshLay
     private List<Lymbo> lymbos;
     private LymbosStashListAdapter lymbosStashedAdapter;
 
-    private static final int REFRESH_DELAY = 10000;
+    private static final int REFRESH_DELAY = 60000;
 
     // --------------------
     // Methods - Lifecycle
@@ -57,7 +57,7 @@ public class LymbosStashActivity extends BaseActivity implements SwipeRefreshLay
 
         srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         srl.setOnRefreshListener(this);
-        srl.setColorSchemeColors(R.color.colorPrimary, R.color.colorPrimaryDark);
+        srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
     }
 
     public void onResume() {

@@ -13,12 +13,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.persistence.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.LymboLocation;
 import de.interoberlin.lymbo.model.persistence.LymboLocationDatasource;
+import de.interoberlin.lymbo.model.persistence.LymboLocationHelper;
 import de.interoberlin.mate.lib.model.Log;
 
 public class LymbosController extends Application {
@@ -28,7 +30,6 @@ public class LymbosController extends Application {
     private List<Lymbo> lymbosStashed;
 
     private static final String LYMBO_FILE_EXTENSION = ".lymbo";
-    private static final String LYMBO_FILE_EXTENSION_STASHED = ".lymbo.stashed";
     private static final String LYMBO_DIR = "";
     private boolean loaded = false;
 
@@ -79,14 +80,16 @@ public class LymbosController extends Application {
         datasource = new LymboLocationDatasource(context);
         datasource.open();
 
-        datasource.clear();
+        datasource.printLocations();
 
         for (File l : findFiles(LYMBO_FILE_EXTENSION)) {
-            datasource.addLocation(l.getAbsolutePath(), 0);
-        }
+            String location = l.getAbsolutePath();
 
-        for (File s : findFiles(LYMBO_FILE_EXTENSION_STASHED)) {
-            datasource.addLocation(s.getAbsolutePath(), 1);
+            if (datasource.contains(LymboLocationHelper.COL_LOCATION, location)) {
+                datasource.updateLocation(location, new Date());
+            } else {
+                datasource.addLocation(location, 0);
+            }
         }
     }
 
@@ -98,6 +101,8 @@ public class LymbosController extends Application {
         if (datasource.getAllLocations().isEmpty()) {
             scan();
         }
+
+        datasource.printLocations();
 
         // Retrieve lymbo files from locations cache
         Collection<File> lymboFiles = new ArrayList<>();
@@ -125,7 +130,13 @@ public class LymbosController extends Application {
     public void changeLocation(String location, boolean stashed) {
         datasource = new LymboLocationDatasource(context);
         datasource.open();
-        datasource.changeLocation(location, stashed);
+
+        datasource.printLocations();
+
+        datasource.updateLocation(location, stashed);
+
+        datasource.printLocations();
+
         datasource.close();
     }
 
@@ -183,7 +194,9 @@ public class LymbosController extends Application {
             for (String asset : Arrays.asList(context.getAssets().list(""))) {
                 if (asset.endsWith(LYMBO_FILE_EXTENSION)) {
                     Lymbo l = LymboLoader.getLymboFromAsset(context, asset);
-                    lymbos.add(l);
+                    if (l != null) {
+                        lymbos.add(l);
+                    }
                 }
             }
         } catch (IOException ioe) {

@@ -16,7 +16,7 @@ public class LymboLocationHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 3;
 
-    private static final String DICTIONARY_TABLE_CREATE =
+    private static final String TABLE_LOCATION_CREATE =
             "CREATE TABLE " + TABLE_LOCATION + " (" + COL_ID
                     + " integer primary key autoincrement, " +
                     COL_LOCATION + " TEXT NOT NULL, " +
@@ -29,7 +29,7 @@ public class LymboLocationHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DICTIONARY_TABLE_CREATE);
+        db.execSQL(TABLE_LOCATION_CREATE);
     }
 
     @Override
