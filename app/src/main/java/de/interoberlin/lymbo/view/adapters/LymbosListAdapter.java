@@ -19,6 +19,7 @@ import java.util.List;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.share.MailSender;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.activities.LymbosActivity;
@@ -107,20 +108,20 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 }
             });
         } else {*/
-            remove(ivEdit);
+        remove(ivEdit);
         /*}*/
 
-        // Action : share
-        /*if (lymbo.getPath() != null) {
+        // Action : sedn
+        if (!lymbo.isAsset()) {
             ivShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(c, R.string.not_yet_implemented, Toast.LENGTH_SHORT);
+                    MailSender.sendLymbo(c, a, lymbo);
                 }
             });
-        } else {*/
+        } else {
             remove(ivShare);
-        /*}*/
+        }
 
         // Action : upload
         /*
@@ -132,7 +133,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 }
             });
         } else {*/
-            remove(ivUpload);
+        remove(ivUpload);
         /*}*/
 
         // Action : hint
@@ -145,7 +146,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 }
             });
         } else {*/
-            remove(ivHint);
+        remove(ivHint);
         /*}*/
 
         return ll;
