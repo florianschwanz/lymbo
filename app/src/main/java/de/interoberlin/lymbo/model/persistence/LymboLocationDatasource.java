@@ -52,8 +52,9 @@ public class LymboLocationDatasource {
         Cursor cursor = database.query(LymboLocationHelper.TABLE_LOCATION,
                 allColumns, columnName + "='" + value + "'", null,
                 null, null, null);
-
-        return cursor.getCount() > 0;
+        int count = cursor.getCount();
+        cursor.close();
+        return count > 0;
     }
 
     /**
