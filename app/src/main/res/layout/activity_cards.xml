@@ -15,17 +15,24 @@
             android:id="@+id/toolbar"
             layout="@layout/toolbar" />
 
-        <com.fortysevendeg.swipelistview.SwipeListView xmlns:swipe="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/slv"
-            android:listSelector="#00000000"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            swipe:swipeFrontView="@+id/front"
-            swipe:swipeBackView="@+id/back"
-            swipe:swipeAnimationTime="0"
-            swipe:swipeOffsetLeft="0dp"
-            swipe:swipeOffsetRight="0dp"
-            android:layout_below="@id/toolbar" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:foreground="@drawable/bottom_shadow">
+
+            <com.fortysevendeg.swipelistview.SwipeListView xmlns:swipe="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/slv"
+                android:listSelector="#00000000"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                swipe:swipeFrontView="@+id/front"
+                swipe:swipeBackView="@+id/back"
+                swipe:swipeAnimationTime="0"
+                swipe:swipeOffsetLeft="0dp"
+                swipe:swipeOffsetRight="0dp"
+                android:layout_below="@id/toolbar" />
+        </FrameLayout>
 
         <ImageButton
             android:contentDescription="@string/desc_image"
@@ -38,6 +45,6 @@
             android:layout_marginEnd="@dimen/fab_button_margin_right"
             android:background="@drawable/fab_shape"
             android:src="@drawable/fab_ic_add"
-            android:tint="@android:color/white"/>
+            android:tint="@android:color/white" />
     </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>
