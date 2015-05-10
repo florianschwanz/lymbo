@@ -21,7 +21,7 @@
   		    <text value="Cards can be flipped by clicking on this button"/>
   		</front>
   		<back>
-            <title value="This is the back side">
+            <title value="This is the back side" />
   		</back>
   	</card>
     <card>
