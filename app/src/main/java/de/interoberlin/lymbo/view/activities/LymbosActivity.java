@@ -51,7 +51,7 @@ public class LymbosActivity extends BaseActivity implements SwipeRefreshLayout.O
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(false);
 
-        REFRESH_DELAY =  Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY));
+        REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY));
     }
 
     public void onResume() {

@@ -87,17 +87,13 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         });
 
         // Action : stash
-        if (!lymbo.isAsset()) {
-            ivStash.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cardsController.setLymbo(lymbo);
-                    ((LymbosActivity) a).stash();
-                }
-            });
-        } else {
-            remove(ivStash);
-        }
+        ivStash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cardsController.setLymbo(lymbo);
+                ((LymbosActivity) a).stash();
+            }
+        });
 
         // Action : edit
         /*if (!lymbo.isAsset()) {
