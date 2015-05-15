@@ -22,6 +22,7 @@ import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.ComponentsController;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
+import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 import de.interoberlin.lymbo.model.card.components.ImageComponent;
@@ -63,6 +64,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     @Override
     public View getView(final int position, View v, ViewGroup parent) {
         final Card card = getItem(position);
+        Side front = (card.getSides().size() < 1) ? null : card.getSides().get(0);
+        Side back = (card.getSides().size() < 2) ? null : card.getSides().get(1);
 
         if (!card.isDiscarded() && card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
             // Layout inflater
@@ -71,8 +74,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             LinearLayout ll = (LinearLayout) vi.inflate(R.layout.card, parent, false);
 
             // Load views : front
-            final LinearLayout front = (LinearLayout) ll.findViewById(R.id.front);
-            final LinearLayout back = (LinearLayout) ll.findViewById(R.id.back);
+            final LinearLayout llFront = (LinearLayout) ll.findViewById(R.id.front);
+            final LinearLayout llBack = (LinearLayout) ll.findViewById(R.id.back);
             final LinearLayout llComponentsFront = (LinearLayout) ll.findViewById(R.id.llComponentsFront);
             final LinearLayout llComponentsBack = (LinearLayout) ll.findViewById(R.id.llComponentsBack);
 
@@ -83,8 +86,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             final ImageView ivHint = (ImageView) ll.findViewById(R.id.ivHint);
 
             // Add components : front
-            if (card.getFront() != null) {
-                for (Displayable d : card.getFront().getComponents()) {
+            if (front != null) {
+                for (Displayable d : front.getComponents()) {
                     View component = d.getView(c, a, llComponentsFront);
                     llComponentsFront.addView(component);
 
@@ -97,7 +100,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                         component.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                flipToBack(card, front, back, llComponentsFront);
+                                flipToBack(card, llFront, llBack, llComponentsFront);
                             }
                         });
 
@@ -106,8 +109,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             }
 
             // Add components : back
-            if (card.getBack() != null) {
-                for (Displayable d : card.getBack().getComponents()) {
+            if (back != null) {
+                for (Displayable d : back.getComponents()) {
                     View component = d.getView(c, a, llComponentsBack);
                     llComponentsBack.addView(component);
 
@@ -120,7 +123,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                         component.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                flipToFront(card, front, back, llComponentsFront);
+                                flipToFront(card, llFront, llBack, llComponentsFront);
                             }
                         });
 
@@ -128,8 +131,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 }
             }
 
-            front.setVisibility(View.VISIBLE);
-            back.setVisibility(View.INVISIBLE);
+            llFront.setVisibility(View.VISIBLE);
+            llBack.setVisibility(View.INVISIBLE);
 
             // Center vertically
             llComponentsFront.setGravity(Gravity.CENTER_VERTICAL);
@@ -141,9 +144,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                     @Override
                     public void onClick(View view) {
                         if (frontVisible) {
-                            flipToBack(card, front, back, llComponentsBack);
+                            flipToBack(card, llFront, llBack, llComponentsBack);
                         } else {
-                            flipToFront(card, front, back, llComponentsFront);
+                            flipToFront(card, llFront, llBack, llComponentsFront);
                         }
                     }
                 });
@@ -197,7 +200,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         }
     }
 
-    private void flipToBack(final Card card, final LinearLayout front, final LinearLayout back, final LinearLayout visible) {
+    private void flipToBack(final Card card, final LinearLayout llFront, final LinearLayout llBack, final LinearLayout visible) {
+        // Side front = (card.getSides().size() < 1) ? null : card.getSides().get(0);
+        Side back = (card.getSides().size() < 2) ? null : card.getSides().get(1);
+
         ((Vibrator) a.getSystemService(c.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
 
         // If front contains choice component make sure that at least on answer is selected
@@ -205,16 +211,16 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             return;
 
         // Switch visibility
-        front.setVisibility(View.INVISIBLE);
-        back.setVisibility(View.VISIBLE);
+        llFront.setVisibility(View.INVISIBLE);
+        llBack.setVisibility(View.VISIBLE);
 
         // Handle components
         handleQuiz(card);
 
         // Re-draw components
         visible.removeAllViews();
-        if (card.getBack() != null) {
-            for (Displayable d : card.getBack().getComponents()) {
+        if (back != null) {
+            for (Displayable d : back.getComponents()) {
                 View component = d.getView(c, a, visible);
                 visible.addView(component);
 
@@ -227,7 +233,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                     component.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            flipToFront(card, front, back, visible);
+                            flipToFront(card, llFront, llBack, visible);
                         }
                     });
 
@@ -238,17 +244,20 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         frontVisible = false;
     }
 
-    private void flipToFront(final Card card, final LinearLayout front, final LinearLayout back, final LinearLayout visible) {
+    private void flipToFront(final Card card, final LinearLayout llFront, final LinearLayout llBack, final LinearLayout visible) {
+        Side front = (card.getSides().size() < 1) ? null : card.getSides().get(0);
+        // Side back = (card.getSides().size() < 2) ? null : card.getSides().get(1);
+
         ((Vibrator) a.getSystemService(c.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
 
         // Switch visibility
-        front.setVisibility(View.VISIBLE);
-        back.setVisibility(View.INVISIBLE);
+        llFront.setVisibility(View.VISIBLE);
+        llBack.setVisibility(View.INVISIBLE);
 
         // Re-draw components
         visible.removeAllViews();
-        if (card.getFront() != null) {
-            for (Displayable d : card.getFront().getComponents()) {
+        if (front != null) {
+            for (Displayable d : front.getComponents()) {
                 View component = d.getView(c, a, visible);
                 visible.addView(component);
 
@@ -261,7 +270,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                     component.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            flipToBack(card, front, back, visible);
+                            flipToBack(card, llFront, llBack, visible);
                         }
                     });
                 }
@@ -272,8 +281,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     }
 
     private boolean checkAnswerSelected(Card card) {
-        if (card.getFront().contains(EComponent.CHOICE)) {
-            for (Answer a : ((ChoiceComponent) card.getFront().getFirst(EComponent.CHOICE)).getAnswers()) {
+        if (card.getSides().get(0).contains(EComponent.CHOICE)) {
+            for (Answer a : ((ChoiceComponent) card.getSides().get(0).getFirst(EComponent.CHOICE)).getAnswers()) {
                 if (a.isSelected()) {
                     return true;
                 }
@@ -295,15 +304,18 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     }
 
     private void handleQuiz(Card card) {
-        // Handle quiz card
-        if (card.getFront().contains(EComponent.CHOICE) && card.getBack().contains(EComponent.RESULT)) {
-            // Default result : CORRECT
-            ((ResultComponent) card.getBack().getFirst(EComponent.RESULT)).setValue("CORRECT");
+        Side front = (card.getSides().size() < 1) ? null : card.getSides().get(0);
+        Side back = (card.getSides().size() < 2) ? null : card.getSides().get(1);
 
-            for (Answer a : ((ChoiceComponent) card.getFront().getFirst(EComponent.CHOICE)).getAnswers()) {
+        // Handle quiz card
+        if (front != null && front.contains(EComponent.CHOICE) && back != null && back.contains(EComponent.RESULT)) {
+            // Default result : CORRECT
+            ((ResultComponent) back.getFirst(EComponent.RESULT)).setValue("CORRECT");
+
+            for (Answer a : ((ChoiceComponent) front.getFirst(EComponent.CHOICE)).getAnswers()) {
                 if (a.isCorrect() != a.isSelected()) {
                     // At least on answer is wrong : WRONG
-                    ((ResultComponent) card.getBack().getFirst(EComponent.RESULT)).setValue("WRONG");
+                    ((ResultComponent) card.getSides().get(1).getFirst(EComponent.RESULT)).setValue("WRONG");
                     break;
                 }
             }

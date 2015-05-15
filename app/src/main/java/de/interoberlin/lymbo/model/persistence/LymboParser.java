@@ -184,8 +184,7 @@ public class LymboParser {
         String tags = parser.getAttributeValue(null, "tags");
 
         // Read sub elements
-        Side front = null;
-        Side back = null;
+        List<Side> sides = new ArrayList<>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -195,23 +194,28 @@ public class LymboParser {
 
             name = parser.getName();
 
+            Side side = null;
             switch (name) {
                 case "front":
-                    front = parseSide(parser, "front");
+                    side = parseSide(parser, "front");
                     break;
                 case "back":
-                    back = parseSide(parser, "back");
+                    side = parseSide(parser, "back");
+                    break;
+                case "side":
+                    side = parseSide(parser, "side");
                     break;
                 default:
                     skip(parser);
             }
+
+            if (side != null)
+                sides.add(side);
         }
 
         // Fill element
-        if (front != null)
-            card.setFront(front);
-        if (back != null)
-            card.setBack(back);
+        card.setSides(sides);
+
         if (hint != null)
             card.setHint(hint);
         if (chapter != null) {

@@ -68,8 +68,8 @@ public class EditCardActivity extends BaseActivity {
 
         // Get list view and add adapter
         ComponentsListView clv = (ComponentsListView) findViewById(R.id.clvComponents);
-        componentsAdapter = new ComponentsListAdapter(this, this, 0, componentsController.getCard().getFront().getComponents());
-        clv.setComponents(componentsController.getCard().getFront().getComponents());
+        componentsAdapter = new ComponentsListAdapter(this, this, 0, componentsController.getCard().getSides().get(0).getComponents());
+        clv.setComponents(componentsController.getCard().getSides().get(0).getComponents());
         clv.setAdapter(componentsAdapter);
         clv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     }

@@ -5,12 +5,11 @@ import java.util.List;
 
 public class Card {
     private int id;
-    private Side front;
-    private Side back;
+    private List<Side> sides;
 
     private String hint;
     private Tag chapter;
-    private List<Tag> tags = new ArrayList<>();
+    private List<Tag> tags;
 
     private boolean flip = true;
     private boolean edit = false;
@@ -22,8 +21,8 @@ public class Card {
     // -------------------------
 
     public Card() {
-        front = new Side();
-        back = new Side();
+        sides = new ArrayList<>();
+        tags = new ArrayList<>();
     }
 
 
@@ -66,20 +65,12 @@ public class Card {
         this.id = id;
     }
 
-    public Side getFront() {
-        return front;
+    public List<Side> getSides() {
+        return sides;
     }
 
-    public void setFront(Side front) {
-        this.front = front;
-    }
-
-    public Side getBack() {
-        return back;
-    }
-
-    public void setBack(Side back) {
-        this.back = back;
+    public void setSides(List<Side> sides) {
+        this.sides = sides;
     }
 
     public String getHint() {

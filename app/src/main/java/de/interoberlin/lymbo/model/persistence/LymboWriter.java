@@ -81,11 +81,11 @@ public class LymboWriter {
 
         addStartTag(tag, attributes);
 
-        if (card.getFront() != null)
-            appendSide("front", card.getFront());
+        if (card.getSides().get(0) != null)
+            appendSide("front", card.getSides().get(0));
 
-        if (card.getBack() != null)
-            appendSide("back", card.getBack());
+        if (card.getSides().get(1) != null)
+            appendSide("back", card.getSides().get(1));
 
         addEndTag(tag);
     }

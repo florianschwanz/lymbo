@@ -76,8 +76,8 @@ public class CardsController {
         back.setValue(backText);
 
         Card card = new Card();
-        card.getFront().addComponent(front);
-        card.getBack().addComponent(back);
+        card.getSides().get(0).addComponent(front);
+        card.getSides().get(1).addComponent(back);
 
         cards.add(card);
     }
