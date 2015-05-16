@@ -110,14 +110,36 @@
                             android:contentDescription="@string/hint"
                             android:padding="10dp"
                             android:src="@drawable/ic_action_about" />
-                        <!-- Flip -->
-                        <ImageView
-                            android:id="@+id/ivFlip"
+                    </LinearLayout>
+                    <!-- Flip -->
+                    <LinearLayout
+                        android:id="@+id/llFlip"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:padding="10dp"
+                        android:gravity="end">
+
+                        <TextView
+                            android:id="@+id/tvNumerator"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="@string/flip"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_action_screen_rotation" />
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="@color/card_text" />
+
+                        <TextView
+                            android:id="@+id/tvFraction"
+                            android:text="@string/fraction"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="@color/card_text" />
+
+                        <TextView
+                            android:id="@+id/tvDenominator"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/card_text" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

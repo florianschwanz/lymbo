@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -64,26 +65,28 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     @Override
     public View getView(final int position, View v, ViewGroup parent) {
         final Card card = getItem(position);
-        Side front = (card.getSides().size() < 1) ? null : card.getSides().get(0);
-        Side back = (card.getSides().size() < 2) ? null : card.getSides().get(1);
+        final Side front = (card.getSides().size() < 1) ? null : card.getSides().get(0);
+        final Side back = (card.getSides().size() < 2) ? null : card.getSides().get(1);
 
         if (!card.isDiscarded() && card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            LinearLayout ll = (LinearLayout) vi.inflate(R.layout.card, parent, false);
+            LinearLayout llCard = (LinearLayout) vi.inflate(R.layout.card, parent, false);
 
             // Load views : front
-            final LinearLayout llFront = (LinearLayout) ll.findViewById(R.id.front);
-            final LinearLayout llBack = (LinearLayout) ll.findViewById(R.id.back);
-            final LinearLayout llComponentsFront = (LinearLayout) ll.findViewById(R.id.llComponentsFront);
-            final LinearLayout llComponentsBack = (LinearLayout) ll.findViewById(R.id.llComponentsBack);
+            final LinearLayout llFront = (LinearLayout) llCard.findViewById(R.id.front);
+            final LinearLayout llBack = (LinearLayout) llCard.findViewById(R.id.back);
+            final LinearLayout llComponentsFront = (LinearLayout) llCard.findViewById(R.id.llComponentsFront);
+            final LinearLayout llComponentsBack = (LinearLayout) llCard.findViewById(R.id.llComponentsBack);
 
             // Load views : bottom bar
-            final LinearLayout llBottom = (LinearLayout) ll.findViewById(R.id.llBottom);
-            final ImageView ivFlip = (ImageView) ll.findViewById(R.id.ivFlip);
-            final ImageView ivEdit = (ImageView) ll.findViewById(R.id.ivEdit);
-            final ImageView ivHint = (ImageView) ll.findViewById(R.id.ivHint);
+            final LinearLayout llBottom = (LinearLayout) llCard.findViewById(R.id.llBottom);
+            final LinearLayout llFlip = (LinearLayout) llCard.findViewById(R.id.llFlip);
+            final TextView tvNumerator = (TextView) llCard.findViewById(R.id.tvNumerator);
+            final TextView tvDenominator = (TextView) llCard.findViewById(R.id.tvDenominator);
+            final ImageView ivEdit = (ImageView) llCard.findViewById(R.id.ivEdit);
+            final ImageView ivHint = (ImageView) llCard.findViewById(R.id.ivHint);
 
             // Add components : front
             if (front != null) {
@@ -100,7 +103,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                         component.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                flipToBack(card, llFront, llBack, llComponentsFront);
+                                flipToBack(card, llFront, llBack, tvNumerator, llComponentsFront);
                             }
                         });
 
@@ -123,7 +126,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                         component.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                flipToFront(card, llFront, llBack, llComponentsFront);
+                                flipToFront(card, llFront, llBack, tvNumerator, llComponentsFront);
                             }
                         });
 
@@ -139,19 +142,22 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             llComponentsBack.setGravity(Gravity.CENTER_VERTICAL);
 
             // Action : flip
-            if (card.isFlip()) {
-                ivFlip.setOnClickListener(new View.OnClickListener() {
+            if (card.isFlip() && back != null) {
+                tvNumerator.setText("1");
+                tvDenominator.setText(String.valueOf(card.getSides().size()));
+
+                llFlip.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (frontVisible) {
-                            flipToBack(card, llFront, llBack, llComponentsBack);
+                            flipToBack(card, llFront, llBack, tvNumerator, llComponentsBack);
                         } else {
-                            flipToFront(card, llFront, llBack, llComponentsFront);
+                            flipToFront(card, llFront, llBack, tvNumerator, llComponentsFront);
                         }
                     }
                 });
             } else {
-                remove(ivFlip);
+                remove(llFlip);
             }
 
             // Action : edit
@@ -188,11 +194,11 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             }
 
             // Remove bottom bar if unnecessary
-            if (!card.isFlip() && !card.isEdit() && card.getHint() == null) {
+            if (back == null && !card.isEdit() && card.getHint() == null) {
                 remove(llBottom);
             }
 
-            return ll;
+            return llCard;
         } else {
             Space s = new Space(c);
             s.setVisibility(View.GONE);
@@ -200,7 +206,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         }
     }
 
-    private void flipToBack(final Card card, final LinearLayout llFront, final LinearLayout llBack, final LinearLayout visible) {
+    private void flipToBack(final Card card, final LinearLayout llFront, final LinearLayout llBack, final TextView tvNumerator, final LinearLayout visible) {
         // Side front = (card.getSides().size() < 1) ? null : card.getSides().get(0);
         Side back = (card.getSides().size() < 2) ? null : card.getSides().get(1);
 
@@ -233,7 +239,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                     component.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            flipToFront(card, llFront, llBack, visible);
+                            flipToFront(card, llFront, llBack, tvNumerator, visible);
                         }
                     });
 
@@ -241,10 +247,11 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             }
         }
 
+        tvNumerator.setText("2");
         frontVisible = false;
     }
 
-    private void flipToFront(final Card card, final LinearLayout llFront, final LinearLayout llBack, final LinearLayout visible) {
+    private void flipToFront(final Card card, final LinearLayout llFront, final LinearLayout llBack, final TextView tvNumerator, final LinearLayout visible) {
         Side front = (card.getSides().size() < 1) ? null : card.getSides().get(0);
         // Side back = (card.getSides().size() < 2) ? null : card.getSides().get(1);
 
@@ -270,13 +277,14 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                     component.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            flipToBack(card, llFront, llBack, visible);
+                            flipToBack(card, llFront, llBack, tvNumerator, visible);
                         }
                     });
                 }
             }
         }
 
+        tvNumerator.setText("1");
         frontVisible = true;
     }
 
