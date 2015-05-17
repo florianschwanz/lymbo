@@ -17,21 +17,17 @@ import android.widget.RelativeLayout;
 import android.widget.Space;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.ComponentsController;
-import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
-import de.interoberlin.lymbo.model.card.components.ImageComponent;
 import de.interoberlin.lymbo.model.card.components.ResultComponent;
-import de.interoberlin.lymbo.model.card.components.SVGComponent;
-import de.interoberlin.lymbo.model.card.components.TextComponent;
-import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EComponent;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
@@ -45,8 +41,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     CardsController cardsController = CardsController.getInstance();
     ComponentsController componentsController = ComponentsController.getInstance();
 
-    private int VIBRATION_DURATION = 10;
-    private boolean frontVisible = true;
+    private int VIBRATION_DURATION = 40;
 
     // --------------------
     // Constructors
@@ -66,14 +61,12 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     @Override
     public View getView(final int position, View v, ViewGroup parent) {
         final Card card = getItem(position);
-        final Side front = (card.getSides().size() < 1) ? null : card.getSides().get(0);
-        final Side back = (card.getSides().size() < 2) ? null : card.getSides().get(1);
 
         if (card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card, null);
+            final FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card, null);
 
             // Load views : components
             final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
@@ -90,28 +83,23 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             final Button btnDismiss = (Button) flCard.findViewById(R.id.btnDismiss);
 
             // Add sides
-            boolean visible = true;
             for (Side side : card.getSides()) {
                 View component = side.getView(c, a, rlMain);
-                component.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+                component.setVisibility(View.INVISIBLE);
                 rlMain.addView(component);
-
-                visible = false;
             }
 
+            rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
+
             // Action : flip
-            if (card.isFlip() && back != null) {
-                tvNumerator.setText("1");
+            if (card.isFlip() && card.getSides().size() > 1) {
+                tvNumerator.setText(String.valueOf(card.getSideVisible() + 1));
                 tvDenominator.setText(String.valueOf(card.getSides().size()));
 
                 llFlip.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (frontVisible) {
-                            // flipToBack(card, llFront, llBack, tvNumerator, llComponentsBack);
-                        } else {
-                            // flipToFront(card, llFront, llBack, tvNumerator, llFront);
-                        }
+                        flip(card, flCard);
                     }
                 });
             } else {
@@ -131,11 +119,11 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 });
             } else {
             */
-                remove(ivEdit);
+            remove(ivEdit);
             //}
 
             // Action : hint
-            if (card.getHint() != null && frontVisible) {
+            if (card.getHint() != null) {
                 ivHint.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -154,7 +142,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             }
 
             // Remove bottom bar if unnecessary
-            if (back == null && !card.isEdit() && card.getHint() == null) {
+            if (card.getSides().size() < 2 && !card.isEdit() && card.getHint() == null) {
                 remove(llBottom);
             }
 
@@ -176,6 +164,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
     /**
      * Removes an item from the current stack
+     *
      * @param pos
      */
     private void dismiss(int pos) {
@@ -183,90 +172,59 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         notifyDataSetChanged();
     }
 
-    private void flipToBack(final Card card, final LinearLayout llFront, final LinearLayout llBack, final TextView tvNumerator, final LinearLayout visible) {
-        // Side front = (card.getSides().size() < 1) ? null : card.getSides().get(0);
-        Side back = (card.getSides().size() < 2) ? null : card.getSides().get(1);
-
+    /**
+     * Displays next side
+     *
+     * @param flCard
+     */
+    private void flip(Card card, FrameLayout flCard) {
         ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
 
+        final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
+        final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
+
+        /*
         // If front contains choice component make sure that at least on answer is selected
         if (!checkAnswerSelected(card))
             return;
 
-        // Switch visibility
-        llFront.setVisibility(View.INVISIBLE);
-        llBack.setVisibility(View.VISIBLE);
-
         // Handle components
         handleQuiz(card);
+*/
+        card.setSideVisible(card.getSideVisible() +1);
+        card.setSideVisible(card.getSideVisible() % card.getSides().size());
 
-        // Re-draw components
-        visible.removeAllViews();
-        if (back != null) {
-            for (Displayable d : back.getComponents()) {
-                View component = d.getView(c, a, visible);
-                visible.addView(component);
+        tvNumerator.setText(String.valueOf(card.getSideVisible() + 1));
 
-                if ((d instanceof TitleComponent && ((TitleComponent) d).isFlip()) ||
-                        (d instanceof TextComponent && ((TextComponent) d).isFlip()) ||
-                        (d instanceof ImageComponent && ((ImageComponent) d).isFlip()) ||
-                        (d instanceof ResultComponent && ((ResultComponent) d).isFlip()) ||
-                        (d instanceof SVGComponent && ((SVGComponent) d).isFlip())
-                        ) {
-                    component.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            flipToFront(card, llFront, llBack, tvNumerator, visible);
-                        }
-                    });
-
-                }
-            }
+        for (View v : getAllChildren(rlMain)) {
+            v.setVisibility(View.INVISIBLE);
         }
 
-        tvNumerator.setText("2");
-        frontVisible = false;
+        rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
     }
 
-    private void flipToFront(final Card card, final LinearLayout llFront, final LinearLayout llBack, final TextView tvNumerator, final LinearLayout visible) {
-        Side front = (card.getSides().size() < 1) ? null : card.getSides().get(0);
-        // Side back = (card.getSides().size() < 2) ? null : card.getSides().get(1);
+    /**
+     * Returns all direct children of a view
+     *
+     * @param v
+     * @return
+     */
+    private List<View> getAllChildren(View v) {
+        List<View> children = new ArrayList<>();
 
-        ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-
-        // Switch visibility
-        llFront.setVisibility(View.VISIBLE);
-        llBack.setVisibility(View.INVISIBLE);
-
-        // Re-draw components
-        visible.removeAllViews();
-        if (front != null) {
-            for (Displayable d : front.getComponents()) {
-                View component = d.getView(c, a, visible);
-                visible.addView(component);
-
-                if ((d instanceof TitleComponent && ((TitleComponent) d).isFlip()) ||
-                        (d instanceof TextComponent && ((TextComponent) d).isFlip()) ||
-                        (d instanceof ImageComponent && ((ImageComponent) d).isFlip()) ||
-                        (d instanceof ResultComponent && ((ResultComponent) d).isFlip()) ||
-                        (d instanceof SVGComponent && ((SVGComponent) d).isFlip())
-                        ) {
-                    component.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            flipToBack(card, llFront, llBack, tvNumerator, visible);
-                        }
-                    });
-                }
+        if (!(v instanceof ViewGroup)) {
+            return children;
+        } else {
+            ViewGroup viewGroup = (ViewGroup) v;
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                children.add(viewGroup.getChildAt(i));
             }
+            return children;
         }
-
-        tvNumerator.setText("1");
-        frontVisible = true;
     }
 
     private boolean checkAnswerSelected(Card card) {
-        if (card.getSides().get(0).contains(EComponent.CHOICE)) {
+        if (card.getSides().get(card.getSideVisible()).contains(EComponent.CHOICE)) {
             for (Answer a : ((ChoiceComponent) card.getSides().get(0).getFirst(EComponent.CHOICE)).getAnswers()) {
                 if (a.isSelected()) {
                     return true;
@@ -289,15 +247,15 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     }
 
     private void handleQuiz(Card card) {
-        Side front = (card.getSides().size() < 1) ? null : card.getSides().get(0);
-        Side back = (card.getSides().size() < 2) ? null : card.getSides().get(1);
+        Side current = card.getSides().get(card.getSideVisible());
+        Side next = card.getSides().get(card.getSideVisible() + 1);
 
         // Handle quiz card
-        if (front != null && front.contains(EComponent.CHOICE) && back != null && back.contains(EComponent.RESULT)) {
+        if (current != null && current.contains(EComponent.CHOICE) && next != null && next.contains(EComponent.RESULT)) {
             // Default result : CORRECT
-            ((ResultComponent) back.getFirst(EComponent.RESULT)).setValue("CORRECT");
+            ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue("CORRECT");
 
-            for (Answer a : ((ChoiceComponent) front.getFirst(EComponent.CHOICE)).getAnswers()) {
+            for (Answer a : ((ChoiceComponent) current.getFirst(EComponent.CHOICE)).getAnswers()) {
                 if (a.isCorrect() != a.isSelected()) {
                     // At least on answer is wrong : WRONG
                     ((ResultComponent) card.getSides().get(1).getFirst(EComponent.RESULT)).setValue("WRONG");

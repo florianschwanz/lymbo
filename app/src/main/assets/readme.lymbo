@@ -21,8 +21,13 @@
   		    <text value="Cards can be flipped by clicking on this button"/>
   		</front>
   		<back>
-            <title value="This is the back side" />
+            <title value="Flipping cards (2)" />
+            <text value="Click again to flip to third side"/>
   		</back>
+        <side>
+            <title value="Flipping cards (3)" />
+            <text value="There can be an unlimited number of sides per card"/>
+        </side>
   	</card>
     <card>
         <front>

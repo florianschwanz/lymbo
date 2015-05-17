@@ -15,6 +15,7 @@ public class Card {
     private boolean edit = false;
 
     private boolean discarded = false;
+    private int sideVisible = 0;
 
     // -------------------------
     // Constructors
@@ -120,4 +121,13 @@ public class Card {
     public void setDiscarded(boolean discarded) {
         this.discarded = discarded;
     }
+
+    public int getSideVisible() {
+        return sideVisible;
+    }
+
+    public void setSideVisible(int sideVisible) {
+        this.sideVisible = sideVisible;
+    }
+
 }
