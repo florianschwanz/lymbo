@@ -30,7 +30,7 @@ import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
 import de.interoberlin.lymbo.view.dialogfragments.SimpleCardDialogFragment;
 import de.interoberlin.mate.lib.util.Toaster;
 
-public class CardsActivity extends BaseActivity implements SimpleCardDialogFragment.OnCompleteListener ,DisplayDialogFragment.OnCompleteListener, CheckboxDialogFragment.OnLabelSelectedListener {
+public class CardsActivity extends BaseActivity implements SimpleCardDialogFragment.OnCompleteListener, DisplayDialogFragment.OnCompleteListener, CheckboxDialogFragment.OnLabelSelectedListener {
     // Controllers
     CardsController cardsController = CardsController.getInstance();
 
@@ -139,10 +139,6 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
 
             @Override
             public void onDismiss(int[] reverseSortedPositions) {
-                for (int position : reverseSortedPositions) {
-                    cards.get(position).setDiscarded(true);
-                }
-                cardsAdapter.notifyDataSetChanged();
             }
         });
 
@@ -329,5 +325,9 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
         draw();
     }
     */
+
+    public List<Card> getCards() {
+        return cards;
+    }
 
 }

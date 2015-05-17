@@ -5,18 +5,18 @@
 
     <RelativeLayout
         android:id="@+id/reveal"
+        android:padding="@dimen/card_reveal_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btnDismiss"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
-            android:padding="20dp"
-            android:id="@+id/textView" />
+            android:text="@string/dismiss" />
     </RelativeLayout>
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -25,7 +25,7 @@
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="@dimen/card_margin"
         card_view:cardCornerRadius="2dp">
 
         <LinearLayout
@@ -68,6 +68,7 @@
                         android:id="@+id/llCustomIconsFront"
                         android:gravity="start"
                         android:orientation="horizontal">
+
                         <ImageView
                             android:id="@+id/ivEdit"
                             android:layout_width="wrap_content"
@@ -83,6 +84,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:gravity="end">
+
                         <ImageView
                             android:id="@+id/ivHint"
                             android:layout_width="wrap_content"
@@ -100,12 +102,14 @@
                         android:layout_weight="0.2"
                         android:padding="10dp"
                         android:gravity="end">
+
                         <TextView
                             android:id="@+id/tvNumerator"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:textColor="@color/card_text" />
+
                         <TextView
                             android:id="@+id/tvFraction"
                             android:text="@string/fraction"
@@ -113,6 +117,7 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:textColor="@color/card_text" />
+
                         <TextView
                             android:id="@+id/tvDenominator"
                             android:layout_width="wrap_content"

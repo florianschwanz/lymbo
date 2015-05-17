@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,6 +33,7 @@ import de.interoberlin.lymbo.model.card.components.SVGComponent;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EComponent;
+import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
 
@@ -67,21 +69,25 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         final Side front = (card.getSides().size() < 1) ? null : card.getSides().get(0);
         final Side back = (card.getSides().size() < 2) ? null : card.getSides().get(1);
 
-        // if (false) {
-        if (!card.isDiscarded() && card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
+        if (card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
             FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card, null);
 
-            // Load views
+            // Load views : components
             final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
+
+            // Load views : bottom bar
             final LinearLayout llBottom = (LinearLayout) flCard.findViewById(R.id.llBottom);
             final LinearLayout llFlip = (LinearLayout) flCard.findViewById(R.id.llFlip);
             final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
             final TextView tvDenominator = (TextView) flCard.findViewById(R.id.tvDenominator);
             final ImageView ivEdit = (ImageView) flCard.findViewById(R.id.ivEdit);
             final ImageView ivHint = (ImageView) flCard.findViewById(R.id.ivHint);
+
+            // Load views : reveal
+            final Button btnDismiss = (Button) flCard.findViewById(R.id.btnDismiss);
 
             // Add sides
             boolean visible = true;
@@ -94,7 +100,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             }
 
             // Action : flip
-            /*
             if (card.isFlip() && back != null) {
                 tvNumerator.setText("1");
                 tvDenominator.setText(String.valueOf(card.getSides().size()));
@@ -103,9 +108,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                     @Override
                     public void onClick(View view) {
                         if (frontVisible) {
-                            flipToBack(card, llFront, llBack, tvNumerator, llComponentsBack);
+                            // flipToBack(card, llFront, llBack, tvNumerator, llComponentsBack);
                         } else {
-                            flipToFront(card, llFront, llBack, tvNumerator, llFront);
+                            // flipToFront(card, llFront, llBack, tvNumerator, llFront);
                         }
                     }
                 });
@@ -113,8 +118,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 remove(llFlip);
             }
 
-
             // Action : edit
+            /*
             if (card.isEdit()) {
                 ivEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -125,8 +130,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                     }
                 });
             } else {
+            */
                 remove(ivEdit);
-            }
+            //}
 
             // Action : hint
             if (card.getHint() != null && frontVisible) {
@@ -151,7 +157,14 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             if (back == null && !card.isEdit() && card.getHint() == null) {
                 remove(llBottom);
             }
-            */
+
+            // Reveal : dismiss
+            btnDismiss.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dismiss(position);
+                }
+            });
 
             return flCard;
         } else {
@@ -159,6 +172,15 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             s.setVisibility(View.GONE);
             return s;
         }
+    }
+
+    /**
+     * Removes an item from the current stack
+     * @param pos
+     */
+    private void dismiss(int pos) {
+        ((CardsActivity) a).getCards().remove(pos);
+        notifyDataSetChanged();
     }
 
     private void flipToBack(final Card card, final LinearLayout llFront, final LinearLayout llBack, final TextView tvNumerator, final LinearLayout visible) {

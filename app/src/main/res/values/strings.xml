@@ -10,6 +10,7 @@
     <string name="desc_image">Image component</string>
     <string name="download_the_attachment">Download the attachment to use this lymbo</string>
     <string name="discard">Discard</string>
+    <string name="dismiss">Dismiss</string>
     <string name="edit">Edit</string>
     <string name="flip">Flip</string>
     <string name="fraction">/</string>
