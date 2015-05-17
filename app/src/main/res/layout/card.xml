@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
-    android:layout_width="wrap_content"
-    android:padding="10dp">
+    android:layout_width="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/reveal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+            android:padding="20dp"
+            android:id="@+id/textView" />
+    </RelativeLayout>
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view"
+        android:id="@+id/surface"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         card_view:cardCornerRadius="2dp">
 
         <LinearLayout
@@ -17,48 +33,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Components -->
             <RelativeLayout
-                android:id="@+id/main"
+                android:id="@+id/rlMain"
                 android:tag="front"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp">
-
-                <!-- Front -->
-                <LinearLayout
-                    android:id="@+id/front"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <!-- Front components -->
-                    <LinearLayout
-                        android:id="@+id/llComponentsFront"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:minHeight="@dimen/min_card_height"
-                        android:paddingBottom="16dp" />
-
-                </LinearLayout>
-
-                <!-- Back -->
-                <LinearLayout
-                    android:id="@+id/back"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <!-- Back components -->
-                    <LinearLayout
-                        android:id="@+id/llComponentsBack"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:minHeight="@dimen/min_card_height"
-                        android:paddingBottom="16dp" />
-                </LinearLayout>
-            </RelativeLayout>
+                android:padding="8dp" />
 
             <!-- Bottom bar -->
             <LinearLayout
@@ -77,17 +58,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="true"
-                    android:id="@+id/llIconbarFront"
+                    android:id="@+id/llIconbar"
                     android:orientation="horizontal">
 
+                    <!-- Edit -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/llCustomIconsFront"
                         android:gravity="start"
                         android:orientation="horizontal">
-
-                        <!-- Edit -->
                         <ImageView
                             android:id="@+id/ivEdit"
                             android:layout_width="wrap_content"
@@ -97,12 +77,12 @@
                             android:src="@drawable/ic_action_edit" />
                     </LinearLayout>
 
+                    <!-- Hint -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:gravity="end">
-                        <!-- Hint -->
                         <ImageView
                             android:id="@+id/ivHint"
                             android:layout_width="wrap_content"
@@ -111,6 +91,7 @@
                             android:padding="10dp"
                             android:src="@drawable/ic_action_about" />
                     </LinearLayout>
+
                     <!-- Flip -->
                     <LinearLayout
                         android:id="@+id/llFlip"
@@ -119,14 +100,12 @@
                         android:layout_weight="0.2"
                         android:padding="10dp"
                         android:gravity="end">
-
                         <TextView
                             android:id="@+id/tvNumerator"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:textColor="@color/card_text" />
-
                         <TextView
                             android:id="@+id/tvFraction"
                             android:text="@string/fraction"
@@ -134,7 +113,6 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:textColor="@color/card_text" />
-
                         <TextView
                             android:id="@+id/tvDenominator"
                             android:layout_width="wrap_content"
@@ -144,6 +122,6 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
     </android.support.v7.widget.CardView>
-</LinearLayout>
+
+</FrameLayout>

@@ -99,9 +99,9 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
         // Get list view and add adapter
         slv = (SwipeListView) findViewById(R.id.slv);
         slv.setAdapter(cardsAdapter);
-        slv.setSwipeMode(SwipeListView.SWIPE_MODE_RIGHT);
-        slv.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_DISMISS);
-        slv.setSwipeActionRight(SwipeListView.SWIPE_ACTION_DISMISS);
+        slv.setSwipeMode(SwipeListView.SWIPE_MODE_BOTH);
+        slv.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_REVEAL);
+        slv.setSwipeActionRight(SwipeListView.SWIPE_ACTION_REVEAL);
         slv.setSwipeOpenOnLongPress(false);
 
         slv.setSwipeListViewListener(new BaseSwipeListViewListener() {
