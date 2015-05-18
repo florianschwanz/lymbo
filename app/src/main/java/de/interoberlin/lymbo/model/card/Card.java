@@ -14,7 +14,6 @@ public class Card {
     private boolean flip = true;
     private boolean edit = false;
 
-    private boolean discarded = false;
     private int sideVisible = 0;
 
     // -------------------------
@@ -112,14 +111,6 @@ public class Card {
 
     public void setEdit(boolean edit) {
         this.edit = edit;
-    }
-
-    public boolean isDiscarded() {
-        return discarded;
-    }
-
-    public void setDiscarded(boolean discarded) {
-        this.discarded = discarded;
     }
 
     public int getSideVisible() {

@@ -3,21 +3,41 @@
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/reveal"
         android:padding="@dimen/card_reveal_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
+        <!--
         <Button
             android:id="@+id/btnDismiss"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/button_margin"
             android:layout_gravity="center_horizontal|center_vertical"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/dismiss" />
-    </RelativeLayout>
+        -->
+        <Button
+            android:id="@+id/btnDiscard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/button_margin"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/discard" />
+
+        <Button
+            android:id="@+id/btnToEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/button_margin"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/to_end" />
+    </LinearLayout>
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"

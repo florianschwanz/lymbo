@@ -16,7 +16,6 @@ import com.fortysevendeg.swipelistview.SwipeListView;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
@@ -43,7 +42,7 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
     private ImageButton ibFab;
 
     // Model
-    private List<Card> cards;
+    private Lymbo lymbo;
     private CardsListAdapter cardsAdapter;
 
     private final String BUNDLE_LYMBO_PATH = "lymbo_path";
@@ -90,8 +89,8 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
 
     public void onResume() {
         super.onResume();
-        cards = cardsController.getCards();
-        cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cards);
+        lymbo = cardsController.getLymbo();
+        cardsAdapter = new CardsListAdapter(this, this, R.layout.card, lymbo.getCards());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
@@ -180,14 +179,14 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
         switch (item.getItemId()) {
             case R.id.menu_shuffle: {
                 ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-                Collections.shuffle(cards);
+                Collections.shuffle(lymbo.getCards());
                 cardsAdapter.notifyDataSetChanged();
                 break;
             }
             case R.id.menu_refresh: {
                 ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-                for (Card c : cards) {
-                    c.setDiscarded(false);
+                for (Card c : lymbo.getCards()) {
+                    // c.setDismissed(false);
                 }
                 cardsAdapter.notifyDataSetChanged();
                 break;
@@ -325,9 +324,4 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
         draw();
     }
     */
-
-    public List<Card> getCards() {
-        return cards;
-    }
-
 }

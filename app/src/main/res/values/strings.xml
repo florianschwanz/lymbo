@@ -25,8 +25,9 @@
     <string name="menu_shuffle">Shuffle</string>
     <string name="menu_stash">Stash</string>
     <string name="message">Message</string>
-    <string name="okay">Okay</string>
     <string name="not_yet_implemented">Not yet implemented</string>
+    <string name="okay">Okay</string>
+    <string name="putToEnd">Put To End</string>
     <string name="search_lymbo_files">Searching for lymbo files</string>
     <string name="select_answer">Select at least one answer</string>
     <string name="send">Send</string>
@@ -36,6 +37,7 @@
     <string name="stash">Stash</string>
     <string name="tags">Tags</string>
     <string name="text">Text</string>
+    <string name="to_end">To End</string>
     <string name="title">Title</string>
     <string name="title_activity_edit_card">CardEditActivity</string>
     <string name="undo">Undo</string>

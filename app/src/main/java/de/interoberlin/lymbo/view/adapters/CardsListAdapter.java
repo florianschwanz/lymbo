@@ -22,14 +22,12 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.controller.ComponentsController;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.model.card.enums.EComponent;
-import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
 
@@ -39,7 +37,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
     // Controllers
     CardsController cardsController = CardsController.getInstance();
-    ComponentsController componentsController = ComponentsController.getInstance();
+    // ComponentsController componentsController = ComponentsController.getInstance();
 
     private int VIBRATION_DURATION = 40;
 
@@ -66,7 +64,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            final FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card, null);
+            final FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card, parent, false);
 
             // Load views : components
             final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
@@ -80,7 +78,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             final ImageView ivHint = (ImageView) flCard.findViewById(R.id.ivHint);
 
             // Load views : reveal
-            final Button btnDismiss = (Button) flCard.findViewById(R.id.btnDismiss);
+            // final Button btnDismiss = (Button) flCard.findViewById(R.id.btnDismiss);
+            final Button btnDiscard = (Button) flCard.findViewById(R.id.btnDiscard);
+            final Button btnPutToEnd = (Button) flCard.findViewById(R.id.btnToEnd);
 
             // Add sides
             for (Side side : card.getSides()) {
@@ -147,10 +147,28 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             }
 
             // Reveal : dismiss
+            /*
             btnDismiss.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dismiss(position);
+                }
+            });
+            */
+
+            // Reveal : discard
+            btnDiscard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    discard(position);
+                }
+            });
+
+            // Reveal : discard
+            btnPutToEnd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    putToEnd(position);
                 }
             });
 
@@ -163,19 +181,45 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     }
 
     /**
-     * Removes an item from the current stack
+     * Puts an item from the current stack away temporarily
      *
-     * @param pos
+     * @param pos position of item
      */
-    private void dismiss(int pos) {
-        ((CardsActivity) a).getCards().remove(pos);
+    /*
+        private void dismiss(int pos) {
+        cardsController.getLymbo().getCards().remove(pos);
+        notifyDataSetChanged();
+    }
+    */
+
+    /**
+     * Removes an item from the current stack permanently
+     *
+     * @param pos position of item
+     */
+    private void discard(int pos) {
+        cardsController.getLymbo().getCards().remove(pos);
+        cardsController.save();
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Puts an item to the end of the stack
+     *
+     * @param pos position of item
+     */
+    private void putToEnd(int pos) {
+        Card card = cardsController.getLymbo().getCards().get(pos);
+
+        cardsController.getLymbo().getCards().add(card);
+        cardsController.getLymbo().getCards().remove(pos);
         notifyDataSetChanged();
     }
 
     /**
      * Displays next side
      *
-     * @param flCard
+     * @param flCard frameLayout of card
      */
     private void flip(Card card, FrameLayout flCard) {
         ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
@@ -191,7 +235,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         // Handle components
         handleQuiz(card);
 */
-        card.setSideVisible(card.getSideVisible() +1);
+        card.setSideVisible(card.getSideVisible() + 1);
         card.setSideVisible(card.getSideVisible() % card.getSides().size());
 
         tvNumerator.setText(String.valueOf(card.getSideVisible() + 1));
@@ -206,8 +250,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     /**
      * Returns all direct children of a view
      *
-     * @param v
-     * @return
+     * @param v view to get children from
+     * @return list of all child views
      */
     private List<View> getAllChildren(View v) {
         List<View> children = new ArrayList<>();
