@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -78,9 +77,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             final ImageView ivHint = (ImageView) flCard.findViewById(R.id.ivHint);
 
             // Load views : reveal
-            // final Button btnDismiss = (Button) flCard.findViewById(R.id.btnDismiss);
-            final Button btnDiscard = (Button) flCard.findViewById(R.id.btnDiscard);
-            final Button btnPutToEnd = (Button) flCard.findViewById(R.id.btnToEnd);
+            // final ImageView ivDismiss = (Button) flCard.findViewById(R.id.ivDismiss);
+            final ImageView ivDiscard = (ImageView) flCard.findViewById(R.id.ivDiscard);
+            final ImageView ivPutToEnd = (ImageView) flCard.findViewById(R.id.ivToEnd);
 
             // Add sides
             for (Side side : card.getSides()) {
@@ -157,15 +156,17 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             */
 
             // Reveal : discard
-            btnDiscard.setOnClickListener(new View.OnClickListener() {
+            /*
+            ivDiscard.setOnC lickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     discard(position);
                 }
             });
+            */
 
             // Reveal : discard
-            btnPutToEnd.setOnClickListener(new View.OnClickListener() {
+            ivPutToEnd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     putToEnd(position);
