@@ -228,14 +228,14 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
         final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
 
-        /*
+
         // If front contains choice component make sure that at least on answer is selected
         if (!checkAnswerSelected(card))
             return;
 
         // Handle components
         handleQuiz(card);
-*/
+
         card.setSideVisible(card.getSideVisible() + 1);
         card.setSideVisible(card.getSideVisible() % card.getSides().size());
 
@@ -293,7 +293,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
     private void handleQuiz(Card card) {
         Side current = card.getSides().get(card.getSideVisible());
-        Side next = card.getSides().get(card.getSideVisible() + 1);
+
+        Side next = null;
+        if(card.getSides().size() > (card.getSideVisible()))
+            next = card.getSides().get(card.getSideVisible() + 1);
 
         // Handle quiz card
         if (current != null && current.contains(EComponent.CHOICE) && next != null && next.contains(EComponent.RESULT)) {

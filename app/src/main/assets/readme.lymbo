@@ -18,39 +18,23 @@
     <card>
   		<front>
   		    <title value="Flipping cards"/>
-  		    <text value="Cards can be flipped by clicking on this button"/>
+  		    <text value="Cards can be flipped by clicking on the index in the lower left corner."/>
   		</front>
   		<back>
             <title value="Flipping cards (2)" />
-            <text value="Click again to flip to third side"/>
+            <text value="Click again to flip to third side."/>
   		</back>
         <side>
             <title value="Flipping cards (3)" />
-            <text value="There can be an unlimited number of sides per card"/>
+            <text value="There can be an unlimited number of sides per card./>
         </side>
   	</card>
-    <card>
-        <front>
-            <title
-                value="Flipping cards"
-                flip="true" />
-            <text value="Every part of a card can be defined to trigger a flip." />
-            <text value="Click on the title of this card to see what I mean." />
-        </front>
-        <back>
-            <title
-                value="Flipping cards (back)" />
-            <text value="See. This is the backside of the cards." />
-            <text value="See. Click on this text to flip back to front." flip="true" />
-        </back>
-    </card>
     <card>
  		<front>
  			<title value="Quiz cards"/>
  			<text value="Cards can also contain questions which can help you to practice for tests."/>
  			<text value="This is a card with a multiple choice quiz."/>
- 			<text value="Click on one of the answers to select it. Click on this button to flip the card."/>
- 			<text value="Click on this button to display a useful hint"/>
+ 			<text value="Click on one of the answers to select it. Click on the index in the lower left corner to flip the card."/>
  			<text value="Which statements about quiz cards are true?"/>
  			<choice>
  				<answer value="They can be used to practice for test." correct="true"/>
@@ -79,22 +63,22 @@
     <card>
         <front>
             <title value="Putting away cards" />
-            <text value="Use your finger to swipe a card to the right side of the screen." />
-            <text value="The card will disappear from your current stack." />
+            <text value="Use your finger to swipe a card away." />
+            <text value="Use the cross button to put the card to the end of the stack." />
         </front>
     </card>
     <card>
         <front>
             <title value="Shuffling cards" />
-            <text value="In the cards screen click on this button in the menu to shuffle cards." />
+            <text value="In the cards screen click on the shuffle button in the menu to shuffle cards." />
         </front>
     </card>
     <card>
         <front>
             <title value="Stashing stacks" />
             <text value="Each stack from the stack overview screen can be stashed by clicking this button." />
-            <text value="This way a stack is out of your focus. Stashed stacks can be found in the stash screen" />
-            <text value="From there they can be restored" />
+            <text value="This way a stack is out of your focus. Stashed stacks can be found in the stash screen." />
+            <text value="From there they can be restored." />
         </front>
     </card>
 </lymbo>
