@@ -295,7 +295,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         Side current = card.getSides().get(card.getSideVisible());
 
         Side next = null;
-        if(card.getSides().size() > (card.getSideVisible()))
+        if (card.getSideVisible() + 1 < card.getSides().size())
             next = card.getSides().get(card.getSideVisible() + 1);
 
         // Handle quiz card
@@ -306,10 +306,12 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             for (Answer a : ((ChoiceComponent) current.getFirst(EComponent.CHOICE)).getAnswers()) {
                 if (a.isCorrect() != a.isSelected()) {
                     // At least on answer is wrong : WRONG
-                    ((ResultComponent) card.getSides().get(1).getFirst(EComponent.RESULT)).setValue("WRONG");
+                    ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue("WRONG");
                     break;
                 }
             }
+
+            notifyDataSetChanged();
         }
     }
 
