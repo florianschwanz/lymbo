@@ -22,4 +22,5 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimaryDark"
-    android:textColorPrimary="@color/white"/>
+    android:textColorPrimary="@color/white"
+    style="@style/Widget.Lymbo.ActionBar"/>
