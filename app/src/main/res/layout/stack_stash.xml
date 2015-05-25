@@ -72,26 +72,20 @@
                 android:layout_alignParentBottom="true"
                 android:orientation="vertical">
 
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal">
+                    android:layout_weight="0.5"
+                    android:gravity="end">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:id="@+id/ivUndo"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:gravity="end">
-
-                        <ImageView
-                            android:id="@+id/ivUndo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:contentDescription="@string/undo"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_action_undo" />
-                    </LinearLayout>
+                        android:contentDescription="@string/undo"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_action_undo" />
                 </LinearLayout>
             </LinearLayout>
 
