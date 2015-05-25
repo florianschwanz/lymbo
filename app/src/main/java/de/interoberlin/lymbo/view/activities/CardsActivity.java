@@ -154,6 +154,10 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
                 simpleCardDialogFragment.show(getFragmentManager(), "okay");
             }
         });
+
+        if (lymbo.isAsset()) {
+            ibFab.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
