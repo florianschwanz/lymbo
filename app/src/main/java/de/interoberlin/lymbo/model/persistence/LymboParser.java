@@ -59,18 +59,19 @@ public class LymboParser {
     /**
      * Parses xml file an returns a map
      *
-     * @param is input stream representing lymbo file
+     * @param is           input stream representing lymbo file
+     * @param onlyTopLevel determines if only the top level element shall be parsed
      * @return xmlLymbo
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    public Lymbo parse(InputStream is) throws XmlPullParserException, IOException {
+    public Lymbo parse(InputStream is, boolean onlyTopLevel) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(is, null);
             parser.nextTag();
-            return parseLymbo(parser);
+            return parseLymbo(parser, onlyTopLevel);
         } finally {
             is.close();
         }
@@ -79,12 +80,13 @@ public class LymboParser {
     /**
      * Returns a lymbo
      *
-     * @param parser the XmlPullParser
+     * @param parser       the XmlPullParser
+     * @param onlyTopLevel determines if only the top level element shall be parsed
      * @return xmlLymbo
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private Lymbo parseLymbo(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private Lymbo parseLymbo(XmlPullParser parser, boolean onlyTopLevel) throws XmlPullParserException, IOException {
         Log.trace("parseLymbo()");
         String name;
 
@@ -121,18 +123,20 @@ public class LymboParser {
         // Read sub elements
         List<Card> cards = new ArrayList<>();
 
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                Log.trace("parseCard() continue");
-                continue;
-            }
+        if (!onlyTopLevel) {
+            while (parser.next() != XmlPullParser.END_TAG) {
+                if (parser.getEventType() != XmlPullParser.START_TAG) {
+                    Log.trace("parseCard() continue");
+                    continue;
+                }
 
-            name = parser.getName();
+                name = parser.getName();
 
-            if (name.equals("card")) {
-                cards.add(parseCard(parser));
-            } else {
-                skip(parser);
+                if (name.equals("card")) {
+                    cards.add(parseCard(parser));
+                } else {
+                    skip(parser);
+                }
             }
         }
 
@@ -149,6 +153,7 @@ public class LymboParser {
             lymbo.setAuthor(author);
 
         lymbo.setCards(cards);
+
 
         return lymbo;
     }

@@ -63,9 +63,9 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
             Lymbo l = null;
             if (savedInstanceState.getString(BUNDLE_LYMBO_PATH) != null) {
                 if (savedInstanceState.getBoolean(BUNDLE_ASSET)) {
-                    l = LymboLoader.getLymboFromAsset(getApplicationContext(), savedInstanceState.getString(BUNDLE_LYMBO_PATH));
+                    l = LymboLoader.getLymboFromAsset(context, savedInstanceState.getString(BUNDLE_LYMBO_PATH), false);
                 } else {
-                    l = LymboLoader.getLymboFromFile(new File(savedInstanceState.getString(BUNDLE_LYMBO_PATH)));
+                    l = LymboLoader.getLymboFromFile(new File(savedInstanceState.getString(BUNDLE_LYMBO_PATH)), false);
                 }
             }
 

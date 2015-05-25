@@ -22,10 +22,10 @@ public class LymboLoader {
      * @param lymboPath path to lymbo file
      * @return Lymbo object
      */
-    public static Lymbo getLymboFromAsset(Context c, String lymboPath) {
+    public static Lymbo getLymboFromAsset(Context c, String lymboPath, boolean onlyTopLevel) {
         try {
             InputStream inputStream = c.getAssets().open(lymboPath);
-            Lymbo l = getLymboFromInputStream(inputStream);
+            Lymbo l = getLymboFromInputStream(inputStream, onlyTopLevel);
             if (l != null) {
                 l.setPath(lymboPath);
                 l.setAsset(true);
@@ -48,9 +48,9 @@ public class LymboLoader {
      * @param f File
      * @return Lymbo file
      */
-    public static Lymbo getLymboFromFile(File f) {
+    public static Lymbo getLymboFromFile(File f, boolean onlyTopLevel) {
         try {
-            Lymbo l = getLymboFromInputStream(new FileInputStream(f));
+            Lymbo l = getLymboFromInputStream(new FileInputStream(f), onlyTopLevel);
             if (l != null) {
                 l.setPath(f.getAbsolutePath());
                 l.setAsset(false);
@@ -65,9 +65,9 @@ public class LymboLoader {
         }
     }
 
-    public static Lymbo getLymboFromInputStream(InputStream is) {
+    public static Lymbo getLymboFromInputStream(InputStream is, boolean onlyTopLevel) {
         try {
-            return LymboParser.getInstance().parse(is);
+            return LymboParser.getInstance().parse(is, onlyTopLevel);
         } catch (XmlPullParserException | IOException e) {
             Log.error(e.toString());
             e.printStackTrace();
