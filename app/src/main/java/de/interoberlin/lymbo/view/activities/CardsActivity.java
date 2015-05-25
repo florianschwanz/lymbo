@@ -164,6 +164,7 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        cardsController.setLymbo(null);
     }
 
     @Override
