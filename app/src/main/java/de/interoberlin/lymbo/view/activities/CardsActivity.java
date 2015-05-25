@@ -47,7 +47,6 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
 
     private final String BUNDLE_LYMBO_PATH = "lymbo_path";
     private final String BUNDLE_ASSET = "asset";
-    private final String BUNDLE_SCROLL_POS = "scroll_pos";
 
     // --------------------
     // Methods - Lifecycle

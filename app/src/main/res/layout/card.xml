@@ -23,6 +23,7 @@
         -->
         <ImageView
             android:id="@+id/ivDiscard"
+            android:contentDescription="@string/desc_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/button_margin"
@@ -36,6 +37,7 @@
 
         <ImageView
             android:id="@+id/ivToEnd"
+            android:contentDescription="@string/desc_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/button_margin"
