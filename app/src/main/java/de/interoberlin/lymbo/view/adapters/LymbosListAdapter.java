@@ -14,11 +14,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.persistence.LymboLoader;
 import de.interoberlin.lymbo.model.share.MailSender;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
@@ -79,10 +81,20 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cardsController.setLymbo(lymbo);
-                cardsController.init();
-                Intent openStartingPoint = new Intent(c, CardsActivity.class);
-                c.startActivity(openStartingPoint);
+                Lymbo l;
+
+                if (lymbo.isAsset()) {
+                    l = LymboLoader.getLymboFromAsset(c, lymbo.getPath(), false);
+                } else {
+                    l = LymboLoader.getLymboFromFile(new File(lymbo.getPath()), false);
+                }
+
+                if (l != null) {
+                    cardsController.setLymbo(l);
+                    cardsController.init();
+                    Intent openStartingPoint = new Intent(c, CardsActivity.class);
+                    c.startActivity(openStartingPoint);
+                }
             }
         });
 
@@ -107,7 +119,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         remove(ivEdit);
         /*}*/
 
-        // Action : sedn
+        // Action : send
         if (!lymbo.isAsset()) {
             ivShare.setOnClickListener(new View.OnClickListener() {
                 @Override
