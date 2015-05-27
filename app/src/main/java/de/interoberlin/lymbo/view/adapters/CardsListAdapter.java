@@ -59,53 +59,55 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     public View getView(final int position, View v, ViewGroup parent) {
         final Card card = getItem(position);
 
-        if (card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
-            // Layout inflater
-            LayoutInflater vi;
-            vi = LayoutInflater.from(getContext());
-            final FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card, parent, false);
+        if (card != null) {
 
-            // Load views : components
-            final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
+            if (card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
+                // Layout inflater
+                LayoutInflater vi;
+                vi = LayoutInflater.from(getContext());
+                final FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card, parent, false);
 
-            // Load views : bottom bar
-            final LinearLayout llBottom = (LinearLayout) flCard.findViewById(R.id.llBottom);
-            final LinearLayout llFlip = (LinearLayout) flCard.findViewById(R.id.llFlip);
-            final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
-            final TextView tvDenominator = (TextView) flCard.findViewById(R.id.tvDenominator);
-            final ImageView ivEdit = (ImageView) flCard.findViewById(R.id.ivEdit);
-            final ImageView ivHint = (ImageView) flCard.findViewById(R.id.ivHint);
+                // Load views : components
+                final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
 
-            // Load views : reveal
-            // final ImageView ivDismiss = (Button) flCard.findViewById(R.id.ivDismiss);
-            final ImageView ivDiscard = (ImageView) flCard.findViewById(R.id.ivDiscard);
-            final ImageView ivPutToEnd = (ImageView) flCard.findViewById(R.id.ivToEnd);
+                // Load views : bottom bar
+                final LinearLayout llBottom = (LinearLayout) flCard.findViewById(R.id.llBottom);
+                final LinearLayout llFlip = (LinearLayout) flCard.findViewById(R.id.llFlip);
+                final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
+                final TextView tvDenominator = (TextView) flCard.findViewById(R.id.tvDenominator);
+                final ImageView ivEdit = (ImageView) flCard.findViewById(R.id.ivEdit);
+                final ImageView ivHint = (ImageView) flCard.findViewById(R.id.ivHint);
 
-            // Add sides
-            for (Side side : card.getSides()) {
-                View component = side.getView(c, a, rlMain);
-                component.setVisibility(View.INVISIBLE);
-                rlMain.addView(component);
-            }
+                // Load views : reveal
+                // final ImageView ivDismiss = (Button) flCard.findViewById(R.id.ivDismiss);
+                final ImageView ivDiscard = (ImageView) flCard.findViewById(R.id.ivDiscard);
+                final ImageView ivPutToEnd = (ImageView) flCard.findViewById(R.id.ivToEnd);
 
-            rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
+                // Add sides
+                for (Side side : card.getSides()) {
+                    View component = side.getView(c, a, rlMain);
+                    component.setVisibility(View.INVISIBLE);
+                    rlMain.addView(component);
+                }
 
-            // Action : flip
-            if (card.isFlip() && card.getSides().size() > 1) {
-                tvNumerator.setText(String.valueOf(card.getSideVisible() + 1));
-                tvDenominator.setText(String.valueOf(card.getSides().size()));
+                rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
 
-                llFlip.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        flip(card, flCard);
-                    }
-                });
-            } else {
-                remove(llFlip);
-            }
+                // Action : flip
+                if (card.isFlip() && card.getSides().size() > 1) {
+                    tvNumerator.setText(String.valueOf(card.getSideVisible() + 1));
+                    tvDenominator.setText(String.valueOf(card.getSides().size()));
 
-            // Action : edit
+                    llFlip.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            flip(card, flCard);
+                        }
+                    });
+                } else {
+                    remove(llFlip);
+                }
+
+                // Action : edit
             /*
             if (card.isEdit()) {
                 ivEdit.setOnClickListener(new View.OnClickListener() {
@@ -118,34 +120,34 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 });
             } else {
             */
-            remove(ivEdit);
-            //}
+                remove(ivEdit);
+                //}
 
-            // Action : hint
-            if (card.getHint() != null) {
-                ivHint.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        DisplayDialogFragment displayDialogFragment = new DisplayDialogFragment();
-                        Bundle b = new Bundle();
-                        b.putCharSequence("type", EDialogType.HINT.toString());
-                        b.putCharSequence("title", a.getResources().getString(R.string.hint));
-                        b.putCharSequence("message", card.getHint());
+                // Action : hint
+                if (card.getHint() != null) {
+                    ivHint.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            DisplayDialogFragment displayDialogFragment = new DisplayDialogFragment();
+                            Bundle b = new Bundle();
+                            b.putCharSequence("type", EDialogType.HINT.toString());
+                            b.putCharSequence("title", a.getResources().getString(R.string.hint));
+                            b.putCharSequence("message", card.getHint());
 
-                        displayDialogFragment.setArguments(b);
-                        displayDialogFragment.show(a.getFragmentManager(), "okay");
-                    }
-                });
-            } else {
-                remove(ivHint);
-            }
+                            displayDialogFragment.setArguments(b);
+                            displayDialogFragment.show(a.getFragmentManager(), "okay");
+                        }
+                    });
+                } else {
+                    remove(ivHint);
+                }
 
-            // Remove bottom bar if unnecessary
-            if (card.getSides().size() < 2 && !card.isEdit() && card.getHint() == null) {
-                remove(llBottom);
-            }
+                // Remove bottom bar if unnecessary
+                if (card.getSides().size() < 2 && !card.isEdit() && card.getHint() == null) {
+                    remove(llBottom);
+                }
 
-            // Reveal : dismiss
+                // Reveal : dismiss
             /*
             btnDismiss.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -155,7 +157,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             });
             */
 
-            // Reveal : discard
+                // Reveal : discard
             /*
             ivDiscard.setOnC lickListener(new View.OnClickListener() {
                 @Override
@@ -165,19 +167,25 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             });
             */
 
-            // Reveal : discard
-            ivPutToEnd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    putToEnd(position);
-                }
-            });
+                // Reveal : discard
+                ivPutToEnd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        putToEnd(position);
+                    }
+                });
 
-            return flCard;
+                return flCard;
+            } else {
+                Space s = new Space(c);
+                s.setVisibility(View.GONE);
+                return s;
+            }
         } else {
-            Space s = new Space(c);
-            s.setVisibility(View.GONE);
-            return s;
+            // Layout inflater
+            LayoutInflater vi;
+            vi = LayoutInflater.from(getContext());
+            return (LinearLayout) vi.inflate(R.layout.toolbar_space, parent, false);
         }
     }
 

@@ -35,13 +35,13 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
     private ArrayList<View> hideableHeaderViews = new ArrayList<>();
     private ArrayList<View> hideableFooterViews = new ArrayList<>();
 
-    private boolean actionBarAutoHideEnabled = false;
+    // private boolean actionBarAutoHideEnabled = false;
     private int actionBarAutoHideSensivity = 0;
     private int actionBarAutoHideMinY = 0;
     private int actionBarAutoHideSignal = 0;
     private boolean actionBarShown = true;
 
-    private static final int HEADER_HIDE_ANIM_DURATION = 300;
+    private static final int HEADER_HIDE_ANIM_DURATION = 500;
 
     // --------------------
     // Methods
@@ -59,7 +59,7 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
      * Initializes the Action Bar auto-hide (aka Quick Recall) effect.
      */
     private void initActionBarAutoHide() {
-        actionBarAutoHideEnabled = true;
+        // actionBarAutoHideEnabled = true;
         actionBarAutoHideMinY = getResources().getDimensionPixelSize(
                 R.dimen.toolbar_auto_hide_min_y);
         actionBarAutoHideSensivity = getResources().getDimensionPixelSize(
@@ -137,6 +137,22 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
             } else {
                 view.animate()
                         .translationY(-view.getBottom())
+                        .alpha(0)
+                        .setDuration(HEADER_HIDE_ANIM_DURATION)
+                        .setInterpolator(new DecelerateInterpolator());
+            }
+        }
+
+        for (View view : hideableFooterViews) {
+            if (shown) {
+                view.animate()
+                        .translationY(0)
+                        .alpha(1)
+                        .setDuration(HEADER_HIDE_ANIM_DURATION)
+                        .setInterpolator(new DecelerateInterpolator());
+            } else {
+                view.animate()
+                        .translationY(view.getTop())
                         .alpha(0)
                         .setDuration(HEADER_HIDE_ANIM_DURATION)
                         .setInterpolator(new DecelerateInterpolator());
