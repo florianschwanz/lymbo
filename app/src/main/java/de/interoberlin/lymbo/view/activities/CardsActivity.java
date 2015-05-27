@@ -2,14 +2,17 @@ package de.interoberlin.lymbo.view.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import com.fortysevendeg.swipelistview.BaseSwipeListViewListener;
 import com.fortysevendeg.swipelistview.SwipeListView;
@@ -22,14 +25,15 @@ import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.persistence.LymboLoader;
+import de.interoberlin.lymbo.util.Configuration;
+import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.CheckboxDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
 import de.interoberlin.lymbo.view.dialogfragments.SimpleCardDialogFragment;
-import de.interoberlin.mate.lib.util.Toaster;
 
-public class CardsActivity extends BaseActivity implements SimpleCardDialogFragment.OnCompleteListener, DisplayDialogFragment.OnCompleteListener, CheckboxDialogFragment.OnLabelSelectedListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, SimpleCardDialogFragment.OnCompleteListener, DisplayDialogFragment.OnCompleteListener, CheckboxDialogFragment.OnLabelSelectedListener {
     // Controllers
     CardsController cardsController = CardsController.getInstance();
 
@@ -38,8 +42,10 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
     // private static Activity activity;
 
     // Views
+    private SwipeRefreshLayout srl;
     private SwipeListView slv;
     private ImageButton ibFab;
+    private LinearLayout toolbarWrapper;
 
     // Model
     private Lymbo lymbo;
@@ -47,6 +53,8 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
 
     private final String BUNDLE_LYMBO_PATH = "lymbo_path";
     private final String BUNDLE_ASSET = "asset";
+
+    private static int REFRESH_DELAY;
 
     // --------------------
     // Methods - Lifecycle
@@ -76,25 +84,27 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
             finish();
         }
 
+        setSwipeRefreshLayout(srl);
         setActionBarIcon(R.drawable.ic_ab_drawer);
+        setDisplayHomeAsUpEnabled(true);
 
-        // Register on toaster
-        Toaster.register(this, context);
-
-        // Get activity and context for further use
-        // activity = this;
-        context = getApplicationContext();
+        REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY));
     }
 
     public void onResume() {
         super.onResume();
         lymbo = cardsController.getLymbo();
-        cardsAdapter = new CardsListAdapter(this, this, R.layout.card, lymbo.getCards());
+        cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
 
-        // Get list view and add adapter
+        toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
+
+        srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        srl.setOnRefreshListener(this);
+        srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
+
         slv = (SwipeListView) findViewById(R.id.slv);
         slv.setAdapter(cardsAdapter);
         slv.setSwipeMode(SwipeListView.SWIPE_MODE_BOTH);
@@ -157,6 +167,11 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
         if (lymbo.isAsset()) {
             ibFab.setVisibility(View.INVISIBLE);
         }
+
+        updateSwipeRefreshProgressBarTop();
+        registerHideableHeaderView(toolbarWrapper);
+        registerHideableFooterView(ibFab);
+        enableActionBarAutoHide(slv);
     }
 
     @Override
@@ -209,6 +224,17 @@ public class CardsActivity extends BaseActivity implements SimpleCardDialogFragm
         }
 
         return true;
+    }
+
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // srl.setRefreshing(false);
+                // slv.invalidateViews();
+            }
+        }, REFRESH_DELAY);
     }
 
     @Override

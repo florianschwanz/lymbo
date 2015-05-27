@@ -11,15 +11,10 @@
         android:layout_height="match_parent"
         android:background="@color/background">
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar" />
-
-        <FrameLayout
+        <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/swipe_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/toolbar"
-            android:foreground="@drawable/bottom_shadow">
+            android:layout_height="wrap_content">
 
             <com.fortysevendeg.swipelistview.SwipeListView xmlns:swipe="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/slv"
@@ -32,7 +27,25 @@
                 swipe:swipeAnimationTime="0"
                 swipe:swipeOffsetLeft="0dp"
                 swipe:swipeOffsetRight="0dp" />
-        </FrameLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <LinearLayout
+            android:id="@+id/toolbar_wrapper"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar" />
+
+            <FrameLayout
+                android:id="@+id/shadow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/toolbar"
+                android:foreground="@drawable/bottom_shadow" />
+        </LinearLayout>
 
         <ImageButton
             android:contentDescription="@string/desc_image"

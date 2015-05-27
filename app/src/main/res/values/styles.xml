@@ -46,7 +46,7 @@
 
     <style name="ThemeOverlay.Lymbo.ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textStyle">bold</item>
+
     </style>
 
     <style name="CardText">

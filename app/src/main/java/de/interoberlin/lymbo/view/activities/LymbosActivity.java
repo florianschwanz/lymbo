@@ -9,6 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 import com.fortysevendeg.swipelistview.SwipeListView;
 import com.github.mrengineer13.snackbar.SnackBar;
@@ -23,7 +24,7 @@ import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 
-public class LymbosActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener, DisplayDialogFragment.OnCompleteListener {
+public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener, DisplayDialogFragment.OnCompleteListener {
     // Controllers
     private LymbosController lymbosController = LymbosController.getInstance();
     private CardsController cardsController = CardsController.getInstance();
@@ -31,6 +32,7 @@ public class LymbosActivity extends BaseActivity implements SwipeRefreshLayout.O
     // Views
     private SwipeRefreshLayout srl;
     private SwipeListView slv;
+    private LinearLayout toolbarWrapper;
 
     // Model
     private LymbosListAdapter lymbosAdapter;
@@ -44,10 +46,12 @@ public class LymbosActivity extends BaseActivity implements SwipeRefreshLayout.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (savedInstanceState != null) {
             lymbosController.load();
         }
 
+        setSwipeRefreshLayout(srl);
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(false);
 
@@ -61,6 +65,8 @@ public class LymbosActivity extends BaseActivity implements SwipeRefreshLayout.O
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
 
+        toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
+
         srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         srl.setOnRefreshListener(this);
         srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
@@ -68,6 +74,10 @@ public class LymbosActivity extends BaseActivity implements SwipeRefreshLayout.O
         slv = (SwipeListView) findViewById(R.id.slv);
         slv.setAdapter(lymbosAdapter);
         slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
+
+        updateSwipeRefreshProgressBarTop();
+        registerHideableHeaderView(toolbarWrapper);
+        enableActionBarAutoHide(slv);
     }
 
     @Override
