@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="add_card">Karte hinzufügen</string>
+    <string name="app_name">lymbo</string>
+    <string name="back">Rückseite</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="chapters">Kapitel</string>
+    <string name="click_to_continue">Klicke auf den Bildschirm zum Fortfahren</string>
+    <string name="desc_image">Image Komponente</string>
+    <string name="download_the_attachment">Lade den Anhang herunter um das Lymbo verwenden zu können</string>
+    <string name="discard">Entfernen</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="fraction">/</string>
+    <string name="front">Vorderseite</string>
+    <string name="hint">Hinweis</string>
+    <string name="logo">Logo</string>
+    <string name="lymbo_for_you">Lymbo für Dich</string>
+    <string name="menu_log">Log</string>
+    <string name="menu_about">Impressum</string>
+    <string name="menu_labels">Labels</string>
+    <string name="menu_refresh">Aktualisieren</string>
+    <string name="menu_shuffle">Mischen</string>
+    <string name="menu_stash">Papierkorb</string>
+    <string name="message">Nachricht</string>
+    <string name="not_yet_implemented">Noch nicht implementiert</string>
+    <string name="okay">Okay</string>
+    <string name="search_lymbo_files">Suche lymbo Dateien</string>
+    <string name="select_answer">Wähle mindestens eine Antwort aus</string>
+    <string name="send">Versenden</string>
+    <string name="share">Teilen</string>
+    <string name="stack_restored">Stapel wiederhergestellt</string>
+    <string name="stack_stashed">Stapel in den Papierkorb verschoben</string>
+    <string name="stash">Papierkorb</string>
+    <string name="tags">Tags</string>
+    <string name="text">Text</string>
+    <string name="title">Titel</string>
+    <string name="title_activity_edit_card">CardEditActivity</string>
+    <string name="undo">Rückgängig</string>
+    <string name="upload">Hochladen</string>
+
+</resources>
