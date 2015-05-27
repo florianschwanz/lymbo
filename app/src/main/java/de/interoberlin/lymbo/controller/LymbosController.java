@@ -17,12 +17,12 @@ import java.util.Date;
 import java.util.List;
 
 import de.interoberlin.lymbo.model.card.Lymbo;
-import de.interoberlin.lymbo.util.Configuration;
-import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.model.persistence.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.LymboLocation;
 import de.interoberlin.lymbo.model.persistence.LymboLocationDatasource;
 import de.interoberlin.lymbo.model.persistence.LymboLocationHelper;
+import de.interoberlin.lymbo.util.Configuration;
+import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.mate.lib.model.Log;
 
 public class LymbosController extends Application {
@@ -240,6 +240,10 @@ public class LymbosController extends Application {
     // --------------------
 
     public List<Lymbo> getLymbos() {
+        if (lymbos.get(0) != null) {
+            lymbos.add(0, null);
+        }
+
         return lymbos;
     }
 

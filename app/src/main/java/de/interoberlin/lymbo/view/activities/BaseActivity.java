@@ -23,7 +23,6 @@ import android.support.v7.widget.Toolbar;
 import de.interoberlin.lymbo.R;
 
 public abstract class BaseActivity extends ActionBarActivity {
-
     private Toolbar toolbar;
 
     @Override
@@ -38,6 +37,10 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     protected abstract int getLayoutResource();
+
+    protected Toolbar getToolbar() {
+        return toolbar;
+    }
 
     protected void setActionBarIcon(int iconRes) {
         toolbar.setNavigationIcon(iconRes);

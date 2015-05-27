@@ -11,39 +11,48 @@
         android:layout_height="match_parent"
         android:background="@color/background">
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar" />
-
-        <FrameLayout
+        <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/swipe_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/toolbar"
-            android:foreground="@drawable/bottom_shadow">
+            android:layout_height="wrap_content">
 
-            <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/swipe_container"
+            <com.fortysevendeg.swipelistview.SwipeListView xmlns:swipe="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/slv"
+                android:listSelector="#00000000"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/background"
+                swipe:swipeFrontView="@+id/front"
+                swipe:swipeBackView="@+id/back"
+                swipe:swipeActionLeft="reveal"
+                swipe:swipeActionRight="dismiss"
+                swipe:swipeMode="both"
+                swipe:swipeCloseAllItemsWhenMoveList="false"
+                swipe:swipeOpenOnLongPress="true"
+                swipe:swipeAnimationTime="0"
+                swipe:swipeOffsetLeft="0dp"
+                swipe:swipeOffsetRight="0dp" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <LinearLayout
+            android:id="@+id/toolbar_wrapper"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar" />
+
+            <FrameLayout
+                android:id="@+id/shadow"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent"
+                android:layout_below="@id/toolbar"
+                android:foreground="@drawable/bottom_shadow" />
+        </LinearLayout>
 
-                <com.fortysevendeg.swipelistview.SwipeListView xmlns:swipe="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/slv"
-                    android:listSelector="#00000000"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@color/background"
-                    swipe:swipeFrontView="@+id/front"
-                    swipe:swipeBackView="@+id/back"
-                    swipe:swipeActionLeft="reveal"
-                    swipe:swipeActionRight="dismiss"
-                    swipe:swipeMode="both"
-                    swipe:swipeCloseAllItemsWhenMoveList="false"
-                    swipe:swipeOpenOnLongPress="true"
-                    swipe:swipeAnimationTime="0"
-                    swipe:swipeOffsetLeft="0dp"
-                    swipe:swipeOffsetRight="0dp" />
 
-            </android.support.v4.widget.SwipeRefreshLayout>
-        </FrameLayout>
     </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>
