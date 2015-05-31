@@ -111,10 +111,14 @@ public class LymbosController extends Application {
         Collection<File> lymboFilesStashed = new ArrayList<>();
 
         for (LymboLocation l : datasource.getAllLocations()) {
-            if (l.getStashed() == 0) {
-                lymboFiles.add(new File(l.getLocation()));
-            } else if (l.getStashed() == 1) {
-                lymboFilesStashed.add(new File(l.getLocation()));
+            if (new File(l.getLocation()).exists()) {
+                if (l.getStashed() == 0) {
+                    lymboFiles.add(new File(l.getLocation()));
+                } else if (l.getStashed() == 1) {
+                    lymboFilesStashed.add(new File(l.getLocation()));
+                }
+            } else {
+                datasource.deleteLocation(l);
             }
         }
 
