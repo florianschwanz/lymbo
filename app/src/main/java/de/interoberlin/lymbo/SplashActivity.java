@@ -123,7 +123,7 @@ public class SplashActivity extends Activity {
                     }
                 }
 
-                showMessage("Found " + lymbosController.getLymbos().size() + " lymbo files");
+                showMessage(context.getResources().getString(R.string.splash_found_1) + " " + lymbosController.getLymbos().size() + " " + context.getResources().getString(R.string.splash_found_2));
 
                 try {
                     sleep(1000);

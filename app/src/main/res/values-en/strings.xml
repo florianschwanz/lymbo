@@ -38,5 +38,7 @@
     <string name="title_activity_edit_card">CardEditActivity</string>
     <string name="undo">Undo</string>
     <string name="upload">Upload</string>
+    <string name="splash_found_1"> lymbo files</string>
+    <string name="splash_found_2">lymbo files</string>
 
 </resources>

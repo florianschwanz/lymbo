@@ -38,5 +38,7 @@
     <string name="title_activity_edit_card">CardEditActivity</string>
     <string name="undo">Rückgängig</string>
     <string name="upload">Hochladen</string>
+    <string name="splash_found_1"></string>
+    <string name="splash_found_2">lymbo Dateien gefunden</string>
 
 </resources>

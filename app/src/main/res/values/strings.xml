@@ -29,6 +29,8 @@
     <string name="select_answer">Select at least one answer</string>
     <string name="send">Send</string>
     <string name="share">Share</string>
+    <string name="splash_found_1">Found</string>
+    <string name="splash_found_2">Found</string>
     <string name="stack_restored">Stack restored</string>
     <string name="stack_stashed">Stack stashed</string>
     <string name="stash">Stash</string>
