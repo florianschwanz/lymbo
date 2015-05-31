@@ -15,12 +15,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.persistence.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.LymboLocation;
 import de.interoberlin.lymbo.model.persistence.LymboLocationDatasource;
 import de.interoberlin.lymbo.model.persistence.LymboLocationHelper;
+import de.interoberlin.lymbo.model.persistence.LymboWriter;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.mate.lib.model.Log;
@@ -33,6 +35,7 @@ public class LymbosController extends Application {
 
     private static String LYMBO_FILE_EXTENSION;
     private static String LYMBO_LOOKUP_PATH;
+    private static String LYMBO_SAVE_PATH;
 
     private boolean loaded = false;
 
@@ -67,19 +70,49 @@ public class LymbosController extends Application {
 
         LYMBO_FILE_EXTENSION = Configuration.getProperty(this, EProperty.LYMBO_FILE_EXTENSION);
         LYMBO_LOOKUP_PATH = Configuration.getProperty(this, EProperty.LYMBO_LOOKUP_PATH);
+        LYMBO_SAVE_PATH = Configuration.getProperty(this, EProperty.LYMBO_SAVE_PATH);
     }
 
     // --------------------
     // Methods
     // --------------------
 
-    public Context getContext() {
-        return context;
-    }
-
     public void init() {
         lymbos = new ArrayList<>();
         lymbosStashed = new ArrayList<>();
+    }
+
+    /**
+     * Returns an empty lymbo stack
+     *
+     * @param title    title of new stack
+     * @param subtitle subtitle of new stack
+     * @param author   author of new stack
+     * @return
+     */
+    public Lymbo getEmptyLymbo(String title, String subtitle, String author) {
+        Lymbo lymbo = new Lymbo();
+        lymbo.setId(UUID.randomUUID().toString());
+        lymbo.setTitle(title);
+        lymbo.setSubtitle(subtitle);
+        lymbo.setAuthor(author);
+        lymbo.setPath(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + title.trim().replaceAll(" ", "_").toLowerCase() + LYMBO_FILE_EXTENSION);
+
+        return lymbo;
+    }
+
+    /**
+     * Creates a new lymbo stack
+     *
+     * @param lymbo lymbo to be created
+     */
+    public void addStack(Lymbo lymbo) {
+        LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
+
+        datasource = new LymboLocationDatasource(context);
+        datasource.open();
+        datasource.addLocation(lymbo.getPath(), 0);
+        datasource.close();
     }
 
     public void scan() {
@@ -95,6 +128,8 @@ public class LymbosController extends Application {
                 datasource.addLocation(location, 0);
             }
         }
+
+        datasource.close();
     }
 
     public void load() {

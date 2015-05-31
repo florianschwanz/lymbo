@@ -53,6 +53,7 @@ public class LymboWriter {
      */
     private static void appendLymbo(String tag, Lymbo lymbo) {
         Map<String, String> attributes = new HashMap<>();
+        attributes.put("id", lymbo.getId());
         attributes.put("title", lymbo.getTitle());
         attributes.put("subtitle", lymbo.getSubtitle());
         attributes.put("hint", lymbo.getHint());

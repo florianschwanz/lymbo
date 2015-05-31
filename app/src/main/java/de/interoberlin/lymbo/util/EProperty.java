@@ -4,6 +4,7 @@ package de.interoberlin.lymbo.util;
 public enum EProperty {
     LYMBO_FILE_EXTENSION("lymbo_file_extension"),
     LYMBO_LOOKUP_PATH("lymbo_lookup_path"),
+    LYMBO_SAVE_PATH("lymbo_save_path"),
     REFRESH_DELAY("refresh_delay");
 
     private String propertyName;

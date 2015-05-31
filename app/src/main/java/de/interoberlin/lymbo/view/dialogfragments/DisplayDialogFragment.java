@@ -44,8 +44,8 @@ public class DisplayDialogFragment extends DialogFragment {
 
         // Determine type
         switch (b.getString("type")) {
-            case "CREATE_STACK":
-                type = EDialogType.CREATE_STACK;
+            case "ADD_STACK":
+                type = EDialogType.ADD_STACK;
                 break;
             case "CHANGE_STACK":
                 type = EDialogType.CHANGE_STACK;
