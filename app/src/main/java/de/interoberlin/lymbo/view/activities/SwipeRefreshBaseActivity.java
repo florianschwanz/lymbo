@@ -29,7 +29,6 @@ import de.interoberlin.lymbo.R;
 
 public abstract class SwipeRefreshBaseActivity extends BaseActivity {
     // Views
-    private SwipeRefreshLayout srl;
 
     // Toolbar
     private ArrayList<View> hideableHeaderViews = new ArrayList<>();
@@ -46,10 +45,6 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
     // --------------------
     // Methods
     // --------------------
-
-    protected void setSwipeRefreshLayout(SwipeRefreshLayout srl) {
-        this.srl = srl;
-    }
 
     // --------------------
     // Methods -  Toolbar
@@ -125,8 +120,6 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
     }
 
     protected void onActionBarAutoShowOrHide(boolean shown) {
-        updateSwipeRefreshProgressBarTop();
-
         for (View view : hideableHeaderViews) {
             if (shown) {
                 view.animate()
@@ -160,7 +153,7 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
         }
     }
 
-    protected void updateSwipeRefreshProgressBarTop() {
+    protected void updateSwipeRefreshProgressBarTop(SwipeRefreshLayout srl) {
         if (srl == null) {
             return;
         }

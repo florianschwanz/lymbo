@@ -84,7 +84,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             finish();
         }
 
-        setSwipeRefreshLayout(srl);
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(true);
 
@@ -168,7 +167,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             ibFab.setVisibility(View.INVISIBLE);
         }
 
-        updateSwipeRefreshProgressBarTop();
+        updateSwipeRefreshProgressBarTop(srl);
         registerHideableHeaderView(toolbarWrapper);
         registerHideableFooterView(ibFab);
         enableActionBarAutoHide(slv);

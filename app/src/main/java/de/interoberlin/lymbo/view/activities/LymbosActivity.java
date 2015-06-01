@@ -56,7 +56,6 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
             lymbosController.load();
         }
 
-        setSwipeRefreshLayout(srl);
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(false);
 
@@ -94,7 +93,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
             }
         });
 
-        updateSwipeRefreshProgressBarTop();
+        updateSwipeRefreshProgressBarTop(srl);
         registerHideableHeaderView(toolbarWrapper);
         registerHideableFooterView(ibFab);
         enableActionBarAutoHide(slv);
