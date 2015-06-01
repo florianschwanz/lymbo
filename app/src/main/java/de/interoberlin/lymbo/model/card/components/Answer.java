@@ -1,7 +1,11 @@
 package de.interoberlin.lymbo.model.card.components;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Answer {
     private String value = "";
+    private Map<String, String> translations = new HashMap();
     private boolean correct = false;
     private boolean selected = false;
 
@@ -19,6 +23,14 @@ public class Answer {
     // --------------------
     // Getters / Setters
     // --------------------
+
+    public Map<String, String> getTranslations() {
+        return translations;
+    }
+
+    public void setTranslations(Map<String, String> translations) {
+        this.translations = translations;
+    }
 
     public String getValue() {
         return value;

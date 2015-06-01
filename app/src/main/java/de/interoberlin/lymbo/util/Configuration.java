@@ -26,4 +26,8 @@ public class Configuration {
 
         return null;
     }
+
+    public static String getLanguage(Context c) {
+        return c.getResources().getConfiguration().locale.getLanguage();
+    }
 }

@@ -11,13 +11,18 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
 import de.interoberlin.lymbo.model.card.enums.EStyle;
+import de.interoberlin.lymbo.util.Configuration;
 
 public class TextComponent implements Displayable {
     private String value = "";
+    private Map<String, String> translations = new HashMap();
     private int lines = 0;
     private EGravity gravity = EGravity.LEFT;
     private EStyle style = EStyle.NORMAL;
@@ -43,7 +48,10 @@ public class TextComponent implements Displayable {
         TextView tvText = (TextView) llTextComponent.findViewById(R.id.tvText);
 
         // Attribute : value
-        tvText.setText(value);
+        if (translations.containsKey(Configuration.getLanguage(c)))
+            tvText.setText(translations.get(Configuration.getLanguage(c)));
+        else
+            tvText.setText(value);
 
         // Attribute : lines
         if (lines != 0)
@@ -85,6 +93,14 @@ public class TextComponent implements Displayable {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public Map<String, String> getTranslations() {
+        return translations;
+    }
+
+    public void setTranslations(Map<String, String> translations) {
+        this.translations = translations;
     }
 
     public int getLines() {
