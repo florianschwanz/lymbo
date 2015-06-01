@@ -55,10 +55,8 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
      */
     private void initActionBarAutoHide() {
         // actionBarAutoHideEnabled = true;
-        actionBarAutoHideMinY = getResources().getDimensionPixelSize(
-                R.dimen.toolbar_auto_hide_min_y);
-        actionBarAutoHideSensivity = getResources().getDimensionPixelSize(
-                R.dimen.toolbar_auto_hide_sensivity);
+        actionBarAutoHideMinY = getResources().getDimensionPixelSize(R.dimen.toolbar_auto_hide_min_y);
+        actionBarAutoHideSensivity = getResources().getDimensionPixelSize(R.dimen.toolbar_auto_hide_sensivity);
     }
 
     protected void enableActionBarAutoHide(final ListView listView) {
@@ -130,7 +128,7 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
             } else {
                 view.animate()
                         .translationY(-view.getBottom())
-                        .alpha(0)
+                        .alpha(1)
                         .setDuration(HEADER_HIDE_ANIM_DURATION)
                         .setInterpolator(new DecelerateInterpolator());
             }
@@ -145,8 +143,8 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
                         .setInterpolator(new DecelerateInterpolator());
             } else {
                 view.animate()
-                        .translationY(view.getTop())
-                        .alpha(0)
+                        .translationY(view.getHeight() + view.getPaddingBottom())
+                        .alpha(1)
                         .setDuration(HEADER_HIDE_ANIM_DURATION)
                         .setInterpolator(new DecelerateInterpolator());
             }
