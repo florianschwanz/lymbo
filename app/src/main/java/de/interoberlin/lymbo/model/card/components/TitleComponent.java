@@ -9,13 +9,18 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
+import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class TitleComponent implements Displayable {
     private String value = "";
+    private Map<String, String> translations = new HashMap();
     private int lines = 0;
     private EGravity gravity = EGravity.LEFT;
 
@@ -40,7 +45,11 @@ public class TitleComponent implements Displayable {
         RobotoTextView tvTitle = (RobotoTextView) llTitleComponent.findViewById(R.id.tvTitle);
 
         // Attribute : value
-        tvTitle.setText(value);
+        if (translations.containsKey(Configuration.getLanguage(c)))
+            tvTitle.setText(translations.get(Configuration.getLanguage(c)));
+        else
+            tvTitle.setText(value);
+
 
         // Attribute : lines
         if (lines != 0)
@@ -79,6 +88,14 @@ public class TitleComponent implements Displayable {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public Map<String, String> getTranslations() {
+        return translations;
+    }
+
+    public void setTranslations(Map<String, String> translations) {
+        this.translations = translations;
     }
 
     public int getLines() {

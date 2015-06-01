@@ -7,6 +7,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -323,6 +324,7 @@ public class LymboParser {
      */
     private TitleComponent parseTitleComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
         Log.trace("parseTitleComponent()");
+        String name;
         parser.require(XmlPullParser.START_TAG, null, "title");
 
         // Create element
@@ -335,14 +337,26 @@ public class LymboParser {
         String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
-        parser.next();
-        /*
+        Map<String, String> translations = new HashMap<>();
+
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
+
+            name = parser.getName();
+            Log.trace("name : " + name);
+
+            switch (name) {
+                case "translation":
+                    Map.Entry<String, String> translation = parseTranslation(parser);
+                    translations.put(translation.getKey(), translation.getValue());
+                    break;
+                default:
+                    skip(parser);
+            }
         }
-        */
+
 
         // Fill element
         if (value != null)
@@ -359,6 +373,8 @@ public class LymboParser {
             component.setFlip(Boolean.parseBoolean(flip));
         else if (defaults.containsKey("titleFlip"))
             component.setFlip(Boolean.parseBoolean(defaults.get("titleFlip")));
+        if (!translations.isEmpty())
+            component.setTranslations(translations);
 
         return component;
     }
@@ -373,6 +389,7 @@ public class LymboParser {
      */
     private TextComponent parseTextComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
         Log.trace("parseTextComponent()");
+        String name;
         parser.require(XmlPullParser.START_TAG, null, "text");
 
         // Create element
@@ -386,14 +403,25 @@ public class LymboParser {
         String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
-        parser.next();
-        /*
+        Map<String, String> translations = new HashMap<>();
+
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
+
+            name = parser.getName();
+            Log.trace("name : " + name);
+
+            switch (name) {
+                case "translation":
+                    Map.Entry<String, String> translation = parseTranslation(parser);
+                    translations.put(translation.getKey(), translation.getValue());
+                    break;
+                default:
+                    skip(parser);
+            }
         }
-        */
 
         // Fill element
         if (value != null)
@@ -414,6 +442,8 @@ public class LymboParser {
             component.setFlip(Boolean.parseBoolean(flip));
         else if (defaults.containsKey("textFlip"))
             component.setFlip(Boolean.parseBoolean(defaults.get("textFlip")));
+        if (!translations.isEmpty())
+            component.setTranslations(translations);
 
         return component;
     }
@@ -637,12 +667,45 @@ public class LymboParser {
         }
     }
 
+    private Map.Entry<String, String> parseTranslation(XmlPullParser parser) throws IOException, XmlPullParserException {
+        Log.trace("parseTranslation");
+        // String name;
+        parser.require(XmlPullParser.START_TAG, null, "translation");
+
+        // Create element
+
+        // Read attributes
+        String value = parser.getAttributeValue(null, "value");
+        String lang = parser.getAttributeValue(null, "lang");
+
+        // Read sub elements
+        parser.next();
+        /*
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+
+            name = parser.getName();
+            Log.trace("name : " + name);
+
+            switch (name) {
+                default:
+                    skip(parser);
+            }
+           }*/
+
+        return new AbstractMap.SimpleEntry<>(lang, value);
+    }
+
+
     /**
      * Returns a line count
      *
      * @param lines string value representing line count
      * @return line count
      */
+
     private int parseLines(String lines) {
         try {
             return Integer.parseInt(lines) > 0 ? Integer.parseInt(lines) : 0;

@@ -81,4 +81,14 @@
             <text value="From there they can be restored." />
         </front>
     </card>
+    <card>
+        <front>
+            <title value="Language Cards">
+                <translation lang="de" value="Sprachkarten" />
+            </title>
+            <text value="If you can read this your phone's language is either English or there is no translation for your locale.">
+                <translation lang="de" value="Wenn du das lesen kannst, ist die Systemsprache deines Telefons deutsch" />
+            </text>
+        </front>
+    </card>
 </lymbo>

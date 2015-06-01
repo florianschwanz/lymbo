@@ -1,7 +1,11 @@
 package de.interoberlin.lymbo.model.card.components;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Answer {
     private String value = "";
+    private Map<String, String> values = new HashMap();
     private boolean correct = false;
     private boolean selected = false;
 
