@@ -34,6 +34,9 @@
     <dimen name="list_item_height">48dip</dimen>
     <dimen name="sticky_height">120dp</dimen>
 
+    <!-- Tag -->
+    <dimen name="tag_margin">10dp</dimen>
+
     <!-- Floating action button -->
     <dimen name="fab_button_diameter">60dp</dimen>
     <dimen name="fab_button_margin_bottom">16dp</dimen>
