@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Card {
-    private int id;
+    private String id;
     private List<Side> sides;
 
     private String hint;
@@ -57,11 +57,11 @@ public class Card {
     // Getters / Setters
     // -------------------------
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

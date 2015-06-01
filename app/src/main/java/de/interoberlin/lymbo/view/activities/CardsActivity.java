@@ -274,7 +274,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public void onAddSimpleCard(String frontText, String backText) {
-        cardsController.addSimpleCard(frontText, backText);
+        Card card = cardsController.getSimpleCard(frontText, backText);
+
+        cardsController.addCard(card);
         cardsController.save();
         cardsAdapter.notifyDataSetChanged();
         slv.invalidateViews();
