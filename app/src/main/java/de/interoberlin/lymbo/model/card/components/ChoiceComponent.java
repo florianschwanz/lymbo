@@ -17,6 +17,7 @@ import java.util.List;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.enums.ChoiceType;
+import de.interoberlin.lymbo.util.Configuration;
 
 public class ChoiceComponent implements Displayable {
     private ChoiceType type = ChoiceType.MULTIPLE;
@@ -52,7 +53,11 @@ public class ChoiceComponent implements Displayable {
                 }
             });
 
-            tvText.setText(answer.getValue());
+            if (answer.getTranslations().containsKey(Configuration.getLanguage(c)))
+                tvText.setText(answer.getTranslations().get(Configuration.getLanguage(c)));
+            else
+                tvText.setText(answer.getValue());
+
             tvText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -357,7 +357,6 @@ public class LymboParser {
             }
         }
 
-
         // Fill element
         if (value != null)
             component.setValue(value);
@@ -581,6 +580,7 @@ public class LymboParser {
      */
     private Answer parseAnswer(XmlPullParser parser) throws XmlPullParserException, IOException {
         Log.trace("parseAnswer()");
+        String name;
         parser.require(XmlPullParser.START_TAG, null, "answer");
 
         // Create element
@@ -591,20 +591,33 @@ public class LymboParser {
         String correct = parser.getAttributeValue(null, "correct");
 
         // Read sub elements
-        parser.next();
-        /*
+        Map<String, String> translations = new HashMap<>();
+
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
+
+            name = parser.getName();
+            Log.trace("name : " + name);
+
+            switch (name) {
+                case "translation":
+                    Map.Entry<String, String> translation = parseTranslation(parser);
+                    translations.put(translation.getKey(), translation.getValue());
+                    break;
+                default:
+                    skip(parser);
+            }
         }
-        */
 
         // Fill element
         if (value != null)
             answer.setValue(value);
         if (correct != null)
             answer.setCorrect(Boolean.parseBoolean(correct));
+        if (!translations.isEmpty())
+            answer.setTranslations(translations);
 
         return answer;
     }
