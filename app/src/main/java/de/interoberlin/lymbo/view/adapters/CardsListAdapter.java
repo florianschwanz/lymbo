@@ -309,12 +309,12 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         // Handle quiz card
         if (current != null && current.contains(EComponent.CHOICE) && next != null && next.contains(EComponent.RESULT)) {
             // Default result : CORRECT
-            ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue("CORRECT");
+            ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(c.getResources().getString(R.string.correct).toUpperCase());
 
             for (Answer a : ((ChoiceComponent) current.getFirst(EComponent.CHOICE)).getAnswers()) {
                 if (a.isCorrect() != a.isSelected()) {
                     // At least on answer is wrong : WRONG
-                    ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue("WRONG");
+                    ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(c.getResources().getString(R.string.correct).toUpperCase());
                     break;
                 }
             }
