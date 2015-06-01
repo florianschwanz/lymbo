@@ -9,6 +9,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.fortysevendeg.swipelistview.SwipeListView;
@@ -17,14 +19,16 @@ import com.github.mrengineer13.snackbar.SnackBar;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.LymbosController;
+import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
-import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.AddStackDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 
-public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener, DisplayDialogFragment.OnCompleteListener {
+public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddStackDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
     private LymbosController lymbosController = LymbosController.getInstance();
     private CardsController cardsController = CardsController.getInstance();
@@ -32,6 +36,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     // Views
     private SwipeRefreshLayout srl;
     private SwipeListView slv;
+    private ImageButton ibFab;
     private LinearLayout toolbarWrapper;
 
     // Model
@@ -75,8 +80,23 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
         slv.setAdapter(lymbosAdapter);
         slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
 
+        ibFab = (ImageButton) findViewById(R.id.fab);
+        ibFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddStackDialogFragment addStackDialogFragment = new AddStackDialogFragment();
+                Bundle b = new Bundle();
+                b.putString("type", EDialogType.ADD_STACK.toString());
+                b.putString("title", getResources().getString(R.string.add_stack));
+
+                addStackDialogFragment.setArguments(b);
+                addStackDialogFragment.show(getFragmentManager(), "okay");
+            }
+        });
+
         updateSwipeRefreshProgressBarTop();
         registerHideableHeaderView(toolbarWrapper);
+        registerHideableFooterView(ibFab);
         enableActionBarAutoHide(slv);
     }
 
@@ -112,40 +132,6 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
                 startActivity(i);
                 break;
             }
-            /*
-            case R.id.menu_add: {
-                InputDialogFragment inputDialogFragment = new InputDialogFragment();
-                Bundle b = new Bundle();
-                b.putString("type", "CREATE_STACK");
-                b.putString("title", a.getResources().getString(R.string.txtNewStack));
-                b.putString("message", a.getResources().getString(R.string.txtChooseName));
-                b.putString("hint", "");
-
-                inputDialogFragment.setArguments(b);
-                inputDialogFragment.show(a.getFragmentManager(), "okay");
-
-                break;
-            }
-            case R.id.menu_refresh: {
-                findLymboFiles();
-                clear();
-                draw();
-                break;
-            }
-            case R.id.menu_download: {
-                InputDialogFragment inputDialogFragment = new InputDialogFragment();
-                Bundle b = new Bundle();
-                b.putString("type", "DOWNLOAD_BLOB");
-                b.putString("title", a.getResources().getString(R.string.txtDownloadFromBlob));
-                b.putString("message", a.getResources().getString(R.string.txtEnterBlobCode));
-                b.putString("hint", "");
-
-                inputDialogFragment.setArguments(b);
-                inputDialogFragment.show(a.getFragmentManager(), "okay");
-
-                break;
-            }
-            */
             default: {
                 return super.onOptionsItemSelected(item);
             }
@@ -199,13 +185,13 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     // --------------------
 
     @Override
-    public void onHintDialogComplete() {
+    public void onAddStack(String title, String subtitle, String author) {
+        Lymbo lymbo = lymbosController.getEmptyLymbo(title, subtitle, author);
 
-    }
-
-    @Override
-    public void onDiscardCardDialogComplete() {
-
+        lymbosController.addStack(lymbo);
+        lymbosAdapter.add(lymbo);
+        lymbosAdapter.notifyDataSetChanged();
+        slv.invalidateViews();
     }
 
     // --------------------
@@ -216,16 +202,4 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     protected int getLayoutResource() {
         return R.layout.activity_lymbos;
     }
-
-    /*
-    public void uiRefresh() {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                clear();
-                draw();
-            }
-        });
-    }
-    */
 }

@@ -7,17 +7,19 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.view.controls.RobotoEditText;
 
-public class SimpleCardDialogFragment extends DialogFragment {
+public class AddStackDialogFragment extends DialogFragment {
     private static EDialogType type = EDialogType.NULL;
 
-    private RobotoEditText retFront;
-    private RobotoEditText retBack;
+    private EditText etTitle;
+    private EditText etSubtitle;
+    private EditText etAuthor;
 
     private OnCompleteListener ocListener;
 
@@ -25,7 +27,7 @@ public class SimpleCardDialogFragment extends DialogFragment {
     // Constructors
     // --------------------
 
-    public SimpleCardDialogFragment() {
+    public AddStackDialogFragment() {
     }
 
     // --------------------
@@ -36,13 +38,14 @@ public class SimpleCardDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Context c = getActivity();
+        final Context c = getActivity();
 
         // Load layout
-        final View v = View.inflate(c, R.layout.dialogfragment_simplecard, null);
+        final View v = View.inflate(c, R.layout.dialogfragment_addstack, null);
 
-        retFront = (RobotoEditText) v.findViewById(R.id.retFront);
-        retBack = (RobotoEditText) v.findViewById(R.id.retBack);
+        etTitle = (EditText) v.findViewById(R.id.etTitle);
+        etSubtitle = (EditText) v.findViewById(R.id.etSubtitle);
+        etAuthor = (EditText) v.findViewById(R.id.etAuthor);
 
         // Load dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -51,8 +54,8 @@ public class SimpleCardDialogFragment extends DialogFragment {
 
         // Determine type
         switch (b.getString("type")) {
-            case "ADD_SIMPLE_CARD":
-                type = EDialogType.ADD_SIMPLE_CARD;
+            case "ADD_STACK":
+                type = EDialogType.ADD_STACK;
                 break;
         }
 
@@ -62,12 +65,31 @@ public class SimpleCardDialogFragment extends DialogFragment {
 
         // Add positive button
         switch (type) {
-            case ADD_SIMPLE_CARD: {
+            case ADD_STACK: {
                 builder.setPositiveButton(R.string.okay, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ocListener.onAddSimpleCard(retFront.getText().toString(), retBack.getText().toString());
-                        dismiss();
+                        String title = etTitle.getText().toString().trim();
+                        String subtitle = etSubtitle.getText().toString().trim();
+                        String author = etAuthor.getText().toString().trim();
+
+                        Drawable dWarning = c.getResources().getDrawable(R.drawable.ic_action_warning);
+                        boolean valid = true;
+
+                        if (title.isEmpty()) {
+                            etTitle.setError(c.getResources().getString(R.string.field_must_not_be_empty), dWarning);
+                            valid = false;
+                        }
+
+                        if (author.isEmpty()) {
+                            etAuthor.setError(c.getResources().getString(R.string.field_must_not_be_empty), dWarning);
+                            valid = false;
+                        }
+
+                        if (valid) {
+                            ocListener.onAddStack(title, subtitle, author);
+                            dismiss();
+                        }
                     }
                 });
                 break;
@@ -86,7 +108,7 @@ public class SimpleCardDialogFragment extends DialogFragment {
 
         // Add negative button
         switch (type) {
-            case ADD_SIMPLE_CARD: {
+            case ADD_STACK: {
                 builder.setNegativeButton(R.string.cancel, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -118,7 +140,7 @@ public class SimpleCardDialogFragment extends DialogFragment {
 // --------------------
 
     public static interface OnCompleteListener {
-        public abstract void onAddSimpleCard(String frontText, String backText);
+        public abstract void onAddStack(String title, String subtitle, String author);
     }
 
     public void onAttach(Activity activity) {

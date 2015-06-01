@@ -96,6 +96,7 @@ public class LymboParser {
         Lymbo lymbo = new Lymbo();
 
         // Read attributes
+        String id = parser.getAttributeValue(null, "id");
         String title = parser.getAttributeValue(null, "title");
         String subtitle = parser.getAttributeValue(null, "subtitle");
         String hint = parser.getAttributeValue(null, "hint");
@@ -141,6 +142,8 @@ public class LymboParser {
         }
 
         // Fill element
+        if (id != null)
+            lymbo.setId(id);
         if (title != null)
             lymbo.setTitle(title);
         if (subtitle != null)

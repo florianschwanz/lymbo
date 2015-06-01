@@ -2,7 +2,9 @@
 <resources>
 
     <string name="add_card">Add card</string>
+    <string name="add_stack">Add stack</string>
     <string name="app_name">lymbo</string>
+    <string name="author">Author</string>
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
     <string name="chapters">Chapters</string>
@@ -11,6 +13,7 @@
     <string name="download_the_attachment">Download the attachment to use this lymbo</string>
     <string name="discard">Discard</string>
     <string name="edit">Edit</string>
+    <string name="field_must_not_be_empty">Field must not be empty</string>
     <string name="fraction">/</string>
     <string name="front">Front</string>
     <string name="hint">Hint</string>
@@ -34,6 +37,7 @@
     <string name="stack_restored">Stack restored</string>
     <string name="stack_stashed">Stack stashed</string>
     <string name="stash">Stash</string>
+    <string name="subtitle">Subtitle</string>
     <string name="tags">Tags</string>
     <string name="text">Text</string>
     <string name="title">Title</string>

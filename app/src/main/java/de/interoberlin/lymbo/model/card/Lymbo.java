@@ -24,12 +24,13 @@ public class Lymbo implements Displayable {
     private String path;
     private boolean asset;
 
+    private String id = "";
     private String title = "";
     private String subtitle = "";
     private String hint = "";
     private String image = "";
     private String author = "";
-    private List<Card> cards;
+    private List<Card> cards = new ArrayList<>();
 
     // -------------------------
     // Constructors
@@ -171,6 +172,14 @@ public class Lymbo implements Displayable {
     // -------------------------
     // Getters / Setters
     // -------------------------
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getPath() {
         return path;
