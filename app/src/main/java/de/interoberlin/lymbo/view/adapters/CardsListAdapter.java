@@ -23,6 +23,7 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Side;
+import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 import de.interoberlin.lymbo.model.card.components.ResultComponent;
@@ -72,6 +73,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
                 // Load views : bottom bar
                 final LinearLayout llBottom = (LinearLayout) flCard.findViewById(R.id.llBottom);
+                final LinearLayout llTags = (LinearLayout) flCard.findViewById(R.id.llTags);
+                final View divider = (View) flCard.findViewById(R.id.divider);
+                final LinearLayout llIconbar = (LinearLayout) flCard.findViewById(R.id.llIconbar);
                 final LinearLayout llFlip = (LinearLayout) flCard.findViewById(R.id.llFlip);
                 final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
                 final TextView tvDenominator = (TextView) flCard.findViewById(R.id.tvDenominator);
@@ -91,6 +95,12 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 }
 
                 rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
+
+                // Tags
+                for (Tag tag : card.getTags()) {
+                    if (!tag.getName().equals(c.getResources().getString(R.string.no_tag)))
+                        llTags.addView(tag.getView(c, a, llTags));
+                }
 
                 // Action : flip
                 if (card.isFlip() && card.getSides().size() > 1) {
@@ -144,7 +154,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
                 // Remove bottom bar if unnecessary
                 if (card.getSides().size() < 2 && !card.isEdit() && card.getHint() == null) {
-                    remove(llBottom);
+                    remove(divider);
+                    remove(llIconbar);
                 }
 
                 // Reveal : dismiss

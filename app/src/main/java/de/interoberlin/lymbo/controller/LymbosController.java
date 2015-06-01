@@ -278,6 +278,10 @@ public class LymbosController extends Application {
     // Getters / Setters
     // --------------------
 
+    public Context getContext() {
+        return context;
+    }
+
     public List<Lymbo> getLymbos() {
         if (lymbos.get(0) != null) {
             lymbos.add(0, null);

@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
@@ -230,13 +232,13 @@ public class LymboParser {
         if (chapter != null) {
             card.setChapter(parseTag(chapter));
         } else {
-            card.setChapter(new Tag("< no chapter >"));
+            card.setChapter(new Tag(LymbosController.getInstance().getContext().getResources().getString(R.string.no_chapter)));
         }
         if (tags != null) {
             card.setTags(parseTags(tags));
         } else {
             List<Tag> defaultTags = new ArrayList<>();
-            defaultTags.add(new Tag("< no tag >"));
+            defaultTags.add(new Tag(LymbosController.getInstance().getContext().getResources().getString(R.string.no_tag)));
             card.setTags(defaultTags);
         }
         if (flip != null)

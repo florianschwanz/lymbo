@@ -27,6 +27,8 @@
     <string name="menu_shuffle">Shuffle</string>
     <string name="menu_stash">Stash</string>
     <string name="message">Message</string>
+    <string name="no_chapter">no chapter</string>
+    <string name="no_tag">no tag</string>
     <string name="not_yet_implemented">Not yet implemented</string>
     <string name="okay">Okay</string>
     <string name="search_lymbo_files">Searching for lymbo files</string>

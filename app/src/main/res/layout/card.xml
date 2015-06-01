@@ -32,8 +32,7 @@
             android:minWidth="@dimen/reveal_icon_size"
             android:paddingStart="@dimen/reveal_icon_padding"
             android:paddingEnd="@dimen/reveal_icon_padding"
-            android:src="@drawable/ic_action_accept"
-             />
+            android:src="@drawable/ic_action_accept" />
 
         <ImageView
             android:id="@+id/ivToEnd"
@@ -78,12 +77,23 @@
                 android:id="@+id/llBottom"
                 android:orientation="vertical">
 
+                <!-- Tags -->
+                <LinearLayout
+                    android:id="@+id/llTags"
+                    android:gravity="start"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <!-- Divider -->
                 <View
+                    android:id="@+id/divider"
                     android:layout_width="fill_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="14dp"
                     android:background="@color/stroke" />
 
+                <!-- Bottom icons -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
