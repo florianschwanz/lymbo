@@ -69,6 +69,11 @@ public class CardsController {
         lymbosController.changeLocation(lymbo.getPath(), false);
     }
 
+    public void addSimpleCard(String frontText, String backText) {
+        addCard(getSimpleCard(frontText, backText));
+        save();
+    }
+
     public Card getSimpleCard(String frontText, String backText) {
         Card card = new Card();
         card.setId(UUID.randomUUID().toString());
@@ -98,6 +103,33 @@ public class CardsController {
     public void shuffle() {
         Collections.shuffle(cards);
         addNullElement(cards);
+    }
+
+    /**
+     * Puts a card with a given index to the end
+     *
+     * @param pos index of the card to be moved
+     */
+    public void putToEnd(int pos) {
+        Card card = getCards().get(pos);
+        card.reset();
+
+        getCards().add(card);
+        getCards().remove(pos);
+    }
+
+    /**
+     * Puts a card from the end to a given position
+     *
+     * @param pos index to put card
+     */
+    public void putLastItemToPos(int pos) {
+        int lastItem = getCards().size() - 1;
+
+        Card card = getCards().get(lastItem);
+
+        getCards().remove(lastItem);
+        getCards().add(pos, card);
     }
 
     /**

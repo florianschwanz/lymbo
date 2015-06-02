@@ -155,23 +155,6 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
         }, REFRESH_DELAY);
     }
 
-    /**
-     * Stashes the current lymbo
-     */
-    public void stash() {
-        cardsController.stash();
-        lymbosAdapter.notifyDataSetChanged();
-        slv.invalidateViews();
-
-        new SnackBar.Builder(this)
-                .withOnClickListener(this)
-                .withMessageId(R.string.stack_stashed)
-                .withActionMessageId(R.string.undo)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
-    }
-
     @Override
     public void onMessageClick(Parcelable token) {
         cardsController.restore();
@@ -200,5 +183,21 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     @Override
     protected int getLayoutResource() {
         return R.layout.activity_lymbos;
+    }
+
+    /**
+     * Stashes the current lymbo
+     */
+    public void stash() {
+        cardsController.stash();
+        slv.invalidateViews();
+
+        new SnackBar.Builder(this)
+                .withOnClickListener(this)
+                .withMessageId(R.string.stack_stashed)
+                .withActionMessageId(R.string.undo)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
     }
 }

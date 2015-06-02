@@ -28,6 +28,7 @@ import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.model.card.enums.EComponent;
+import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
 
@@ -226,11 +227,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
      * @param pos position of item
      */
     private void putToEnd(int pos) {
-        Card card = cardsController.getLymbo().getCards().get(pos);
-        card.reset();
-
-        cardsController.getLymbo().getCards().add(card);
-        cardsController.getLymbo().getCards().remove(pos);
+        cardsController.putToEnd(pos);
+        ((CardsActivity) a).putToEnd(pos);
         notifyDataSetChanged();
     }
 

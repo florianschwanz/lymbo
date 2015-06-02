@@ -46,5 +46,7 @@
     <string name="field_must_not_be_empty">Field must not be empty</string>
     <string name="correct">correct</string>
     <string name="wrong">wrong</string>
+    <string name="no_chapter">no chapter</string>
+    <string name="no_tag">not tag</string>
 
 </resources>

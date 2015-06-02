@@ -105,6 +105,9 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 @Override
                 public void onClick(View view) {
                     cardsController.setLymbo(lymbo);
+                    notifyDataSetChanged();
+
+                    // Update view
                     ((LymbosActivity) a).stash();
                 }
             });

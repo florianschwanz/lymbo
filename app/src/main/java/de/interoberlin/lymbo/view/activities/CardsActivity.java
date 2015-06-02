@@ -3,6 +3,7 @@ package de.interoberlin.lymbo.view.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.os.Vibrator;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 
 import com.fortysevendeg.swipelistview.BaseSwipeListViewListener;
 import com.fortysevendeg.swipelistview.SwipeListView;
+import com.github.mrengineer13.snackbar.SnackBar;
 
 import java.io.File;
 
@@ -32,7 +34,7 @@ import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
 import de.interoberlin.lymbo.view.dialogfragments.SimpleCardDialogFragment;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, SimpleCardDialogFragment.OnCompleteListener, DisplayDialogFragment.OnCompleteListener, CheckboxDialogFragment.OnLabelSelectedListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, SimpleCardDialogFragment.OnCompleteListener, DisplayDialogFragment.OnCompleteListener, CheckboxDialogFragment.OnLabelSelectedListener, SnackBar.OnMessageClickListener {
     // Controllers
     CardsController cardsController = CardsController.getInstance();
 
@@ -52,6 +54,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     private final String BUNDLE_LYMBO_PATH = "lymbo_path";
     private final String BUNDLE_ASSET = "asset";
+
+    private int previousCardId = -1;
 
     private static int REFRESH_DELAY;
 
@@ -258,6 +262,27 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         super.onSaveInstanceState(savedInstanceState);
     }
 
+    // --------------------
+    // Methods
+    // --------------------
+
+    /**
+     * Puts a card with a given index to the end
+     *
+     * @param pos index of the card to be moved
+     */
+    public void putToEnd(int pos) {
+        slv.invalidateViews();
+        previousCardId = pos;
+
+        new SnackBar.Builder(this)
+                .withOnClickListener(this)
+                .withMessageId(R.string.put_card_to_end)
+                .withActionMessageId(R.string.undo)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
 
     private int getFirst() {
         int first = slv.getFirstVisiblePosition();
@@ -273,10 +298,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public void onAddSimpleCard(String frontText, String backText) {
-        Card card = cardsController.getSimpleCard(frontText, backText);
-
-        cardsController.addCard(card);
-        cardsController.save();
+        cardsController.addSimpleCard(frontText, backText);
         cardsAdapter.notifyDataSetChanged();
         slv.invalidateViews();
     }
@@ -296,6 +318,13 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         cardsAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onMessageClick(Parcelable parcelable) {
+        cardsController.putLastItemToPos(previousCardId);
+        cardsAdapter.notifyDataSetChanged();
+        slv.invalidateViews();
+    }
+
     // --------------------
     // Methods
     // --------------------
@@ -303,45 +332,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     @Override
     protected int getLayoutResource() {
         return R.layout.activity_cards;
-    }
-
-    /*
-    @Override
-    public void onCreateStackDialogComplete(String input) {
-        StackController.createEmptyStack(input);
-        StackController.findLymboFiles();
-
-        clear();
-        draw();
-    }
-    */
-
-    /*
-    @Override
-    public void onChangeStackDialogComplete(final String input, final String file) {
-        StackController.renameStack(input, file);
-        StackController.findLymboFiles();
-
-        clear();
-        draw();
-    }
-    */
-
-    /*
-    @Override
-    public void onDiscardStackDialogComplete() {
-        StackController.removeStack(Properties.getCurrentFileString());
-        StackController.findLymboFiles();
-
-        clear();
-        draw();
-    }
-    */
-
-    /*
-    @Override
-    public void onDiscardCardDialogComplete() {
-        // Not relevant
     }
 
     /*

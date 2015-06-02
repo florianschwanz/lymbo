@@ -46,5 +46,8 @@
     <string name="field_must_not_be_empty">Feld darf nicht leer sein</string>
     <string name="correct">richtig</string>
     <string name="wrong">falsch</string>
+    <string name="no_chapter">kein Kapitel</string>
+    <string name="no_tag">kein Tag</string>
+    <string name="put_card_to_end">Lege Karte ans Ende</string>
 
 </resources>
