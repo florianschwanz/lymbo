@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -277,8 +278,12 @@ public class LymbosController extends Application {
      * @param list list which shall be extended by a leading null element
      */
     public void addNullElement(List<Lymbo> list) {
-        if (!list.isEmpty() && list.get(0) != null) {
-            list.add(0, null);
+        if (!list.isEmpty()) {
+            list.removeAll(Collections.singleton(null));
+
+            if (list.get(0) != null) {
+                list.add(0, null);
+            }
         }
     }
 

@@ -18,7 +18,6 @@ import com.fortysevendeg.swipelistview.BaseSwipeListViewListener;
 import com.fortysevendeg.swipelistview.SwipeListView;
 
 import java.io.File;
-import java.util.Collections;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
@@ -197,7 +196,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         switch (item.getItemId()) {
             case R.id.menu_shuffle: {
                 ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-                Collections.shuffle(lymbo.getCards());
+                cardsController.shuffle();
                 cardsAdapter.notifyDataSetChanged();
                 break;
             }

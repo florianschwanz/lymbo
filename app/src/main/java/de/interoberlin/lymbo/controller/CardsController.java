@@ -2,6 +2,7 @@ package de.interoberlin.lymbo.controller;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -94,14 +95,23 @@ public class CardsController {
         }
     }
 
+    public void shuffle() {
+        Collections.shuffle(cards);
+        addNullElement(cards);
+    }
+
     /**
      * This is necessary to display the first element below the toolbar
      *
      * @param list list which shall be extended by a leading null element
      */
     public void addNullElement(List<Card> list) {
-        if (!list.isEmpty() && list.get(0) != null) {
-            list.add(0, null);
+        if (!list.isEmpty()) {
+            list.removeAll(Collections.singleton(null));
+
+            if (list.get(0) != null) {
+                list.add(0, null);
+            }
         }
     }
 
