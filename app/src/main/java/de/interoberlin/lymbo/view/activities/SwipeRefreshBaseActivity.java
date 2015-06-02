@@ -143,7 +143,7 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
                         .setInterpolator(new DecelerateInterpolator());
             } else {
                 view.animate()
-                        .translationY(view.getHeight() + view.getPaddingBottom())
+                        .translationY(view.getHeight() + view.getPaddingBottom() + getResources().getDimension(R.dimen.hide_cushion))
                         .alpha(1)
                         .setDuration(HEADER_HIDE_ANIM_DURATION)
                         .setInterpolator(new DecelerateInterpolator());
