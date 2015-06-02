@@ -94,6 +94,17 @@ public class CardsController {
         }
     }
 
+    /**
+     * This is necessary to display the first element below the toolbar
+     *
+     * @param list list which shall be extended by a leading null element
+     */
+    public void addNullElement(List<Card> list) {
+        if (!list.isEmpty() && list.get(0) != null) {
+            list.add(0, null);
+        }
+    }
+
     // --------------------
     // Getters / Setters
     // --------------------
@@ -107,9 +118,7 @@ public class CardsController {
     }
 
     public List<Card> getCards() {
-        if (!cards.isEmpty() && cards.get(0) != null) {
-            cards.add(0, null);
-        }
+        addNullElement(cards);
 
         return cards;
     }

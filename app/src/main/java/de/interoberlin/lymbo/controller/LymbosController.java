@@ -88,7 +88,7 @@ public class LymbosController extends Application {
      * @param title    title of new stack
      * @param subtitle subtitle of new stack
      * @param author   author of new stack
-     * @return
+     * @return empty lymbo stack
      */
     public Lymbo getEmptyLymbo(String title, String subtitle, String author) {
         Lymbo lymbo = new Lymbo();
@@ -136,11 +136,6 @@ public class LymbosController extends Application {
         datasource = new LymboLocationDatasource(context);
         datasource.open();
 
-        // Scan for lymbo files if no files are known
-        if (datasource.getAllLocations().isEmpty()) {
-            scan();
-        }
-
         // Retrieve lymbo files from locations cache
         Collection<File> lymboFiles = new ArrayList<>();
         Collection<File> lymboFilesStashed = new ArrayList<>();
@@ -160,9 +155,11 @@ public class LymbosController extends Application {
         lymbos.clear();
         lymbos.addAll(getLymbosFromAssets());
         lymbos.addAll(getLymbosFromFiles(lymboFiles));
+        addNullElement(lymbos);
 
         lymbosStashed.clear();
         lymbosStashed.addAll(getLymbosFromFiles(lymboFilesStashed));
+        addNullElement(lymbosStashed);
 
         datasource.close();
         loaded = true;
@@ -274,6 +271,17 @@ public class LymbosController extends Application {
         return externalStorageAvailable && externalStorageWriteable;
     }
 
+    /**
+     * This is necessary to display the first element below the toolbar
+     *
+     * @param list list which shall be extended by a leading null element
+     */
+    public void addNullElement(List<Lymbo> list) {
+        if (!list.isEmpty() && list.get(0) != null) {
+            list.add(0, null);
+        }
+    }
+
     // --------------------
     // Getters / Setters
     // --------------------
@@ -283,14 +291,14 @@ public class LymbosController extends Application {
     }
 
     public List<Lymbo> getLymbos() {
-        if (lymbos.get(0) != null) {
-            lymbos.add(0, null);
-        }
+        addNullElement(lymbos);
 
         return lymbos;
     }
 
     public List<Lymbo> getLymbosStashed() {
+        addNullElement(lymbosStashed);
+
         return lymbosStashed;
     }
 
