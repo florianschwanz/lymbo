@@ -39,8 +39,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     CardsController cardsController = CardsController.getInstance();
     // ComponentsController componentsController = ComponentsController.getInstance();
 
-    private int VIBRATION_DURATION = 40;
-
     // --------------------
     // Constructors
     // --------------------
@@ -72,9 +70,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
 
                 // Load views : bottom bar
-                final LinearLayout llBottom = (LinearLayout) flCard.findViewById(R.id.llBottom);
                 final LinearLayout llTags = (LinearLayout) flCard.findViewById(R.id.llTags);
-                final View divider = (View) flCard.findViewById(R.id.divider);
+                final View divider = flCard.findViewById(R.id.divider);
                 final LinearLayout llIconbar = (LinearLayout) flCard.findViewById(R.id.llIconbar);
                 final LinearLayout llFlip = (LinearLayout) flCard.findViewById(R.id.llFlip);
                 final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
@@ -230,6 +227,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
      */
     private void putToEnd(int pos) {
         Card card = cardsController.getLymbo().getCards().get(pos);
+        card.reset();
 
         cardsController.getLymbo().getCards().add(card);
         cardsController.getLymbo().getCards().remove(pos);
@@ -242,6 +240,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
      * @param flCard frameLayout of card
      */
     private void flip(Card card, FrameLayout flCard) {
+        int VIBRATION_DURATION = 40;
+
         ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
 
         final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);

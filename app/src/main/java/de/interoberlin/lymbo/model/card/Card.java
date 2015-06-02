@@ -3,6 +3,10 @@ package de.interoberlin.lymbo.model.card;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.interoberlin.lymbo.model.Displayable;
+import de.interoberlin.lymbo.model.card.components.Answer;
+import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
+
 public class Card {
     private String id;
     private List<Side> sides;
@@ -51,6 +55,23 @@ public class Card {
             }
         }
         return false;
+    }
+
+    /**
+     * Brings card into initial state
+     */
+    public void reset() {
+        sideVisible = 0;
+
+        for (Side side : getSides()) {
+            for (Displayable component : side.getComponents()) {
+                if (component instanceof ChoiceComponent) {
+                    for (Answer answer : ((ChoiceComponent) component).getAnswers()) {
+                        answer.setSelected(false);
+                    }
+                }
+            }
+        }
     }
 
     // -------------------------
