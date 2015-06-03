@@ -42,6 +42,8 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     // Model
     private LymbosListAdapter lymbosAdapter;
 
+    private Lymbo recentLymbo = null;
+
     private static int REFRESH_DELAY;
 
     // --------------------
@@ -59,7 +61,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(false);
 
-        REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY));
+        REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_LYMBOS));
     }
 
     public void onResume() {
@@ -157,7 +159,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
     @Override
     public void onMessageClick(Parcelable token) {
-        cardsController.restore();
+        cardsController.restore(recentLymbo);
         lymbosAdapter.notifyDataSetChanged();
         slv.invalidateViews();
     }
@@ -186,11 +188,14 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     }
 
     /**
-     * Stashes the current lymbo
+     * Stashes a lymbo
+     *
+     * @param lymbo lymbo to be stashed
      */
-    public void stash() {
-        cardsController.stash();
+    public void stash(Lymbo lymbo) {
         slv.invalidateViews();
+
+        recentLymbo = lymbo;
 
         new SnackBar.Builder(this)
                 .withOnClickListener(this)

@@ -60,8 +60,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         final Card card = getItem(position);
 
         if (card != null) {
-
-            if (card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
+            if (!card.isDiscarded() && card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
                 // Layout inflater
                 LayoutInflater vi;
                 vi = LayoutInflater.from(getContext());
@@ -167,16 +166,15 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             */
 
                 // Reveal : discard
-            /*
-            ivDiscard.setOnC lickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    discard(position);
-                }
-            });
-            */
+                ivDiscard.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        discard(position);
+                    }
+                });
 
-                // Reveal : discard
+
+                // Reveal : put to end
                 ivPutToEnd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -216,8 +214,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
      * @param pos position of item
      */
     private void discard(int pos) {
-        cardsController.getLymbo().getCards().remove(pos);
-        cardsController.save();
+        cardsController.discard(pos);
+        ((CardsActivity) a).discard(pos);
         notifyDataSetChanged();
     }
 

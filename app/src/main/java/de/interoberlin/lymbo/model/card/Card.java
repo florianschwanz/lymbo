@@ -20,6 +20,8 @@ public class Card {
 
     private int sideVisible = 0;
 
+    private boolean discarded = false;
+
     // -------------------------
     // Constructors
     // -------------------------
@@ -62,6 +64,7 @@ public class Card {
      */
     public void reset() {
         sideVisible = 0;
+        discarded = false;
 
         for (Side side : getSides()) {
             for (Displayable component : side.getComponents()) {
@@ -142,4 +145,11 @@ public class Card {
         this.sideVisible = sideVisible;
     }
 
+    public boolean isDiscarded() {
+        return discarded;
+    }
+
+    public void setDiscarded(boolean discarded) {
+        this.discarded = discarded;
+    }
 }

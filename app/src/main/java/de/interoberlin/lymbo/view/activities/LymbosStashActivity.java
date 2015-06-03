@@ -22,11 +22,10 @@ import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.LymbosStashListAdapter;
-import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 
-public class LymbosStashActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener, DisplayDialogFragment.OnCompleteListener {
+public class LymbosStashActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener {
     // Controllers
     LymbosController lymbosController = LymbosController.getInstance();
     CardsController cardsController = CardsController.getInstance();
@@ -38,6 +37,8 @@ public class LymbosStashActivity extends BaseActivity implements SwipeRefreshLay
     // Model
     private List<Lymbo> lymbos;
     private LymbosStashListAdapter lymbosStashedAdapter;
+
+    private Lymbo recentLymbo = null;
 
     private static int REFRESH_DELAY;
 
@@ -57,7 +58,7 @@ public class LymbosStashActivity extends BaseActivity implements SwipeRefreshLay
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(true);
 
-        REFRESH_DELAY =  Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY));
+        REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_LYMBOS));
     }
 
     public void onResume() {
@@ -128,10 +129,15 @@ public class LymbosStashActivity extends BaseActivity implements SwipeRefreshLay
         }, REFRESH_DELAY);
     }
 
-    public void restore() {
-        cardsController.restore();
-        lymbosStashedAdapter.notifyDataSetChanged();
+    /**
+     * Restores a lymbo
+     *
+     * @param lymbo lymbo to be restored
+     */
+    public void restore(Lymbo lymbo) {
         slv.invalidateViews();
+
+        recentLymbo = lymbo;
 
         new SnackBar.Builder(this)
                 .withOnClickListener(this)
@@ -144,21 +150,9 @@ public class LymbosStashActivity extends BaseActivity implements SwipeRefreshLay
 
     @Override
     public void onMessageClick(Parcelable token) {
-        cardsController.stash();
+        cardsController.stash(recentLymbo);
         lymbosStashedAdapter.notifyDataSetChanged();
         slv.invalidateViews();
-    }
-
-    // --------------------
-    // Methods - Callbacks
-    // --------------------
-
-    @Override
-    public void onHintDialogComplete() {
-    }
-
-    @Override
-    public void onDiscardCardDialogComplete() {
     }
 
     // --------------------

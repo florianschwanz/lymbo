@@ -23,7 +23,6 @@ import java.io.File;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.persistence.LymboLoader;
 import de.interoberlin.lymbo.util.Configuration;
@@ -55,7 +54,11 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private final String BUNDLE_LYMBO_PATH = "lymbo_path";
     private final String BUNDLE_ASSET = "asset";
 
-    private int previousCardId = -1;
+    private int recentCardId = -1;
+    private int recentEvent = -1;
+
+    private static final int EVENT_DISCARD = 0;
+    private static final int EVENT_PUT_TO_END = 1;
 
     private static int REFRESH_DELAY;
 
@@ -90,7 +93,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(true);
 
-        REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY));
+        REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_CARDS));
+
+        context = this;
     }
 
     public void onResume() {
@@ -204,14 +209,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 cardsAdapter.notifyDataSetChanged();
                 break;
             }
-            case R.id.menu_refresh: {
-                ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-                for (Card c : lymbo.getCards()) {
-                    // c.setDismissed(false);
-                }
-                cardsAdapter.notifyDataSetChanged();
-                break;
-            }
             case R.id.menu_label: {
                 ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
                 CheckboxDialogFragment checkboxDialogFragment = new CheckboxDialogFragment();
@@ -233,8 +230,12 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // srl.setRefreshing(false);
-                // slv.invalidateViews();
+                srl.setRefreshing(false);
+
+                cardsController.reset();
+
+                cardsAdapter.notifyDataSetChanged();
+                slv.invalidateViews();
             }
         }, REFRESH_DELAY);
     }
@@ -266,6 +267,26 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     // Methods
     // --------------------
 
+
+    /**
+     * Discards a card from the current stack
+     *
+     * @param pos index of the card to be discarded
+     */
+    public void discard(int pos) {
+        slv.invalidateViews();
+        recentCardId = pos;
+        recentEvent = EVENT_DISCARD;
+
+        new SnackBar.Builder(this)
+                .withOnClickListener(this)
+                .withMessageId(R.string.discard_card)
+                .withActionMessageId(R.string.undo)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
     /**
      * Puts a card with a given index to the end
      *
@@ -273,7 +294,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
      */
     public void putToEnd(int pos) {
         slv.invalidateViews();
-        previousCardId = pos;
+        recentCardId = pos;
+        recentEvent = EVENT_PUT_TO_END;
 
         new SnackBar.Builder(this)
                 .withOnClickListener(this)
@@ -309,18 +331,23 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onDiscardCardDialogComplete() {
-
-    }
-
-    @Override
     public void onLabelSelected() {
         cardsAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onMessageClick(Parcelable parcelable) {
-        cardsController.putLastItemToPos(previousCardId);
+        switch (recentEvent) {
+            case EVENT_DISCARD: {
+                cardsController.retain(recentCardId);
+                break;
+            }
+            case EVENT_PUT_TO_END: {
+                cardsController.putLastItemToPos(recentCardId);
+                break;
+            }
+        }
+
         cardsAdapter.notifyDataSetChanged();
         slv.invalidateViews();
     }

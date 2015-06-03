@@ -1,5 +1,7 @@
 package de.interoberlin.lymbo.controller;
 
+import android.content.Context;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +12,7 @@ import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
+import de.interoberlin.lymbo.model.persistence.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.LymboWriter;
 
 public class CardsController {
@@ -43,6 +46,28 @@ public class CardsController {
         getCardsFromLymbo();
     }
 
+    /**
+     * Resets all cards
+     */
+    public void reset() {
+        for (Card card : cards) {
+            if (card != null) {
+                card.reset();
+            }
+        }
+    }
+
+    /**
+     * Renames a lymbo file so that it will not be found anymore
+     *
+     * @param lymbo lymbo to be stashed
+     */
+    public void stash(Lymbo lymbo) {
+        lymbosController.getLymbos().remove(lymbo);
+        lymbosController.getLymbosStashed().add(lymbo);
+        lymbosController.changeLocation(lymbo.getPath(), true);
+    }
+
     public void getCardsFromLymbo() {
         if (lymbo != null) {
             cards = lymbo.getCards();
@@ -50,19 +75,11 @@ public class CardsController {
     }
 
     /**
-     * Renames a lymbo file so that it will not be found anymore
-     */
-    public void stash() {
-        lymbosController.getLymbos().remove(lymbo);
-        lymbosController.getLymbosStashed().add(lymbo);
-
-        lymbosController.changeLocation(lymbo.getPath(), true);
-    }
-
-    /**
      * Renames a lymbo file so that it will be found again
+     *
+     * @param lymbo lymbo to be stashed
      */
-    public void restore() {
+    public void restore(Lymbo lymbo) {
         lymbosController.getLymbos().add(lymbo);
         lymbosController.getLymbosStashed().remove(lymbo);
 
@@ -103,6 +120,26 @@ public class CardsController {
     public void shuffle() {
         Collections.shuffle(cards);
         addNullElement(cards);
+    }
+
+    /**
+     * Discards a card from the current stack
+     *
+     * @param pos index of the card to be discarded
+     */
+    public void discard(int pos) {
+        getCards().get(pos).setDiscarded(true);
+        // save();
+    }
+
+    /**
+     * Retains a card that has been removed
+     *
+     * @param pos index of the card to be retained
+     */
+    public void retain(int pos) {
+        getCards().get(pos).setDiscarded(false);
+        // save();
     }
 
     /**
@@ -157,6 +194,14 @@ public class CardsController {
 
     public void setLymbo(Lymbo lymbo) {
         this.lymbo = lymbo;
+    }
+
+    public void setFullLymbo(Context c, Lymbo lymbo) {
+        if (lymbo.isAsset()) {
+            this.lymbo = LymboLoader.getLymboFromAsset(c, lymbo.getPath(), false);
+        } else {
+            this.lymbo = LymboLoader.getLymboFromFile(new File(lymbo.getPath()), false);
+        }
     }
 
     public List<Card> getCards() {

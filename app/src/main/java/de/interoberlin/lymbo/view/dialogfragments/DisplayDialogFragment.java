@@ -44,15 +44,6 @@ public class DisplayDialogFragment extends DialogFragment {
 
         // Determine type
         switch (b.getString("type")) {
-            case "ADD_STACK":
-                type = EDialogType.ADD_STACK;
-                break;
-            case "CHANGE_STACK":
-                type = EDialogType.CHANGE_STACK;
-                break;
-            case "DISCARD_CARD":
-                type = EDialogType.DISCARD_CARD;
-                break;
             case "HINT":
                 type = EDialogType.HINT;
                 break;
@@ -72,16 +63,6 @@ public class DisplayDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ocListener.onHintDialogComplete();
-                        dismiss();
-                    }
-                });
-                break;
-            }
-            case DISCARD_CARD: {
-                builder.setPositiveButton(R.string.okay, new OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ocListener.onDiscardCardDialogComplete();
                         dismiss();
                     }
                 });
@@ -135,7 +116,6 @@ public class DisplayDialogFragment extends DialogFragment {
 
     public static interface OnCompleteListener {
         public abstract void onHintDialogComplete();
-        public abstract void onDiscardCardDialogComplete();
     }
 
     public void onAttach(Activity activity) {

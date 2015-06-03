@@ -5,7 +5,8 @@ public enum EProperty {
     LYMBO_FILE_EXTENSION("lymbo_file_extension"),
     LYMBO_LOOKUP_PATH("lymbo_lookup_path"),
     LYMBO_SAVE_PATH("lymbo_save_path"),
-    REFRESH_DELAY("refresh_delay");
+    REFRESH_DELAY_LYMBOS("refresh_delay_lymbos"),
+    REFRESH_DELAY_CARDS("refresh_delay_cards");
 
     private String propertyName;
 

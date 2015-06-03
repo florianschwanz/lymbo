@@ -43,36 +43,45 @@ public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
     public View getView(int position, View v, ViewGroup parent) {
         final Lymbo lymbo = getItem(position);
 
-        // Layout inflater
-        LayoutInflater vi;
-        vi = LayoutInflater.from(getContext());
-        LinearLayout ll = (LinearLayout) vi.inflate(R.layout.stack_stash, parent, false);
+        if (lymbo != null) {
 
-        // Load views
-        TextView tvTitle = (TextView) ll.findViewById(R.id.tvTitle);
-        TextView tvSubtitle = (TextView) ll.findViewById(R.id.tvSubtitle);
-        ImageView ivUndo = (ImageView) ll.findViewById(R.id.ivUndo);
+            // Layout inflater
+            LayoutInflater vi;
+            vi = LayoutInflater.from(getContext());
+            LinearLayout ll = (LinearLayout) vi.inflate(R.layout.stack_stash, parent, false);
 
-        // Set values
-        if (lymbo.getTitle() != null)
-            tvTitle.setText(lymbo.getTitle());
-        if (lymbo.getSubtitle() != null)
-            tvSubtitle.setText(lymbo.getSubtitle());
+            // Load views
+            TextView tvTitle = (TextView) ll.findViewById(R.id.tvTitle);
+            TextView tvSubtitle = (TextView) ll.findViewById(R.id.tvSubtitle);
+            ImageView ivUndo = (ImageView) ll.findViewById(R.id.ivUndo);
 
-        // Action : stash
-        if (lymbo.getPath() != null) {
-            ivUndo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cardsController.setLymbo(lymbo);
-                    ((LymbosStashActivity) a).restore();
-                }
-            });
+            // Set values
+            if (lymbo.getTitle() != null)
+                tvTitle.setText(lymbo.getTitle());
+            if (lymbo.getSubtitle() != null)
+                tvSubtitle.setText(lymbo.getSubtitle());
+
+            // Action : stash
+            if (lymbo.getPath() != null) {
+                ivUndo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cardsController.restore(lymbo);
+                        ((LymbosStashActivity) a).restore(lymbo);
+                        notifyDataSetChanged();
+                    }
+                });
+            } else {
+                remove(ivUndo);
+            }
+
+            return ll;
         } else {
-            remove(ivUndo);
+            // Layout inflater
+            LayoutInflater vi;
+            vi = LayoutInflater.from(getContext());
+            return (LinearLayout) vi.inflate(R.layout.toolbar_space, parent, false);
         }
-
-        return ll;
     }
 
     private void remove(View v) {
