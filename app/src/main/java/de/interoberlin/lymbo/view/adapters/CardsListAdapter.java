@@ -101,7 +101,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 }
 
                 // Action : flip
-                if (card.isFlip() && card.getSides().size() > 1) {
+                if (card.getSides().size() > 1) {
                     tvNumerator.setText(String.valueOf(card.getSideVisible() + 1));
                     tvDenominator.setText(String.valueOf(card.getSides().size()));
 

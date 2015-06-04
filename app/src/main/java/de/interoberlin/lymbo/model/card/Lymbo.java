@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.Displayable;
@@ -37,11 +38,22 @@ public class Lymbo implements Displayable {
     // -------------------------
 
     public Lymbo() {
+        init();
     }
 
     // -------------------------
     // Methods
     // -------------------------
+
+    private void init() {
+        id = UUID.randomUUID().toString();
+        title = "";
+        subtitle = "";
+        hint = null;
+        image = null;
+        author = "";
+        cards = new ArrayList<>();
+    }
 
     @Override
     public View getView(Context c, final Activity a, ViewGroup parent) {

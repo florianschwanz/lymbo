@@ -153,7 +153,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            return (LinearLayout) vi.inflate(R.layout.toolbar_space, parent, false);
+            return vi.inflate(R.layout.toolbar_space, parent, false);
         }
     }
 

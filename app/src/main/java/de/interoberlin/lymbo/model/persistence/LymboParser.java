@@ -14,8 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
@@ -187,9 +185,7 @@ public class LymboParser {
         Card card = new Card();
 
         // Read attributes
-        String flip = parser.getAttributeValue(null, "flip");
         String edit = parser.getAttributeValue(null, "edit");
-
         String hint = parser.getAttributeValue(null, "hint");
         String chapter = parser.getAttributeValue(null, "chapter");
         String tags = parser.getAttributeValue(null, "tags");
@@ -229,20 +225,10 @@ public class LymboParser {
 
         if (hint != null)
             card.setHint(hint);
-        if (chapter != null) {
+        if (chapter != null)
             card.setChapter(parseTag(chapter));
-        } else {
-            card.setChapter(new Tag(LymbosController.getInstance().getContext().getResources().getString(R.string.no_chapter)));
-        }
-        if (tags != null) {
+        if (tags != null)
             card.setTags(parseTags(tags));
-        } else {
-            List<Tag> defaultTags = new ArrayList<>();
-            defaultTags.add(new Tag(LymbosController.getInstance().getContext().getResources().getString(R.string.no_tag)));
-            card.setTags(defaultTags);
-        }
-        if (flip != null)
-            card.setFlip(Boolean.parseBoolean(flip));
         if (edit != null)
             card.setEdit(Boolean.parseBoolean(edit));
 

@@ -114,6 +114,7 @@ public class CardsController {
 
     public void addCard(Card card) {
         cards.add(card);
+        save();
     }
 
     /**

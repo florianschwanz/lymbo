@@ -2,46 +2,61 @@ package de.interoberlin.lymbo.model.card;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 
 public class Card {
-    private String id = "";
-    private List<Side> sides = new ArrayList<>();
+    private LymbosController lymbosController;
 
-    private String hint = null;
-    private Tag chapter = null;
-    private List<Tag> tags = new ArrayList<>();
+    private String id;
+    private List<Side> sides;
 
-    private boolean flip = true;
-    private boolean edit = false;
+    private String hint;
+    private Tag chapter;
+    private List<Tag> tags;
 
-    private int sideVisible = 0;
-
-    private boolean discarded = false;
+    private boolean edit;
+    private int sideVisible;
+    private boolean discarded;
 
     // -------------------------
     // Constructors
     // -------------------------
 
     public Card() {
+        init();
     }
 
     // -------------------------
-    // Constructors
+    // Methods
     // -------------------------
 
-    public boolean matchesChapter(List<Tag> cs) {
-        if (chapter == null)
-            return true;
+    private void init() {
+        lymbosController = LymbosController.getInstance();
 
-        if (cs.isEmpty()) {
+        id = UUID.randomUUID().toString();
+        sides = new ArrayList<>();
+        hint = null;
+        chapter = null;
+        tags = new ArrayList<>();
+        edit = false;
+        sideVisible = 0;
+        discarded = false;
+    }
+
+    public boolean matchesChapter(List<Tag> cs) {
+        String noChapter = lymbosController.getContext().getResources().getString(R.string.no_chapter);
+
+        if (cs == null || cs.isEmpty()) {
             return true;
         } else {
             for (Tag c : cs) {
-                if (chapter == null && c.getName().equals("no chapter") || chapter != null && chapter.getName().equals(c.getName()) && c.isChecked()) {
+                if (chapter == null && c.getName().equals(noChapter) || chapter != null && chapter.getName().equals(c.getName()) && c.isChecked()) {
                     return true;
                 }
             }
@@ -51,16 +66,14 @@ public class Card {
     }
 
     public boolean matchesTag(List<Tag> ts) {
-        if (tags == null || tags.isEmpty())
-            return true;
+        String noTag = lymbosController.getContext().getResources().getString(R.string.no_tag);
 
-        if (ts.isEmpty()) {
+        if (ts == null || ts.isEmpty()) {
             return true;
         } else {
             for (Tag t : ts) {
-                if (tags.isEmpty()) {
-                    if (t.getName().equals("no tag"))
-                        return true;
+                if ((tags == null || tags.isEmpty()) && (t.getName().equals(noTag))) {
+                    return true;
                 } else {
                     for (Tag tag : tags) {
                         if (t.getName().equals(tag.getName()) && t.isChecked())
@@ -70,14 +83,12 @@ public class Card {
             }
         }
 
-
         return false;
     }
 
     /**
      * Brings card into initial state
      */
-
     public void reset() {
         sideVisible = 0;
         discarded = false;
@@ -135,14 +146,6 @@ public class Card {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
-    }
-
-    public boolean isFlip() {
-        return flip;
-    }
-
-    public void setFlip(boolean flip) {
-        this.flip = flip;
     }
 
     public boolean isEdit() {

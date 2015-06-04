@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.persistence.LymboLoader;
@@ -93,7 +92,6 @@ public class LymbosController extends Application {
      */
     public Lymbo getEmptyLymbo(String title, String subtitle, String author) {
         Lymbo lymbo = new Lymbo();
-        lymbo.setId(UUID.randomUUID().toString());
         lymbo.setTitle(title);
         lymbo.setSubtitle(subtitle);
         lymbo.setAuthor(author);

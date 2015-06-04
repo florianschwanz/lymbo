@@ -88,6 +88,7 @@ public class LymboWriter {
         else
             attributes.put("id", UUID.randomUUID().toString());
 
+        attributes.put("edit", String.valueOf(card.isEdit()));
         attributes.put("hint", card.getHint());
 
         addStartTag(tag, attributes);

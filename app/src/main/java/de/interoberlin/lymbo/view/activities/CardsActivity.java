@@ -23,17 +23,18 @@ import java.io.File;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
+import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.persistence.LymboLoader;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
+import de.interoberlin.lymbo.view.dialogfragments.AddSimpleCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.CheckboxDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
-import de.interoberlin.lymbo.view.dialogfragments.SimpleCardDialogFragment;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, SimpleCardDialogFragment.OnCompleteListener, DisplayDialogFragment.OnCompleteListener, CheckboxDialogFragment.OnLabelSelectedListener, SnackBar.OnMessageClickListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddSimpleCardDialogFragment.OnCompleteListener, DisplayDialogFragment.OnCompleteListener, CheckboxDialogFragment.OnLabelSelectedListener, SnackBar.OnMessageClickListener {
     // Controllers
     CardsController cardsController = CardsController.getInstance();
 
@@ -161,13 +162,13 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         ibFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SimpleCardDialogFragment simpleCardDialogFragment = new SimpleCardDialogFragment();
+                AddSimpleCardDialogFragment addSimpleCardDialogFragment = new AddSimpleCardDialogFragment();
                 Bundle b = new Bundle();
                 b.putString("type", EDialogType.ADD_SIMPLE_CARD.toString());
                 b.putString("title", getResources().getString(R.string.add_card));
 
-                simpleCardDialogFragment.setArguments(b);
-                simpleCardDialogFragment.show(getFragmentManager(), "okay");
+                addSimpleCardDialogFragment.setArguments(b);
+                addSimpleCardDialogFragment.show(getFragmentManager(), "okay");
             }
         });
 
@@ -320,11 +321,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public void onAddSimpleCard(String frontText, String backText) {
-        if (frontText == null || frontText.isEmpty())
-            return;
+        Card card = cardsController.getSimpleCard(frontText, backText);
 
-        cardsController.addSimpleCard(frontText, backText);
-        cardsController.save();
+        cardsController.addCard(card);
         cardsAdapter.notifyDataSetChanged();
         slv.invalidateViews();
     }

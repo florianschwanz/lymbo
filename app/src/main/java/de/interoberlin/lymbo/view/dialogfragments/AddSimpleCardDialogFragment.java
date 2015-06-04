@@ -7,13 +7,14 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
 import de.interoberlin.lymbo.R;
 
-public class SimpleCardDialogFragment extends DialogFragment {
+public class AddSimpleCardDialogFragment extends DialogFragment {
     private static EDialogType type = EDialogType.NULL;
 
     private EditText etFront;
@@ -25,7 +26,7 @@ public class SimpleCardDialogFragment extends DialogFragment {
     // Constructors
     // --------------------
 
-    public SimpleCardDialogFragment() {
+    public AddSimpleCardDialogFragment() {
     }
 
     // --------------------
@@ -36,7 +37,7 @@ public class SimpleCardDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Context c = getActivity();
+        final Context c = getActivity();
 
         // Load layout
         final View v = View.inflate(c, R.layout.dialogfragment_simplecard, null);
@@ -66,8 +67,20 @@ public class SimpleCardDialogFragment extends DialogFragment {
                 builder.setPositiveButton(R.string.okay, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ocListener.onAddSimpleCard(etFront.getText().toString(), etBack.getText().toString());
-                        dismiss();
+                        String front = etFront.getText().toString().trim();
+
+                        Drawable dWarning = c.getResources().getDrawable(R.drawable.ic_action_warning);
+                        boolean valid = true;
+
+                        if (front.isEmpty()) {
+                            etFront.setError(c.getResources().getString(R.string.field_must_not_be_empty), dWarning);
+                            valid = false;
+                        }
+
+                        if (valid) {
+                            ocListener.onAddSimpleCard(etFront.getText().toString(), etBack.getText().toString());
+                            dismiss();
+                        }
                     }
                 });
                 break;

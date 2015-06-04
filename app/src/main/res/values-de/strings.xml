@@ -48,6 +48,7 @@
     <string name="wrong">falsch</string>
     <string name="no_chapter">kein Kapitel</string>
     <string name="no_tag">kein Tag</string>
-    <string name="put_card_to_end">Lege Karte ans Ende</string>
+    <string name="put_card_to_end">Karte ans Ende gelegt</string>
+    <string name="discard_card">Karte weggelegt</string>
 
 </resources>
