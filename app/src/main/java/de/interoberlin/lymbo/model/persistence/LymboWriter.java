@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
@@ -53,7 +54,11 @@ public class LymboWriter {
      */
     private static void appendLymbo(String tag, Lymbo lymbo) {
         Map<String, String> attributes = new HashMap<>();
-        attributes.put("id", lymbo.getId());
+        if (lymbo.getId() != null)
+            attributes.put("id", lymbo.getId());
+        else
+            attributes.put("id", UUID.randomUUID().toString());
+
         attributes.put("title", lymbo.getTitle());
         attributes.put("subtitle", lymbo.getSubtitle());
         attributes.put("hint", lymbo.getHint());
@@ -63,7 +68,8 @@ public class LymboWriter {
         addStartTag(tag, attributes);
 
         for (Card card : lymbo.getCards()) {
-            appendCard("card", card);
+            if (card != null)
+                appendCard("card", card);
         }
 
         addEndTag(tag);
@@ -77,16 +83,18 @@ public class LymboWriter {
      */
     private static void appendCard(String tag, Card card) {
         Map<String, String> attributes = new HashMap<>();
-        attributes.put("id", String.valueOf(card.getId()));
+        if (card.getId() != null)
+            attributes.put("id", String.valueOf(card.getId()));
+        else
+            attributes.put("id", UUID.randomUUID().toString());
+
         attributes.put("hint", card.getHint());
 
         addStartTag(tag, attributes);
 
-        if (card.getSides().get(0) != null)
-            appendSide("front", card.getSides().get(0));
-
-        if (card.getSides().get(1) != null)
-            appendSide("back", card.getSides().get(1));
+        for (Side s : card.getSides()) {
+            appendSide("side", s);
+        }
 
         addEndTag(tag);
     }
@@ -197,7 +205,7 @@ public class LymboWriter {
     /**
      * Add a self-closing tag with attributes
      *
-     * @param tag tag name to appended
+     * @param tag        tag name to appended
      * @param attributes attributes to appended
      */
     private static void addTag(String tag, Map<String, String> attributes) {
@@ -224,7 +232,7 @@ public class LymboWriter {
     /**
      * Appends a simple tag to the xml
      *
-     * @param tag tag name to appended
+     * @param tag  tag name to appended
      * @param text text value of the tag
      */
     private static void appendTag(String tag, String text) {

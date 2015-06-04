@@ -9,15 +9,15 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.view.controls.RobotoEditText;
 
 public class SimpleCardDialogFragment extends DialogFragment {
     private static EDialogType type = EDialogType.NULL;
 
-    private RobotoEditText retFront;
-    private RobotoEditText retBack;
+    private EditText etFront;
+    private EditText etBack;
 
     private OnCompleteListener ocListener;
 
@@ -41,8 +41,8 @@ public class SimpleCardDialogFragment extends DialogFragment {
         // Load layout
         final View v = View.inflate(c, R.layout.dialogfragment_simplecard, null);
 
-        retFront = (RobotoEditText) v.findViewById(R.id.retFront);
-        retBack = (RobotoEditText) v.findViewById(R.id.retBack);
+        etFront = (EditText) v.findViewById(R.id.etFront);
+        etBack = (EditText) v.findViewById(R.id.etBack);
 
         // Load dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -66,7 +66,7 @@ public class SimpleCardDialogFragment extends DialogFragment {
                 builder.setPositiveButton(R.string.okay, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ocListener.onAddSimpleCard(retFront.getText().toString(), retBack.getText().toString());
+                        ocListener.onAddSimpleCard(etFront.getText().toString(), etBack.getText().toString());
                         dismiss();
                     }
                 });

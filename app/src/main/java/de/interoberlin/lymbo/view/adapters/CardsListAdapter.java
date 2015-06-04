@@ -93,6 +93,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
                 rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
 
+
                 // Tags
                 for (Tag tag : card.getTags()) {
                     if (!tag.getName().equals(c.getResources().getString(R.string.no_tag)))
@@ -156,14 +157,14 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 }
 
                 // Reveal : dismiss
-            /*
-            btnDismiss.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dismiss(position);
-                }
-            });
-            */
+                /*
+                btnDismiss.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dismiss(position);
+                    }
+                });
+                */
 
                 // Reveal : discard
                 ivDiscard.setOnClickListener(new View.OnClickListener() {
@@ -192,7 +193,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            return (LinearLayout) vi.inflate(R.layout.toolbar_space, parent, false);
+            return vi.inflate(R.layout.toolbar_space, parent, false);
         }
     }
 

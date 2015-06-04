@@ -8,12 +8,12 @@ import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 
 public class Card {
-    private String id;
-    private List<Side> sides;
+    private String id = "";
+    private List<Side> sides = new ArrayList<>();
 
-    private String hint;
-    private Tag chapter;
-    private List<Tag> tags;
+    private String hint = null;
+    private Tag chapter = null;
+    private List<Tag> tags = new ArrayList<>();
 
     private boolean flip = true;
     private boolean edit = false;
@@ -27,17 +27,23 @@ public class Card {
     // -------------------------
 
     public Card() {
-        sides = new ArrayList<>();
-        tags = new ArrayList<>();
     }
 
+    // -------------------------
+    // Constructors
+    // -------------------------
 
     public boolean matchesChapter(List<Tag> cs) {
-        for (Tag c : cs) {
-            if (chapter == null && c.getName().equals("< no chapter >")) {
-                return true;
-            } else if (chapter.getName().equals(c.getName()) && c.isChecked()) {
-                return true;
+        if (chapter == null)
+            return true;
+
+        if (cs.isEmpty()) {
+            return true;
+        } else {
+            for (Tag c : cs) {
+                if (chapter == null && c.getName().equals("no chapter") || chapter != null && chapter.getName().equals(c.getName()) && c.isChecked()) {
+                    return true;
+                }
             }
         }
 
@@ -45,23 +51,33 @@ public class Card {
     }
 
     public boolean matchesTag(List<Tag> ts) {
-        for (Tag t : ts) {
-            if (tags.isEmpty()) {
-                if (t.getName().equals("< no tag >"))
-                    return true;
-            } else {
-                for (Tag tag : tags) {
-                    if (t.getName().equals(tag.getName()) && t.isChecked())
+        if (tags == null || tags.isEmpty())
+            return true;
+
+        if (ts.isEmpty()) {
+            return true;
+        } else {
+            for (Tag t : ts) {
+                if (tags.isEmpty()) {
+                    if (t.getName().equals("no tag"))
                         return true;
+                } else {
+                    for (Tag tag : tags) {
+                        if (t.getName().equals(tag.getName()) && t.isChecked())
+                            return true;
+                    }
                 }
             }
         }
+
+
         return false;
     }
 
     /**
      * Brings card into initial state
      */
+
     public void reset() {
         sideVisible = 0;
         discarded = false;

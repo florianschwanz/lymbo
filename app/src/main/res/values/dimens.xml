@@ -5,10 +5,13 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <!-- Dialog fragments -->
+    <dimen name="dialog_fragment_padding">8dp</dimen>
+
+    <!-- Floating action button -->
     <dimen name="button_margin">5dp</dimen>
     <dimen name="reveal_icon_size">80dp</dimen>
     <dimen name="reveal_icon_padding">40dp</dimen>
-
     <dimen name="hide_cushion">10dp</dimen>
 
     <!-- Toolbar -->

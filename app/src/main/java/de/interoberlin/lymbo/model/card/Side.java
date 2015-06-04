@@ -33,6 +33,12 @@ public class Side implements Displayable {
     public Side() {
     }
 
+    public Side(Displayable... components) {
+        for (Displayable c : components) {
+            this.components.add(c);
+        }
+    }
+
     // -------------------------
     // Methods
     // -------------------------

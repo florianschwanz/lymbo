@@ -3,18 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="@dimen/dialog_fragment_padding"
     android:theme="@style/Theme.AppCompat.Light.Dialog">
 
-    <de.interoberlin.lymbo.view.controls.RobotoEditText
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/front"
-        android:id="@+id/retFront" />
+        android:id="@+id/etFront">
 
-    <de.interoberlin.lymbo.view.controls.RobotoEditText
+        <requestFocus />
+    </EditText>
+
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/back"
-        android:id="@+id/retBack" />
+        android:id="@+id/etBack" />
 
 </LinearLayout>
