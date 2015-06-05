@@ -5,7 +5,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,6 +15,7 @@ import java.util.List;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.LymbosStashActivity;
 
 public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
@@ -48,12 +48,12 @@ public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            LinearLayout ll = (LinearLayout) vi.inflate(R.layout.stack_stash, parent, false);
+            final LinearLayout llStack = (LinearLayout) vi.inflate(R.layout.stack_stash, parent, false);
 
             // Load views
-            TextView tvTitle = (TextView) ll.findViewById(R.id.tvTitle);
-            TextView tvSubtitle = (TextView) ll.findViewById(R.id.tvSubtitle);
-            ImageView ivUndo = (ImageView) ll.findViewById(R.id.ivUndo);
+            TextView tvTitle = (TextView) llStack.findViewById(R.id.tvTitle);
+            TextView tvSubtitle = (TextView) llStack.findViewById(R.id.tvSubtitle);
+            ImageView ivUndo = (ImageView) llStack.findViewById(R.id.ivUndo);
 
             // Set values
             if (lymbo.getTitle() != null)
@@ -66,25 +66,23 @@ public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
                 ivUndo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        ViewUtil.collapse(llStack);
+
                         cardsController.restore(lymbo);
                         ((LymbosStashActivity) a).restore(lymbo);
                         notifyDataSetChanged();
                     }
                 });
             } else {
-                remove(ivUndo);
+                ViewUtil.remove(ivUndo);
             }
 
-            return ll;
+            return llStack;
         } else {
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            return (LinearLayout) vi.inflate(R.layout.toolbar_space, parent, false);
+            return vi.inflate(R.layout.toolbar_space, parent, false);
         }
-    }
-
-    private void remove(View v) {
-        ((ViewManager) v.getParent()).removeView(v);
     }
 }
