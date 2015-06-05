@@ -7,7 +7,6 @@ import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewManager;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -28,6 +27,7 @@ import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.model.card.enums.EComponent;
+import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
@@ -112,7 +112,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                         }
                     });
                 } else {
-                    remove(llFlip);
+                    ViewUtil.remove(llFlip);
                 }
 
                 // Action : edit
@@ -128,7 +128,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 });
             } else {
             */
-                remove(ivEdit);
+                ViewUtil.remove(ivEdit);
                 //}
 
                 // Action : hint
@@ -147,13 +147,13 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                         }
                     });
                 } else {
-                    remove(ivHint);
+                    ViewUtil.remove(ivHint);
                 }
 
                 // Remove bottom bar if unnecessary
                 if (card.getSides().size() < 2 && !card.isEdit() && card.getHint() == null) {
-                    remove(divider);
-                    remove(llIconbar);
+                    ViewUtil.remove(divider);
+                    ViewUtil.remove(llIconbar);
                 }
 
                 // Reveal : dismiss
@@ -170,7 +170,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 ivDiscard.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        discard(position);
+                        discard(position, flCard);
                     }
                 });
 
@@ -179,7 +179,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 ivPutToEnd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        putToEnd(position);
+                        putToEnd(position, flCard);
                     }
                 });
 
@@ -214,7 +214,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
      *
      * @param pos position of item
      */
-    private void discard(int pos) {
+    private void discard(int pos, FrameLayout flCard) {
+        ViewUtil.collapse(flCard);
+
         cardsController.discard(pos);
         ((CardsActivity) a).discard(pos);
         notifyDataSetChanged();
@@ -225,7 +227,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
      *
      * @param pos position of item
      */
-    private void putToEnd(int pos) {
+    private void putToEnd(int pos, FrameLayout flCard) {
+        ViewUtil.collapse(flCard);
+
         cardsController.putToEnd(pos);
         ((CardsActivity) a).putToEnd(pos);
         notifyDataSetChanged();
@@ -329,14 +333,5 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
             notifyDataSetChanged();
         }
-    }
-
-    /**
-     * Removes a view from ViewManager
-     *
-     * @param v View to be removed
-     */
-    private void remove(View v) {
-        ((ViewManager) v.getParent()).removeView(v);
     }
 }

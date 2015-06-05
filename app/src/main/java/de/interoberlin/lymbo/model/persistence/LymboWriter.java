@@ -20,6 +20,12 @@ import de.interoberlin.lymbo.model.card.components.TitleComponent;
 public class LymboWriter {
     private static StringBuilder result;
 
+    public static void createLymboSavePath(File path) {
+        if (path.exists()) {
+            path.mkdirs();
+        }
+    }
+
     public static void writeXml(Lymbo lymbo, File file) {
         try {
             FileWriter fw = new FileWriter(file);
