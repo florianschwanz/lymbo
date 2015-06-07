@@ -1,14 +1,16 @@
 package de.interoberlin.lymbo.util;
 
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewManager;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.GridLayout;
 
+import de.interoberlin.lymbo.R;
+
 public class ViewUtil {
-    private static final float DP_PER_SECOND = 0.01f;
 
     // --------------------
     // Methods
@@ -23,9 +25,19 @@ public class ViewUtil {
         ((ViewManager) v.getParent()).removeView(v);
     }
 
-    public static void expand(final View v) {
+    /**
+     * Expands a view by increasing its height from 0 to its target height
+     *
+     * @param c context
+     * @param v view to expand
+     * @return expand animation
+     */
+    public static Animation expand(final Context c, final View v) {
         v.measure(GridLayout.LayoutParams.MATCH_PARENT, GridLayout.LayoutParams.WRAP_CONTENT);
         final int targetHeight = v.getMeasuredHeight();
+        final int CARD_EXPAND_TIME = c.getResources().getInteger(R.integer.card_expand_time);
+        // final int CARD_EXPAND_DP_PER_MILLISECOND = c.getResources().getInteger(R.integer.card_expand_dp_per_millisecond);
+        // final int duration = (int) ((targetHeight / v.getContext().getResources().getDisplayMetrics().density) / CARD_EXPAND_DP_PER_MILLISECOND);
 
         v.getLayoutParams().height = 0;
         v.setVisibility(View.VISIBLE);
@@ -44,13 +56,23 @@ public class ViewUtil {
             }
         };
 
-        // 1dp/ms
-        a.setDuration((int) ((targetHeight / v.getContext().getResources().getDisplayMetrics().density) / DP_PER_SECOND));
-        v.startAnimation(a);
+        a.setDuration(CARD_EXPAND_TIME);
+
+        return a;
     }
 
-    public static void collapse(final View v) {
+    /**
+     * Collapses a view by decreasing its height
+     *
+     * @param c context
+     * @param v view to collapse
+     * @return collapse animation
+     */
+    public static Animation collapse(final Context c, final View v) {
         final int initialHeight = v.getMeasuredHeight();
+        final int CARD_COLLAPSE_TIME = c.getResources().getInteger(R.integer.card_collapse_time);
+        // final int CARD_COLLAPSE_DP_PER_MILLISECOND = c.getResources().getInteger(R.integer.card_expand_dp_per_millisecond);
+        // final int duration = (int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density / CARD_COLLAPSE_DP_PER_MILLISECOND);
 
         Animation a = new Animation() {
             @Override
@@ -69,7 +91,8 @@ public class ViewUtil {
             }
         };
 
-        a.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density / DP_PER_SECOND));
-        v.startAnimation(a);
+        a.setDuration(CARD_COLLAPSE_TIME);
+
+        return a;
     }
 }

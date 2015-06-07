@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -66,11 +67,27 @@ public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
                 ivUndo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ViewUtil.collapse(llStack);
+                        Animation anim = ViewUtil.collapse(c, llStack);
+                        llStack.startAnimation(anim);
 
-                        cardsController.restore(lymbo);
-                        ((LymbosStashActivity) a).restore(lymbo);
-                        notifyDataSetChanged();
+                        anim.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                cardsController.restore(lymbo);
+                                ((LymbosStashActivity) a).restore(lymbo);
+                                notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
                     }
                 });
             } else {

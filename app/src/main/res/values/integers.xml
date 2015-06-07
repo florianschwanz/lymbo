@@ -1,0 +1,11 @@
+<resources>
+    <!-- Animation time -->
+    <integer name="card_flip_time">800</integer>
+    <integer name="card_expand_dp_per_millisecond">100</integer>
+    <integer name="card_expand_time">250</integer>it 
+    <integer name="card_collapse_time">250</integer>
+    <integer name="card_collapse_dp_per_millisecond">100</integer>
+
+    <!-- Vibration duration -->
+    <integer name="vibration_duration_flip">0</integer>
+</resources>
