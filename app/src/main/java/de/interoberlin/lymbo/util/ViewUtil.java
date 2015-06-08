@@ -40,7 +40,7 @@ public class ViewUtil {
         // final int duration = (int) ((targetHeight / v.getContext().getResources().getDisplayMetrics().density) / CARD_EXPAND_DP_PER_MILLISECOND);
 
         v.getLayoutParams().height = 0;
-        v.setVisibility(View.VISIBLE);
+        // v.setVisibility(View.VISIBLE);
         Animation a = new Animation() {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
@@ -59,6 +59,40 @@ public class ViewUtil {
         a.setDuration(CARD_EXPAND_TIME);
 
         return a;
+    }
+
+    public static Animation fromRight(final Context c, final View v) {
+        /*
+        v.measure(GridLayout.LayoutParams.MATCH_PARENT, GridLayout.LayoutParams.WRAP_CONTENT);
+        final int viewWidth = v.getMeasuredWidth();
+        final int CARD_EXPAND_TIME = c.getResources().getInteger(R.integer.card_expand_time);
+        // final int CARD_EXPAND_DP_PER_MILLISECOND = c.getResources().getInteger(R.integer.card_expand_dp_per_millisecond);
+        // final int duration = (int) ((targetHeight / v.getContext().getResources().getDisplayMetrics().density) / CARD_EXPAND_DP_PER_MILLISECOND);
+
+        v.setVisibility(View.VISIBLE);
+        v.setTranslationX();
+
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getTranslationX() = interpolatedTime == 1
+                        ? GridLayout.LayoutParams.WRAP_CONTENT
+                        : (int) (targetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setDuration(CARD_EXPAND_TIME);
+
+        return a;
+        */
+
+        return null;
     }
 
     /**

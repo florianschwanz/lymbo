@@ -268,7 +268,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     // Methods
     // --------------------
 
-
     /**
      * Discards a card from the current stack
      *

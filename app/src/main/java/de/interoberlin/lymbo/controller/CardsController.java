@@ -147,8 +147,11 @@ public class CardsController {
      * @param pos index of the card to be retained
      */
     public void retain(int pos) {
-        getCards().get(pos).setDiscarded(false);
-        // save();
+        Card card = getCards().get(pos);
+        card.reset();
+        card.setRestoring(true);
+
+        card.setDiscarded(false);
     }
 
     /**
@@ -159,6 +162,7 @@ public class CardsController {
     public void putToEnd(int pos) {
         Card card = getCards().get(pos);
         card.reset();
+        card.setRestoring(true);
 
         getCards().add(card);
         getCards().remove(pos);
@@ -173,6 +177,7 @@ public class CardsController {
         int lastItem = getCards().size() - 1;
 
         Card card = getCards().get(lastItem);
+        card.setRestoring(true);
 
         getCards().remove(lastItem);
         getCards().add(pos, card);

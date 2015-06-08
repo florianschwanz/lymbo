@@ -63,6 +63,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     public View getView(final int position, View v, ViewGroup parent) {
         final Card card = getItem(position);
 
+        return getCardView(position, card, parent);
+    }
+
+    private View getCardView(final int position, final Card card, final ViewGroup parent) {
         if (card != null) {
             if (!card.isDiscarded() && card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
                 // Layout inflater
@@ -242,12 +246,42 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                     }
                 });
 
+                if (card.isRestoring()) {
+                    flCard.setVisibility(View.INVISIBLE);
+                    flCard.getLayoutParams().height = 0;
+
+                    Animation anim = ViewUtil.expand(c, flCard);
+                    flCard.startAnimation(anim);
+
+                    anim.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            card.setRestoring(false);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            flCard.setVisibility(View.VISIBLE);
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+
+                    flCard.setVisibility(View.INVISIBLE);
+                }
+
                 return flCard;
             } else {
                 Space s = new Space(c);
                 s.setVisibility(View.GONE);
                 return s;
             }
+
+
         } else {
             // Layout inflater
             LayoutInflater vi;
@@ -255,6 +289,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             return vi.inflate(R.layout.toolbar_space, parent, false);
         }
     }
+
 
     /**
      * Puts an item from the current stack away temporarily
