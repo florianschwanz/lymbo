@@ -24,6 +24,8 @@ public class Card {
     private int sideVisible;
     private boolean discarded;
 
+    private boolean restoring = false;
+
     // -------------------------
     // Constructors
     // -------------------------
@@ -170,5 +172,13 @@ public class Card {
 
     public void setDiscarded(boolean discarded) {
         this.discarded = discarded;
+    }
+
+    public boolean isRestoring() {
+        return restoring;
+    }
+
+    public void setRestoring(boolean restoring) {
+        this.restoring = restoring;
     }
 }

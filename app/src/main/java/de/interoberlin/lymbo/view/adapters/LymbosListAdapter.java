@@ -8,7 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewManager;
+import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +21,7 @@ import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.share.MailSender;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
+import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.activities.LymbosActivity;
 
@@ -54,17 +55,17 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            LinearLayout ll = (LinearLayout) vi.inflate(R.layout.stack, parent, false);
+            final LinearLayout llStack = (LinearLayout) vi.inflate(R.layout.stack, parent, false);
 
             // Load views
-            ImageView ivImage = (ImageView) ll.findViewById(R.id.ivImage);
-            TextView tvTitle = (TextView) ll.findViewById(R.id.tvTitle);
-            TextView tvSubtitle = (TextView) ll.findViewById(R.id.tvSubtitle);
-            ImageView ivStash = (ImageView) ll.findViewById(R.id.ivStash);
-            ImageView ivEdit = (ImageView) ll.findViewById(R.id.ivEdit);
-            ImageView ivShare = (ImageView) ll.findViewById(R.id.ivShare);
-            ImageView ivUpload = (ImageView) ll.findViewById(R.id.ivUpload);
-            ImageView ivHint = (ImageView) ll.findViewById(R.id.ivHint);
+            ImageView ivImage = (ImageView) llStack.findViewById(R.id.ivImage);
+            TextView tvTitle = (TextView) llStack.findViewById(R.id.tvTitle);
+            TextView tvSubtitle = (TextView) llStack.findViewById(R.id.tvSubtitle);
+            ImageView ivStash = (ImageView) llStack.findViewById(R.id.ivStash);
+            ImageView ivEdit = (ImageView) llStack.findViewById(R.id.ivEdit);
+            ImageView ivShare = (ImageView) llStack.findViewById(R.id.ivShare);
+            ImageView ivUpload = (ImageView) llStack.findViewById(R.id.ivUpload);
+            ImageView ivHint = (ImageView) llStack.findViewById(R.id.ivHint);
 
             // Set values
             if (lymbo.getImage() != null) {
@@ -78,7 +79,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 tvSubtitle.setText(lymbo.getSubtitle());
 
             // Action : open cards view
-            ll.setOnClickListener(new View.OnClickListener() {
+            llStack.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     cardsController.setFullLymbo(c, lymbo);
@@ -92,9 +93,27 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             ivStash.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    cardsController.stash(lymbo);
-                    ((LymbosActivity) a).stash(lymbo);
-                    notifyDataSetChanged();
+                    Animation anim = ViewUtil.collapse(c, llStack);
+                    llStack.startAnimation(anim);
+
+                    anim.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            cardsController.stash(lymbo);
+                            ((LymbosActivity) a).stash(lymbo);
+                            notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
                 }
             });
 
@@ -107,7 +126,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 }
             });
         } else {*/
-            remove(ivEdit);
+            ViewUtil.remove(ivEdit);
         /*}*/
 
             // Action : send
@@ -119,7 +138,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                     }
                 });
             } else {
-                remove(ivShare);
+                ViewUtil.remove(ivShare);
             }
 
             // Action : upload
@@ -132,7 +151,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 }
             });
         } else {*/
-            remove(ivUpload);
+            ViewUtil.remove(ivUpload);
         /*}*/
 
             // Action : hint
@@ -145,19 +164,15 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 }
             });
         } else {*/
-            remove(ivHint);
+            ViewUtil.remove(ivHint);
         /*}*/
 
-            return ll;
+            return llStack;
         } else {
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
             return vi.inflate(R.layout.toolbar_space, parent, false);
         }
-    }
-
-    private void remove(View v) {
-        ((ViewManager) v.getParent()).removeView(v);
     }
 }

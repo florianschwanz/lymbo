@@ -1,12 +1,16 @@
 package de.interoberlin.lymbo.view.adapters;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -33,8 +37,8 @@ import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
 
 public class CardsListAdapter extends ArrayAdapter<Card> {
-    Context c;
-    Activity a;
+    private Context c;
+    private Activity a;
 
     // Controllers
     CardsController cardsController = CardsController.getInstance();
@@ -59,6 +63,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     public View getView(final int position, View v, ViewGroup parent) {
         final Card card = getItem(position);
 
+        return getCardView(position, card, parent);
+    }
+
+    private View getCardView(final int position, final Card card, final ViewGroup parent) {
         if (card != null) {
             if (!card.isDiscarded() && card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
                 // Layout inflater
@@ -108,7 +116,27 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                     llFlip.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            flip(card, flCard);
+                            final int CARD_FLIP_TIME = c.getResources().getInteger(R.integer.card_flip_time);
+                            final int VIBRATION_DURATION_FLIP = c.getResources().getInteger(R.integer.vibration_duration_flip);
+
+                            ObjectAnimator animation = ObjectAnimator.ofFloat(flCard, "rotationY", 0.0f, 90.0f);
+                            animation.setDuration(CARD_FLIP_TIME / 2);
+                            animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                            animation.start();
+
+                            flCard.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    flip(card, flCard);
+
+                                    ObjectAnimator animation = ObjectAnimator.ofFloat(flCard, "rotationY", -90.0f, 0.0f);
+                                    animation.setDuration(CARD_FLIP_TIME / 2);
+                                    animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                                    animation.start();
+                                }
+                            }, CARD_FLIP_TIME / 2);
+
+                            ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION_FLIP);
                         }
                     });
                 } else {
@@ -170,18 +198,82 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 ivDiscard.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        discard(position, flCard);
+                        Animation a = ViewUtil.collapse(c, flCard);
+                        flCard.startAnimation(a);
+
+                        a.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                discard(position, flCard);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
                     }
                 });
-
 
                 // Reveal : put to end
                 ivPutToEnd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        putToEnd(position, flCard);
+                        Animation a = ViewUtil.collapse(c, flCard);
+                        flCard.startAnimation(a);
+
+                        a.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                putToEnd(position, flCard);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
                     }
                 });
+
+                if (card.isRestoring()) {
+                    DisplayMetrics displaymetrics = new DisplayMetrics();
+                    a.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+                    final int displayWidth = displaymetrics.widthPixels;
+
+                    flCard.setTranslationX(displayWidth);
+
+                    Animation anim = ViewUtil.expand(c, flCard);
+                    flCard.startAnimation(anim);
+
+                    anim.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            card.setRestoring(false);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            Animation anim = ViewUtil.fromRight(c, flCard, displayWidth);
+                            flCard.startAnimation(anim);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+                }
 
                 return flCard;
             } else {
@@ -189,6 +281,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 s.setVisibility(View.GONE);
                 return s;
             }
+
+
         } else {
             // Layout inflater
             LayoutInflater vi;
@@ -196,6 +290,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
             return vi.inflate(R.layout.toolbar_space, parent, false);
         }
     }
+
 
     /**
      * Puts an item from the current stack away temporarily
@@ -215,7 +310,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
      * @param pos position of item
      */
     private void discard(int pos, FrameLayout flCard) {
-        ViewUtil.collapse(flCard);
+        ViewUtil.collapse(c, flCard);
 
         cardsController.discard(pos);
         ((CardsActivity) a).discard(pos);
@@ -228,7 +323,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
      * @param pos position of item
      */
     private void putToEnd(int pos, FrameLayout flCard) {
-        ViewUtil.collapse(flCard);
+        ViewUtil.collapse(c, flCard);
 
         cardsController.putToEnd(pos);
         ((CardsActivity) a).putToEnd(pos);
@@ -241,10 +336,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
      * @param flCard frameLayout of card
      */
     private void flip(Card card, FrameLayout flCard) {
-        int VIBRATION_DURATION = 40;
-
-        ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-
         final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
         final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
 
