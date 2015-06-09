@@ -25,13 +25,15 @@ public class Lymbo implements Displayable {
     private String path;
     private boolean asset;
 
-    private String id = "";
-    private String title = "";
-    private String subtitle = "";
-    private String hint = "";
-    private String image = "";
-    private String author = "";
-    private List<Card> cards = new ArrayList<>();
+    private String id;
+    private String title;
+    private String subtitle;
+    private String hint;
+    private String image;
+    private String author;
+    private List<Card> cards;
+
+    private String error;
 
     // -------------------------
     // Constructors
@@ -53,6 +55,8 @@ public class Lymbo implements Displayable {
         image = null;
         author = "";
         cards = new ArrayList<>();
+
+        error = "";
     }
 
     @Override
@@ -255,5 +259,13 @@ public class Lymbo implements Displayable {
 
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }

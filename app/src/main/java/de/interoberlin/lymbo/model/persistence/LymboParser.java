@@ -63,16 +63,19 @@ public class LymboParser {
      * @param is           input stream representing lymbo file
      * @param onlyTopLevel determines if only the top level element shall be parsed
      * @return xmlLymbo
-     * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    public Lymbo parse(InputStream is, boolean onlyTopLevel) throws XmlPullParserException, IOException {
+    public Lymbo parse(InputStream is, boolean onlyTopLevel) throws IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(is, null);
             parser.nextTag();
             return parseLymbo(parser, onlyTopLevel);
+        } catch (XmlPullParserException xmlppe) {
+            Lymbo lymbo = new Lymbo();
+            lymbo.setError(xmlppe.toString());
+            return lymbo;
         } finally {
             is.close();
         }
