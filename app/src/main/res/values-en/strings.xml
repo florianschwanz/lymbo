@@ -50,5 +50,7 @@
     <string name="no_tag">not tag</string>
     <string name="discard_card">Discarded card</string>
     <string name="put_card_to_end">Put card to end</string>
+    <string name="broken_lymbo_file">Broken lymbo :(</string>
+    <string name="path">Path</string>
 
 </resources>
