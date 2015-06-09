@@ -14,6 +14,7 @@ import de.interoberlin.lymbo.view.controls.RobotoTextView;
 public class ResultComponent implements Displayable {
     private String value = "";
     private String gravity = "left";
+    private int color = 0;
 
     private boolean flip = false;
 
@@ -35,6 +36,9 @@ public class ResultComponent implements Displayable {
 
         RobotoTextView tvTitle = (RobotoTextView) llTitleComponent.findViewById(R.id.tvTitle);
         tvTitle.setText(value);
+
+        if (color != 0)
+            tvTitle.setTextColor(color);
 
         return llTitleComponent;
     }
@@ -62,6 +66,14 @@ public class ResultComponent implements Displayable {
 
     public void setGravity(String gravity) {
         this.gravity = gravity;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 
     public boolean isFlip() {

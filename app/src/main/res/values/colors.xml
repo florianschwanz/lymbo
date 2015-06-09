@@ -22,4 +22,7 @@
     <!--<color name="card_grid_text">#ff707070</color>-->
     <!--<color name="card_separator">#ffe5e5e5</color>-->
     <!--<color name="card_border">#ffdedede</color>-->
+
+    <color name="correct">#8BC34A</color>
+    <color name="wrong">#FF5722</color>
 </resources>
