@@ -52,72 +52,74 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
 
         if (lymbo != null) {
 
-            // Layout inflater
-            LayoutInflater vi;
-            vi = LayoutInflater.from(getContext());
-            final LinearLayout llStack = (LinearLayout) vi.inflate(R.layout.stack, parent, false);
+            if (lymbo.getError().isEmpty()) {
 
-            // Load views
-            ImageView ivImage = (ImageView) llStack.findViewById(R.id.ivImage);
-            TextView tvTitle = (TextView) llStack.findViewById(R.id.tvTitle);
-            TextView tvSubtitle = (TextView) llStack.findViewById(R.id.tvSubtitle);
-            ImageView ivStash = (ImageView) llStack.findViewById(R.id.ivStash);
-            ImageView ivEdit = (ImageView) llStack.findViewById(R.id.ivEdit);
-            ImageView ivShare = (ImageView) llStack.findViewById(R.id.ivShare);
-            ImageView ivUpload = (ImageView) llStack.findViewById(R.id.ivUpload);
-            ImageView ivHint = (ImageView) llStack.findViewById(R.id.ivHint);
+                // Layout inflater
+                LayoutInflater vi;
+                vi = LayoutInflater.from(getContext());
+                final LinearLayout llStack = (LinearLayout) vi.inflate(R.layout.stack, parent, false);
 
-            // Set values
-            if (lymbo.getImage() != null) {
-                Bitmap b = Base64BitmapConverter.decodeBase64(lymbo.getImage());
-                BitmapDrawable bd = new BitmapDrawable(b);
-                ivImage.setBackgroundDrawable(bd);
-            }
-            if (lymbo.getTitle() != null)
-                tvTitle.setText(lymbo.getTitle());
-            if (lymbo.getSubtitle() != null)
-                tvSubtitle.setText(lymbo.getSubtitle());
+                // Load views
+                ImageView ivImage = (ImageView) llStack.findViewById(R.id.ivImage);
+                TextView tvTitle = (TextView) llStack.findViewById(R.id.tvTitle);
+                TextView tvSubtitle = (TextView) llStack.findViewById(R.id.tvSubtitle);
+                ImageView ivStash = (ImageView) llStack.findViewById(R.id.ivStash);
+                ImageView ivEdit = (ImageView) llStack.findViewById(R.id.ivEdit);
+                ImageView ivShare = (ImageView) llStack.findViewById(R.id.ivShare);
+                ImageView ivUpload = (ImageView) llStack.findViewById(R.id.ivUpload);
+                ImageView ivHint = (ImageView) llStack.findViewById(R.id.ivHint);
 
-            // Action : open cards view
-            llStack.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cardsController.setFullLymbo(c, lymbo);
-                    cardsController.init();
-                    Intent openStartingPoint = new Intent(c, CardsActivity.class);
-                    c.startActivity(openStartingPoint);
+                // Set values
+                if (lymbo.getImage() != null) {
+                    Bitmap b = Base64BitmapConverter.decodeBase64(lymbo.getImage());
+                    BitmapDrawable bd = new BitmapDrawable(b);
+                    ivImage.setBackgroundDrawable(bd);
                 }
-            });
+                if (lymbo.getTitle() != null)
+                    tvTitle.setText(lymbo.getTitle());
+                if (lymbo.getSubtitle() != null)
+                    tvSubtitle.setText(lymbo.getSubtitle());
 
-            // Action : stash
-            ivStash.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Animation anim = ViewUtil.collapse(c, llStack);
-                    llStack.startAnimation(anim);
+                // Action : open cards view
+                llStack.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cardsController.setFullLymbo(c, lymbo);
+                        cardsController.init();
+                        Intent openStartingPoint = new Intent(c, CardsActivity.class);
+                        c.startActivity(openStartingPoint);
+                    }
+                });
 
-                    anim.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
+                // Action : stash
+                ivStash.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Animation anim = ViewUtil.collapse(c, llStack);
+                        llStack.startAnimation(anim);
 
-                        }
+                        anim.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
 
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            cardsController.stash(lymbo);
-                            ((LymbosActivity) a).stash(lymbo);
-                            notifyDataSetChanged();
-                        }
+                            }
 
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                cardsController.stash(lymbo);
+                                ((LymbosActivity) a).stash(lymbo);
+                                notifyDataSetChanged();
+                            }
 
-                        }
-                    });
-                }
-            });
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
 
-            // Action : edit
+                            }
+                        });
+                    }
+                });
+
+                // Action : edit
         /*if (!lymbo.isAsset()) {
             ivEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -126,22 +128,22 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 }
             });
         } else {*/
-            ViewUtil.remove(ivEdit);
+                ViewUtil.remove(ivEdit);
         /*}*/
 
-            // Action : send
-            if (!lymbo.isAsset()) {
-                ivShare.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        MailSender.sendLymbo(c, a, lymbo);
-                    }
-                });
-            } else {
-                ViewUtil.remove(ivShare);
-            }
+                // Action : send
+                if (!lymbo.isAsset()) {
+                    ivShare.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            MailSender.sendLymbo(c, a, lymbo);
+                        }
+                    });
+                } else {
+                    ViewUtil.remove(ivShare);
+                }
 
-            // Action : upload
+                // Action : upload
         /*
         if (!lymbo.isAsset()) {
             ivUpload.setOnClickListener(new View.OnClickListener() {
@@ -151,10 +153,10 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 }
             });
         } else {*/
-            ViewUtil.remove(ivUpload);
+                ViewUtil.remove(ivUpload);
         /*}*/
 
-            // Action : hint
+                // Action : hint
         /*
         if (!lymbo.isAsset()) {
             ivHint.setOnClickListener(new View.OnClickListener() {
@@ -164,10 +166,32 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 }
             });
         } else {*/
-            ViewUtil.remove(ivHint);
+                ViewUtil.remove(ivHint);
         /*}*/
 
-            return llStack;
+                return llStack;
+            } else {
+                // Layout inflater
+                LayoutInflater vi;
+                vi = LayoutInflater.from(getContext());
+                final LinearLayout llStack = (LinearLayout) vi.inflate(R.layout.stack_broken, parent, false);
+
+                // Load views
+                TextView tvTitle = (TextView) llStack.findViewById(R.id.tvTitle);
+                TextView tvPath = (TextView) llStack.findViewById(R.id.tvPath);
+                TextView tvError = (TextView) llStack.findViewById(R.id.tvError);
+
+                // Set values
+                tvTitle.setText(a.getResources().getString(R.string.broken_lymbo_file));
+
+                if (lymbo.getPath() != null)
+                    tvPath.setText(lymbo.getPath());
+
+                if (lymbo.getError() != null)
+                    tvError.setText(lymbo.getError());
+
+                return llStack;
+            }
         } else {
             // Layout inflater
             LayoutInflater vi;

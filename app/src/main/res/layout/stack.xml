@@ -78,7 +78,7 @@
                             android:layout_marginStart="8dp"
                             android:ellipsize="end"
                             android:maxLines="4"
-                            android:text="@string/title" />
+                            android:text="@string/subtitle" />
                     </LinearLayout>
                 </LinearLayout>
 

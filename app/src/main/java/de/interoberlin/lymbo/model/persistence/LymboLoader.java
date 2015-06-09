@@ -2,8 +2,6 @@ package de.interoberlin.lymbo.model.persistence;
 
 import android.content.Context;
 
-import org.xmlpull.v1.XmlPullParserException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -68,7 +66,7 @@ public class LymboLoader {
     public static Lymbo getLymboFromInputStream(InputStream is, boolean onlyTopLevel) {
         try {
             return LymboParser.getInstance().parse(is, onlyTopLevel);
-        } catch (XmlPullParserException | IOException e) {
+        } catch (IOException e) {
             Log.error(e.toString());
             e.printStackTrace();
             return null;

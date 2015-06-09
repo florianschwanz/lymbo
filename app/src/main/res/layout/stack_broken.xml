@@ -27,20 +27,8 @@
                     android:id="@+id/ll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/stack_padding"
                     android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:contentDescription="@string/desc_image"
-                            android:id="@+id/ivImage"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/stack_image_height"
-                            android:scaleType="centerCrop" />
-                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -71,99 +59,39 @@
 
                         <de.interoberlin.lymbo.view.controls.RobotoTextView
                             roboto:typeface="roboto_regular"
-                            android:id="@+id/tvSubtitle"
+                            android:id="@+id/tvPath"
                             style="@style/CardText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:ellipsize="end"
                             android:maxLines="4"
-                            android:text="@string/title" />
+                            android:text="@string/path" />
                     </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:paddingLeft="@dimen/stack_bar_padding"
-                    android:paddingRight="@dimen/stack_bar_padding"
-                    android:orientation="vertical">
-
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="4dp"
-                        android:background="@color/stroke" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:baselineAligned="false"
-                        android:orientation="horizontal">
+                        android:background="@drawable/selectable_background_cardbank"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="@dimen/stack_padding"
+                        android:paddingRight="@dimen/stack_padding"
+                        android:paddingTop="8dp">
 
-                        <LinearLayout
+                        <de.interoberlin.lymbo.view.controls.RobotoTextView
+                            roboto:typeface="roboto_regular"
+                            android:id="@+id/tvError"
+                            style="@style/CardTextError"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="start">
-
-                            <ImageView
-                                android:id="@+id/ivStash"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:contentDescription="@string/discard"
-                                android:padding="10dp"
-                                android:src="@drawable/ic_action_discard" />
-
-                            <ImageView
-                                android:id="@+id/ivEdit"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:contentDescription="@string/edit"
-                                android:padding="10dp"
-                                android:src="@drawable/ic_action_edit" />
-
-                            <ImageView
-                                android:id="@+id/ivShare"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:contentDescription="@string/share"
-                                android:padding="10dp"
-                                android:src="@drawable/ic_action_share" />
-
-                            <ImageView
-                                android:id="@+id/ivUpload"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:contentDescription="@string/upload"
-                                android:padding="10dp"
-                                android:src="@drawable/ic_action_upload" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.5"
-                            android:gravity="end">
-
-                            <ImageView
-                                android:id="@+id/ivHint"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:contentDescription="@string/hint"
-                                android:padding="10dp"
-                                android:src="@drawable/ic_action_about" />
-                        </LinearLayout>
+                            android:layout_marginStart="8dp"
+                            android:ellipsize="end"
+                            android:maxLines="4"
+                            android:text="@string/path" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/ivLogo"
-                    android:layout_width="@dimen/stack_image_height"
-                    android:layout_height="@dimen/stack_image_height"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
-                    android:contentDescription="@string/logo" />
 
             </RelativeLayout>
 
