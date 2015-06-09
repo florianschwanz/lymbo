@@ -116,6 +116,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                     llFlip.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            // If front contains choice component make sure that at least on answer is selected
+                            if (!checkAnswerSelected(card))
+                                return;
+
                             final int CARD_FLIP_TIME = c.getResources().getInteger(R.integer.card_flip_time);
                             final int VIBRATION_DURATION_FLIP = c.getResources().getInteger(R.integer.vibration_duration_flip);
 
@@ -339,11 +343,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
         final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
 
-
-        // If front contains choice component make sure that at least on answer is selected
-        if (!checkAnswerSelected(card))
-            return;
-
         // Handle components
         handleQuiz(card);
 
@@ -387,14 +386,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 }
             }
 
-            DisplayDialogFragment displayDialogFragment = new DisplayDialogFragment();
-            Bundle b = new Bundle();
-            b.putCharSequence("type", EDialogType.WARNING.toString());
-            b.putCharSequence("title", a.getResources().getString(R.string.select_answer));
-            b.putCharSequence("message", "");
-
-            displayDialogFragment.setArguments(b);
-            displayDialogFragment.show(a.getFragmentManager(), "okay");
+            ((CardsActivity) a).alertSelectAnswer();
 
             return false;
         } else {

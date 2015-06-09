@@ -269,6 +269,18 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     // --------------------
 
     /**
+     * Displays an alert that at least one answer shall be selected
+     */
+    public void alertSelectAnswer() {
+        new SnackBar.Builder(this)
+                .withOnClickListener(this)
+                .withMessageId(R.string.select_answer)
+                .withStyle(SnackBar.Style.ALERT)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    /**
      * Discards a card from the current stack
      *
      * @param pos index of the card to be discarded

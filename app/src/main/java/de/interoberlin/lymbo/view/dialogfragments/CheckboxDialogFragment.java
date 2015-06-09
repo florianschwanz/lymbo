@@ -125,9 +125,6 @@ public class CheckboxDialogFragment extends DialogFragment {
             case "HINT":
                 type = EDialogType.HINT;
                 break;
-            case "WARNING":
-                type = EDialogType.WARNING;
-                break;
             case "SELECT_LABEL":
                 type = EDialogType.SELECT_LABEL;
                 break;

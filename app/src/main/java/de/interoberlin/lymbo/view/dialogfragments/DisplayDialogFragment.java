@@ -47,9 +47,6 @@ public class DisplayDialogFragment extends DialogFragment {
             case "HINT":
                 type = EDialogType.HINT;
                 break;
-            case "WARNING":
-                type = EDialogType.WARNING;
-                break;
         }
 
         builder.setView(v);
