@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -247,8 +248,11 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 });
 
                 if (card.isRestoring()) {
-                    flCard.setVisibility(View.INVISIBLE);
-                    flCard.getLayoutParams().height = 0;
+                    DisplayMetrics displaymetrics = new DisplayMetrics();
+                    a.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+                    final int displayWidth = displaymetrics.widthPixels;
+
+                    flCard.setTranslationX(displayWidth);
 
                     Animation anim = ViewUtil.expand(c, flCard);
                     flCard.startAnimation(anim);
@@ -261,8 +265,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
                         @Override
                         public void onAnimationEnd(Animation animation) {
-                            flCard.setVisibility(View.VISIBLE);
-
+                            Animation anim = ViewUtil.fromRight(c, flCard, displayWidth);
+                            flCard.startAnimation(anim);
                         }
 
                         @Override
@@ -270,8 +274,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
                         }
                     });
-
-                    flCard.setVisibility(View.INVISIBLE);
                 }
 
                 return flCard;
