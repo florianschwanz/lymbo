@@ -52,5 +52,6 @@
     <string name="put_card_to_end">Put card to end</string>
     <string name="broken_lymbo_file">Broken lymbo :(</string>
     <string name="path">Path</string>
+    <string name="add_tags">Add tags</string>
 
 </resources>

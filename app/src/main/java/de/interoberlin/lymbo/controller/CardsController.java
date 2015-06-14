@@ -6,11 +6,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Side;
+import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
 import de.interoberlin.lymbo.model.persistence.LymboLoader;
@@ -87,13 +87,8 @@ public class CardsController {
         lymbosController.changeLocation(lymbo.getPath(), false);
     }
 
-    public void addSimpleCard(String frontText, String backText) {
-        addCard(getSimpleCard(frontText, backText));
-    }
-
     public Card getSimpleCard(String frontText, String backText) {
         Card card = new Card();
-        card.setId(UUID.randomUUID().toString());
 
         TitleComponent frontTitle = new TitleComponent();
         frontTitle.setValue(frontText);
@@ -108,6 +103,13 @@ public class CardsController {
 
         card.getSides().add(frontSide);
         card.getSides().add(backSide);
+
+        return card;
+    }
+
+    public Card getSimpleCard(String frontText, String backText, List<Tag> tags) {
+        Card card = getSimpleCard(frontText, backText);
+        card.setTags(tags);
 
         return card;
     }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -11,6 +12,7 @@ import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Side;
+import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 
@@ -96,6 +98,7 @@ public class LymboWriter {
 
         attributes.put("edit", String.valueOf(card.isEdit()));
         attributes.put("hint", card.getHint());
+        attributes.put("tags", getTagsList(card.getTags()));
 
         addStartTag(tag, attributes);
 
@@ -246,5 +249,15 @@ public class LymboWriter {
         addStartTag(tag);
         addValue(text);
         addEndTag(tag);
+    }
+
+    private static String getTagsList(List<Tag> tags) {
+        String tagsList = "";
+
+        for (Tag t : tags) {
+            tagsList += " " + t.getName();
+        }
+
+        return tagsList;
     }
 }

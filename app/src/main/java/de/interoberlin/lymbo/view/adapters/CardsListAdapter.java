@@ -33,8 +33,7 @@ import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.model.card.enums.EComponent;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
-import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
+import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 
 public class CardsListAdapter extends ArrayAdapter<Card> {
     private Context c;
@@ -168,14 +167,13 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                     ivHint.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            DisplayDialogFragment displayDialogFragment = new DisplayDialogFragment();
+                            DisplayHintDialogFragment displayHintDialogFragment = new DisplayHintDialogFragment();
                             Bundle b = new Bundle();
-                            b.putCharSequence("type", EDialogType.HINT.toString());
                             b.putCharSequence("title", a.getResources().getString(R.string.hint));
                             b.putCharSequence("message", card.getHint());
 
-                            displayDialogFragment.setArguments(b);
-                            displayDialogFragment.show(a.getFragmentManager(), "okay");
+                            displayHintDialogFragment.setArguments(b);
+                            displayHintDialogFragment.show(a.getFragmentManager(), "okay");
                         }
                     });
                 } else {

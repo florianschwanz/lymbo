@@ -52,5 +52,6 @@
     <string name="discard_card">Karte weggelegt</string>
     <string name="broken_lymbo_file">Ungültige lymbo Datei</string>
     <string name="path">Pfad</string>
+    <string name="add_tags">Tags hinzufügen</string>
 
 </resources>

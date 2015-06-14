@@ -20,27 +20,27 @@ import com.fortysevendeg.swipelistview.SwipeListView;
 import com.github.mrengineer13.snackbar.SnackBar;
 
 import java.io.File;
+import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.persistence.LymboLoader;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
-import de.interoberlin.lymbo.view.dialogfragments.AddSimpleCardDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.CheckboxDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
+import de.interoberlin.lymbo.view.dialogfragments.AddCardDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddSimpleCardDialogFragment.OnCompleteListener, DisplayDialogFragment.OnCompleteListener, CheckboxDialogFragment.OnLabelSelectedListener, SnackBar.OnMessageClickListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnLabelSelectedListener, SnackBar.OnMessageClickListener {
     // Controllers
     CardsController cardsController = CardsController.getInstance();
 
     // Context and Activity
     private static Context context;
-    // private static Activity activity;
 
     // Views
     private SwipeRefreshLayout srl;
@@ -162,13 +162,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         ibFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddSimpleCardDialogFragment addSimpleCardDialogFragment = new AddSimpleCardDialogFragment();
-                Bundle b = new Bundle();
-                b.putString("type", EDialogType.ADD_SIMPLE_CARD.toString());
-                b.putString("title", getResources().getString(R.string.add_card));
-
-                addSimpleCardDialogFragment.setArguments(b);
-                addSimpleCardDialogFragment.show(getFragmentManager(), "okay");
+                new AddCardDialogFragment().show(getFragmentManager(), "okay");
             }
         });
 
@@ -212,13 +206,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             }
             case R.id.menu_label: {
                 ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-                CheckboxDialogFragment checkboxDialogFragment = new CheckboxDialogFragment();
-
-                Bundle b = new Bundle();
-                b.putCharSequence("type", EDialogType.SELECT_LABEL.toString());
-
-                checkboxDialogFragment.setArguments(b);
-                checkboxDialogFragment.show(getFragmentManager(), "okay");
+                new SelectTagsDialogFragment().show(getFragmentManager(), "okay");
                 break;
             }
         }
@@ -331,8 +319,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     // --------------------
 
     @Override
-    public void onAddSimpleCard(String frontText, String backText) {
-        Card card = cardsController.getSimpleCard(frontText, backText);
+    public void onAddSimpleCard(String frontText, String backText, List<Tag> tags) {
+        Card card = cardsController.getSimpleCard(frontText, backText, tags);
 
         cardsController.addCard(card);
         cardsAdapter.notifyDataSetChanged();

@@ -7,25 +7,19 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 
 import de.interoberlin.lymbo.R;
 
-public class AddStackDialogFragment extends DialogFragment {
-    private EditText etTitle;
-    private EditText etSubtitle;
-    private EditText etAuthor;
-
+public class DisplayHintDialogFragment extends DialogFragment {
     private OnCompleteListener ocListener;
 
     // --------------------
     // Constructors
     // --------------------
 
-    public AddStackDialogFragment() {
+    public DisplayHintDialogFragment() {
     }
 
     // --------------------
@@ -36,49 +30,27 @@ public class AddStackDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Context c = getActivity();
+        Context c = getActivity();
 
         // Load layout
-        final View v = View.inflate(c, R.layout.dialogfragment_add_stack, null);
-
-        etTitle = (EditText) v.findViewById(R.id.etTitle);
-        etSubtitle = (EditText) v.findViewById(R.id.etSubtitle);
-        etAuthor = (EditText) v.findViewById(R.id.etAuthor);
+        final View v = View.inflate(c, R.layout.dialogfragment, null);
 
         // Load dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        Bundle b = getArguments();
         builder.setView(v);
-        builder.setTitle(R.string.add_stack);
+        builder.setTitle(R.string.hint);
+        builder.setMessage((String) b.get("message"));
 
         // Add positive button
         builder.setPositiveButton(R.string.okay, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String title = etTitle.getText().toString().trim();
-                String subtitle = etSubtitle.getText().toString().trim();
-                String author = etAuthor.getText().toString().trim();
-
-                Drawable dWarning = c.getResources().getDrawable(R.drawable.ic_action_warning);
-                boolean valid = true;
-
-                if (title.isEmpty()) {
-                    etTitle.setError(c.getResources().getString(R.string.field_must_not_be_empty), dWarning);
-                    valid = false;
-                }
-
-                if (author.isEmpty()) {
-                    etAuthor.setError(c.getResources().getString(R.string.field_must_not_be_empty), dWarning);
-                    valid = false;
-                }
-
-                if (valid) {
-                    ocListener.onAddStack(title, subtitle, author);
-                    dismiss();
-                }
+                ocListener.onHintDialogComplete();
+                dismiss();
             }
         });
 
-        // Add negative button
         builder.setNegativeButton(R.string.cancel, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -99,12 +71,12 @@ public class AddStackDialogFragment extends DialogFragment {
         super.onPause();
     }
 
-// --------------------
-// Callback interfaces
-// --------------------
+    // --------------------
+    // Callback interfaces
+    // --------------------
 
     public interface OnCompleteListener {
-        void onAddStack(String title, String subtitle, String author);
+        void onHintDialogComplete();
     }
 
     public void onAttach(Activity activity) {

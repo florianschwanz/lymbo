@@ -17,8 +17,7 @@ import java.util.UUID;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.Displayable;
-import de.interoberlin.lymbo.view.dialogfragments.DisplayDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
+import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.mate.lib.util.Toaster;
 
 public class Lymbo implements Displayable {
@@ -105,14 +104,11 @@ public class Lymbo implements Displayable {
         ivHint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DisplayDialogFragment displayDialogFragment = new DisplayDialogFragment();
+                DisplayHintDialogFragment displayHintDialogFragment = new DisplayHintDialogFragment();
                 Bundle b = new Bundle();
-                b.putCharSequence("type", EDialogType.HINT.toString());
-                b.putCharSequence("title", a.getResources().getString(R.string.hint));
                 b.putCharSequence("message", getHint());
-
-                displayDialogFragment.setArguments(b);
-                displayDialogFragment.show(a.getFragmentManager(), "okay");
+                displayHintDialogFragment.setArguments(b);
+                displayHintDialogFragment.show(a.getFragmentManager(), "okay");
             }
         });
 

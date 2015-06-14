@@ -35,12 +35,13 @@ public class ViewUtil {
     public static Animation expand(final Context c, final View v) {
         v.measure(GridLayout.LayoutParams.MATCH_PARENT, GridLayout.LayoutParams.WRAP_CONTENT);
         final int targetHeight = v.getMeasuredHeight();
+
         final int CARD_EXPAND_TIME = c.getResources().getInteger(R.integer.card_expand_time);
         // final int CARD_EXPAND_DP_PER_MILLISECOND = c.getResources().getInteger(R.integer.card_expand_dp_per_millisecond);
         // final int duration = (int) ((targetHeight / v.getContext().getResources().getDisplayMetrics().density) / CARD_EXPAND_DP_PER_MILLISECOND);
 
         v.getLayoutParams().height = 0;
-        // v.setVisibility(View.VISIBLE);
+        v.setVisibility(View.VISIBLE);
         Animation a = new Animation() {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
