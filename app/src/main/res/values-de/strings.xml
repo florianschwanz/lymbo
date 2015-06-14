@@ -53,5 +53,6 @@
     <string name="broken_lymbo_file">Ungültige lymbo Datei</string>
     <string name="path">Pfad</string>
     <string name="add_tags">Tags hinzufügen</string>
+    <string name="new_tag">neuer Tag</string>
 
 </resources>

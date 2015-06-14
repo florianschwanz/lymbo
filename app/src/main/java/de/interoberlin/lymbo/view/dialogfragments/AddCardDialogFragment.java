@@ -13,9 +13,11 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,6 @@ import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.util.ModelUtil;
 import de.interoberlin.lymbo.util.ViewUtil;
-import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class AddCardDialogFragment extends DialogFragment {
     // Controllers
@@ -39,6 +40,7 @@ public class AddCardDialogFragment extends DialogFragment {
     private EditText etBack;
     private LinearLayout llAddTags;
     private TableLayout tblTags;
+    private ImageView ivAdd;
 
     private boolean addTagsIsExpanded = false;
 
@@ -68,6 +70,7 @@ public class AddCardDialogFragment extends DialogFragment {
         etBack = (EditText) v.findViewById(R.id.etBack);
         llAddTags = (LinearLayout) v.findViewById(R.id.llAddTags);
         tblTags = (TableLayout) v.findViewById(R.id.tblTags);
+        ivAdd = (ImageView) v.findViewById(R.id.ivAdd);
 
         llAddTags.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,11 +91,12 @@ public class AddCardDialogFragment extends DialogFragment {
 
         tblTags.getLayoutParams().height = 0;
 
+        // Existing tags
         for (final Tag t : tags) {
             final TableRow tr = new TableRow(c);
 
             final CheckBox cb = new CheckBox(c);
-            final RobotoTextView tvText = new RobotoTextView(c);
+            final TextView tvText = new TextView(c);
 
             tr.addView(cb);
             tr.addView(tvText);
@@ -113,8 +117,28 @@ public class AddCardDialogFragment extends DialogFragment {
                 }
             });
 
-            tblTags.addView(tr);
+            tblTags.addView(tr, tblTags.getChildCount() - 1);
         }
+
+        // Add button
+        ivAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TableRow trLast = (TableRow) tblTags.getChildAt(tblTags.getChildCount() - 2);
+
+                if (!(trLast.getChildAt(1) instanceof EditText) || (trLast.getChildAt(1) instanceof EditText && !((EditText) trLast.getChildAt(1)).getText().toString().isEmpty())) {
+                    // New tag
+                    final TableRow tr = new TableRow(c);
+                    final CheckBox cb = new CheckBox(c);
+                    final EditText etText = new EditText(c);
+                    tr.addView(cb);
+                    tr.addView(etText);
+                    etText.setHint(R.string.new_tag);
+                    cb.setChecked(true);
+                    tblTags.addView(tr, tblTags.getChildCount() - 1);
+                }
+            }
+        });
 
         // Load dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -136,9 +160,7 @@ public class AddCardDialogFragment extends DialogFragment {
                 }
 
                 if (valid) {
-
-
-                    ocListener.onAddSimpleCard(etFront.getText().toString(), etBack.getText().toString(), getSelectedTags(tags));
+                    ocListener.onAddSimpleCard(etFront.getText().toString(), etBack.getText().toString(), getSelectedTags(tags, tblTags));
                     dismiss();
                 }
             }
@@ -169,16 +191,41 @@ public class AddCardDialogFragment extends DialogFragment {
     // Methods
     // --------------------
 
-    private List<Tag> getSelectedTags(List<Tag> tags) {
+    private List<Tag> getSelectedTags(List<Tag> tags, TableLayout tblTags) {
         List<Tag> selectedTags = new ArrayList<>();
 
+        // Existing
         for (Tag t : tags) {
             if (t.isChecked()) {
                 selectedTags.add(t);
             }
         }
 
+        // Newly added
+        for (int i = 0; i < tblTags.getChildCount(); i++) {
+            if (tblTags.getChildAt(i) instanceof TableRow) {
+                TableRow trLast = (TableRow) tblTags.getChildAt(i);
+
+                if (trLast.getChildAt(0) instanceof CheckBox && ((CheckBox) trLast.getChildAt(0)).isChecked() && trLast.getChildAt(1) instanceof EditText && !((EditText) trLast.getChildAt(1)).getText().toString().isEmpty()) {
+                    Tag tag = new Tag(((EditText) trLast.getChildAt(1)).getText().toString());
+
+                    if (!containsTag(selectedTags, tag)) {
+                        selectedTags.add(tag);
+                    }
+                }
+            }
+        }
+
         return selectedTags;
+    }
+
+    private boolean containsTag(List<Tag> tags, Tag tag) {
+        for (Tag t : tags) {
+            if (t.getName().equalsIgnoreCase(tag.getName()))
+                return true;
+        }
+
+        return false;
     }
 
     // --------------------
