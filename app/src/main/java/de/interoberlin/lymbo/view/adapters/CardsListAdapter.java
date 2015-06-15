@@ -200,25 +200,27 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 ivDiscard.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Animation a = ViewUtil.collapse(c, flCard);
-                        flCard.startAnimation(a);
+                        if (card.isRevealed()) {
+                            Animation a = ViewUtil.collapse(c, flCard);
+                            flCard.startAnimation(a);
 
-                        a.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
+                            a.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
 
-                            }
+                                }
 
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                discard(position, flCard);
-                            }
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    discard(position, flCard);
+                                }
 
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
 
-                            }
-                        });
+                                }
+                            });
+                        }
                     }
                 });
 
@@ -226,25 +228,27 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 ivPutToEnd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Animation a = ViewUtil.collapse(c, flCard);
-                        flCard.startAnimation(a);
+                        if (card.isRevealed()) {
+                            Animation a = ViewUtil.collapse(c, flCard);
+                            flCard.startAnimation(a);
 
-                        a.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
+                            a.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
 
-                            }
+                                }
 
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                putToEnd(position, flCard);
-                            }
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    putToEnd(position, flCard);
+                                }
 
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
 
-                            }
-                        });
+                                }
+                            });
+                        }
                     }
                 });
 

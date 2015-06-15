@@ -123,10 +123,12 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         slv.setSwipeListViewListener(new BaseSwipeListViewListener() {
             @Override
             public void onOpened(int position, boolean toRight) {
+                cardsController.getCards().get(position).setRevealed(true);
             }
 
             @Override
             public void onClosed(int position, boolean fromRight) {
+                cardsController.getCards().get(position).setRevealed(false);
             }
 
             @Override

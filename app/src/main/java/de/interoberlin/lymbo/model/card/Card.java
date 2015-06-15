@@ -24,6 +24,7 @@ public class Card {
     private int sideVisible;
     private boolean discarded;
 
+    private boolean revealed = false;
     private boolean restoring = false;
 
     // -------------------------
@@ -172,6 +173,14 @@ public class Card {
 
     public void setDiscarded(boolean discarded) {
         this.discarded = discarded;
+    }
+
+    public boolean isRevealed() {
+        return revealed;
+    }
+
+    public void setRevealed(boolean revealed) {
+        this.revealed = revealed;
     }
 
     public boolean isRestoring() {

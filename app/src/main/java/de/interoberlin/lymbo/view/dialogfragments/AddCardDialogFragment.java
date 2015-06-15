@@ -126,7 +126,7 @@ public class AddCardDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 TableRow trLast = (TableRow) tblTags.getChildAt(tblTags.getChildCount() - 2);
 
-                if (!(trLast.getChildAt(1) instanceof EditText) || (trLast.getChildAt(1) instanceof EditText && !((EditText) trLast.getChildAt(1)).getText().toString().isEmpty())) {
+                if (trLast == null || trLast.getChildCount() < 2 || !(trLast.getChildAt(1) instanceof EditText) || (trLast.getChildAt(1) instanceof EditText && !((EditText) trLast.getChildAt(1)).getText().toString().isEmpty())) {
                     // New tag
                     final TableRow tr = new TableRow(c);
                     final CheckBox cb = new CheckBox(c);
