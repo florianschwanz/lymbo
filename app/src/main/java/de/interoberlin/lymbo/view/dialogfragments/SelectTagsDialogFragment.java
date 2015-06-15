@@ -19,11 +19,9 @@ import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
-public class CheckboxDialogFragment extends DialogFragment {
+public class SelectTagsDialogFragment extends DialogFragment {
     // Controllers
     CardsController cardsController = CardsController.getInstance();
-
-    private static EDialogType type;
 
     private OnLabelSelectedListener onLabelSelectedListener;
 
@@ -31,7 +29,7 @@ public class CheckboxDialogFragment extends DialogFragment {
     // Constructors
     // --------------------
 
-    public CheckboxDialogFragment() {
+    public SelectTagsDialogFragment() {
     }
 
     // --------------------
@@ -45,7 +43,7 @@ public class CheckboxDialogFragment extends DialogFragment {
         Context c = getActivity();
 
         // Load layout
-        final View v = View.inflate(c, R.layout.dialogfragment_table, null);
+        final View v = View.inflate(c, R.layout.dialogfragment_select_labels, null);
         final TableLayout tblChapters = (TableLayout) v.findViewById(R.id.tblChapters);
         final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
 
@@ -105,68 +103,27 @@ public class CheckboxDialogFragment extends DialogFragment {
             tblTags.addView(tr);
         }
 
-
         // Load dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-        Bundle b = getArguments();
-
-        // Determine type
-        switch (b.getString("type")) {
-            case "ADD_STACK":
-                type = EDialogType.ADD_STACK;
-                break;
-            case "CHANGE_STACK":
-                type = EDialogType.CHANGE_STACK;
-                break;
-            case "DISCARD_CARD":
-                type = EDialogType.DISCARD_CARD;
-                break;
-            case "HINT":
-                type = EDialogType.HINT;
-                break;
-            case "SELECT_LABEL":
-                type = EDialogType.SELECT_LABEL;
-                break;
-        }
-
         builder.setView(v);
-        if (b.get("title") != null) {
-            builder.setTitle((String) b.get("title"));
-        }
-        if (b.get("message") != null) {
-            builder.setMessage((String) b.get("message"));
-        }
+            builder.setTitle(R.string.tags);
 
         // Add positive button
-        switch (type) {
-            case SELECT_LABEL: {
-                builder.setPositiveButton(R.string.okay, new OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        onLabelSelectedListener.onLabelSelected();
-                        dismiss();
-                    }
-                });
+        builder.setPositiveButton(R.string.okay, new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                onLabelSelectedListener.onLabelSelected();
+                dismiss();
             }
-        }
+        });
 
         // Add negative button
-        switch (type) {
-            case SELECT_LABEL: {
-                break;
+        builder.setNegativeButton(R.string.cancel, new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dismiss();
             }
-
-            default: {
-                builder.setNegativeButton(R.string.cancel, new OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dismiss();
-                    }
-                });
-                break;
-            }
-        }
+        });
 
         return builder.create();
     }
@@ -185,10 +142,8 @@ public class CheckboxDialogFragment extends DialogFragment {
     // Callback interfaces
     // --------------------
 
-    public static interface OnLabelSelectedListener {
-
-        public abstract void onLabelSelected();
-
+    public interface OnLabelSelectedListener {
+        void onLabelSelected();
     }
 
     public void onAttach(Activity activity) {

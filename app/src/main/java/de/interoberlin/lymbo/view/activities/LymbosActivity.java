@@ -24,7 +24,6 @@ import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.AddStackDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.EDialogType;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 
@@ -85,13 +84,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
         ibFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddStackDialogFragment addStackDialogFragment = new AddStackDialogFragment();
-                Bundle b = new Bundle();
-                b.putString("type", EDialogType.ADD_STACK.toString());
-                b.putString("title", getResources().getString(R.string.add_stack));
-
-                addStackDialogFragment.setArguments(b);
-                addStackDialogFragment.show(getFragmentManager(), "okay");
+                new AddStackDialogFragment().show(getFragmentManager(), "okay");
             }
         });
 

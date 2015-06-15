@@ -45,6 +45,12 @@ public class Tag implements Displayable {
         return new View(c);
     }
 
+    public Tag clone() {
+        Tag t = new Tag(this.getName());
+        t.setChecked(false);
+        return t;
+    }
+
     // --------------------
     // Getters / Setters
     // --------------------
