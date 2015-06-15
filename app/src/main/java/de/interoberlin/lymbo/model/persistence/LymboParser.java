@@ -7,9 +7,13 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +105,8 @@ public class LymboParser {
 
         // Read attributes
         String id = parser.getAttributeValue(null, "id");
+        String creationDate = parser.getAttributeValue(null, "creationDate");
+        String modificationDate = parser.getAttributeValue(null, "modificationDate");
         String title = parser.getAttributeValue(null, "title");
         String subtitle = parser.getAttributeValue(null, "subtitle");
         String hint = parser.getAttributeValue(null, "hint");
@@ -148,6 +154,10 @@ public class LymboParser {
         // Fill element
         if (id != null)
             lymbo.setId(id);
+        if (creationDate != null)
+            lymbo.setCreationDate(creationDate);
+        if (modificationDate != null)
+            lymbo.setModificationDate(modificationDate);
         if (title != null)
             lymbo.setTitle(title);
         if (subtitle != null)
@@ -704,7 +714,6 @@ public class LymboParser {
 
         return new AbstractMap.SimpleEntry<>(lang, value);
     }
-
 
     /**
      * Returns a line count

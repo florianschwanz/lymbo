@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +27,8 @@ public class Lymbo implements Displayable {
     private boolean asset;
 
     private String id;
+    private String creationDate;
+    private String modificationDate;
     private String title;
     private String subtitle;
     private String hint;
@@ -49,6 +52,8 @@ public class Lymbo implements Displayable {
 
     private void init() {
         id = UUID.randomUUID().toString();
+        creationDate = new Date().toString();
+        modificationDate = new Date().toString();
         title = "";
         subtitle = "";
         hint = null;
@@ -195,6 +200,22 @@ public class Lymbo implements Displayable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getModificationDate() {
+        return modificationDate;
+    }
+
+    public void setModificationDate(String modificationDate) {
+        this.modificationDate = modificationDate;
     }
 
     public String getPath() {

@@ -60,11 +60,9 @@ public class LymboWriter {
      */
     private static void appendLymbo(String tag, Lymbo lymbo) {
         Map<String, String> attributes = new HashMap<>();
-        if (lymbo.getId() != null)
-            attributes.put("id", lymbo.getId());
-        else
-            attributes.put("id", UUID.randomUUID().toString());
-
+        attributes.put("id", lymbo.getId());
+        attributes.put("creationDate", lymbo.getCreationDate().toString());
+        attributes.put("modificationDate", lymbo.getModificationDate().toString());
         attributes.put("title", lymbo.getTitle());
         attributes.put("subtitle", lymbo.getSubtitle());
         attributes.put("hint", lymbo.getHint());

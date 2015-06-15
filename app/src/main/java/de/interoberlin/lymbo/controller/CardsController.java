@@ -5,6 +5,7 @@ import android.content.Context;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -122,6 +123,7 @@ public class CardsController {
      */
     public void save() {
         if (lymbo.getPath() != null) {
+            lymbo.setModificationDate(new Date().toString());
             LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
         }
     }
