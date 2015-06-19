@@ -26,6 +26,7 @@ public class Card {
 
     private boolean revealed = false;
     private boolean restoring = false;
+    private boolean noteExpanded = false;
 
     // -------------------------
     // Constructors
@@ -189,5 +190,13 @@ public class Card {
 
     public void setRestoring(boolean restoring) {
         this.restoring = restoring;
+    }
+
+    public boolean isNoteExpanded() {
+        return noteExpanded;
+    }
+
+    public void setNoteExpanded(boolean noteExpanded) {
+        this.noteExpanded = noteExpanded;
     }
 }

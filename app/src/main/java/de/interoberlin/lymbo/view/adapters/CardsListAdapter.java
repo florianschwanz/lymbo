@@ -83,8 +83,11 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 final LinearLayout llFlip = (LinearLayout) flCard.findViewById(R.id.llFlip);
                 final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
                 final TextView tvDenominator = (TextView) flCard.findViewById(R.id.tvDenominator);
+                final ImageView ivNote = (ImageView) flCard.findViewById(R.id.ivNote);
                 final ImageView ivEdit = (ImageView) flCard.findViewById(R.id.ivEdit);
                 final ImageView ivHint = (ImageView) flCard.findViewById(R.id.ivHint);
+
+                final LinearLayout llNoteBar = (LinearLayout) flCard.findViewById(R.id.llNoteBar);
 
                 // Load views : reveal
                 // final ImageView ivDismiss = (Button) flCard.findViewById(R.id.ivDismiss);
@@ -100,6 +103,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
                 rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
 
+                if (!card.isNoteExpanded())
+                    llNoteBar.getLayoutParams().height = 0;
 
                 // Tags
                 for (Tag tag : card.getTags()) {
@@ -147,20 +152,76 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 }
 
                 // Action : edit
-            /*
-            if (card.isEdit()) {
-                ivEdit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        componentsController.setCard(card);
-                        Intent openStartingPoint = new Intent(c, EditCardActivity.class);
-                        c.startActivity(openStartingPoint);
-                    }
-                });
-            } else {
-            */
+                /*
+                if (card.isEdit()) {
+                    ivEdit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            componentsController.setCard(card);
+                            Intent openStartingPoint = new Intent(c, EditCardActivity.class);
+                            c.startActivity(openStartingPoint);
+                        }
+                    });
+                } else {
+                */
                 ViewUtil.remove(ivEdit);
                 //}
+
+                // Action : note
+                ivNote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        System.out.println("HUHU");
+
+                        if (card.isNoteExpanded()) {
+                            System.out.println("PING");
+
+                            Animation anim = ViewUtil.collapse(c, llNoteBar);
+                            llNoteBar.startAnimation(anim);
+                            card.setNoteExpanded(false);
+
+                            anim.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    ivNote.setImageResource(R.drawable.ic_action_expand);
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+
+                                }
+                            });
+                        } else {
+                            System.out.println("PONG");
+
+                            Animation anim = ViewUtil.expand(c, llNoteBar);
+                            llNoteBar.startAnimation(anim);
+                            card.setNoteExpanded(true);
+
+                            anim.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    ivNote.setImageResource(R.drawable.ic_action_collapse);
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+
+                                }
+                            });
+                        }
+                    }
+                });
 
                 // Action : hint
                 if (card.getHint() != null) {

@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="wrap_content"
-    android:layout_width="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <!-- Reveal -->
 
     <LinearLayout
         android:id="@+id/reveal"
-        android:padding="@dimen/card_reveal_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/card_reveal_margin">
 
         <!--
         <Button
@@ -23,150 +25,207 @@
         -->
         <ImageView
             android:id="@+id/ivDiscard"
-            android:contentDescription="@string/desc_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/button_margin"
             android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_margin="@dimen/button_margin"
+            android:contentDescription="@string/desc_image"
             android:minHeight="@dimen/reveal_icon_size"
             android:minWidth="@dimen/reveal_icon_size"
-            android:paddingStart="@dimen/reveal_icon_padding"
             android:paddingEnd="@dimen/reveal_icon_padding"
+            android:paddingStart="@dimen/reveal_icon_padding"
             android:src="@drawable/ic_action_accept" />
 
         <ImageView
             android:id="@+id/ivToEnd"
-            android:contentDescription="@string/desc_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/button_margin"
             android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_margin="@dimen/button_margin"
+            android:contentDescription="@string/desc_image"
             android:minHeight="@dimen/reveal_icon_size"
             android:minWidth="@dimen/reveal_icon_size"
-            android:paddingStart="@dimen/reveal_icon_padding"
             android:paddingEnd="@dimen/reveal_icon_padding"
+            android:paddingStart="@dimen/reveal_icon_padding"
             android:src="@drawable/ic_action_cancel" />
     </LinearLayout>
 
-    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <!-- Surface -->
+
+    <LinearLayout
         android:id="@+id/surface"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/card_margin"
-        card_view:cardCornerRadius="2dp">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            card_view:cardCornerRadius="2dp">
 
-            <!-- Components -->
-            <RelativeLayout
-                android:id="@+id/rlMain"
-                android:tag="front"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp" />
-
-            <!-- Bottom bar -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/llBottom"
                 android:orientation="vertical">
 
-                <!-- Tags -->
-                <LinearLayout
-                    android:id="@+id/llTags"
-                    android:gravity="start"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <!-- Divider -->
-                <View
-                    android:id="@+id/divider"
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="14dp"
-                    android:background="@color/stroke" />
-
-                <!-- Bottom icons -->
-                <LinearLayout
+                <!-- Components -->
+                <RelativeLayout
+                    android:id="@+id/rlMain"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:baselineAligned="true"
-                    android:id="@+id/llIconbar"
-                    android:orientation="horizontal">
+                    android:padding="@dimen/card_padding"
+                    android:tag="front" />
 
-                    <!-- Edit -->
+                <!-- Bottom bar -->
+                <LinearLayout
+                    android:id="@+id/llBottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Tags -->
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:id="@+id/llTags"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/llCustomIconsFront"
                         android:gravity="start"
+                        android:orientation="horizontal" />
+
+                    <!-- Divider -->
+                    <View
+                        android:id="@+id/divider"
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="14dp"
+                        android:background="@color/stroke" />
+
+                    <!-- Bottom icons -->
+                    <LinearLayout
+                        android:id="@+id/llIconbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="true"
                         android:orientation="horizontal">
 
-                        <ImageView
-                            android:id="@+id/ivEdit"
+                        <!-- Note -->
+                        <LinearLayout
+                            android:id="@+id/llNote"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="@string/edit"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_action_edit" />
-                    </LinearLayout>
+                            android:gravity="start"
+                            android:orientation="horizontal">
 
-                    <!-- Hint -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:gravity="end">
+                            <ImageView
+                                android:id="@+id/ivNote"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/note"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_action_expand" />
+                        </LinearLayout>
 
-                        <ImageView
-                            android:id="@+id/ivHint"
+                        <!-- Edit -->
+                        <LinearLayout
+                            android:id="@+id/llCustomIconsFront"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="@string/hint"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_action_about" />
-                    </LinearLayout>
+                            android:gravity="start"
+                            android:orientation="horizontal">
 
-                    <!-- Flip -->
-                    <LinearLayout
-                        android:id="@+id/llFlip"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.2"
-                        android:padding="10dp"
-                        android:gravity="end">
+                            <ImageView
+                                android:id="@+id/ivEdit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/edit"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_action_edit" />
+                        </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/tvNumerator"
-                            android:layout_width="wrap_content"
+                        <!-- Hint -->
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:textColor="@color/card_text" />
+                            android:layout_weight="0.5"
+                            android:gravity="end">
 
-                        <TextView
-                            android:id="@+id/tvFraction"
-                            android:text="@string/fraction"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:textColor="@color/card_text" />
+                            <ImageView
+                                android:id="@+id/ivHint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/hint"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_action_about" />
+                        </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/tvDenominator"
-                            android:layout_width="wrap_content"
+                        <!-- Flip -->
+                        <LinearLayout
+                            android:id="@+id/llFlip"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/card_text" />
+                            android:layout_weight="0.2"
+                            android:gravity="end"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:id="@+id/tvNumerator"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textColor="@color/card_text" />
+
+                            <TextView
+                                android:id="@+id/tvFraction"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/fraction"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textColor="@color/card_text" />
+
+                            <TextView
+                                android:id="@+id/tvDenominator"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/card_text" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+        </android.support.v7.widget.CardView>
 
+        <!-- Note -->
+        <LinearLayout
+            android:id="@+id/llNoteBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/note_margin"
+            android:layout_marginStart="@dimen/note_margin"
+            android:background="@color/card_light_text"
+            android:padding="@dimen/card_padding">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.9"
+                    android:hint="@string/note" />
+
+                <ImageView
+                    android:id="@+id/ivEditNote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_edit" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
 </FrameLayout>

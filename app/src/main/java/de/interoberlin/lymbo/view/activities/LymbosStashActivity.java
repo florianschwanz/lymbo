@@ -4,13 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.fortysevendeg.swipelistview.SwipeListView;
 import com.github.mrengineer13.snackbar.SnackBar;
 
 import java.util.List;
@@ -24,6 +23,7 @@ import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.LymbosStashListAdapter;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
+import de.interoberlin.swipelistview.view.SwipeListView;
 
 public class LymbosStashActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener {
     // Controllers
@@ -67,7 +67,7 @@ public class LymbosStashActivity extends BaseActivity implements SwipeRefreshLay
         lymbosStashedAdapter = new LymbosStashListAdapter(this, this, R.layout.stack_stash, lymbos);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
-        drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
+        drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         srl.setOnRefreshListener(this);

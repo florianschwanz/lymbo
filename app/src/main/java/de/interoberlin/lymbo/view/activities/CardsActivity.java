@@ -5,18 +5,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.os.Vibrator;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
-import com.fortysevendeg.swipelistview.BaseSwipeListViewListener;
-import com.fortysevendeg.swipelistview.SwipeListView;
 import com.github.mrengineer13.snackbar.SnackBar;
 
 import java.io.File;
@@ -34,6 +33,8 @@ import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.AddCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
+import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
+import de.interoberlin.swipelistview.view.SwipeListView;
 
 public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnLabelSelectedListener, SnackBar.OnMessageClickListener {
     // Controllers
@@ -105,7 +106,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
-        drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
+        drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
 
@@ -119,6 +120,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         slv.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_REVEAL);
         slv.setSwipeActionRight(SwipeListView.SWIPE_ACTION_REVEAL);
         slv.setSwipeOpenOnLongPress(false);
+        slv.setDescendantFocusability(ListView.FOCUS_AFTER_DESCENDANTS);
 
         slv.setSwipeListViewListener(new BaseSwipeListViewListener() {
             @Override

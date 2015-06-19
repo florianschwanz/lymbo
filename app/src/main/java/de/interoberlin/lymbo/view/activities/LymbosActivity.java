@@ -4,16 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import com.fortysevendeg.swipelistview.SwipeListView;
 import com.github.mrengineer13.snackbar.SnackBar;
 
 import de.interoberlin.lymbo.R;
@@ -26,6 +25,7 @@ import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.AddStackDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
+import de.interoberlin.swipelistview.view.SwipeListView;
 
 public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddStackDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
@@ -68,7 +68,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
         lymbosAdapter = new LymbosListAdapter(this, this, R.layout.stack, lymbosController.getLymbos());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
-        drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
+        drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
 

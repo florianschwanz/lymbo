@@ -30,7 +30,7 @@
     <!-- <integer name="num_cols">1</integer> -->
     <dimen name="card_margin">10dp</dimen>
     <dimen name="card_reveal_margin">20dp</dimen>
-    <dimen name="card_padding">16.0dip</dimen>
+    <dimen name="card_padding">8dp</dimen>
     <dimen name="min_card_height">80dp</dimen>
     <!-- <dimen name="stack_height">150dp</dimen> -->
     <dimen name="card_small_text">14.0sp</dimen>
@@ -38,6 +38,7 @@
     <dimen name="list_text_size">16sp</dimen>
     <dimen name="list_item_height">48dip</dimen>
     <dimen name="sticky_height">120dp</dimen>
+    <dimen name="note_margin">5dp</dimen>
 
     <!-- Tag -->
     <dimen name="tag_margin">10dp</dimen>
