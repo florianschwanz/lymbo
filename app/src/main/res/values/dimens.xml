@@ -34,6 +34,7 @@
     <dimen name="min_card_height">80dp</dimen>
     <!-- <dimen name="stack_height">150dp</dimen> -->
     <dimen name="card_small_text">14.0sp</dimen>
+    <dimen name="card_medium_text">20.0sp</dimen>
     <dimen name="card_large_text">25.0sp</dimen>
     <dimen name="list_text_size">16sp</dimen>
     <dimen name="list_item_height">48dip</dimen>

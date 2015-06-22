@@ -16,11 +16,15 @@ import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
 import de.interoberlin.lymbo.model.persistence.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.LymboWriter;
+import de.interoberlin.lymbo.model.persistence.sqlite.notes.LymboNote;
+import de.interoberlin.lymbo.model.persistence.sqlite.notes.LymboNoteDatasource;
 
 public class CardsController {
     private Lymbo lymbo;
     private List<Card> cards = new ArrayList<>();
     private LymbosController lymbosController = LymbosController.getInstance();
+
+    private LymboNoteDatasource datasource;
 
     private static CardsController instance;
 
@@ -200,6 +204,39 @@ public class CardsController {
                 list.add(0, null);
             }
         }
+    }
+
+    public void setNote(Context context, String uuid, String text) {
+        datasource = new LymboNoteDatasource(context);
+        datasource.open();
+
+        System.out.println("\nBEFORE");
+        for (LymboNote ln : datasource.getAllNotes()) {
+            System.out.println(ln.getId() + " " + ln.getUuid() + " " + ln.getText());
+        }
+
+        datasource.updateNote(uuid, text);
+
+        System.out.println("\nAFTER");
+        for (LymboNote ln : datasource.getAllNotes()) {
+            System.out.println(ln.getId() + " " + ln.getUuid() + " " + ln.getText());
+        }
+
+        datasource.close();
+    }
+
+    public String getNote(Context context, String uuid) {
+        datasource = new LymboNoteDatasource(context);
+        datasource.open();
+
+        LymboNote note = datasource.getNote(uuid);
+
+        datasource.close();
+
+        if (note != null)
+            return note.getText();
+        else
+            return null;
     }
 
     // --------------------

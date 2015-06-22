@@ -7,13 +7,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -198,6 +194,7 @@ public class LymboParser {
         Card card = new Card();
 
         // Read attributes
+        String id = parser.getAttributeValue(null, "id");
         String edit = parser.getAttributeValue(null, "edit");
         String hint = parser.getAttributeValue(null, "hint");
         String chapter = parser.getAttributeValue(null, "chapter");
@@ -236,6 +233,10 @@ public class LymboParser {
         // Fill element
         card.setSides(sides);
 
+        if (id != null)
+            card.setId(id);
+        if (edit != null)
+            card.setEdit(Boolean.parseBoolean(edit));
         if (hint != null)
             card.setHint(hint);
         if (chapter != null)
