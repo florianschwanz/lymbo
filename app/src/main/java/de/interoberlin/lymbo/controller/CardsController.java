@@ -209,19 +209,7 @@ public class CardsController {
     public void setNote(Context context, String uuid, String text) {
         datasource = new LymboNoteDatasource(context);
         datasource.open();
-
-        System.out.println("\nBEFORE");
-        for (LymboNote ln : datasource.getAllNotes()) {
-            System.out.println(ln.getId() + " " + ln.getUuid() + " " + ln.getText());
-        }
-
         datasource.updateNote(uuid, text);
-
-        System.out.println("\nAFTER");
-        for (LymboNote ln : datasource.getAllNotes()) {
-            System.out.println(ln.getId() + " " + ln.getUuid() + " " + ln.getText());
-        }
-
         datasource.close();
     }
 
@@ -233,10 +221,7 @@ public class CardsController {
 
         datasource.close();
 
-        if (note != null)
-            return note.getText();
-        else
-            return null;
+        return note != null ? note.getText() : null;
     }
 
     // --------------------

@@ -99,7 +99,7 @@ public class LymboNoteDatasource {
      */
     public void deleteNote(LymboNote note) {
         database.delete(LymboSQLiteOpenHelper.TABLE_NOTE, LymboSQLiteOpenHelper.COL_UUID
-                + " = " + note.getUuid(), null);
+                + " = '" + note.getUuid() + "'", null);
     }
 
     /**

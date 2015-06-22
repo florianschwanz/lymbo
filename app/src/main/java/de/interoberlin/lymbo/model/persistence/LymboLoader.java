@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.mate.lib.model.Log;
@@ -52,6 +53,13 @@ public class LymboLoader {
             if (l != null) {
                 l.setPath(f.getAbsolutePath());
                 l.setAsset(false);
+
+                // Make sure that newly generated ids will be persistent
+                if (!onlyTopLevel && l.isContainsGeneratedIds()) {
+                    l.setModificationDate(new Date().toString());
+                    LymboWriter.writeXml(l, new File(l.getPath()));
+                }
+
                 return l;
             } else {
                 return null;

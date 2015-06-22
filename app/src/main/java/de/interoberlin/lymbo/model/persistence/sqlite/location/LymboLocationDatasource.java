@@ -74,7 +74,7 @@ public class LymboLocationDatasource {
     public void deleteLocation(LymboLocation location) {
         String path = location.getPath();
         database.delete(LymboSQLiteOpenHelper.TABLE_LOCATION, LymboSQLiteOpenHelper.COL_PATH
-                + " = " + path, null);
+                + " = '" + path + "'", null);
     }
 
     /**
