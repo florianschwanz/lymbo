@@ -124,11 +124,13 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             @Override
             public void onOpened(int position, boolean toRight) {
                 cardsController.getCards().get(position).setRevealed(true);
+                srl.setEnabled(true);
             }
 
             @Override
             public void onClosed(int position, boolean fromRight) {
                 cardsController.getCards().get(position).setRevealed(false);
+                srl.setEnabled(true);
             }
 
             @Override
@@ -141,10 +143,12 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
             @Override
             public void onStartOpen(int position, int action, boolean right) {
+                srl.setEnabled(false);
             }
 
             @Override
             public void onStartClose(int position, boolean right) {
+                srl.setEnabled(false);
             }
 
             @Override
