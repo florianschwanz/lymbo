@@ -272,16 +272,23 @@ public class LymbosController extends Application {
     }
 
     /**
-     * This is necessary to display the first element below the toolbar
+     * This is necessary to display the first element below the toolbar and to leave enough space at
+     * the bottom for the floating action point not to cover other elements
      *
-     * @param list list which shall be extended by a leading null element
+     * @param list list which shall be extended by a leading and trailing null element
      */
     public void addNullElement(List<Lymbo> list) {
         if (!list.isEmpty()) {
             list.removeAll(Collections.singleton(null));
 
+            // Add leading null element
             if (list.get(0) != null) {
                 list.add(0, null);
+            }
+
+            // Add trailling null element
+            if (list.get(list.size() - 1) != null) {
+                list.add(null);
             }
         }
     }
