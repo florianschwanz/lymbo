@@ -35,6 +35,8 @@ public class Lymbo implements Displayable {
     private String author;
     private List<Card> cards;
 
+    private boolean containsGeneratedIds;
+
     private String error;
 
     // -------------------------
@@ -276,6 +278,14 @@ public class Lymbo implements Displayable {
 
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+    public boolean isContainsGeneratedIds() {
+        return containsGeneratedIds;
+    }
+
+    public void setContainsGeneratedIds(boolean containsGeneratedIds) {
+        this.containsGeneratedIds = containsGeneratedIds;
     }
 
     public String getError() {

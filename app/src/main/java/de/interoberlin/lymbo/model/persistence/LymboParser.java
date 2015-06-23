@@ -7,13 +7,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +37,7 @@ public class LymboParser {
     private static LymboParser instance;
 
     private Map<String, String> defaults = new HashMap<>();
+    private boolean containsGeneratedIds = false;
 
     // --------------------
     // Constructors
@@ -75,7 +72,10 @@ public class LymboParser {
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(is, null);
             parser.nextTag();
-            return parseLymbo(parser, onlyTopLevel);
+
+            Lymbo lymbo = parseLymbo(parser, onlyTopLevel);
+            lymbo.setContainsGeneratedIds(containsGeneratedIds);
+            return lymbo;
         } catch (XmlPullParserException xmlppe) {
             Lymbo lymbo = new Lymbo();
             lymbo.setError(xmlppe.toString());
@@ -151,6 +151,11 @@ public class LymboParser {
             }
         }
 
+        // Indicate newly generated id
+        if (id == null) {
+            containsGeneratedIds =true;
+        }
+
         // Fill element
         if (id != null)
             lymbo.setId(id);
@@ -198,6 +203,7 @@ public class LymboParser {
         Card card = new Card();
 
         // Read attributes
+        String id = parser.getAttributeValue(null, "id");
         String edit = parser.getAttributeValue(null, "edit");
         String hint = parser.getAttributeValue(null, "hint");
         String chapter = parser.getAttributeValue(null, "chapter");
@@ -233,9 +239,18 @@ public class LymboParser {
                 sides.add(side);
         }
 
+        // Indicate newly generated id
+        if (id == null) {
+            containsGeneratedIds =true;
+        }
+
         // Fill element
         card.setSides(sides);
 
+        if (id != null)
+            card.setId(id);
+        if (edit != null)
+            card.setEdit(Boolean.parseBoolean(edit));
         if (hint != null)
             card.setHint(hint);
         if (chapter != null)

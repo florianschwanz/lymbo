@@ -34,6 +34,7 @@ import de.interoberlin.lymbo.model.card.enums.EComponent;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
 
 public class CardsListAdapter extends ArrayAdapter<Card> {
     private Context c;
@@ -83,8 +84,13 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 final LinearLayout llFlip = (LinearLayout) flCard.findViewById(R.id.llFlip);
                 final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
                 final TextView tvDenominator = (TextView) flCard.findViewById(R.id.tvDenominator);
+                final ImageView ivNote = (ImageView) flCard.findViewById(R.id.ivNote);
                 final ImageView ivEdit = (ImageView) flCard.findViewById(R.id.ivEdit);
                 final ImageView ivHint = (ImageView) flCard.findViewById(R.id.ivHint);
+
+                final LinearLayout llNoteBar = (LinearLayout) flCard.findViewById(R.id.llNoteBar);
+                final TextView tvNote = (TextView) flCard.findViewById(R.id.tvNote);
+                final ImageView ivEditNote = (ImageView) flCard.findViewById(R.id.ivEditNote);
 
                 // Load views : reveal
                 // final ImageView ivDismiss = (Button) flCard.findViewById(R.id.ivDismiss);
@@ -100,6 +106,14 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
                 rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
 
+                if (!card.isNoteExpanded())
+                    llNoteBar.getLayoutParams().height = 0;
+
+                String note = cardsController.getNote(c, card.getId());
+
+                // Note
+                if (note != null)
+                    tvNote.setText(note);
 
                 // Tags
                 for (Tag tag : card.getTags()) {
@@ -147,20 +161,84 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 }
 
                 // Action : edit
-            /*
-            if (card.isEdit()) {
-                ivEdit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        componentsController.setCard(card);
-                        Intent openStartingPoint = new Intent(c, EditCardActivity.class);
-                        c.startActivity(openStartingPoint);
-                    }
-                });
-            } else {
-            */
+                /*
+                if (card.isEdit()) {
+                    ivEdit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            componentsController.setCard(card);
+                            Intent openStartingPoint = new Intent(c, EditCardActivity.class);
+                            c.startActivity(openStartingPoint);
+                        }
+                    });
+                } else {
+                */
                 ViewUtil.remove(ivEdit);
                 //}
+
+                // Action : note
+                ivNote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (card.isNoteExpanded()) {
+                            Animation anim = ViewUtil.collapse(c, llNoteBar);
+                            llNoteBar.startAnimation(anim);
+                            card.setNoteExpanded(false);
+
+                            anim.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    ivNote.setImageResource(R.drawable.ic_action_expand);
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+
+                                }
+                            });
+                        } else {
+                            Animation anim = ViewUtil.expand(c, llNoteBar);
+                            llNoteBar.startAnimation(anim);
+                            card.setNoteExpanded(true);
+
+                            anim.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    ivNote.setImageResource(R.drawable.ic_action_collapse);
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+
+                                }
+                            });
+                        }
+                    }
+                });
+
+                // Action : edit note
+                ivEditNote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        EditNoteDialogFragment editNoteDialogFragment = new EditNoteDialogFragment();
+                        Bundle b = new Bundle();
+                        b.putCharSequence("uuid", card.getId());
+                        b.putCharSequence("note", tvNote.getText());
+
+                        editNoteDialogFragment.setArguments(b);
+                        editNoteDialogFragment.show(a.getFragmentManager(), "okay");
+                    }
+                });
 
                 // Action : hint
                 if (card.getHint() != null) {
@@ -181,10 +259,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 }
 
                 // Remove bottom bar if unnecessary
-                if (card.getSides().size() < 2 && !card.isEdit() && card.getHint() == null) {
+                /*if (card.getSides().size() < 2 && !card.isEdit() && card.getHint() == null) {
                     ViewUtil.remove(divider);
                     ViewUtil.remove(llIconbar);
-                }
+                }*/
 
                 // Reveal : dismiss
                 /*

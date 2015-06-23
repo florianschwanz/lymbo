@@ -54,5 +54,6 @@
     <string name="path">Pfad</string>
     <string name="add_tags">Tags hinzufügen</string>
     <string name="new_tag">neuer Tag</string>
+    <string name="note">Notiz</string>
 
 </resources>
