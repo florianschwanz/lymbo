@@ -97,6 +97,7 @@ public class LymboWriter {
         attributes.put("edit", String.valueOf(card.isEdit()));
         attributes.put("hint", card.getHint());
         attributes.put("tags", getTagsList(card.getTags()));
+        attributes.put("stashed", String.valueOf(card.isStashed()));
 
         addStartTag(tag, attributes);
 

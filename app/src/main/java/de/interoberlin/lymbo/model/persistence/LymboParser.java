@@ -153,7 +153,7 @@ public class LymboParser {
 
         // Indicate newly generated id
         if (id == null) {
-            containsGeneratedIds =true;
+            containsGeneratedIds = true;
         }
 
         // Fill element
@@ -208,6 +208,7 @@ public class LymboParser {
         String hint = parser.getAttributeValue(null, "hint");
         String chapter = parser.getAttributeValue(null, "chapter");
         String tags = parser.getAttributeValue(null, "tags");
+        String stashed = parser.getAttributeValue(null, "stashed");
 
         // Read sub elements
         List<Side> sides = new ArrayList<>();
@@ -241,7 +242,7 @@ public class LymboParser {
 
         // Indicate newly generated id
         if (id == null) {
-            containsGeneratedIds =true;
+            containsGeneratedIds = true;
         }
 
         // Fill element
@@ -257,8 +258,8 @@ public class LymboParser {
             card.setChapter(parseTag(chapter));
         if (tags != null)
             card.setTags(parseTags(tags));
-        if (edit != null)
-            card.setEdit(Boolean.parseBoolean(edit));
+        if (stashed != null)
+            card.setStashed(Boolean.parseBoolean(stashed));
 
         return card;
     }
