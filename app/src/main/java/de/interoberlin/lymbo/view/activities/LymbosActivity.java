@@ -166,7 +166,6 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
         Lymbo lymbo = lymbosController.getEmptyLymbo(title, subtitle, author);
 
         lymbosController.addStack(lymbo);
-        lymbosAdapter.add(lymbo);
         lymbosAdapter.notifyDataSetChanged();
         slv.invalidateViews();
     }

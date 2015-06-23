@@ -106,6 +106,15 @@ public class LymbosController extends Application {
      * @param lymbo lymbo to be created
      */
     public void addStack(Lymbo lymbo) {
+        lymbos.add(lymbo);
+        addNullElement(lymbos);
+        save(lymbo);
+    }
+
+    /**
+     * Saves lymbo location in database
+     */
+    public void save(Lymbo lymbo) {
         LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
         LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
 
