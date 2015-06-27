@@ -14,7 +14,7 @@ import de.interoberlin.lymbo.model.persistence.sqlite.LymboSQLiteOpenHelper;
 /**
  * Data source for SQLite database table NOTE
  */
-public class LymboNoteDatasource {
+public class NoteDatasource {
     private SQLiteDatabase database;
     private LymboSQLiteOpenHelper dbLymboSQLiteOpenHelper;
     private String[] allColumns = {LymboSQLiteOpenHelper.COL_UUID, LymboSQLiteOpenHelper.COL_TEXT};
@@ -23,7 +23,7 @@ public class LymboNoteDatasource {
     // Constructors
     // --------------------
 
-    public LymboNoteDatasource(Context context) {
+    public NoteDatasource(Context context) {
         dbLymboSQLiteOpenHelper = new LymboSQLiteOpenHelper(context);
     }
 
@@ -61,7 +61,7 @@ public class LymboNoteDatasource {
      * Deletes all entries from table NOTE
      */
     public void clear() {
-        for (LymboNote n : getAllNotes()) {
+        for (Note n : getAllNotes()) {
             deleteNote(n);
         }
     }
@@ -71,15 +71,15 @@ public class LymboNoteDatasource {
      *
      * @param uuid entry identified by this uuid
      */
-    public LymboNote getNote(String uuid) {
-        List<LymboNote> notes = new ArrayList<>();
+    public Note getNote(String uuid) {
+        List<Note> notes = new ArrayList<>();
 
         Cursor cursor = database.rawQuery("SELECT * FROM " + LymboSQLiteOpenHelper.TABLE_NOTE + "  WHERE TRIM(" + LymboSQLiteOpenHelper.COL_UUID + ") = '" + uuid.trim() + "'", null);
         //Cursor cursor = database.query(LymboSQLiteOpenHelper.TABLE_NOTE, allColumns, LymboSQLiteOpenHelper.COL_UUID, new String[]{uuid}, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            LymboNote note = cursorToNote(cursor);
+            Note note = cursorToNote(cursor);
             notes.add(note);
             cursor.moveToNext();
         }
@@ -97,7 +97,7 @@ public class LymboNoteDatasource {
      *
      * @param note entry identified by this uuid will be deleted
      */
-    public void deleteNote(LymboNote note) {
+    public void deleteNote(Note note) {
         database.delete(LymboSQLiteOpenHelper.TABLE_NOTE, LymboSQLiteOpenHelper.COL_UUID
                 + " = '" + note.getUuid() + "'", null);
     }
@@ -118,15 +118,15 @@ public class LymboNoteDatasource {
      *
      * @return list of LymboNote objects
      */
-    public List<LymboNote> getAllNotes() {
-        List<LymboNote> notes = new ArrayList<>();
+    public List<Note> getAllNotes() {
+        List<Note> notes = new ArrayList<>();
 
         Cursor cursor = database.query(LymboSQLiteOpenHelper.TABLE_NOTE,
                 allColumns, null, null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            LymboNote note = cursorToNote(cursor);
+            Note note = cursorToNote(cursor);
             notes.add(note);
             cursor.moveToNext();
         }
@@ -136,10 +136,19 @@ public class LymboNoteDatasource {
         return notes;
     }
 
-    private LymboNote cursorToNote(Cursor cursor) {
-        LymboNote note = new LymboNote();
+    private Note cursorToNote(Cursor cursor) {
+        Note note = new Note();
         note.setUuid(cursor.getString(0));
         note.setText(cursor.getString(1));
         return note;
+    }
+
+    public void recreateOnSchemaChange() {
+        try {
+            database.query(LymboSQLiteOpenHelper.TABLE_NOTE,
+                    allColumns, null, null, null, null, null);
+        } catch (SQLException e) {
+            dbLymboSQLiteOpenHelper.recreateTableNote(database);
+        }
     }
 }

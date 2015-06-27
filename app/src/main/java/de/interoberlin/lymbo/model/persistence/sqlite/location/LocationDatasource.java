@@ -14,7 +14,7 @@ import de.interoberlin.lymbo.model.persistence.sqlite.LymboSQLiteOpenHelper;
 /**
  * Data source for SQLite database table LOCATION
  */
-public class LymboLocationDatasource {
+public class LocationDatasource {
     private SQLiteDatabase database;
     private LymboSQLiteOpenHelper dbLymboSQLiteOpenHelper;
     private String[] allColumns = {LymboSQLiteOpenHelper.COL_PATH, LymboSQLiteOpenHelper.COL_STASHED};
@@ -23,7 +23,7 @@ public class LymboLocationDatasource {
     // Constructors
     // --------------------
 
-    public LymboLocationDatasource(Context context) {
+    public LocationDatasource(Context context) {
         dbLymboSQLiteOpenHelper = new LymboSQLiteOpenHelper(context);
     }
 
@@ -61,7 +61,7 @@ public class LymboLocationDatasource {
      * Deletes all entries from table LOCATION
      */
     public void clear() {
-        for (LymboLocation l : getAllLocations()) {
+        for (Location l : getAllLocations()) {
             deleteLocation(l);
         }
     }
@@ -71,7 +71,7 @@ public class LymboLocationDatasource {
      *
      * @param location entry identified by this location will be deleted
      */
-    public void deleteLocation(LymboLocation location) {
+    public void deleteLocation(Location location) {
         String path = location.getPath();
         database.delete(LymboSQLiteOpenHelper.TABLE_LOCATION, LymboSQLiteOpenHelper.COL_PATH
                 + " = '" + path + "'", null);
@@ -93,15 +93,15 @@ public class LymboLocationDatasource {
      *
      * @return list of LymboLocation objects
      */
-    public List<LymboLocation> getAllLocations() {
-        List<LymboLocation> locations = new ArrayList<>();
+    public List<Location> getAllLocations() {
+        List<Location> locations = new ArrayList<>();
 
         Cursor cursor = database.query(LymboSQLiteOpenHelper.TABLE_LOCATION,
                 allColumns, null, null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            LymboLocation location = cursorToLocation(cursor);
+            Location location = cursorToLocation(cursor);
             locations.add(location);
             cursor.moveToNext();
         }
@@ -111,10 +111,19 @@ public class LymboLocationDatasource {
         return locations;
     }
 
-    private LymboLocation cursorToLocation(Cursor cursor) {
-        LymboLocation location = new LymboLocation();
+    private Location cursorToLocation(Cursor cursor) {
+        Location location = new Location();
         location.setPath(cursor.getString(0));
         location.setStashed(cursor.getInt(1));
         return location;
+    }
+
+    public void recreateOnSchemaChange() {
+        try {
+            database.query(LymboSQLiteOpenHelper.TABLE_LOCATION,
+                    allColumns, null, null, null, null, null);
+        }catch (SQLException e) {
+            dbLymboSQLiteOpenHelper.recreateTableLocation(database);
+        }
     }
 }

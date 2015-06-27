@@ -1,7 +1,7 @@
 package de.interoberlin.lymbo.model.persistence.sqlite.location;
 
 
-public class LymboLocation {
+public class Location {
     private String path;
     private int stashed;
 
@@ -9,11 +9,11 @@ public class LymboLocation {
     // Constructors
     // --------------------
 
-    public LymboLocation() {
+    public Location() {
 
     }
 
-    public LymboLocation(String path, int stashed) {
+    public Location(String path, int stashed) {
         this.path = path;
         this.stashed = stashed;
     }

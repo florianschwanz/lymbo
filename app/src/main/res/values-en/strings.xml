@@ -55,5 +55,7 @@
     <string name="add_tags">Add tags</string>
     <string name="new_tag">new tag</string>
     <string name="note">Note</string>
+    <string name="card_restored">Card restored</string>
+    <string name="stash_card">Stashed card</string>
 
 </resources>

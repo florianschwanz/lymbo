@@ -55,5 +55,7 @@
     <string name="add_tags">Tags hinzufügen</string>
     <string name="new_tag">neuer Tag</string>
     <string name="note">Notiz</string>
+    <string name="card_restored">Karte wiederhergestellt</string>
+    <string name="stash_card">Karte in den Papierkorb verschoben</string>
 
 </resources>

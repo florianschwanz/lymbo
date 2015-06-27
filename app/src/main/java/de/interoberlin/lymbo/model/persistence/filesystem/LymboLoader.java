@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.model.persistence;
+package de.interoberlin.lymbo.model.persistence.filesystem;
 
 import android.content.Context;
 

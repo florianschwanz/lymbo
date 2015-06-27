@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.model.persistence;
+package de.interoberlin.lymbo.model.persistence.filesystem;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -97,7 +97,6 @@ public class LymboWriter {
         attributes.put("edit", String.valueOf(card.isEdit()));
         attributes.put("hint", card.getHint());
         attributes.put("tags", getTagsList(card.getTags()));
-        attributes.put("stashed", String.valueOf(card.isStashed()));
 
         addStartTag(tag, attributes);
 

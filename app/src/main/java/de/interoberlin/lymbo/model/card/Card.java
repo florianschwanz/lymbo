@@ -23,7 +23,6 @@ public class Card {
     private boolean edit;
     private int sideVisible;
     private boolean discarded;
-    private boolean stashed;
 
     private boolean revealed = false;
     private boolean restoring = false;
@@ -52,7 +51,6 @@ public class Card {
         edit = false;
         sideVisible = 0;
         discarded = false;
-        stashed = false;
     }
 
     public boolean matchesChapter(List<Tag> cs) {
@@ -176,14 +174,6 @@ public class Card {
 
     public void setDiscarded(boolean discarded) {
         this.discarded = discarded;
-    }
-
-    public boolean isStashed() {
-        return stashed;
-    }
-
-    public void setStashed(boolean stashed) {
-        this.stashed = stashed;
     }
 
     public boolean isRevealed() {

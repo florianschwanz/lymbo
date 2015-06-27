@@ -1,6 +1,7 @@
 package de.interoberlin.lymbo.view.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -26,7 +27,7 @@ import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.persistence.LymboLoader;
+import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
@@ -54,14 +55,17 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private Lymbo lymbo;
     private CardsListAdapter cardsAdapter;
 
+    // Properties
     private final String BUNDLE_LYMBO_PATH = "lymbo_path";
     private final String BUNDLE_ASSET = "asset";
 
-    private int recentCardId = -1;
+    private String recentCardId = "";
+    private int recentCardPos = -1;
     private int recentEvent = -1;
 
     private static final int EVENT_DISCARD = 0;
     private static final int EVENT_PUT_TO_END = 1;
+    private static final int EVENT_STASH = 2;
 
     private static int REFRESH_DELAY;
 
@@ -193,7 +197,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        cardsController.setLymbo(null);
     }
 
     @Override
@@ -207,6 +210,11 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         int VIBRATION_DURATION = 50;
 
         switch (item.getItemId()) {
+            case R.id.menu_stash: {
+                Intent i = new Intent(CardsActivity.this, CardsStashActivity.class);
+                startActivity(i);
+                break;
+            }
             case R.id.menu_shuffle: {
                 ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
                 cardsController.shuffle();
@@ -278,13 +286,33 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     /**
+     * Stashes a card from the current stack
+     *
+     */
+    public void stash(int pos, String uuid) {
+        slv.invalidateViews();
+        recentCardPos = pos;
+        recentCardId = uuid;
+        recentEvent = EVENT_STASH;
+
+        new SnackBar.Builder(this)
+                .withOnClickListener(this)
+                .withMessageId(R.string.stash_card)
+                .withActionMessageId(R.string.undo)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    /**
      * Discards a card from the current stack
      *
-     * @param pos index of the card to be discarded
+     * @param uuid index of the card to be discarded
      */
-    public void discard(int pos) {
+    public void discard(int pos, String uuid) {
         slv.invalidateViews();
-        recentCardId = pos;
+        recentCardPos = pos;
+        recentCardId = uuid;
         recentEvent = EVENT_DISCARD;
 
         new SnackBar.Builder(this)
@@ -299,11 +327,12 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     /**
      * Puts a card with a given index to the end
      *
-     * @param pos index of the card to be moved
+     * @param uuid index of the card to be moved
      */
-    public void putToEnd(int pos) {
+    public void putToEnd(int pos, String uuid) {
         slv.invalidateViews();
-        recentCardId = pos;
+        recentCardPos = pos;
+        recentCardId = uuid;
         recentEvent = EVENT_PUT_TO_END;
 
         new SnackBar.Builder(this)
@@ -357,12 +386,16 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     @Override
     public void onMessageClick(Parcelable parcelable) {
         switch (recentEvent) {
+            case EVENT_STASH: {
+                cardsController.restore(recentCardPos, recentCardId);
+                break;
+            }
             case EVENT_DISCARD: {
                 cardsController.retain(recentCardId);
                 break;
             }
             case EVENT_PUT_TO_END: {
-                cardsController.putLastItemToPos(recentCardId);
+                cardsController.putLastItemToPos(recentCardPos);
                 break;
             }
         }
@@ -379,15 +412,4 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     protected int getLayoutResource() {
         return R.layout.activity_cards;
     }
-
-    /*
-    @Override
-    public void onDownloadBlob(String input) {
-        StackController.download(a, input);
-        StackController.findLymboFiles();
-
-        clear();
-        draw();
-    }
-    */
 }

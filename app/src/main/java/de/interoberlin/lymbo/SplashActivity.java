@@ -22,7 +22,6 @@ import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.controller.SplashController;
 import de.interoberlin.lymbo.controller.accelerometer.Simulation;
 import de.interoberlin.lymbo.view.activities.LymbosActivity;
-import de.interoberlin.mate.lib.util.Toaster;
 import de.interoberlin.sauvignon.lib.controller.loader.SvgLoader;
 import de.interoberlin.sauvignon.lib.model.svg.SVG;
 import de.interoberlin.sauvignon.lib.model.svg.elements.AGeometric;
@@ -60,9 +59,6 @@ public class SplashActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
-        // Register on toaster
-        Toaster.register(this, context);
 
         // Get activity and context
         activity = this;

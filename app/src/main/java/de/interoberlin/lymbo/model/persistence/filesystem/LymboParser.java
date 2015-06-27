@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.model.persistence;
+package de.interoberlin.lymbo.model.persistence.filesystem;
 
 import android.util.Xml;
 
@@ -176,7 +176,6 @@ public class LymboParser {
 
         lymbo.setCards(cards);
 
-
         return lymbo;
     }
 
@@ -190,7 +189,7 @@ public class LymboParser {
      * Returns a card which contains one or two sides
      *
      * @param parser the XmlPullParser
-     * @return xmlCard
+     * @return card Card object
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
@@ -208,7 +207,6 @@ public class LymboParser {
         String hint = parser.getAttributeValue(null, "hint");
         String chapter = parser.getAttributeValue(null, "chapter");
         String tags = parser.getAttributeValue(null, "tags");
-        String stashed = parser.getAttributeValue(null, "stashed");
 
         // Read sub elements
         List<Side> sides = new ArrayList<>();
@@ -258,8 +256,6 @@ public class LymboParser {
             card.setChapter(parseTag(chapter));
         if (tags != null)
             card.setTags(parseTags(tags));
-        if (stashed != null)
-            card.setStashed(Boolean.parseBoolean(stashed));
 
         return card;
     }

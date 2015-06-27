@@ -9,6 +9,7 @@
     <string name="back">Back</string>
     <string name="broken_lymbo_file">Broken lymbo :(</string>
     <string name="cancel">Cancel</string>
+    <string name="card_restored">Card restored</string>
     <string name="chapters">Chapters</string>
     <string name="click_to_continue">Touch on screen to continue</string>
     <string name="correct">correct</string>
@@ -47,6 +48,7 @@
     <string name="stack_restored">Stack restored</string>
     <string name="stack_stashed">Stack stashed</string>
     <string name="stash">Stash</string>
+    <string name="stash_card">Stashed card</string>
     <string name="subtitle">Subtitle</string>
     <string name="tags">Tags</string>
     <string name="text">Text</string>
