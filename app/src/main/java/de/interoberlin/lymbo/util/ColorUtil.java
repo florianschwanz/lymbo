@@ -9,6 +9,6 @@ public class ColorUtil {
     public static int getColorByString(Context c, String value) {
         int[] colors = c.getResources().getIntArray(R.array.tag_color);
 
-        return colors[value.hashCode() % colors.length];
+        return colors[Math.abs(value.hashCode()) % colors.length];
     }
 }
