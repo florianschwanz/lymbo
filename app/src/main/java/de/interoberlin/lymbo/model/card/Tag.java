@@ -37,7 +37,7 @@ public class Tag implements Displayable {
         cvTag.setCardBackgroundColor(ColorUtil.getColorByString(c, name));
 
         // Attribute : value
-        tvText.setTextColor(R.color.white);
+        tvText.setTextColor(c.getResources().getColor(R.color.white));
         tvText.setText(name);
 
         return cvTag;
