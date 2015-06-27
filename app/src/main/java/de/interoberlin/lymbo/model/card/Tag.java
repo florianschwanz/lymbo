@@ -2,14 +2,15 @@ package de.interoberlin.lymbo.model.card;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.Displayable;
-import de.interoberlin.lymbo.view.controls.RobotoSlabTextView;
+import de.interoberlin.lymbo.util.ColorUtil;
 
 public class Tag implements Displayable {
     private boolean checked = true;
@@ -30,14 +31,16 @@ public class Tag implements Displayable {
     @Override
     public View getView(Context c, Activity a, ViewGroup parent) {
         LayoutInflater li = LayoutInflater.from(c);
-        LinearLayout llTag = (LinearLayout) li.inflate(R.layout.component_tag, parent, false);
+        CardView cvTag = (CardView) li.inflate(R.layout.component_tag, parent, false);
 
-        RobotoSlabTextView rstvText = (RobotoSlabTextView) llTag.findViewById(R.id.rstvText);
+        TextView tvText = (TextView) cvTag.findViewById(R.id.tvText);
+        cvTag.setCardBackgroundColor(ColorUtil.getColorByString(c, name));
 
         // Attribute : value
-        rstvText.setText(name);
+        tvText.setTextColor(R.color.white);
+        tvText.setText(name);
 
-        return llTag;
+        return cvTag;
     }
 
     @Override

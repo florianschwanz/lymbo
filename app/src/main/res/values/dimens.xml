@@ -42,7 +42,7 @@
     <dimen name="note_margin">5dp</dimen>
 
     <!-- Tag -->
-    <dimen name="tag_margin">10dp</dimen>
+    <dimen name="tag_margin">6dp</dimen>
 
     <!-- Floating action button -->
     <dimen name="fab_button_diameter">60dp</dimen>

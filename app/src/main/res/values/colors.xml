@@ -9,7 +9,7 @@
     <!--<color name="windowBackgroundColor">#333333</color>-->
     <!--<color name="black_translucent">#80000000</color>-->
 
-    <color name="white">#FFFFFF</color>
+    <color name="white">@color/md_white_1000</color>
     <!--<color name="black">#000000</color>-->
 
     <color name="background">#EEE</color>
@@ -25,11 +25,11 @@
     <!--<color name="card_border">#ffdedede</color>-->
 
     <!-- Quiz component -->
-    <color name="correct">#8BC34A</color>
-    <color name="wrong">#FF5722</color>
+    <color name="correct">@color/md_light_green_500</color>
+    <color name="wrong">@color/md_deep_orange_500</color>
 
     <!-- Tag -->
-    <array name="tag-color">
+    <array name="tag_color">
         <item>@color/md_red_500</item>
         <item>@color/md_red_800</item>
         <item>@color/md_pink_500</item>
