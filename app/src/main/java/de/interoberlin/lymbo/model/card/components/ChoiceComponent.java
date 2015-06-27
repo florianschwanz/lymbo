@@ -23,6 +23,8 @@ public class ChoiceComponent implements Displayable {
     private ChoiceType type = ChoiceType.MULTIPLE;
     private List<Answer> answers = new ArrayList<>();
 
+    private List<CheckBox> checkboxes = new ArrayList<>();
+
     // --------------------
     // Constructor
     // --------------------
@@ -37,19 +39,40 @@ public class ChoiceComponent implements Displayable {
     @Override
     public View getView(Context c, Activity a, ViewGroup parent) {
         LayoutInflater li = LayoutInflater.from(c);
-        TableLayout tlChoices = (TableLayout) li.inflate(R.layout.component_choice, parent, false);
+        final TableLayout tlChoices = (TableLayout) li.inflate(R.layout.component_choice, parent, false);
 
         for (final Answer answer : answers) {
+
             LinearLayout llAnswer = (LinearLayout) li.inflate(R.layout.component_answer, parent, false);
 
             final CheckBox cb = (CheckBox) llAnswer.findViewById(R.id.cb);
             final TextView tvText = (TextView) llAnswer.findViewById(R.id.tvText);
 
+            checkboxes.add(cb);
+
             cb.setChecked(answer.isSelected());
             cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    answer.setSelected(b);
+                    switch (getChoiceType()) {
+                        case MULTIPLE: {
+                            answer.setSelected(b);
+                            break;
+                        }
+                        case SINGLE: {
+                            answer.setSelected(b);
+                            if (b) {
+                                answer.setSelected(b);
+                                for (CheckBox c : checkboxes) {
+                                    c.setChecked(false);
+                                }
+
+                                cb.setChecked(true);
+                            }
+
+                            break;
+                        }
+                    }
                 }
             });
 
@@ -61,12 +84,29 @@ public class ChoiceComponent implements Displayable {
             tvText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    cb.toggle();
+                    switch (getChoiceType()) {
+                        case MULTIPLE: {
+                            cb.toggle();
+                            break;
+                        }
+                        case SINGLE: {
+                            if (!cb.isChecked()) {
+                                for (CheckBox c : checkboxes) {
+                                    c.setChecked(false);
+                                }
+
+                                cb.setChecked(true);
+                            }
+
+                            break;
+                        }
+                    }
                 }
             });
 
 
             tlChoices.addView(llAnswer);
+
         }
 
         return tlChoices;

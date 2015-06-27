@@ -49,6 +49,24 @@
  			<text value="A B and C are correct."/>
  		</back>
  	</card>
+ 	<card>
+     		<front>
+     			<title value="Single choice"/>
+     			<text value="There can also be single choice cards."/>
+     			<text value="Which color does the action have?"/>
+     			<choice type="single">
+     				<answer value="Green" correct="true"/>
+     				<answer value="Blue"/>
+     				<answer value="Red"/>
+     				<answer value="Black"/>
+     			</choice>
+     			<hint value="It ain't that hard"/>
+     		</front>
+     		<back>
+     			<result/>
+     			<text value="A is correct."/>
+     		</back>
+     	</card>
 	<card>
         <front>
 			<title
