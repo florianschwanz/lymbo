@@ -32,12 +32,15 @@ public class Tag implements Displayable {
     public View getView(Context c, Activity a, ViewGroup parent) {
         LayoutInflater li = LayoutInflater.from(c);
         CardView cvTag = (CardView) li.inflate(R.layout.component_tag, parent, false);
-
         TextView tvText = (TextView) cvTag.findViewById(R.id.tvText);
-        cvTag.setCardBackgroundColor(ColorUtil.getColorByString(c, name));
+
+        int[] colorsDark = c.getResources().getIntArray(R.array.tag_color_dark);
+        int[] colorsLight = c.getResources().getIntArray(R.array.tag_color_light);
+
+        cvTag.setCardBackgroundColor(ColorUtil.getColorByString(c, name, colorsDark, colorsLight));
 
         // Attribute : value
-        tvText.setTextColor(c.getResources().getColor(R.color.white));
+        tvText.setTextColor(c.getResources().getColor(ColorUtil.getTextColorByString(name, colorsDark, colorsLight)));
         tvText.setText(name);
 
         return cvTag;

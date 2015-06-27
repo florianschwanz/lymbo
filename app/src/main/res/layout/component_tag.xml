@@ -11,8 +11,7 @@
 
     <TextView
         android:id="@+id/tvText"
-        android:color="@color/white"
-        android:padding="@dimen/tag_margin"
+        android:padding="@dimen/tag_padding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
