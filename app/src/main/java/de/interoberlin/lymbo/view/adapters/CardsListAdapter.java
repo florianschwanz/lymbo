@@ -93,7 +93,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 final ImageView ivEditNote = (ImageView) flCard.findViewById(R.id.ivEditNote);
 
                 // Load views : reveal
-                // final ImageView ivDismiss = (Button) flCard.findViewById(R.id.ivDismiss);
+                final ImageView ivStash = (ImageView) flCard.findViewById(R.id.ivStash);
                 final ImageView ivDiscard = (ImageView) flCard.findViewById(R.id.ivDiscard);
                 final ImageView ivPutToEnd = (ImageView) flCard.findViewById(R.id.ivToEnd);
 
@@ -103,6 +103,11 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                     component.setVisibility(View.INVISIBLE);
                     rlMain.addView(component);
                 }
+
+                // Display width
+                DisplayMetrics displaymetrics = new DisplayMetrics();
+                a.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+                final int displayWidth = displaymetrics.widthPixels;
 
                 rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
 
@@ -258,21 +263,33 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                     ViewUtil.remove(ivHint);
                 }
 
-                // Remove bottom bar if unnecessary
-                /*if (card.getSides().size() < 2 && !card.isEdit() && card.getHint() == null) {
-                    ViewUtil.remove(divider);
-                    ViewUtil.remove(llIconbar);
-                }*/
-
-                // Reveal : dismiss
-                /*
-                btnDismiss.setOnClickListener(new View.OnClickListener() {
+                // Reveal : stash
+                ivStash.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        dismiss(position);
+                        if (card.isRevealed()) {
+                            Animation a = ViewUtil.collapse(c, flCard);
+                            flCard.startAnimation(a);
+
+                            a.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    stash(position, card.getId(), flCard);
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+
+                                }
+                            });
+                        }
                     }
                 });
-                */
 
                 // Reveal : discard
                 ivDiscard.setOnClickListener(new View.OnClickListener() {
@@ -290,7 +307,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    discard(position, flCard);
+                                    discard(position, card.getId(), flCard);
                                 }
 
                                 @Override
@@ -318,7 +335,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    putToEnd(position, flCard);
+                                    putToEnd(position, card.getId(), flCard);
                                 }
 
                                 @Override
@@ -331,10 +348,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 });
 
                 if (card.isRestoring()) {
-                    DisplayMetrics displaymetrics = new DisplayMetrics();
-                    a.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-                    final int displayWidth = displaymetrics.widthPixels;
-
                     flCard.setTranslationX(displayWidth);
 
                     Animation anim = ViewUtil.expand(c, flCard);
@@ -375,42 +388,44 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         }
     }
 
-
     /**
-     * Puts an item from the current stack away temporarily
+     * Stashes card
      *
-     * @param pos position of item
+     * @param uuid    position of item
+     * @param flCard
      */
-    /*
-        private void dismiss(int pos) {
-        cardsController.getLymbo().getCards().remove(pos);
+    private void stash(int pos, String uuid, FrameLayout flCard) {
+        ViewUtil.collapse(c, flCard);
+
+        cardsController.stash(uuid);
+        ((CardsActivity) a).stash(pos, uuid);
         notifyDataSetChanged();
     }
-    */
 
     /**
      * Removes an item from the current stack permanently
      *
-     * @param pos position of item
+     * @param uuid    position of item
+     * @param flCard
      */
-    private void discard(int pos, FrameLayout flCard) {
+    private void discard(int pos, String uuid, FrameLayout flCard) {
         ViewUtil.collapse(c, flCard);
 
-        cardsController.discard(pos);
-        ((CardsActivity) a).discard(pos);
+        cardsController.discard(uuid);
+        ((CardsActivity) a).discard(pos, uuid);
         notifyDataSetChanged();
     }
 
     /**
      * Puts an item to the end of the stack
      *
-     * @param pos position of item
+     * @param uuid position of item
      */
-    private void putToEnd(int pos, FrameLayout flCard) {
+    private void putToEnd(int pos, String uuid, FrameLayout flCard) {
         ViewUtil.collapse(c, flCard);
 
-        cardsController.putToEnd(pos);
-        ((CardsActivity) a).putToEnd(pos);
+        cardsController.putToEnd(uuid);
+        ((CardsActivity) a).putToEnd(pos, uuid);
         notifyDataSetChanged();
     }
 

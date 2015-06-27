@@ -17,12 +17,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
-import de.interoberlin.lymbo.model.persistence.LymboLoader;
-import de.interoberlin.lymbo.model.persistence.LymboWriter;
+import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
+import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.LymboSQLiteOpenHelper;
-import de.interoberlin.lymbo.model.persistence.sqlite.location.LymboLocation;
-import de.interoberlin.lymbo.model.persistence.sqlite.location.LymboLocationDatasource;
+import de.interoberlin.lymbo.model.persistence.sqlite.cards.CardStateDatasource;
+import de.interoberlin.lymbo.model.persistence.sqlite.location.Location;
+import de.interoberlin.lymbo.model.persistence.sqlite.location.LocationDatasource;
+import de.interoberlin.lymbo.model.persistence.sqlite.notes.NoteDatasource;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.mate.lib.model.Log;
@@ -35,7 +38,7 @@ public class LymbosController extends Application {
     private static SQLiteDatabase sqliteDatabase;
     private static LymboSQLiteOpenHelper sqliteOpenLymboSQLiteOpenHelper;
 
-    // Lymbos
+    // Model
     private List<Lymbo> lymbos;
     private List<Lymbo> lymbosStashed;
 
@@ -46,7 +49,7 @@ public class LymbosController extends Application {
 
     private boolean loaded = false;
 
-    private LymboLocationDatasource datasource;
+    private LocationDatasource datasource;
 
     private static LymbosController instance;
 
@@ -79,8 +82,7 @@ public class LymbosController extends Application {
         sqliteOpenLymboSQLiteOpenHelper = new LymboSQLiteOpenHelper(context);
         if (sqliteOpenLymboSQLiteOpenHelper != null) {
             sqliteDatabase = sqliteOpenLymboSQLiteOpenHelper.getWritableDatabase();
-            if (sqliteDatabase != null) {
-            }
+            recreateOnSchemaChange();
         }
 
         // Properties
@@ -147,14 +149,14 @@ public class LymbosController extends Application {
         LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
         LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
 
-        datasource = new LymboLocationDatasource(context);
+        datasource = new LocationDatasource(context);
         datasource.open();
         datasource.updateLocation(lymbo.getPath(), false);
         datasource.close();
     }
 
     public void scan() {
-        datasource = new LymboLocationDatasource(context);
+        datasource = new LocationDatasource(context);
         datasource.open();
 
         for (File l : findFiles(LYMBO_FILE_EXTENSION)) {
@@ -169,14 +171,14 @@ public class LymbosController extends Application {
     }
 
     public void load() {
-        datasource = new LymboLocationDatasource(context);
+        datasource = new LocationDatasource(context);
         datasource.open();
 
         // Retrieve lymbo files from locations cache
         Collection<File> lymboFiles = new ArrayList<>();
         Collection<File> lymboFilesStashed = new ArrayList<>();
 
-        for (LymboLocation l : datasource.getAllLocations()) {
+        for (Location l : datasource.getAllLocations()) {
             if (new File(l.getPath()).exists()) {
                 if (l.getStashed() == 0) {
                     lymboFiles.add(new File(l.getPath()));
@@ -201,8 +203,26 @@ public class LymbosController extends Application {
         loaded = true;
     }
 
+    public void recreateOnSchemaChange() {
+        LocationDatasource dsLocation = new LocationDatasource(context);
+        dsLocation.open();
+        dsLocation.recreateOnSchemaChange();
+        dsLocation.close();
+
+        NoteDatasource dsNote = new NoteDatasource(context);
+        dsNote.open();
+        dsNote.recreateOnSchemaChange();
+        dsNote.close();
+
+        CardStateDatasource dsCardState = new CardStateDatasource(context);
+        dsCardState.open();
+        dsCardState.recreateOnSchemaChange();
+        dsCardState.close();
+    }
+
+
     public void changeLocation(String location, boolean stashed) {
-        datasource = new LymboLocationDatasource(context);
+        datasource = new LocationDatasource(context);
         datasource.open();
         datasource.updateLocation(location, stashed);
         datasource.close();
@@ -308,23 +328,19 @@ public class LymbosController extends Application {
     }
 
     /**
-     * This is necessary to display the first element below the toolbar and to leave enough space at
-     * the bottom for the floating action point not to cover other elements
+     * This is necessary to display the first element below the toolbar
      *
-     * @param list list which shall be extended by a leading and trailing null element
+     * @param list list which shall be extended by a leading null element
      */
     public void addNullElement(List<Lymbo> list) {
-        if (!list.isEmpty()) {
+        if (list != null) {
             list.removeAll(Collections.singleton(null));
 
-            // Add leading null element
-            if (list.get(0) != null) {
-                list.add(0, null);
-            }
-
-            // Add trailling null element
-            if (list.get(list.size() - 1) != null) {
-                list.add(null);
+            if (!list.isEmpty()) {
+                // Add leading null element
+                if (list.get(0) != null) {
+                    list.add(0, null);
+                }
             }
         }
     }

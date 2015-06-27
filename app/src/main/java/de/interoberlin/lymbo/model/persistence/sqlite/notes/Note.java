@@ -1,7 +1,7 @@
 package de.interoberlin.lymbo.model.persistence.sqlite.notes;
 
 
-public class LymboNote {
+public class Note {
     private long id;
     private String uuid;
     private String text;
@@ -10,11 +10,11 @@ public class LymboNote {
     // Constructors
     // --------------------
 
-    public LymboNote() {
+    public Note() {
 
     }
 
-    public LymboNote(String uuid, String text) {
+    public Note(String uuid, String text) {
         this.uuid = uuid;
         this.text = text;
     }

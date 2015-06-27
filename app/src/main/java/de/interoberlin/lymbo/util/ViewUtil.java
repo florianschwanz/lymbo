@@ -62,36 +62,6 @@ public class ViewUtil {
         return a;
     }
 
-    public static Animation fromRight(final Context c, final View v, final int initialTranslationX) {
-        v.measure(GridLayout.LayoutParams.MATCH_PARENT, GridLayout.LayoutParams.WRAP_CONTENT);
-
-        final int CARD_EXPAND_TIME = c.getResources().getInteger(R.integer.card_expand_time);
-        // final int CARD_EXPAND_DP_PER_MILLISECOND = c.getResources().getInteger(R.integer.card_expand_dp_per_millisecond);
-        // final int duration = (int) ((targetHeight / v.getContext().getResources().getDisplayMetrics().density) / CARD_EXPAND_DP_PER_MILLISECOND);
-
-        v.setVisibility(View.VISIBLE);
-        v.setTranslationX(initialTranslationX);
-
-        Animation a = new Animation() {
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                if (interpolatedTime != 1) {
-                    v.setTranslationX(initialTranslationX - (int) (initialTranslationX * interpolatedTime));
-                    v.requestLayout();
-                }
-            }
-
-            @Override
-            public boolean willChangeBounds() {
-                return true;
-            }
-        };
-
-        a.setDuration(CARD_EXPAND_TIME);
-
-        return a;
-    }
-
     /**
      * Collapses a view by decreasing its height
      *
@@ -123,6 +93,95 @@ public class ViewUtil {
         };
 
         a.setDuration(CARD_COLLAPSE_TIME);
+
+        return a;
+    }
+
+    public static Animation fromLeft(final Context c, final View v, final int screenWidth) {
+        v.measure(GridLayout.LayoutParams.MATCH_PARENT, GridLayout.LayoutParams.WRAP_CONTENT);
+
+        final int CARD_EXPAND_TIME = c.getResources().getInteger(R.integer.card_expand_time);
+        // final int CARD_EXPAND_DP_PER_MILLISECOND = c.getResources().getInteger(R.integer.card_expand_dp_per_millisecond);
+        // final int duration = (int) ((targetHeight / v.getContext().getResources().getDisplayMetrics().density) / CARD_EXPAND_DP_PER_MILLISECOND);
+
+        v.setVisibility(View.VISIBLE);
+        v.setTranslationX(-screenWidth);
+
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if (interpolatedTime != 1) {
+                    v.setTranslationX(-screenWidth - (int) (-screenWidth * interpolatedTime));
+                    v.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setDuration(CARD_EXPAND_TIME);
+
+        return a;
+    }
+
+    public static Animation fromRight(final Context c, final View v, final int screenWidth) {
+        v.measure(GridLayout.LayoutParams.MATCH_PARENT, GridLayout.LayoutParams.WRAP_CONTENT);
+
+        final int CARD_EXPAND_TIME = c.getResources().getInteger(R.integer.card_expand_time);
+        // final int CARD_EXPAND_DP_PER_MILLISECOND = c.getResources().getInteger(R.integer.card_expand_dp_per_millisecond);
+        // final int duration = (int) ((targetHeight / v.getContext().getResources().getDisplayMetrics().density) / CARD_EXPAND_DP_PER_MILLISECOND);
+
+        v.setVisibility(View.VISIBLE);
+        v.setTranslationX(screenWidth);
+
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if (interpolatedTime != 1) {
+                    v.setTranslationX(screenWidth - (int) (screenWidth * interpolatedTime));
+                    v.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setDuration(CARD_EXPAND_TIME);
+
+        return a;
+    }
+
+    public static Animation toLeft(final Context c, final View v, final int targetTranslationX) {
+        v.measure(GridLayout.LayoutParams.MATCH_PARENT, GridLayout.LayoutParams.WRAP_CONTENT);
+
+        final int CARD_EXPAND_TIME = c.getResources().getInteger(R.integer.card_expand_time);
+        // final int CARD_EXPAND_DP_PER_MILLISECOND = c.getResources().getInteger(R.integer.card_expand_dp_per_millisecond);
+        // final int duration = (int) ((targetHeight / v.getContext().getResources().getDisplayMetrics().density) / CARD_EXPAND_DP_PER_MILLISECOND);
+
+        v.setVisibility(View.VISIBLE);
+
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if (interpolatedTime != 1) {
+                    v.setTranslationX(-(int) (targetTranslationX * interpolatedTime));
+                    v.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setDuration(CARD_EXPAND_TIME);
 
         return a;
     }
