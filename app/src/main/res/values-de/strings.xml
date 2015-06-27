@@ -57,5 +57,12 @@
     <string name="note">Notiz</string>
     <string name="card_restored">Karte wiederhergestellt</string>
     <string name="stash_card">Karte in den Papierkorb verschoben</string>
+    <string name="about">Impressum</string>
+    <string name="card">Karte</string>
+    <string name="cards">Karten</string>
+    <string name="cards_stash">Karten Papierkorb</string>
+    <string name="log">Log</string>
+    <string name="lymbos">Lymbos</string>
+    <string name="lymbos_stash">Lymbos Papierkorb</string>
 
 </resources>

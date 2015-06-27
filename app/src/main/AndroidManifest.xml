@@ -24,36 +24,35 @@
         </activity>
         <activity
             android:name="de.interoberlin.mate.lib.view.LogActivity"
-            android:label="@string/app_name"
+            android:label="@string/log"
             android:screenOrientation="portrait" />
         <activity
             android:name="de.interoberlin.mate.lib.view.AboutActivity"
-            android:label="@string/app_name"
+            android:label="@string/about"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light" />
         <activity
             android:name=".view.activities.LymbosActivity"
-            android:label="@string/app_name"
-            android:parentActivityName=".SplashActivity"
+            android:label="@string/lymbos"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.activities.CardsActivity"
-            android:label="@string/app_name"
-            android:parentActivityName=".SplashActivity"
+            android:label="@string/cards"
+            android:parentActivityName=".view.activities.LymbosActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.activities.EditCardActivity"
-            android:label="@string/title_activity_edit_card"
+            android:label="@string/card"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.activities.LymbosStashActivity"
-            android:label="@string/app_name"
-            android:parentActivityName=".SplashActivity"
+            android:label="@string/lymbos_stash"
+            android:parentActivityName=".view.activities.LymbosActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.activities.CardsStashActivity"
-            android:label="@string/app_name"
-            android:parentActivityName=".SplashActivity"
+            android:label="@string/cards_stash"
+            android:parentActivityName=".view.activities.CardsActivity"
             android:screenOrientation="portrait" />
     </application>
 

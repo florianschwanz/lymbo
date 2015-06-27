@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="about">About</string>
     <string name="add_card">Add card</string>
     <string name="add_stack">Add stack</string>
     <string name="add_tags">Add tags</string>
@@ -9,7 +10,10 @@
     <string name="back">Back</string>
     <string name="broken_lymbo_file">Broken lymbo :(</string>
     <string name="cancel">Cancel</string>
+    <string name="card">Card</string>
     <string name="card_restored">Card restored</string>
+    <string name="cards">Cards</string>
+    <string name="cards_stash">Cards Stash</string>
     <string name="chapters">Chapters</string>
     <string name="click_to_continue">Touch on screen to continue</string>
     <string name="correct">correct</string>
@@ -22,8 +26,11 @@
     <string name="fraction">/</string>
     <string name="front">Front</string>
     <string name="hint">Hint</string>
+    <string name="log">Log</string>
     <string name="logo">Logo</string>
     <string name="lymbo_for_you">Lymbo for you</string>
+    <string name="lymbos">Lymbos</string>
+    <string name="lymbos_stash">Lymbos Stash</string>
     <string name="menu_log">Log</string>
     <string name="menu_about">About</string>
     <string name="menu_labels">Labels</string>

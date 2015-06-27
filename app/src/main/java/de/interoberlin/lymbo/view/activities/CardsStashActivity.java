@@ -59,8 +59,6 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
             finish();
         }
 
-        setTitle(R.string.stash);
-
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(true);
 

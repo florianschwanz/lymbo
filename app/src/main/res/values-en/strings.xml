@@ -1,23 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="about">About</string>
     <string name="add_card">Add card</string>
     <string name="add_stack">Add stack</string>
+    <string name="add_tags">Add tags</string>
     <string name="app_name">lymbo</string>
     <string name="author">Author</string>
     <string name="back">Back</string>
+    <string name="broken_lymbo_file">Broken lymbo :(</string>
     <string name="cancel">Cancel</string>
+    <string name="card">Card</string>
+    <string name="card_restored">Card restored</string>
+    <string name="cards">Cards</string>
+    <string name="cards_stash">Cards Stash</string>
     <string name="chapters">Chapters</string>
     <string name="click_to_continue">Touch on screen to continue</string>
+    <string name="correct">correct</string>
     <string name="desc_image">Image component</string>
+    <string name="discard_card">Discarded card</string>
     <string name="download_the_attachment">Download the attachment to use this lymbo</string>
     <string name="discard">Discard</string>
     <string name="edit">Edit</string>
+    <string name="field_must_not_be_empty">Field must not be empty</string>
     <string name="fraction">/</string>
     <string name="front">Front</string>
     <string name="hint">Hint</string>
+    <string name="log">Log</string>
     <string name="logo">Logo</string>
     <string name="lymbo_for_you">Lymbo for you</string>
+    <string name="lymbos">Lymbos</string>
+    <string name="lymbos_stash">Lymbos Stash</string>
     <string name="menu_log">Log</string>
     <string name="menu_about">About</string>
     <string name="menu_labels">Labels</string>
@@ -25,15 +38,24 @@
     <string name="menu_shuffle">Shuffle</string>
     <string name="menu_stash">Stash</string>
     <string name="message">Message</string>
+    <string name="new_tag">new tag</string>
+    <string name="no_chapter">no chapter</string>
+    <string name="no_tag">no tag</string>
     <string name="not_yet_implemented">Not yet implemented</string>
+    <string name="note">Note</string>
     <string name="okay">Okay</string>
+    <string name="path">Path</string>
+    <string name="put_card_to_end">Put card to end</string>
     <string name="search_lymbo_files">Searching for lymbo files</string>
     <string name="select_answer">Select at least one answer</string>
     <string name="send">Send</string>
     <string name="share">Share</string>
+    <string name="splash_found_1">Found</string>
+    <string name="splash_found_2">Found</string>
     <string name="stack_restored">Stack restored</string>
     <string name="stack_stashed">Stack stashed</string>
     <string name="stash">Stash</string>
+    <string name="stash_card">Stashed card</string>
     <string name="subtitle">Subtitle</string>
     <string name="tags">Tags</string>
     <string name="text">Text</string>
@@ -41,21 +63,6 @@
     <string name="title_activity_edit_card">CardEditActivity</string>
     <string name="undo">Undo</string>
     <string name="upload">Upload</string>
-    <string name="splash_found_1">Found</string>
-    <string name="splash_found_2">lymbo files</string>
-    <string name="field_must_not_be_empty">Field must not be empty</string>
-    <string name="correct">correct</string>
     <string name="wrong">wrong</string>
-    <string name="no_chapter">no chapter</string>
-    <string name="no_tag">not tag</string>
-    <string name="discard_card">Discarded card</string>
-    <string name="put_card_to_end">Put card to end</string>
-    <string name="broken_lymbo_file">Broken lymbo :(</string>
-    <string name="path">Path</string>
-    <string name="add_tags">Add tags</string>
-    <string name="new_tag">new tag</string>
-    <string name="note">Note</string>
-    <string name="card_restored">Card restored</string>
-    <string name="stash_card">Stashed card</string>
 
 </resources>

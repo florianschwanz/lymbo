@@ -55,8 +55,6 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
             lymbosController.load();
         }
 
-        setTitle(R.string.stash);
-
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(true);
 
