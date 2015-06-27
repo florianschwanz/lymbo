@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            card_view:cardCornerRadius="2dp">
+            card_view:cardCornerRadius="@dimen/card_corner_radius">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -206,7 +206,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/note_margin"
             android:layout_marginStart="@dimen/note_margin"
-            android:background="@color/card_light_text"
+            android:background="@color/note_bar"
             android:padding="@dimen/card_padding">
 
             <LinearLayout
