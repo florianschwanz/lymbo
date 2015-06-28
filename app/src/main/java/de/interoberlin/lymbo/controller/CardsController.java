@@ -278,7 +278,6 @@ public class CardsController {
         Card card = getCardById(uuid);
         card.reset();
         card.setRestoring(true);
-
         card.setDiscarded(false);
     }
 
@@ -308,7 +307,8 @@ public class CardsController {
         card.setRestoring(true);
 
         getCards().remove(card);
-        getCards().add(pos, card);
+        getCards().add(pos < getCards().size() ? pos : 0, card);
+        addNullElement(cards);
     }
 
     /**

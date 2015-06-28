@@ -136,13 +136,15 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         slv.setSwipeListViewListener(new BaseSwipeListViewListener() {
             @Override
             public void onOpened(int position, boolean toRight) {
-                cardsController.getCards().get(position).setRevealed(true);
+                if (!cardsController.getCards().isEmpty())
+                    cardsController.getCards().get(position).setRevealed(true);
                 srl.setEnabled(true);
             }
 
             @Override
             public void onClosed(int position, boolean fromRight) {
-                cardsController.getCards().get(position).setRevealed(false);
+                if (!cardsController.getCards().isEmpty())
+                    cardsController.getCards().get(position).setRevealed(false);
                 srl.setEnabled(true);
             }
 
@@ -189,12 +191,10 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             ibFab.setVisibility(View.INVISIBLE);
         }
 
-        if (cardsController.getCards().isEmpty()) {
-            LayoutInflater vi;
-            vi = LayoutInflater.from(context);
-            phNoCards = (LinearLayout) vi.inflate(R.layout.placeholder_no_cards, null, false);
-            rl.addView(phNoCards);
-        }
+        phNoCards = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.placeholder_no_cards, null, false);
+        rl.addView(phNoCards);
+
+        checkEmptyStack();
 
         updateSwipeRefreshProgressBarTop(srl);
         registerHideableHeaderView(toolbarWrapper);
@@ -302,6 +302,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
      * Stashes a card from the current stack
      */
     public void stash(int pos, String uuid) {
+        checkEmptyStack();
+
         slv.invalidateViews();
         recentCardPos = pos;
         recentCardId = uuid;
@@ -372,8 +374,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onAddSimpleCard(String frontText, String backText, List<Tag> tags) {
         Card card = cardsController.getSimpleCard(frontText, backText, tags);
 
-        if (cardsController.getCards().isEmpty())
-            rl.removeView(phNoCards);
+        checkEmptyStack();
 
         cardsController.addCard(card);
         cardsAdapter.notifyDataSetChanged();
@@ -402,6 +403,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onMessageClick(Parcelable parcelable) {
         switch (recentEvent) {
             case EVENT_STASH: {
+                checkEmptyStack();
                 cardsController.restore(recentCardPos, recentCardId);
                 break;
             }
@@ -422,6 +424,11 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     // --------------------
     // Methods
     // --------------------
+
+    private void checkEmptyStack() {
+        int phNoCardsHeight = phNoCards.getLayoutParams().height;
+        phNoCards.getLayoutParams().height = cardsController.getCards().isEmpty() ? phNoCardsHeight : 0;
+    }
 
     @Override
     protected int getLayoutResource() {
