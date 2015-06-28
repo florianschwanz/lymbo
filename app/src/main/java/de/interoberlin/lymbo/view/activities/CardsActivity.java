@@ -374,10 +374,10 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onAddSimpleCard(String frontText, String backText, List<Tag> tags) {
         Card card = cardsController.getSimpleCard(frontText, backText, tags);
 
-        checkEmptyStack();
-
         cardsController.addCard(card);
         cardsAdapter.notifyDataSetChanged();
+        checkEmptyStack();
+
         slv.invalidateViews();
     }
 
@@ -403,8 +403,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onMessageClick(Parcelable parcelable) {
         switch (recentEvent) {
             case EVENT_STASH: {
-                checkEmptyStack();
                 cardsController.restore(recentCardPos, recentCardId);
+                checkEmptyStack();
                 break;
             }
             case EVENT_DISCARD: {
@@ -426,8 +426,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     // --------------------
 
     private void checkEmptyStack() {
-        int phNoCardsHeight = phNoCards.getLayoutParams().height;
-        phNoCards.getLayoutParams().height = cardsController.getCards().isEmpty() ? phNoCardsHeight : 0;
+        phNoCards.setVisibility(cardsController.getCards().isEmpty() ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
