@@ -28,6 +28,8 @@
     <dimen name="stack_bar_padding">8dp</dimen>
     <dimen name="stack_image_height">60dp</dimen>
 
+    <dimen name="stack_title_size">27sp</dimen>
+
     <!-- Card -->
     <dimen name="card_margin">10dp</dimen>
     <dimen name="card_reveal_margin">20dp</dimen>

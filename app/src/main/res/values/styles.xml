@@ -46,7 +46,6 @@
 
     <style name="ThemeOverlay.Lymbo.ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@color/white</item>
-
     </style>
 
     <style name="CardText">
@@ -84,7 +83,7 @@
     <style name="StackTitle" parent="@style/CardText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">27sp</item>
+        <item name="android:textSize">@dimen/stack_title_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/card_title_text</item>
         <!-- <item name="android:fontFamily">sans-serif</item> -->

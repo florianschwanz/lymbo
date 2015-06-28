@@ -10,7 +10,6 @@ import android.view.Surface;
 import java.util.Observable;
 
 import de.interoberlin.lymbo.SplashActivity;
-import de.interoberlin.mate.lib.util.Toaster;
 
 public class Accelerometer extends Observable implements SensorEventListener {
     private Activity activity;
@@ -40,14 +39,12 @@ public class Accelerometer extends Observable implements SensorEventListener {
 
     public void start() {
         if (activity instanceof SplashActivity) {
-            Toaster.add("Accelerometer started");
             ((SplashActivity) activity).getSensorManager().registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
         }
     }
 
     public void stop() {
         if (activity instanceof SplashActivity) {
-            Toaster.add("Accelerometer stopped");
             ((SplashActivity) activity).getSensorManager().unregisterListener(this);
         }
     }

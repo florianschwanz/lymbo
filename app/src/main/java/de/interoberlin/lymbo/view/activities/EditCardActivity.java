@@ -26,8 +26,6 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.ComponentsController;
 import de.interoberlin.lymbo.view.adapters.ComponentsListAdapter;
 import de.interoberlin.lymbo.view.controls.ComponentsListView;
-import de.interoberlin.mate.lib.util.Toaster;
-
 
 /**
  * This application creates a listview where the ordering of the data set
@@ -55,9 +53,6 @@ public class EditCardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setActionBarIcon(R.drawable.ic_ab_drawer);
-
-        // Register on toaster
-        Toaster.register(this, context);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);

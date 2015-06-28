@@ -10,12 +10,14 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.github.mrengineer13.snackbar.SnackBar;
 
@@ -50,6 +52,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private SwipeListView slv;
     private ImageButton ibFab;
     private LinearLayout toolbarWrapper;
+    private RelativeLayout rl;
+
+    private LinearLayout phNoCards;
 
     // Model
     private Lymbo lymbo;
@@ -114,6 +119,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
+        rl = (RelativeLayout) findViewById(R.id.rl);
 
         srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         srl.setOnRefreshListener(this);
@@ -181,6 +187,13 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
         if (lymbo.isAsset()) {
             ibFab.setVisibility(View.INVISIBLE);
+        }
+
+        if (cardsController.getCards().isEmpty()) {
+            LayoutInflater vi;
+            vi = LayoutInflater.from(context);
+            phNoCards = (LinearLayout) vi.inflate(R.layout.placeholder_no_cards, null, false);
+            rl.addView(phNoCards);
         }
 
         updateSwipeRefreshProgressBarTop(srl);
@@ -287,7 +300,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     /**
      * Stashes a card from the current stack
-     *
      */
     public void stash(int pos, String uuid) {
         slv.invalidateViews();
@@ -359,6 +371,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     @Override
     public void onAddSimpleCard(String frontText, String backText, List<Tag> tags) {
         Card card = cardsController.getSimpleCard(frontText, backText, tags);
+
+        if (cardsController.getCards().isEmpty())
+            rl.removeView(phNoCards);
 
         cardsController.addCard(card);
         cardsAdapter.notifyDataSetChanged();

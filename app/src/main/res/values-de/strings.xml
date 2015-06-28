@@ -64,5 +64,7 @@
     <string name="log">Log</string>
     <string name="lymbos">Lymbos</string>
     <string name="lymbos_stash">Lymbos Papierkorb</string>
+    <string name="could_not_find_any_cards">Noch keine Karten angelegt</string>
+    <string name="no_cards">keine Karten</string>
 
 </resources>

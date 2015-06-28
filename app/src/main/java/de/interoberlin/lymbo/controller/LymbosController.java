@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
@@ -180,12 +179,15 @@ public class LymbosController extends Application {
 
         for (Location l : datasource.getAllLocations()) {
             if (new File(l.getPath()).exists()) {
+                Log.info("Loaded " + l.getPath());
+
                 if (l.getStashed() == 0) {
                     lymboFiles.add(new File(l.getPath()));
                 } else if (l.getStashed() == 1) {
                     lymboFilesStashed.add(new File(l.getPath()));
                 }
             } else {
+                Log.info("Deleted not existing " + l.getPath());
                 datasource.deleteLocation(l);
             }
         }

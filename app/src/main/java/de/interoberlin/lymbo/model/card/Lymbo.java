@@ -1,14 +1,5 @@
 package de.interoberlin.lymbo.model.card;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.Bundle;
-import android.support.v7.widget.CardView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,12 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.Displayable;
-import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
-import de.interoberlin.mate.lib.util.Toaster;
-
-public class Lymbo implements Displayable {
+public class Lymbo {
     private String path;
     private boolean asset;
 
@@ -61,70 +47,7 @@ public class Lymbo implements Displayable {
         image = null;
         author = "";
         cards = new ArrayList<>();
-
         error = "";
-    }
-
-    @Override
-    public View getView(Context c, final Activity a, ViewGroup parent) {
-        CardView v = (CardView) a.getLayoutInflater().inflate(R.layout.stack, parent, false);
-
-        TextView tvTitle = (TextView) v.findViewById(R.id.tvTitle);
-        TextView tvSubtitle = (TextView) v.findViewById(R.id.tvSubtitle);
-        ImageView ivDiscard = (ImageView) v.findViewById(R.id.ivStash);
-        ImageView ivEdit = (ImageView) v.findViewById(R.id.ivEdit);
-        ImageView ivShare = (ImageView) v.findViewById(R.id.ivShare);
-        ImageView ivUpload = (ImageView) v.findViewById(R.id.ivUpload);
-        ImageView ivHint = (ImageView) v.findViewById(R.id.ivHint);
-
-        tvTitle.setText(getTitle());
-        tvSubtitle.setText(getSubtitle());
-
-        ivDiscard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toaster.add(a.getResources().getString(R.string.not_yet_implemented));
-            }
-        });
-
-        ivEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toaster.add(a.getResources().getString(R.string.not_yet_implemented));
-            }
-        });
-
-        ivShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toaster.add(a.getResources().getString(R.string.not_yet_implemented));
-            }
-        });
-
-        ivUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toaster.add(a.getResources().getString(R.string.not_yet_implemented));
-            }
-        });
-
-        ivHint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DisplayHintDialogFragment displayHintDialogFragment = new DisplayHintDialogFragment();
-                Bundle b = new Bundle();
-                b.putCharSequence("message", getHint());
-                displayHintDialogFragment.setArguments(b);
-                displayHintDialogFragment.show(a.getFragmentManager(), "okay");
-            }
-        });
-
-        return v;
-    }
-
-    @Override
-    public View getEditableView(Context c, final Activity a, ViewGroup parent) {
-        return new View(c);
     }
 
     /**

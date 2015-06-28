@@ -17,6 +17,7 @@
     <string name="chapters">Chapters</string>
     <string name="click_to_continue">Touch on screen to continue</string>
     <string name="correct">correct</string>
+    <string name="could_not_find_any_cards">Could not find any cards</string>
     <string name="desc_image">Image component</string>
     <string name="discard_card">Discarded card</string>
     <string name="download_the_attachment">Download the attachment to use this lymbo</string>
@@ -39,6 +40,7 @@
     <string name="menu_stash">Stash</string>
     <string name="message">Message</string>
     <string name="new_tag">new tag</string>
+    <string name="no_cards">no cards</string>
     <string name="no_chapter">no chapter</string>
     <string name="no_tag">no tag</string>
     <string name="not_yet_implemented">Not yet implemented</string>

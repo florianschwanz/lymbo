@@ -64,5 +64,7 @@
     <string name="undo">Undo</string>
     <string name="upload">Upload</string>
     <string name="wrong">wrong</string>
+    <string name="could_not_find_any_cards">Could not find any cards</string>
+    <string name="no_cards">no cards</string>
 
 </resources>
