@@ -72,7 +72,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private static final int EVENT_PUT_TO_END = 1;
     private static final int EVENT_STASH = 2;
 
+    // Properties
     private static int REFRESH_DELAY;
+    private static int VIBRATION_DURATION;
 
     // --------------------
     // Methods - Lifecycle
@@ -105,7 +107,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(true);
 
+        // Properties
         REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_CARDS));
+        VIBRATION_DURATION = Integer.parseInt(Configuration.getProperty(this, EProperty.VIBRATION_DURATION));
 
         context = this;
     }
@@ -220,8 +224,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int VIBRATION_DURATION = 50;
-
         switch (item.getItemId()) {
             case R.id.menu_stash: {
                 Intent i = new Intent(CardsActivity.this, CardsStashActivity.class);

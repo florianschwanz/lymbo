@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,10 +32,13 @@ import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.model.card.enums.EComponent;
+import de.interoberlin.lymbo.util.Configuration;
+import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
 
 public class CardsListAdapter extends ArrayAdapter<Card> {
     private Context c;
@@ -43,6 +47,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     // Controllers
     CardsController cardsController = CardsController.getInstance();
     // ComponentsController componentsController = ComponentsController.getInstance();
+
+    // Properties
+    private static int VIBRATION_DURATION;
 
     // --------------------
     // Constructors
@@ -53,6 +60,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
         this.c = context;
         this.a = activity;
+
+        // Properties
+        VIBRATION_DURATION = Integer.parseInt(Configuration.getProperty(c, EProperty.VIBRATION_DURATION));
     }
 
     // --------------------
@@ -122,8 +132,18 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
                 // Tags
                 for (Tag tag : card.getTags()) {
-                    if (!tag.getName().equals(c.getResources().getString(R.string.no_tag)))
-                        llTags.addView(tag.getView(c, a, llTags));
+                    if (!tag.getName().equals(c.getResources().getString(R.string.no_tag))) {
+                        CardView cvTag = (CardView) tag.getView(c, a, llTags);
+                        cvTag.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                ((Vibrator) a.getSystemService(c.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+                                new SelectTagsDialogFragment().show(a.getFragmentManager(), "okay");
+                            }
+                        });
+
+                        llTags.addView(cvTag);
+                    }
                 }
 
                 // Action : flip
