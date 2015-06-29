@@ -15,6 +15,7 @@
     <string name="edit">Bearbeiten</string>
     <string name="fraction">/</string>
     <string name="front">Vorderseite</string>
+    <string name="generated_missing_ids">Fehlende IDs generiert</string>
     <string name="hint">Hinweis</string>
     <string name="logo">Logo</string>
     <string name="lymbo_for_you">Lymbo für Dich</string>

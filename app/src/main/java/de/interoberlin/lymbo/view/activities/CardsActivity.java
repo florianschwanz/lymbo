@@ -71,6 +71,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private static final int EVENT_DISCARD = 0;
     private static final int EVENT_PUT_TO_END = 1;
     private static final int EVENT_STASH = 2;
+    private static final int EVENT_GENERATED_IDS = 3;
 
     // Properties
     private static int REFRESH_DELAY;
@@ -199,6 +200,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         rl.addView(phNoCards);
 
         checkEmptyStack();
+        checkGeneratedIds();
 
         updateSwipeRefreshProgressBarTop(srl);
         registerHideableHeaderView(toolbarWrapper);
@@ -417,6 +419,10 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 cardsController.putLastItemToPos(recentCardPos);
                 break;
             }
+            case EVENT_GENERATED_IDS :{
+                lymbo.setContainsGeneratedIds(false);
+                break;
+            }
         }
 
         cardsAdapter.notifyDataSetChanged();
@@ -429,6 +435,20 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     private void checkEmptyStack() {
         phNoCards.setVisibility(cardsController.getCards().isEmpty() ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private void checkGeneratedIds() {
+        if (!lymbo.isAsset() && lymbo.isContainsGeneratedIds()) {
+            recentEvent = EVENT_GENERATED_IDS;
+
+            new SnackBar.Builder(this)
+                    .withOnClickListener(this)
+                    .withMessageId(R.string.generated_missing_ids)
+                    .withActionMessageId(R.string.okay)
+                    .withStyle(SnackBar.Style.INFO)
+                    .withDuration(SnackBar.PERMANENT_SNACK)
+                    .show();
+        }
     }
 
     @Override

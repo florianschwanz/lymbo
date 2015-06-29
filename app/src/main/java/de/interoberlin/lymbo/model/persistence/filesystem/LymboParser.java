@@ -37,7 +37,8 @@ public class LymboParser {
     private static LymboParser instance;
 
     private Map<String, String> defaults = new HashMap<>();
-    private boolean containsGeneratedIds = false;
+    private boolean onlyTopLevel;
+    private boolean containsGeneratedIds;
 
     // --------------------
     // Constructors
@@ -67,6 +68,9 @@ public class LymboParser {
      * @throws java.io.IOException
      */
     public Lymbo parse(InputStream is, boolean onlyTopLevel) throws IOException {
+        this.onlyTopLevel = onlyTopLevel;
+        containsGeneratedIds = false;
+
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -152,7 +156,7 @@ public class LymboParser {
         }
 
         // Indicate newly generated id
-        if (id == null) {
+        if (!onlyTopLevel && id == null) {
             containsGeneratedIds = true;
         }
 
@@ -239,7 +243,7 @@ public class LymboParser {
         }
 
         // Indicate newly generated id
-        if (id == null) {
+        if (!onlyTopLevel &&  id == null) {
             containsGeneratedIds = true;
         }
 
