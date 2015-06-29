@@ -134,6 +134,7 @@ public class AddCardDialogFragment extends DialogFragment {
                     tr.addView(cb);
                     tr.addView(etText);
                     etText.setHint(R.string.new_tag);
+                    etText.requestFocus();
                     cb.setChecked(true);
                     tblTags.addView(tr, tblTags.getChildCount() - 1);
                 }
