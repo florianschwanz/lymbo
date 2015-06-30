@@ -22,12 +22,12 @@
     <dimen name="swipe_refresh_progress_bar_end_margin">16dp</dimen>
 
     <!-- Stack -->
-    <dimen name="stack_height">200dp</dimen>
+    <dimen name="stack_height">175dp</dimen>
+    <dimen name="stack_image_height">150dp</dimen>
     <dimen name="stack_corner_radius">2dp</dimen>
     <dimen name="stack_padding">16dp</dimen>
     <dimen name="stack_bar_padding">8dp</dimen>
-    <dimen name="stack_image_height">60dp</dimen>
-
+    <dimen name="stack_subtitle_spacing">4dp</dimen>
     <dimen name="stack_title_size">27sp</dimen>
 
     <!-- Card -->

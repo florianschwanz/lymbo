@@ -1,5 +1,7 @@
 package de.interoberlin.lymbo.model.persistence.filesystem;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -95,7 +97,7 @@ public class LymboWriter {
             attributes.put("id", UUID.randomUUID().toString());
 
         attributes.put("edit", String.valueOf(card.isEdit()));
-        attributes.put("hint", card.getHint());
+        attributes.put("hint", escape(card.getHint()));
         attributes.put("tags", getTagsList(card.getTags()));
 
         addStartTag(tag, attributes);
@@ -138,7 +140,7 @@ public class LymboWriter {
      */
     private static void appendTitleComponent(String tag, TitleComponent component) {
         Map<String, String> attributes = new HashMap<>();
-        attributes.put("value", component.getValue());
+        attributes.put("value", escape(component.getValue()));
         attributes.put("lines", Integer.toString(component.getLines()));
         attributes.put("gravity", component.getGravity().toString());
 
@@ -153,8 +155,7 @@ public class LymboWriter {
      */
     private static void appendTextComponent(String tag, TextComponent component) {
         Map<String, String> attributes = new HashMap<>();
-        attributes.put("value", component.getValue());
-        attributes.put("value", component.getValue());
+        attributes.put("value", escape(component.getValue()));
         attributes.put("lines", Integer.toString(component.getLines()));
         attributes.put("gravity", component.getGravity().toString());
 
@@ -257,5 +258,9 @@ public class LymboWriter {
         }
 
         return tagsList;
+    }
+
+    private static String escape(String input) {
+        return StringEscapeUtils.escapeXml(input);
     }
 }

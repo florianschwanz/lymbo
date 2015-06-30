@@ -1,15 +1,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="wrap_content"
     android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:padding="10dp">
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:roboto="http://schemas.android.com/apk/res-auto"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        xmlns:roboto="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/stack_height"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         card_view:cardCornerRadius="@dimen/stack_corner_radius">
 
         <LinearLayout
@@ -17,60 +17,62 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Image -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/ivImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/stack_image_height"
+                    android:contentDescription="@string/desc_image"
+                    android:scaleType="fitStart" />
+            </LinearLayout>
+
             <RelativeLayout
                 android:id="@+id/front"
-                android:tag="front"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:tag="front">
 
+                <!-- Main -->
                 <LinearLayout
                     android:id="@+id/ll"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/stack_height"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:contentDescription="@string/desc_image"
-                            android:id="@+id/ivImage"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/stack_image_height"
-                            android:scaleType="centerCrop" />
-                    </LinearLayout>
-
+                    <!-- Title -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:paddingLeft="@dimen/stack_padding"
-                        android:paddingRight="@dimen/stack_padding">
+                        android:padding="@dimen/stack_padding">
 
                         <de.interoberlin.lymbo.view.controls.RobotoTextView
-                            roboto:typeface="roboto_regular"
                             android:id="@+id/tvTitle"
                             style="@style/CardTitle"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.50"
-                            android:text="@string/title" />
+                            android:text="@string/title"
+                            roboto:typeface="roboto_regular" />
                     </LinearLayout>
 
+                    <!-- Subitle -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/selectable_background_cardbank"
                         android:gravity="center_vertical"
-                        android:paddingBottom="8dp"
+                        android:paddingBottom="@dimen/stack_subtitle_spacing"
                         android:paddingLeft="@dimen/stack_padding"
                         android:paddingRight="@dimen/stack_padding"
-                        android:paddingTop="8dp">
+                        android:paddingTop="@dimen/stack_subtitle_spacing">
 
                         <de.interoberlin.lymbo.view.controls.RobotoTextView
-                            roboto:typeface="roboto_regular"
                             android:id="@+id/tvSubtitle"
                             style="@style/CardText"
                             android:layout_width="wrap_content"
@@ -78,17 +80,19 @@
                             android:layout_marginStart="8dp"
                             android:ellipsize="end"
                             android:maxLines="4"
-                            android:text="@string/subtitle" />
+                            android:text="@string/subtitle"
+                            roboto:typeface="roboto_regular" />
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- Bottom -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
+                    android:orientation="vertical"
                     android:paddingLeft="@dimen/stack_bar_padding"
-                    android:paddingRight="@dimen/stack_bar_padding"
-                    android:orientation="vertical">
+                    android:paddingRight="@dimen/stack_bar_padding">
 
                     <View
                         android:layout_width="fill_parent"
@@ -169,10 +173,10 @@
 
             <RelativeLayout
                 android:id="@+id/back"
-                android:tag="back"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp" />
+                android:padding="8dp"
+                android:tag="back" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

@@ -70,10 +70,12 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 ImageView ivHint = (ImageView) llStack.findViewById(R.id.ivHint);
 
                 // Set values
-                if (lymbo.getImage() != null) {
+                if (lymbo.getImage() != null && !lymbo.getImage().trim().isEmpty()) {
                     Bitmap b = Base64BitmapConverter.decodeBase64(lymbo.getImage());
                     BitmapDrawable bd = new BitmapDrawable(b);
                     ivImage.setBackgroundDrawable(bd);
+                } else {
+                    ivImage.getLayoutParams().height = 0;
                 }
                 if (lymbo.getTitle() != null)
                     tvTitle.setText(lymbo.getTitle());

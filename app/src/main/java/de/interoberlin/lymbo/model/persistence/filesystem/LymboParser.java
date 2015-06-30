@@ -34,6 +34,8 @@ import de.interoberlin.sauvignon.lib.controller.parser.SvgParser;
 import de.interoberlin.sauvignon.lib.model.svg.SVG;
 
 public class LymboParser {
+    private static int y = 0;
+
     private static LymboParser instance;
 
     private Map<String, String> defaults = new HashMap<>();
@@ -198,6 +200,8 @@ public class LymboParser {
      * @throws java.io.IOException
      */
     private Card parseCard(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.info("Parse " + y++);
+
         Log.trace("parseCard()");
         String name;
         parser.require(XmlPullParser.START_TAG, null, "card");
