@@ -25,12 +25,17 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
+import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
+import de.interoberlin.lymbo.model.card.components.ImageComponent;
 import de.interoberlin.lymbo.model.card.components.ResultComponent;
+import de.interoberlin.lymbo.model.card.components.SVGComponent;
+import de.interoberlin.lymbo.model.card.components.TextComponent;
+import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EComponent;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
@@ -109,9 +114,34 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
                 // Add sides
                 for (Side side : card.getSides()) {
-                    View component = side.getView(c, a, rlMain);
-                    component.setVisibility(View.INVISIBLE);
-                    rlMain.addView(component);
+                    LayoutInflater li = LayoutInflater.from(c);
+                    LinearLayout llSide = (LinearLayout) li.inflate(R.layout.side, parent, false);
+                    LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
+
+                    // Add components
+                    for (Displayable d : side.getComponents()) {
+                        View component = d.getView(c, a, llComponents);
+                        llComponents.addView(component);
+
+                        if ((d instanceof TitleComponent && ((TitleComponent) d).isFlip()) ||
+                                (d instanceof TextComponent && ((TextComponent) d).isFlip()) ||
+                                (d instanceof ImageComponent && ((ImageComponent) d).isFlip()) ||
+                                (d instanceof ResultComponent && ((ResultComponent) d).isFlip()) ||
+                                (d instanceof SVGComponent && ((SVGComponent) d).isFlip())
+                                ) {
+                            component.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    flip(card, flCard);
+                                }
+                            });
+
+                        }
+                    }
+
+                    llSide.setVisibility(View.INVISIBLE);
+
+                    rlMain.addView(llSide);
                 }
 
                 // Display width
@@ -154,31 +184,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                     llFlip.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            // If front contains choice component make sure that at least on answer is selected
-                            if (!checkAnswerSelected(card))
-                                return;
-
-                            final int CARD_FLIP_TIME = c.getResources().getInteger(R.integer.card_flip_time);
-                            final int VIBRATION_DURATION_FLIP = c.getResources().getInteger(R.integer.vibration_duration_flip);
-
-                            ObjectAnimator animation = ObjectAnimator.ofFloat(flCard, "rotationY", 0.0f, 90.0f);
-                            animation.setDuration(CARD_FLIP_TIME / 2);
-                            animation.setInterpolator(new AccelerateDecelerateInterpolator());
-                            animation.start();
-
-                            flCard.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    flip(card, flCard);
-
-                                    ObjectAnimator animation = ObjectAnimator.ofFloat(flCard, "rotationY", -90.0f, 0.0f);
-                                    animation.setDuration(CARD_FLIP_TIME / 2);
-                                    animation.setInterpolator(new AccelerateDecelerateInterpolator());
-                                    animation.start();
-                                }
-                            }, CARD_FLIP_TIME / 2);
-
-                            ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION_FLIP);
+                            flip(card, flCard);
                         }
                     });
                 } else {
@@ -408,6 +414,33 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         }
     }
 
+    private void flip(final Card card, final FrameLayout flCard) {
+        if (!checkAnswerSelected(card))
+            return;
+
+        final int CARD_FLIP_TIME = c.getResources().getInteger(R.integer.card_flip_time);
+        final int VIBRATION_DURATION_FLIP = c.getResources().getInteger(R.integer.vibration_duration_flip);
+
+        ObjectAnimator animation = ObjectAnimator.ofFloat(flCard, "rotationY", 0.0f, 90.0f);
+        animation.setDuration(CARD_FLIP_TIME / 2);
+        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        animation.start();
+
+        flCard.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                changeSide(card, flCard);
+
+                ObjectAnimator animation = ObjectAnimator.ofFloat(flCard, "rotationY", -90.0f, 0.0f);
+                animation.setDuration(CARD_FLIP_TIME / 2);
+                animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                animation.start();
+            }
+        }, CARD_FLIP_TIME / 2);
+
+        ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION_FLIP);
+    }
+
     /**
      * Stashes card
      *
@@ -454,7 +487,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
      *
      * @param flCard frameLayout of card
      */
-    private void flip(Card card, FrameLayout flCard) {
+    private void changeSide(Card card, FrameLayout flCard) {
         final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
         final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
 

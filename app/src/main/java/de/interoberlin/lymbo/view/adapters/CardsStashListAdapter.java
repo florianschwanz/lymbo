@@ -17,6 +17,7 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
+import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.Tag;
@@ -70,9 +71,19 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
             // Add sides
             for (Side side : card.getSides()) {
-                View component = side.getView(c, a, rlMain);
-                component.setVisibility(View.INVISIBLE);
-                rlMain.addView(component);
+                LayoutInflater li = LayoutInflater.from(c);
+                LinearLayout llSide = (LinearLayout) li.inflate(R.layout.side, parent, false);
+                LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
+
+                // Add components
+                for (Displayable d : side.getComponents()) {
+                    View component = d.getView(c, a, llComponents);
+                    llComponents.addView(component);
+                }
+
+                llSide.setVisibility(View.INVISIBLE);
+
+                rlMain.addView(llSide);
             }
 
             // Display width
