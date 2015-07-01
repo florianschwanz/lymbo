@@ -143,6 +143,7 @@ public class LymboWriter {
         attributes.put("value", escape(component.getValue()));
         attributes.put("lines", Integer.toString(component.getLines()));
         attributes.put("gravity", component.getGravity().toString());
+        attributes.put("flip", String.valueOf(component.isFlip()));
 
         addTag(tag, attributes);
     }
@@ -158,7 +159,8 @@ public class LymboWriter {
         attributes.put("value", escape(component.getValue()));
         attributes.put("lines", Integer.toString(component.getLines()));
         attributes.put("gravity", component.getGravity().toString());
-
+        attributes.put("flip", String.valueOf(component.isFlip()));
+        
         addTag(tag, attributes);
     }
 
