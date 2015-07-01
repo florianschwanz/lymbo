@@ -156,10 +156,12 @@ public class CardsController {
         TitleComponent frontTitle = new TitleComponent();
         frontTitle.setValue(frontText);
         frontTitle.setGravity(EGravity.CENTER);
+        frontTitle.setFlip(true);
 
         TitleComponent backTitle = new TitleComponent();
         backTitle.setGravity(EGravity.CENTER);
         backTitle.setValue(backText);
+        backTitle.setFlip(true);
 
         Side frontSide = new Side(frontTitle);
         Side backSide = new Side(backTitle);
