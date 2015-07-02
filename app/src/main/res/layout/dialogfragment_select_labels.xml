@@ -31,7 +31,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="14dp"
             android:background="@color/stroke" />
-        
+
         <de.interoberlin.lymbo.view.controls.RobotoTextView
             android:id="@+id/tvTags"
             style="@style/CardText"

@@ -94,31 +94,33 @@ public class AddCardDialogFragment extends DialogFragment {
 
         // Existing tags
         for (final Tag t : tags) {
-            final TableRow tr = new TableRow(c);
+            if (!t.getName().equals(getActivity().getResources().getString(R.string.no_tag))) {
+                final TableRow tr = new TableRow(c);
 
-            final CheckBox cb = new CheckBox(c);
-            final TextView tvText = new TextView(c);
+                final CheckBox cb = new CheckBox(c);
+                final TextView tvText = new TextView(c);
 
-            tr.addView(cb);
-            tr.addView(tvText);
+                tr.addView(cb);
+                tr.addView(tvText);
 
-            cb.setChecked(t.isChecked());
-            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    t.setChecked(b);
-                }
-            });
+                cb.setChecked(t.isChecked());
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        t.setChecked(b);
+                    }
+                });
 
-            tvText.setText(t.getName());
-            tvText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cb.toggle();
-                }
-            });
+                tvText.setText(t.getName());
+                tvText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cb.toggle();
+                    }
+                });
 
-            tblTags.addView(tr, tblTags.getChildCount() - 1);
+                tblTags.addView(tr, tblTags.getChildCount() - 1);
+            }
         }
 
         // Add button
