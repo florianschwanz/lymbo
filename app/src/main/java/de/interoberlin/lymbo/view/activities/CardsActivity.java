@@ -1,6 +1,5 @@
 package de.interoberlin.lymbo.view.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,10 +41,7 @@ import de.interoberlin.swipelistview.view.SwipeListView;
 
 public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnLabelSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
-    CardsController cardsController = CardsController.getInstance();
-
-    // Context and Activity
-    private static Context context;
+    CardsController cardsController;
 
     // Views
     private SwipeRefreshLayout srl;
@@ -84,6 +80,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        cardsController = CardsController.getInstance(this);
 
         // Restore instance state
         if (savedInstanceState != null) {
@@ -91,7 +88,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             Lymbo l = null;
             if (savedInstanceState.getString(BUNDLE_LYMBO_PATH) != null) {
                 if (savedInstanceState.getBoolean(BUNDLE_ASSET)) {
-                    l = LymboLoader.getLymboFromAsset(context, savedInstanceState.getString(BUNDLE_LYMBO_PATH), false);
+                    l = LymboLoader.getLymboFromAsset(this, savedInstanceState.getString(BUNDLE_LYMBO_PATH), false);
                 } else {
                     l = LymboLoader.getLymboFromFile(new File(savedInstanceState.getString(BUNDLE_LYMBO_PATH)), false);
                 }
@@ -111,8 +108,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         // Properties
         REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_CARDS));
         VIBRATION_DURATION = Integer.parseInt(Configuration.getProperty(this, EProperty.VIBRATION_DURATION));
-
-        context = this;
     }
 
     public void onResume() {
@@ -196,7 +191,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             ibFab.setVisibility(View.INVISIBLE);
         }
 
-        phNoCards = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.placeholder_no_cards, null, false);
+        phNoCards = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.placeholder_no_cards, null, false);
         rl.addView(phNoCards);
 
         checkEmptyStack();
@@ -397,7 +392,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public void onEditNote(String uuid, String note) {
-        cardsController.setNote(context, uuid, note);
+        cardsController.setNote(this, uuid, note);
 
         cardsAdapter.notifyDataSetChanged();
         slv.invalidateViews();

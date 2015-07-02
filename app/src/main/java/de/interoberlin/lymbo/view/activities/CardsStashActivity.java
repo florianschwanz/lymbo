@@ -1,6 +1,5 @@
 package de.interoberlin.lymbo.view.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,7 +15,6 @@ import com.github.mrengineer13.snackbar.SnackBar;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.CardsStashListAdapter;
@@ -26,10 +24,7 @@ import de.interoberlin.swipelistview.view.SwipeListView;
 
 public class CardsStashActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener {
     // Controllers
-    CardsController cardsController = CardsController.getInstance();
-
-    // Context and Activity
-    private static Context context;
+    CardsController cardsController;
 
     // Views
     private SwipeRefreshLayout srl;
@@ -37,7 +32,6 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
     private LinearLayout toolbarWrapper;
 
     // Model
-    private Lymbo lymbo;
     private CardsStashListAdapter cardsStashAdapter;
 
     private String recentCardId = "";
@@ -55,6 +49,8 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        cardsController = CardsController.getInstance(this);
+
         if (cardsController.getLymbo() == null) {
             finish();
         }
@@ -67,7 +63,6 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
 
     public void onResume() {
         super.onResume();
-        lymbo = cardsController.getLymbo();
         cardsStashAdapter = new CardsStashListAdapter(this, this, R.layout.card_stash, cardsController.getCardsStashed());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);

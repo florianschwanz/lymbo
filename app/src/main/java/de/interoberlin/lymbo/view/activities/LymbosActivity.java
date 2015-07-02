@@ -29,8 +29,8 @@ import de.interoberlin.swipelistview.view.SwipeListView;
 
 public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddStackDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
-    private LymbosController lymbosController = LymbosController.getInstance();
-    private CardsController cardsController = CardsController.getInstance();
+    private LymbosController lymbosController;
+    private CardsController cardsController;
 
     // Views
     private SwipeRefreshLayout srl;
@@ -52,6 +52,8 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        lymbosController = LymbosController.getInstance(this);
+        cardsController = CardsController.getInstance(this);
 
         if (savedInstanceState != null) {
             lymbosController.load();

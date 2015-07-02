@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.UUID;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.LymbosController;
+import de.interoberlin.lymbo.controller.App;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 
 public class Card {
-    private LymbosController lymbosController;
+    // Application
+    App app;
 
     private String id;
     private List<Side> sides;
@@ -41,7 +42,7 @@ public class Card {
     // -------------------------
 
     private void init() {
-        lymbosController = LymbosController.getInstance();
+        app = App.getInstance();
 
         id = UUID.randomUUID().toString();
         sides = new ArrayList<>();
@@ -54,7 +55,7 @@ public class Card {
     }
 
     public boolean matchesChapter(List<Tag> cs) {
-        String noChapter = lymbosController.getContext().getResources().getString(R.string.no_chapter);
+        String noChapter = App.getContext().getResources().getString(R.string.no_chapter);
 
         if (cs == null || cs.isEmpty()) {
             return true;
@@ -70,7 +71,7 @@ public class Card {
     }
 
     public boolean matchesTag(List<Tag> ts) {
-        String noTag = lymbosController.getContext().getResources().getString(R.string.no_tag);
+        String noTag = App.getContext().getResources().getString(R.string.no_tag);
 
         if (ts == null || ts.isEmpty()) {
             return true;

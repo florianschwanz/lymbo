@@ -46,12 +46,12 @@ import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
 
 public class CardsListAdapter extends ArrayAdapter<Card> {
+    // Context
     private Context c;
     private Activity a;
 
     // Controllers
-    CardsController cardsController = CardsController.getInstance();
-    // ComponentsController componentsController = ComponentsController.getInstance();
+    CardsController cardsController;
 
     // Properties
     private static int VIBRATION_DURATION;
@@ -62,6 +62,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
     public CardsListAdapter(Context context, Activity activity, int resource, List<Card> items) {
         super(context, resource, items);
+        cardsController = CardsController.getInstance(activity);
 
         this.c = context;
         this.a = activity;

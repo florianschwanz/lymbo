@@ -1,8 +1,6 @@
 package de.interoberlin.lymbo.controller;
 
-import android.app.Application;
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
+import android.app.Activity;
 import android.os.Environment;
 
 import org.apache.commons.io.FileUtils;
@@ -21,21 +19,21 @@ import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.LymboSQLiteOpenHelper;
-import de.interoberlin.lymbo.model.persistence.sqlite.cards.CardStateDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.location.Location;
 import de.interoberlin.lymbo.model.persistence.sqlite.location.LocationDatasource;
-import de.interoberlin.lymbo.model.persistence.sqlite.notes.NoteDatasource;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.mate.lib.model.Log;
 
-public class LymbosController extends Application {
-    // Context
-    private static Context context;
+public class LymbosController {
+    // Application
+    private App app;
+
+    // Activity
+    private Activity activity;
 
     // Database
-    private static SQLiteDatabase sqliteDatabase;
-    private static LymboSQLiteOpenHelper sqliteOpenLymboSQLiteOpenHelper;
+    private LocationDatasource datasource;
 
     // Model
     private List<Lymbo> lymbos;
@@ -48,59 +46,23 @@ public class LymbosController extends Application {
 
     private boolean loaded = false;
 
-    private LocationDatasource datasource;
-
     private static LymbosController instance;
 
     // --------------------
     // Constructors
     // --------------------
 
-    public LymbosController() {
+    private LymbosController(Activity activity) {
+        this.activity = activity;
         init();
     }
 
-    public static LymbosController getInstance() {
+    public static LymbosController getInstance(Activity activity) {
         if (instance == null) {
-            instance = new LymbosController();
+            instance = new LymbosController(activity);
         }
 
         return instance;
-    }
-
-    // --------------------
-    // Methods - Lifecycle
-    // --------------------
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        context = this;
-
-        // Database
-        sqliteOpenLymboSQLiteOpenHelper = new LymboSQLiteOpenHelper(context);
-        if (sqliteOpenLymboSQLiteOpenHelper != null) {
-            sqliteDatabase = sqliteOpenLymboSQLiteOpenHelper.getWritableDatabase();
-            recreateOnSchemaChange();
-        }
-
-        // Properties
-        LYMBO_FILE_EXTENSION = Configuration.getProperty(this, EProperty.LYMBO_FILE_EXTENSION);
-        LYMBO_LOOKUP_PATH = Configuration.getProperty(this, EProperty.LYMBO_LOOKUP_PATH);
-        LYMBO_SAVE_PATH = Configuration.getProperty(this, EProperty.LYMBO_SAVE_PATH);
-    }
-
-    @Override
-    public void onTerminate() {
-        if (sqliteDatabase != null) {
-            sqliteDatabase.close();
-        }
-
-        if (sqliteOpenLymboSQLiteOpenHelper != null) {
-            sqliteOpenLymboSQLiteOpenHelper.close();
-        }
-
-        super.onTerminate();
     }
 
     // --------------------
@@ -108,8 +70,15 @@ public class LymbosController extends Application {
     // --------------------
 
     public void init() {
+        app = App.getInstance();
+
         lymbos = new ArrayList<>();
         lymbosStashed = new ArrayList<>();
+
+        // Properties
+        LYMBO_FILE_EXTENSION = Configuration.getProperty(activity, EProperty.LYMBO_FILE_EXTENSION);
+        LYMBO_LOOKUP_PATH = Configuration.getProperty(activity, EProperty.LYMBO_LOOKUP_PATH);
+        LYMBO_SAVE_PATH = Configuration.getProperty(activity, EProperty.LYMBO_SAVE_PATH);
     }
 
     /**
@@ -148,14 +117,14 @@ public class LymbosController extends Application {
         LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
         LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
 
-        datasource = new LocationDatasource(context);
+        datasource = new LocationDatasource(activity);
         datasource.open();
         datasource.updateLocation(lymbo.getPath(), false);
         datasource.close();
     }
 
     public void scan() {
-        datasource = new LocationDatasource(context);
+        datasource = new LocationDatasource(activity);
         datasource.open();
 
         for (File l : findFiles(LYMBO_FILE_EXTENSION)) {
@@ -169,8 +138,11 @@ public class LymbosController extends Application {
         datasource.close();
     }
 
+    /**
+     * Loads lymbo files and updates database status
+     */
     public void load() {
-        datasource = new LocationDatasource(context);
+        datasource = new LocationDatasource(activity);
         datasource.open();
 
         // Retrieve lymbo files from locations cache
@@ -205,26 +177,8 @@ public class LymbosController extends Application {
         loaded = true;
     }
 
-    public void recreateOnSchemaChange() {
-        LocationDatasource dsLocation = new LocationDatasource(context);
-        dsLocation.open();
-        dsLocation.recreateOnSchemaChange();
-        dsLocation.close();
-
-        NoteDatasource dsNote = new NoteDatasource(context);
-        dsNote.open();
-        dsNote.recreateOnSchemaChange();
-        dsNote.close();
-
-        CardStateDatasource dsCardState = new CardStateDatasource(context);
-        dsCardState.open();
-        dsCardState.recreateOnSchemaChange();
-        dsCardState.close();
-    }
-
-
     public void changeLocation(String location, boolean stashed) {
-        datasource = new LocationDatasource(context);
+        datasource = new LocationDatasource(activity);
         datasource.open();
         datasource.updateLocation(location, stashed);
         datasource.close();
@@ -281,9 +235,9 @@ public class LymbosController extends Application {
         List<Lymbo> lymbos = new ArrayList<>();
 
         try {
-            for (String asset : Arrays.asList(context.getAssets().list(""))) {
+            for (String asset : Arrays.asList(activity.getAssets().list(""))) {
                 if (asset.endsWith(LYMBO_FILE_EXTENSION)) {
-                    Lymbo l = LymboLoader.getLymboFromAsset(context, asset, true);
+                    Lymbo l = LymboLoader.getLymboFromAsset(activity, asset, true);
                     if (l != null) {
                         lymbos.add(l);
                     }
@@ -350,18 +304,6 @@ public class LymbosController extends Application {
     // --------------------
     // Getters / Setters
     // --------------------
-
-    public Context getContext() {
-        return context;
-    }
-
-    public static SQLiteDatabase getSqliteDatabase() {
-        return sqliteDatabase;
-    }
-
-    public static LymboSQLiteOpenHelper getSqliteOpenLymboSQLiteOpenHelper() {
-        return sqliteOpenLymboSQLiteOpenHelper;
-    }
 
     public List<Lymbo> getLymbos() {
         addNullElement(lymbos);

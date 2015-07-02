@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import de.interoberlin.lymbo.R;
 
 public abstract class SwipeRefreshBaseActivity extends BaseActivity {
-    // Views
-
     // Toolbar
     private ArrayList<View> hideableHeaderViews = new ArrayList<>();
     private ArrayList<View> hideableFooterViews = new ArrayList<>();

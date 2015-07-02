@@ -32,8 +32,8 @@ import de.interoberlin.sauvignon.lib.view.SVGPanel;
 
 public class SplashActivity extends Activity {
     // Controllers
-    SplashController splashController = SplashController.getInstance();
-    LymbosController lymbosController = LymbosController.getInstance();
+    SplashController splashController;
+    LymbosController lymbosController;
 
     private static Context context;
     private static Activity activity;
@@ -58,6 +58,9 @@ public class SplashActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        splashController = SplashController.getInstance(this);
+        lymbosController = LymbosController.getInstance(this);
+
         setContentView(R.layout.activity_splash);
 
         // Get activity and context

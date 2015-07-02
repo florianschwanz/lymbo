@@ -30,8 +30,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     private Activity a;
 
     // Controllers
-    CardsController cardsController = CardsController.getInstance();
-    // ComponentsController componentsController = ComponentsController.getInstance();
+    CardsController cardsController;
 
     // --------------------
     // Constructors
@@ -39,6 +38,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
     public CardsStashListAdapter(Context context, Activity activity, int resource, List<Card> items) {
         super(context, resource, items);
+        cardsController = CardsController.getInstance(activity);
 
         this.c = context;
         this.a = activity;

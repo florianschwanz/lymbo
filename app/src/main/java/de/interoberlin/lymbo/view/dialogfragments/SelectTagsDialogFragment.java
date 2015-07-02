@@ -21,7 +21,7 @@ import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class SelectTagsDialogFragment extends DialogFragment {
     // Controllers
-    CardsController cardsController = CardsController.getInstance();
+    CardsController cardsController;
 
     private OnLabelSelectedListener onLabelSelectedListener;
 
@@ -39,6 +39,7 @@ public class SelectTagsDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        cardsController = CardsController.getInstance(getActivity());
 
         Context c = getActivity();
 

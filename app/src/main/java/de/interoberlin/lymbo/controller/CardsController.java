@@ -1,5 +1,6 @@
 package de.interoberlin.lymbo.controller;
 
+import android.app.Activity;
 import android.content.Context;
 
 import java.io.File;
@@ -21,8 +22,11 @@ import de.interoberlin.lymbo.model.persistence.sqlite.notes.Note;
 import de.interoberlin.lymbo.model.persistence.sqlite.notes.NoteDatasource;
 
 public class CardsController {
-    // Context
-    private static Context context;
+    // Application
+    private App app;
+
+    // Activity
+    private Activity activity;
 
     // Database
     private NoteDatasource datasource;
@@ -31,7 +35,7 @@ public class CardsController {
     private Lymbo lymbo;
     private List<Card> cards;
     private List<Card> cardsStashed;
-    private LymbosController lymbosController = LymbosController.getInstance();
+    private LymbosController lymbosController;
 
     private static CardsController instance;
 
@@ -39,13 +43,14 @@ public class CardsController {
     // Constructors
     // --------------------
 
-    private CardsController() {
+    private CardsController(Activity activity) {
+        this.activity = activity;
         init();
     }
 
-    public static CardsController getInstance() {
+    public static CardsController getInstance(Activity activity) {
         if (instance == null) {
-            instance = new CardsController();
+            instance = new CardsController(activity);
         }
 
         return instance;
@@ -56,13 +61,14 @@ public class CardsController {
     // --------------------
 
     public void init() {
-        context = lymbosController.getContext();
+        app = App.getInstance();
+        lymbosController = LymbosController.getInstance(activity);
 
         cards = new ArrayList<>();
         cardsStashed = new ArrayList<>();
 
         if (lymbo != null) {
-            CardStateDatasource dsCardState = new CardStateDatasource(context);
+            CardStateDatasource dsCardState = new CardStateDatasource(activity);
             dsCardState.open();
 
             for (Card c : lymbo.getCards()) {
@@ -250,7 +256,7 @@ public class CardsController {
     }
 
     private void changeCardState(String uuid, boolean stashed) {
-        CardStateDatasource dsCardState = new CardStateDatasource(context);
+        CardStateDatasource dsCardState = new CardStateDatasource(activity);
         dsCardState.open();
         dsCardState.updateCardState(uuid, stashed);
         dsCardState.close();

@@ -30,7 +30,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
     private Activity a;
 
     // Controllers
-    private CardsController cardsController = CardsController.getInstance();
+    private CardsController cardsController;
 
     // --------------------
     // Constructors
@@ -38,6 +38,8 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
 
     public LymbosListAdapter(Activity activity, Context context, int resource, List<Lymbo> items) {
         super(context, resource, items);
+        cardsController = CardsController.getInstance(activity);
+
         this.a = activity;
         this.c = context;
     }

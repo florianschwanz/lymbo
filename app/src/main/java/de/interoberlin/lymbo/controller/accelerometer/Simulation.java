@@ -8,8 +8,11 @@ import java.util.Observer;
 import de.interoberlin.lymbo.controller.SplashController;
 
 public class Simulation implements Observer {
+    // Activity
+    private Activity activity;
+
     // Controllers
-    SplashController splashController = SplashController.getInstance();
+    SplashController splashController;
 
     private static Simulation instance;
 
@@ -31,10 +34,13 @@ public class Simulation implements Observer {
     private static int x = Integer.MAX_VALUE;
     private static int y = Integer.MAX_VALUE;
 
-    private Activity activity;
+    // --------------------
+    // Constructors
+    // --------------------
 
     private Simulation(Activity activity) {
         this.activity = activity;
+        splashController = SplashController.getInstance(activity);
     }
 
     public static Simulation getInstance(Activity activity) {
@@ -44,6 +50,10 @@ public class Simulation implements Observer {
 
         return instance;
     }
+
+    // --------------------
+    // Methods - Lifecycle
+    // --------------------
 
     @Override
     public void update(Observable observable, Object data) {
@@ -66,6 +76,10 @@ public class Simulation implements Observer {
         y = Math.round(rawY);
     }
 
+    // --------------------
+    // Methods
+    // --------------------
+
     public void start() {
         Accelerometer.getInstance(activity).start();
     }
@@ -85,6 +99,10 @@ public class Simulation implements Observer {
             return f * FACTOR;
         }
     }
+
+    // --------------------
+    // Getters / Setters
+    // --------------------
 
     public static int getX() {
         return x;

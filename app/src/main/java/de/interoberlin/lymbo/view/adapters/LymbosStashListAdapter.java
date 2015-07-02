@@ -24,7 +24,7 @@ public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
     Activity a;
 
     // Controllers
-    CardsController cardsController = CardsController.getInstance();
+    CardsController cardsController;
 
     // --------------------
     // Constructors
@@ -32,6 +32,8 @@ public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
 
     public LymbosStashListAdapter(Activity activity, Context context, int resource, List<Lymbo> items) {
         super(context, resource, items);
+        cardsController = CardsController.getInstance(activity);
+
         this.a = activity;
         this.c = context;
     }

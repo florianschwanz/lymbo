@@ -30,7 +30,7 @@ import de.interoberlin.lymbo.util.ViewUtil;
 
 public class AddCardDialogFragment extends DialogFragment {
     // Controllers
-    CardsController cardsController = CardsController.getInstance();
+    CardsController cardsController;
 
     // Model
     private List<Tag> tags;
@@ -60,6 +60,7 @@ public class AddCardDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        cardsController = CardsController.getInstance(getActivity());
 
         final Context c = getActivity();
 

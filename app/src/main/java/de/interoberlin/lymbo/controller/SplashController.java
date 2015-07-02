@@ -1,29 +1,34 @@
 package de.interoberlin.lymbo.controller;
 
+import android.app.Activity;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.EMessage;
 
 public class SplashController {
+    // Activity
+    private Activity activity;
 
     private List<String> messages = new ArrayList<>();
 
-    private static SplashController instance;
-
     private static float offsetX = 0F;
     private static float offsetY = 0F;
+
+    private static SplashController instance;
 
     // --------------------
     // Singleton
     // --------------------
 
-    private SplashController() {
+    private SplashController(Activity activity) {
+        this.activity = activity;
     }
 
-    public static SplashController getInstance() {
+    public static SplashController getInstance(Activity activity) {
         if (instance == null) {
-            instance = new SplashController();
+            instance = new SplashController(activity);
         }
 
         return instance;
