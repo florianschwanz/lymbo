@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
@@ -47,6 +48,8 @@ public class SelectTagsDialogFragment extends DialogFragment {
         final View v = View.inflate(c, R.layout.dialogfragment_select_labels, null);
         final TableLayout tblChapters = (TableLayout) v.findViewById(R.id.tblChapters);
         final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
+        final TextView tvAll = (TextView) v.findViewById(R.id.tvAll);
+        final TextView tvNone = (TextView) v.findViewById(R.id.tvNone);
 
         for (final Tag t : cardsController.getLymbo().getChapters()) {
             final TableRow tr = new TableRow(c);
@@ -104,6 +107,20 @@ public class SelectTagsDialogFragment extends DialogFragment {
             tblTags.addView(tr);
         }
 
+        tvAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setAllTagsTo(tblTags, true);
+            }
+        });
+
+        tvNone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setAllTagsTo(tblTags, false);
+            }
+        });
+
         // Load dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v);
@@ -137,6 +154,23 @@ public class SelectTagsDialogFragment extends DialogFragment {
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+
+    private void setAllTagsTo(TableLayout tblTags, boolean value) {
+        for (final Tag t : cardsController.getLymbo().getTags()) {
+            t.setChecked(value);
+        }
+
+        for (int i = 0; i < tblTags.getChildCount(); i++) {
+            if (tblTags.getChildAt(i) instanceof TableRow) {
+                TableRow tr = (TableRow) tblTags.getChildAt(i);
+
+                if (tr.getChildCount() > 0 && tr.getChildAt(0) instanceof CheckBox) {
+                    ((CheckBox) tr.getChildAt(0)).setChecked(value);
+                }
+            }
+        }
     }
 
     // --------------------

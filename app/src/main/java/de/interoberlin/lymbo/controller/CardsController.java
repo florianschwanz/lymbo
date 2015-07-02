@@ -79,8 +79,8 @@ public class CardsController {
                 }
             }
 
-            addNullElement(cards);
-            addNullElement(cardsStashed);
+            addNullElementToCards();
+            addNullElementToCardsStashed();
 
             dsCardState.close();
         }
@@ -145,7 +145,7 @@ public class CardsController {
     public void addCard(Card card) {
         lymbo.getCards().add(card);
         cards.add(card);
-        addNullElement(cards);
+        addNullElementToCards();
         save();
     }
 
@@ -221,7 +221,7 @@ public class CardsController {
         getCardsStashed().add(pos < getCardsStashed().size() ? pos : 0, card);
         changeCardState(uuid, true);
 
-        addNullElement(cardsStashed);
+        addNullElementToCards();
     }
 
     /**
@@ -252,7 +252,7 @@ public class CardsController {
         getCardsStashed().remove(card);
         changeCardState(uuid, false);
 
-        addNullElement(cards);
+        addNullElementToCards();
     }
 
     private void changeCardState(String uuid, boolean stashed) {
@@ -264,7 +264,7 @@ public class CardsController {
 
     public void shuffle() {
         Collections.shuffle(cards);
-        addNullElement(cards);
+        addNullElementToCards();
     }
 
     /**
@@ -316,25 +316,11 @@ public class CardsController {
 
         getCards().remove(card);
         getCards().add(pos < getCards().size() ? pos : 0, card);
-        addNullElement(cards);
+        addNullElementToCards();
     }
 
-    /**
-     * This is necessary to display the first element below the toolbar
-     *
-     * @param list list which shall be extended by a leading null element
-     */
-    public void addNullElement(List<Card> list) {
-        if (list != null) {
-            list.removeAll(Collections.singleton(null));
-
-            if (!list.isEmpty()) {
-                // Add leading null element
-                if (list.get(0) != null) {
-                    list.add(0, null);
-                }
-            }
-        }
+    public void selectLabel() {
+        addNullElementToCards();
     }
 
     public void setNote(Context context, String uuid, String text) {
@@ -353,6 +339,35 @@ public class CardsController {
         datasource.close();
 
         return note != null ? note.getText() : null;
+    }
+
+    /**
+     * This is necessary to display the first element below the toolbar
+     *
+     */
+    public void addNullElementToCards() {
+        addNullElement(cards);
+    }
+
+    /**
+     * This is necessary to display the first element below the toolbar
+     *
+     */
+    public void addNullElementToCardsStashed() {
+        addNullElement(cardsStashed);
+    }
+
+    private void addNullElement(List<Card> list) {
+        if (list != null) {
+            list.removeAll(Collections.singleton(null));
+
+            if (!list.isEmpty()) {
+                // Add leading null element
+                if (list.get(0) != null) {
+                    list.add(0, null);
+                }
+            }
+        }
     }
 
     // --------------------
@@ -375,13 +390,17 @@ public class CardsController {
         }
     }
 
+    public void setCards(List<Card> cards) {
+        this.cards = cards;
+    }
+
     public List<Card> getCards() {
-        addNullElement(cards);
+        addNullElementToCards();
         return cards;
     }
 
     public List<Card> getCardsStashed() {
-        addNullElement(cardsStashed);
+        addNullElementToCardsStashed();
         return cardsStashed;
     }
 

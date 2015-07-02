@@ -387,7 +387,10 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public void onLabelSelected() {
+        cardsController.selectLabel();
+
         cardsAdapter.notifyDataSetChanged();
+        slv.invalidateViews();
     }
 
     @Override

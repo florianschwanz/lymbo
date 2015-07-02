@@ -67,5 +67,9 @@
     <string name="lymbos_stash">Lymbos Papierkorb</string>
     <string name="could_not_find_any_cards">Noch keine Karten angelegt</string>
     <string name="no_cards">keine Karten</string>
+    <string name="deselect_all">kein</string>
+    <string name="select_all">alle</string>
+    <string name="all">Alle</string>
+    <string name="none">Keine</string>
 
 </resources>

@@ -210,7 +210,7 @@ public class AddCardDialogFragment extends DialogFragment {
             if (tblTags.getChildAt(i) instanceof TableRow) {
                 TableRow trLast = (TableRow) tblTags.getChildAt(i);
 
-                if (trLast.getChildAt(0) instanceof CheckBox && ((CheckBox) trLast.getChildAt(0)).isChecked() && trLast.getChildAt(1) instanceof EditText && !((EditText) trLast.getChildAt(1)).getText().toString().isEmpty()) {
+                if (trLast.getChildCount() > 1 && trLast.getChildAt(0) instanceof CheckBox && ((CheckBox) trLast.getChildAt(0)).isChecked() && trLast.getChildAt(1) instanceof EditText && !((EditText) trLast.getChildAt(1)).getText().toString().isEmpty()) {
                     Tag tag = new Tag(((EditText) trLast.getChildAt(1)).getText().toString());
 
                     if (!containsTag(selectedTags, tag)) {
