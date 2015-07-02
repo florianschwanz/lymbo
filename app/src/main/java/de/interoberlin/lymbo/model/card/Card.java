@@ -61,7 +61,7 @@ public class Card {
             return true;
         } else {
             for (Tag c : cs) {
-                if (chapter == null && c.getName().equals(noChapter) || chapter != null && chapter.getName().equals(c.getName()) && c.isChecked()) {
+                if (chapter == null && c.isChecked() && c.getName().equals(noChapter) || chapter != null && chapter.getName().equals(c.getName()) && c.isChecked()) {
                     return true;
                 }
             }
@@ -77,7 +77,7 @@ public class Card {
             return true;
         } else {
             for (Tag t : ts) {
-                if ((tags == null || tags.isEmpty()) && (t.getName().equals(noTag))) {
+                if ((tags == null || tags.isEmpty()) && t.isChecked() && t.getName().equals(noTag)) {
                     return true;
                 } else {
                     for (Tag tag : tags) {

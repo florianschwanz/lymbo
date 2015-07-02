@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.controller.App;
+
 public class Lymbo {
     private String path;
     private boolean asset;
@@ -20,6 +23,9 @@ public class Lymbo {
     private String image;
     private String author;
     private List<Card> cards;
+
+    List<Tag> tags;
+    List<Tag> chapters;
 
     private boolean containsGeneratedIds;
 
@@ -48,6 +54,14 @@ public class Lymbo {
         author = "";
         cards = new ArrayList<>();
         error = "";
+
+        tags = new ArrayList<>();
+        String noTag = App.getContext().getResources().getString(R.string.no_tag);
+        tags.add(new Tag(noTag));
+
+        chapters = new ArrayList<>();
+        String noChapter = App.getContext().getResources().getString(R.string.no_chapter);
+        chapters.add(new Tag(noChapter));
     }
 
     /**
@@ -56,8 +70,6 @@ public class Lymbo {
      * @return a list of tags
      */
     public List<Tag> getTags() {
-        List<Tag> tags = new ArrayList<>();
-
         for (Card c : getCards()) {
             if (c != null) {
                 for (Tag t : c.getTags()) {
@@ -84,8 +96,6 @@ public class Lymbo {
      * @return a list of tags representing the chapters found
      */
     public List<Tag> getChapters() {
-        List<Tag> chapters = new ArrayList<>();
-
         for (Card c : getCards()) {
             if (c != null && c.getChapter() != null && !containsTag(chapters, c.getChapter())) {
                 chapters.add(c.getChapter());

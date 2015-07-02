@@ -21,17 +21,17 @@
             android:text="@string/chapters"
             roboto:typeface="roboto_regular" />
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="14dp"
-            android:background="@color/stroke" />
-
         <TableLayout
             android:id="@+id/tblChapters"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="14dp"
+            android:background="@color/stroke" />
+        
         <de.interoberlin.lymbo.view.controls.RobotoTextView
             android:id="@+id/tvTags"
             style="@style/CardText"
