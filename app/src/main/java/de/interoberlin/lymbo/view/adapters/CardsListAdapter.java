@@ -95,8 +95,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
                 // Load views : bottom bar
                 final LinearLayout llTags = (LinearLayout) flCard.findViewById(R.id.llTags);
-                final View divider = flCard.findViewById(R.id.divider);
-                final LinearLayout llIconbar = (LinearLayout) flCard.findViewById(R.id.llIconbar);
                 final LinearLayout llFlip = (LinearLayout) flCard.findViewById(R.id.llFlip);
                 final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
                 final TextView tvDenominator = (TextView) flCard.findViewById(R.id.tvDenominator);
@@ -112,6 +110,16 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 final ImageView ivStash = (ImageView) flCard.findViewById(R.id.ivStash);
                 final ImageView ivDiscard = (ImageView) flCard.findViewById(R.id.ivDiscard);
                 final ImageView ivPutToEnd = (ImageView) flCard.findViewById(R.id.ivToEnd);
+
+                //
+                if (card.isFlip()) {
+                    flCard.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            flip(card, flCard);
+                        }
+                    });
+                }
 
                 // Add sides
                 for (Side side : card.getSides()) {
@@ -168,7 +176,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                         cvTag.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                ((Vibrator) a.getSystemService(c.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+                                ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
                                 new SelectTagsDialogFragment().show(a.getFragmentManager(), "okay");
                             }
                         });
@@ -445,8 +453,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     /**
      * Stashes card
      *
-     * @param uuid    position of item
-     * @param flCard
+     * @param uuid   position of item
+     * @param flCard frame layout representing the card
      */
     private void stash(int pos, String uuid, FrameLayout flCard) {
         ViewUtil.collapse(c, flCard);
@@ -459,8 +467,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     /**
      * Removes an item from the current stack permanently
      *
-     * @param uuid    position of item
-     * @param flCard
+     * @param uuid   position of item
+     * @param flCard frame layout representing the card
      */
     private void discard(int pos, String uuid, FrameLayout flCard) {
         ViewUtil.collapse(c, flCard);

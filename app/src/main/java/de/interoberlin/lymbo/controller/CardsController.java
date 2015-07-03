@@ -22,9 +22,6 @@ import de.interoberlin.lymbo.model.persistence.sqlite.notes.Note;
 import de.interoberlin.lymbo.model.persistence.sqlite.notes.NoteDatasource;
 
 public class CardsController {
-    // Application
-    private App app;
-
     // Activity
     private Activity activity;
 
@@ -61,7 +58,6 @@ public class CardsController {
     // --------------------
 
     public void init() {
-        app = App.getInstance();
         lymbosController = LymbosController.getInstance(activity);
 
         cards = new ArrayList<>();
@@ -174,6 +170,7 @@ public class CardsController {
 
         card.getSides().add(frontSide);
         card.getSides().add(backSide);
+        card.setFlip(true);
 
         return card;
     }
@@ -270,7 +267,7 @@ public class CardsController {
     /**
      * Discards a card from the current stack
      *
-     * @param uuid
+     * @param uuid index of the card to be discarded
      */
     public void discard(String uuid) {
         Card card = getCardById(uuid);

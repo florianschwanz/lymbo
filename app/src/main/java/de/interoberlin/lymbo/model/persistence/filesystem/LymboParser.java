@@ -211,6 +211,7 @@ public class LymboParser {
 
         // Read attributes
         String id = parser.getAttributeValue(null, "id");
+        String flip = parser.getAttributeValue(null, "flip");
         String edit = parser.getAttributeValue(null, "edit");
         String hint = parser.getAttributeValue(null, "hint");
         String chapter = parser.getAttributeValue(null, "chapter");
@@ -247,7 +248,7 @@ public class LymboParser {
         }
 
         // Indicate newly generated id
-        if (!onlyTopLevel &&  id == null) {
+        if (!onlyTopLevel && id == null) {
             containsGeneratedIds = true;
         }
 
@@ -256,8 +257,14 @@ public class LymboParser {
 
         if (id != null)
             card.setId(id);
+        if (flip != null)
+            card.setFlip(Boolean.parseBoolean(flip));
+        else if (defaults.containsKey("cardFlip"))
+            card.setFlip(Boolean.parseBoolean(defaults.get("cardFlip")));
         if (edit != null)
             card.setEdit(Boolean.parseBoolean(edit));
+        else if (defaults.containsKey("cardEdit"))
+            card.setEdit(Boolean.parseBoolean(defaults.get("cardEdit")));
         if (hint != null)
             card.setHint(hint);
         if (chapter != null)

@@ -11,9 +11,6 @@ import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 
 public class Card {
-    // Application
-    App app;
-
     private String id;
     private List<Side> sides;
 
@@ -21,6 +18,7 @@ public class Card {
     private Tag chapter;
     private List<Tag> tags;
 
+    private boolean flip;
     private boolean edit;
     private int sideVisible;
     private boolean discarded;
@@ -42,8 +40,6 @@ public class Card {
     // -------------------------
 
     private void init() {
-        app = App.getInstance();
-
         id = UUID.randomUUID().toString();
         sides = new ArrayList<>();
         hint = null;
@@ -54,6 +50,30 @@ public class Card {
         discarded = false;
     }
 
+    /**
+     * Brings card into initial state
+     */
+    public void reset() {
+        sideVisible = 0;
+        discarded = false;
+
+        for (Side side : getSides()) {
+            for (Displayable component : side.getComponents()) {
+                if (component instanceof ChoiceComponent) {
+                    for (Answer answer : ((ChoiceComponent) component).getAnswers()) {
+                        answer.setSelected(false);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Determines whether this card's chapters is contained in a given list
+     *
+     * @param cs list of chapter tags
+     * @return
+     */
     public boolean matchesChapter(List<Tag> cs) {
         String noChapter = App.getContext().getResources().getString(R.string.no_chapter);
 
@@ -70,6 +90,12 @@ public class Card {
         return false;
     }
 
+    /**
+     * Determines whether at least one of this card's tags matches a given list of tags
+     *
+     * @param ts list of tags
+     * @return
+     */
     public boolean matchesTag(List<Tag> ts) {
         String noTag = App.getContext().getResources().getString(R.string.no_tag);
 
@@ -89,24 +115,6 @@ public class Card {
         }
 
         return false;
-    }
-
-    /**
-     * Brings card into initial state
-     */
-    public void reset() {
-        sideVisible = 0;
-        discarded = false;
-
-        for (Side side : getSides()) {
-            for (Displayable component : side.getComponents()) {
-                if (component instanceof ChoiceComponent) {
-                    for (Answer answer : ((ChoiceComponent) component).getAnswers()) {
-                        answer.setSelected(false);
-                    }
-                }
-            }
-        }
     }
 
     // -------------------------
@@ -151,6 +159,14 @@ public class Card {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public boolean isFlip() {
+        return flip;
+    }
+
+    public void setFlip(boolean flip) {
+        this.flip = flip;
     }
 
     public boolean isEdit() {
