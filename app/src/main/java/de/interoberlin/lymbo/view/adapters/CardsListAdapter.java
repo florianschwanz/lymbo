@@ -9,7 +9,9 @@ import android.os.Vibrator;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -44,6 +46,7 @@ import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.EditCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
 
@@ -101,7 +104,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
                 final TextView tvDenominator = (TextView) flCard.findViewById(R.id.tvDenominator);
                 final ImageView ivNote = (ImageView) flCard.findViewById(R.id.ivNote);
-                final ImageView ivEdit = (ImageView) flCard.findViewById(R.id.ivEdit);
                 final ImageView ivHint = (ImageView) flCard.findViewById(R.id.ivHint);
 
                 final LinearLayout llNoteBar = (LinearLayout) flCard.findViewById(R.id.llNoteBar);
@@ -122,6 +124,46 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                         }
                     });
                 }
+
+                // Context menu
+                flCard.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                    @Override
+                    public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+                        contextMenu.add(0, 0, 0, a.getResources().getString(R.string.edit))
+                                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        String uuid = card.getId();
+                                        int pos = position;
+                                        String frontTitle = ((TitleComponent) card.getSides().get(0).getFirst(EComponent.TITLE)).getValue();
+                                        String backTitle = ((TitleComponent) card.getSides().get(1).getFirst(EComponent.TITLE)).getValue();
+                                        ArrayList<String> tagsLymbo = new ArrayList<>();
+                                        ArrayList<String> tagsCard = new ArrayList<>();
+
+                                        for (Tag tag : cardsController.getLymbo().getTags()) {
+                                            tagsLymbo.add(tag.getName());
+                                        }
+
+                                        for (Tag tag : card.getTags()) {
+                                            tagsCard.add(tag.getName());
+                                        }
+
+                                        ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+                                        EditCardDialogFragment dialog = new EditCardDialogFragment();
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString(c.getResources().getString(R.string.bundle_uuid), uuid);
+                                        bundle.putInt(c.getResources().getString(R.string.bundle_pos), pos);
+                                        bundle.putString(c.getResources().getString(R.string.bundle_front_title), frontTitle);
+                                        bundle.putString(c.getResources().getString(R.string.bundle_back_title), backTitle);
+                                        bundle.putStringArrayList(c.getResources().getString(R.string.bundle_tags_lymbo), tagsLymbo);
+                                        bundle.putStringArrayList(c.getResources().getString(R.string.bundle_tags_card), tagsCard);
+                                        dialog.setArguments(bundle);
+                                        dialog.show(a.getFragmentManager(), "okay");
+                                        return false;
+                                    }
+                                });
+                    }
+                });
 
                 // Add sides
                 for (Side side : card.getSides()) {
@@ -204,22 +246,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 } else {
                     ViewUtil.remove(llFlip);
                 }
-
-                // Action : edit
-                /*
-                if (card.isEdit()) {
-                    ivEdit.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            componentsController.setCard(card);
-                            Intent openStartingPoint = new Intent(c, EditCardActivity.class);
-                            c.startActivity(openStartingPoint);
-                        }
-                    });
-                } else {
-                */
-                ViewUtil.remove(ivEdit);
-                //}
 
                 // Action : note
                 ivNote.setOnClickListener(new View.OnClickListener() {
