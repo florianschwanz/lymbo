@@ -382,10 +382,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onEditSimpleCard(String uuid, int pos, String frontText, String backText, List<Tag> tags) {
-        // Card card = cardsController.getSimpleCard(frontText, backText, tags);
-        // card.setId(uuid);
-
+    public void onEditSimpleCard(String uuid, String frontText, String backText, List<Tag> tags) {
         cardsController.updateCard(uuid, frontText, backText, tags);
         cardsAdapter.notifyDataSetChanged();
         checkEmptyStack();

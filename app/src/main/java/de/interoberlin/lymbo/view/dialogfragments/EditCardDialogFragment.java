@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -61,10 +61,8 @@ public class EditCardDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         cardsController = CardsController.getInstance(getActivity());
 
-        final Context c = getActivity();
-
         // Load layout
-        final View v = View.inflate(c, R.layout.dialogfragment_add_card, null);
+        final View v = View.inflate(getActivity(), R.layout.dialogfragment_add_card, null);
         etFront = (EditText) v.findViewById(R.id.etFront);
         etBack = (EditText) v.findViewById(R.id.etBack);
         llAddTags = (LinearLayout) v.findViewById(R.id.llAddTags);
@@ -73,12 +71,10 @@ public class EditCardDialogFragment extends DialogFragment {
 
         // Get arguments
         Bundle bundle = this.getArguments();
-        final String uuid = bundle.getString(c.getResources().getString(R.string.bundle_uuid));
-        final int pos = bundle.getInt(c.getResources().getString(R.string.bundle_pos));
-        final String frontTitle = bundle.getString(c.getResources().getString(R.string.bundle_front_title));
-        String backTitle = bundle.getString(c.getResources().getString(R.string.bundle_back_title));
-        ArrayList<String> tagsLymbo = bundle.getStringArrayList(c.getResources().getString(R.string.bundle_tags_lymbo));
-        ArrayList<String> tagsCard = bundle.getStringArrayList(c.getResources().getString(R.string.bundle_tags_card));
+        final String frontTitle = bundle.getString(getActivity().getResources().getString(R.string.bundle_front_title));
+        String backTitle = bundle.getString(getActivity().getResources().getString(R.string.bundle_back_title));
+        ArrayList<String> tagsLymbo = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_lymbo));
+        ArrayList<String> tagsCard = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_card));
 
         if (frontTitle != null)
             etFront.setText(frontTitle);
@@ -90,10 +86,10 @@ public class EditCardDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 if (addTagsIsExpanded) {
                     addTagsIsExpanded = false;
-                    tblTags.startAnimation(ViewUtil.collapse(c, tblTags));
+                    tblTags.startAnimation(ViewUtil.collapse(getActivity(), tblTags));
                 } else {
                     addTagsIsExpanded = true;
-                    tblTags.startAnimation(ViewUtil.expand(c, tblTags));
+                    tblTags.startAnimation(ViewUtil.expand(getActivity(), tblTags));
                 }
             }
         });
@@ -107,10 +103,10 @@ public class EditCardDialogFragment extends DialogFragment {
         // Existing tags
         for (final String tag : tagsLymbo) {
             if (!tag.equals(getActivity().getResources().getString(R.string.no_tag))) {
-                final TableRow tr = new TableRow(c);
+                final TableRow tr = new TableRow(getActivity());
 
-                final CheckBox cb = new CheckBox(c);
-                final TextView tvText = new TextView(c);
+                final CheckBox cb = new CheckBox(getActivity());
+                final TextView tvText = new TextView(getActivity());
 
                 tr.addView(cb);
                 tr.addView(tvText);
@@ -138,9 +134,9 @@ public class EditCardDialogFragment extends DialogFragment {
 
                 if (trLast == null || trLast.getChildCount() < 2 || !(trLast.getChildAt(1) instanceof EditText) || (trLast.getChildAt(1) instanceof EditText && !((EditText) trLast.getChildAt(1)).getText().toString().isEmpty())) {
                     // New tag
-                    final TableRow tr = new TableRow(c);
-                    final CheckBox cb = new CheckBox(c);
-                    final EditText etText = new EditText(c);
+                    final TableRow tr = new TableRow(getActivity());
+                    final CheckBox cb = new CheckBox(getActivity());
+                    final EditText etText = new EditText(getActivity());
                     tr.addView(cb);
                     tr.addView(etText);
                     etText.setHint(R.string.new_tag);
@@ -159,22 +155,6 @@ public class EditCardDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.okay, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String front = etFront.getText().toString().trim();
-
-                Drawable dWarning = c.getResources().getDrawable(R.drawable.ic_action_warning);
-                boolean valid = true;
-
-                if (front.isEmpty()) {
-                    etFront.setError(c.getResources().getString(R.string.field_must_not_be_empty), dWarning);
-                    valid = false;
-                }
-
-                if (valid) {
-                    ocListener.onEditSimpleCard(uuid, pos, etFront.getText().toString(), etBack.getText().toString(), getSelectedTags(tblTags));
-                    dismiss();
-                }
-
-
             }
         });
 
@@ -187,6 +167,40 @@ public class EditCardDialogFragment extends DialogFragment {
         });
 
         return builder.create();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // Get arguments
+        Bundle bundle = this.getArguments();
+        final String uuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_uuid));
+
+        AlertDialog dialog = (AlertDialog) getDialog();
+
+        if (dialog != null) {
+            Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String front = etFront.getText().toString().trim();
+
+                    Drawable dWarning = getActivity().getResources().getDrawable(R.drawable.ic_action_warning);
+                    boolean valid = true;
+
+                    if (front.isEmpty()) {
+                        etFront.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);
+                        valid = false;
+                    }
+
+                    if (valid) {
+                        ocListener.onEditSimpleCard(uuid, etFront.getText().toString(), etBack.getText().toString(), getSelectedTags(tblTags));
+                        dismiss();
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -241,7 +255,7 @@ public class EditCardDialogFragment extends DialogFragment {
     // --------------------
 
     public interface OnCompleteListener {
-        void onEditSimpleCard(String uuid, int pos, String frontText, String backText, List<Tag> tags);
+        void onEditSimpleCard(String uuid, String frontText, String backText, List<Tag> tags);
     }
 
     public void onAttach(Activity activity) {
