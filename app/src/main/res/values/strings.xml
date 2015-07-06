@@ -9,6 +9,14 @@
     <string name="app_name">lymbo</string>
     <string name="author">Author</string>
     <string name="back">Back</string>
+
+    <string name="bundle_uuid" translatable="false">bundleUuid</string>
+    <string name="bundle_pos" translatable="false">bundlePos</string>
+    <string name="bundle_front_title" translatable="false">bundleFrontTitle</string>
+    <string name="bundle_back_title" translatable="false">bundleBackTitle</string>
+    <string name="bundle_tags_lymbo" translatable="false">bundleTagsLymbo</string>
+    <string name="bundle_tags_card" translatable="false">bundleTagsCard</string>
+
     <string name="broken_lymbo_file">Broken lymbo :(</string>
     <string name="cancel">Cancel</string>
     <string name="card">Card</string>

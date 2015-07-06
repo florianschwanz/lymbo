@@ -34,12 +34,13 @@ import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.AddCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.EditCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnLabelSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener,DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnLabelSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
     CardsController cardsController;
 
@@ -374,6 +375,18 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         Card card = cardsController.getSimpleCard(frontText, backText, tags);
 
         cardsController.addCard(card);
+        cardsAdapter.notifyDataSetChanged();
+        checkEmptyStack();
+
+        slv.invalidateViews();
+    }
+
+    @Override
+    public void onEditSimpleCard(String uuid, int pos, String frontText, String backText, List<Tag> tags) {
+        // Card card = cardsController.getSimpleCard(frontText, backText, tags);
+        // card.setId(uuid);
+
+        cardsController.updateCard(uuid, frontText, backText, tags);
         cardsAdapter.notifyDataSetChanged();
         checkEmptyStack();
 

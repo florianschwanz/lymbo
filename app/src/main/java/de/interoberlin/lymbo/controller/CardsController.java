@@ -150,9 +150,10 @@ public class CardsController {
      *
      * @param frontText text on front side
      * @param backText  text on back side
-     * @return card
+     * @param tags      tags for this card
+     * @return card new simple card
      */
-    public Card getSimpleCard(String frontText, String backText) {
+    public Card getSimpleCard(String frontText, String backText, List<Tag> tags) {
         Card card = new Card();
 
         TitleComponent frontTitle = new TitleComponent();
@@ -172,22 +173,41 @@ public class CardsController {
         card.getSides().add(backSide);
         card.setFlip(true);
 
+        card.setTags(tags);
+
         return card;
     }
 
     /**
-     * Returns a simple card
+     * Updates a simple card
      *
+     * @param uuid      id of the card to be updated
      * @param frontText text on front side
      * @param backText  text on back side
      * @param tags      tags for this card
-     * @return card
      */
-    public Card getSimpleCard(String frontText, String backText, List<Tag> tags) {
-        Card card = getSimpleCard(frontText, backText);
-        card.setTags(tags);
+    public void updateCard(String uuid, String frontText, String backText, List<Tag> tags) {
+        if (cardsContainsId(uuid)) {
+            Card card = getCardById(uuid);
 
-        return card;
+            if (card.getSides().size() > 0) {
+                Side frontSide = card.getSides().get(0);
+                if (frontSide.getComponents().size() > 0 && frontSide.getComponents().get(0) instanceof TitleComponent) {
+                    ((TitleComponent) frontSide.getComponents().get(0)).setValue(frontText);
+                }
+            }
+
+            if (card.getSides().size() > 1) {
+                Side backSide = card.getSides().get(1);
+                if (backSide.getComponents().size() > 0 && backSide.getComponents().get(0) instanceof TitleComponent) {
+                    ((TitleComponent) backSide.getComponents().get(0)).setValue(backText);
+                }
+            }
+
+            card.setTags(tags);
+
+            save();
+        }
     }
 
     /**
@@ -340,7 +360,6 @@ public class CardsController {
 
     /**
      * This is necessary to display the first element below the toolbar
-     *
      */
     public void addNullElementToCards() {
         addNullElement(cards);
@@ -348,7 +367,6 @@ public class CardsController {
 
     /**
      * This is necessary to display the first element below the toolbar
-     *
      */
     public void addNullElementToCardsStashed() {
         addNullElement(cardsStashed);
@@ -399,6 +417,16 @@ public class CardsController {
     public List<Card> getCardsStashed() {
         addNullElementToCardsStashed();
         return cardsStashed;
+    }
+
+    public boolean cardsContainsId(String uuid) {
+        for (Card c : lymbo.getCards()) {
+            if (c.getId().equals(uuid)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Card getCardById(String uuid) {
