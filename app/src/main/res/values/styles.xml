@@ -13,7 +13,7 @@
         <item name="android:actionMenuTextColor">@color/card_text</item>
     </style>
 
-    <style name="LymboTheme" parent="Theme.AppCompat.Light">
+    <style name="LymboTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- android:textColorPrimary is the  color of the title text
              in the Toolbar, in the Theme.AppCompat theme:  -->
 

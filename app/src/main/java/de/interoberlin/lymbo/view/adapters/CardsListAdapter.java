@@ -3,8 +3,10 @@ package de.interoberlin.lymbo.view.adapters;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -111,7 +113,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 final ImageView ivDiscard = (ImageView) flCard.findViewById(R.id.ivDiscard);
                 final ImageView ivPutToEnd = (ImageView) flCard.findViewById(R.id.ivToEnd);
 
-                //
+                // Enable flip for the whole card
                 if (card.isFlip()) {
                     flCard.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -166,8 +168,11 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 String note = cardsController.getNote(c, card.getId());
 
                 // Note
-                if (note != null)
+                if (note != null && !note.isEmpty()) {
                     tvNote.setText(note);
+                    Drawable wrapDrawable = DrawableCompat.wrap(ivNote.getDrawable());
+                    DrawableCompat.setTint(wrapDrawable, c.getResources().getColor(R.color.colorPrimaryDark));
+                }
 
                 // Tags
                 for (Tag tag : card.getTags()) {
@@ -234,6 +239,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
                                     ivNote.setImageResource(R.drawable.ic_action_expand);
+                                    Drawable wrapDrawable = DrawableCompat.wrap(ivNote.getDrawable());
+                                    DrawableCompat.setTint(wrapDrawable, c.getResources().getColor(R.color.colorPrimaryDark));
                                 }
 
                                 @Override
@@ -255,6 +262,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
                                     ivNote.setImageResource(R.drawable.ic_action_collapse);
+                                    Drawable wrapDrawable = DrawableCompat.wrap(ivNote.getDrawable());
+                                    DrawableCompat.setTint(wrapDrawable, c.getResources().getColor(R.color.colorPrimaryDark));
                                 }
 
                                 @Override
