@@ -185,6 +185,8 @@ public class EditCardDialogFragment extends DialogFragment {
                 @Override
                 public void onClick(View v) {
                     String front = etFront.getText().toString().trim();
+                    String back = etBack.getText().toString().trim();
+                    List<Tag> tags = getSelectedTags(tblTags);
 
                     Drawable dWarning = getActivity().getResources().getDrawable(R.drawable.ic_action_warning);
                     boolean valid = true;
@@ -195,7 +197,7 @@ public class EditCardDialogFragment extends DialogFragment {
                     }
 
                     if (valid) {
-                        ocListener.onEditSimpleCard(uuid, etFront.getText().toString(), etBack.getText().toString(), getSelectedTags(tblTags));
+                        ocListener.onEditSimpleCard(uuid, front, back, tags);
                         dismiss();
                     }
                 }

@@ -111,11 +111,64 @@ public class LymbosController {
     }
 
     /**
+     * Updates a stack
+     *
+     * @param uuid     id of stack to be updated
+     * @param title    title
+     * @param subtitle subtitle
+     * @param author   author
+     */
+    public void updateStack(String uuid, String title, String subtitle, String author) {
+        if (lymbosContainsId(uuid)) {
+            Lymbo lymbo = getLymboById(uuid);
+
+            Lymbo fullLymbo = LymboLoader.getLymboFromFile(new File(lymbo.getPath()), false);
+
+            lymbo.setCards(fullLymbo.getCards());
+            lymbo.setHint(fullLymbo.getHint());
+            lymbo.setImage(fullLymbo.getImage());
+
+            lymbo.setTitle(title);
+            lymbo.setSubtitle(subtitle);
+            lymbo.setAuthor(author);
+
+            String path = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + lymbo.getTitle().trim().replaceAll(" ", "_").toLowerCase() + LYMBO_FILE_EXTENSION;
+
+            if (lymbo.getPath().equals(path)) {
+                save(lymbo);
+            } else {
+                saveAs(lymbo, path);
+            }
+        }
+    }
+
+    /**
      * Saves lymbo location in database
+     *
+     * @param lymbo lymbo to be saved
      */
     public void save(Lymbo lymbo) {
         LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
         LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
+
+        datasource = new LocationDatasource(activity);
+        datasource.open();
+        datasource.updateLocation(lymbo.getPath(), false);
+        datasource.close();
+    }
+
+    /**
+     * Saves lymbo under a new name
+     *
+     * @param lymbo lymbo to be saved
+     * @param path  new path
+     */
+    public void saveAs(Lymbo lymbo, String path) {
+        LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
+        LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
+
+        new File(lymbo.getPath()).renameTo(new File(path));
+        lymbo.setPath(path);
 
         datasource = new LocationDatasource(activity);
         datasource.open();
@@ -319,5 +372,25 @@ public class LymbosController {
 
     public boolean isLoaded() {
         return loaded;
+    }
+
+    public boolean lymbosContainsId(String uuid) {
+        for (Lymbo l : lymbos) {
+            if (l != null && l.getId() != null && l.getId().equals(uuid)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public Lymbo getLymboById(String uuid) {
+        for (Lymbo l : lymbos) {
+            if (l != null && l.getId() != null && l.getId().equals(uuid)) {
+                return l;
+            }
+        }
+
+        return null;
     }
 }
