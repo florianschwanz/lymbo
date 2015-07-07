@@ -13,20 +13,21 @@
         layout="@layout/toolbar_space" />
 
     <!-- Image -->
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="8dp">
+
         <ImageView
             android:id="@+id/ivImage"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
+            android:layout_weight="2.11"
             android:contentDescription="@string/desc_image"
-            android:src="@drawable/ic_trex"
-            android:layout_weight="2.11" />
+            android:src="@drawable/ic_trex" />
     </LinearLayout>
 
     <!-- Title -->
@@ -41,9 +42,9 @@
             android:id="@+id/tvTitle"
             style="@style/CardTitle"
             android:layout_width="288dp"
-            android:gravity="center_horizontal"
             android:layout_height="0dp"
             android:layout_weight="0.50"
+            android:gravity="center_horizontal"
             android:text="@string/could_not_find_any_cards"
             roboto:typeface="roboto_regular" />
     </LinearLayout>

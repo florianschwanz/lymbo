@@ -311,7 +311,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
         new SnackBar.Builder(this)
                 .withOnClickListener(this)
-                .withMessageId(R.string.stash_card)
+                .withMessageId(R.string.stashed_card)
                 .withActionMessageId(R.string.undo)
                 .withStyle(SnackBar.Style.INFO)
                 .withDuration(SnackBar.MED_SNACK)

@@ -57,7 +57,7 @@
     <string name="new_tag">neuer Tag</string>
     <string name="note">Notiz</string>
     <string name="card_restored">Karte wiederhergestellt</string>
-    <string name="stash_card">Karte in den Papierkorb verschoben</string>
+    <string name="stashed_card">Karte in den Papierkorb verschoben</string>
     <string name="about">Impressum</string>
     <string name="card">Karte</string>
     <string name="cards">Karten</string>
@@ -71,5 +71,6 @@
     <string name="select_all">alle</string>
     <string name="all">Alle</string>
     <string name="none">Keine</string>
+    <string name="stash_card">Karte in Papierkorb legen</string>
 
 </resources>

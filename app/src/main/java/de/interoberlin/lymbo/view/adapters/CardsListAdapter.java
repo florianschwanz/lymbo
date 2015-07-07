@@ -111,7 +111,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 final ImageView ivEditNote = (ImageView) flCard.findViewById(R.id.ivEditNote);
 
                 // Load views : reveal
-                final ImageView ivStash = (ImageView) flCard.findViewById(R.id.ivStash);
                 final ImageView ivDiscard = (ImageView) flCard.findViewById(R.id.ivDiscard);
                 final ImageView ivPutToEnd = (ImageView) flCard.findViewById(R.id.ivToEnd);
 
@@ -159,6 +158,32 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                                         bundle.putStringArrayList(c.getResources().getString(R.string.bundle_tags_card), tagsCard);
                                         dialog.setArguments(bundle);
                                         dialog.show(a.getFragmentManager(), "okay");
+                                        return false;
+                                    }
+                                });
+                        contextMenu.add(0, 1, 0, a.getResources().getString(R.string.stash_card))
+                                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        Animation a = ViewUtil.collapse(c, flCard);
+                                        flCard.startAnimation(a);
+
+                                        a.setAnimationListener(new Animation.AnimationListener() {
+                                            @Override
+                                            public void onAnimationStart(Animation animation) {
+
+                                            }
+
+                                            @Override
+                                            public void onAnimationEnd(Animation animation) {
+                                                stash(position, card.getId(), flCard);
+                                            }
+
+                                            @Override
+                                            public void onAnimationRepeat(Animation animation) {
+
+                                            }
+                                        });
                                         return false;
                                     }
                                 });
@@ -332,34 +357,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 } else {
                     ViewUtil.remove(ivHint);
                 }
-
-                // Reveal : stash
-                ivStash.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (card.isRevealed()) {
-                            Animation a = ViewUtil.collapse(c, flCard);
-                            flCard.startAnimation(a);
-
-                            a.setAnimationListener(new Animation.AnimationListener() {
-                                @Override
-                                public void onAnimationStart(Animation animation) {
-
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animation animation) {
-                                    stash(position, card.getId(), flCard);
-                                }
-
-                                @Override
-                                public void onAnimationRepeat(Animation animation) {
-
-                                }
-                            });
-                        }
-                    }
-                });
 
                 // Reveal : discard
                 ivDiscard.setOnClickListener(new View.OnClickListener() {

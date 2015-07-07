@@ -68,7 +68,8 @@
     <string name="stack_restored">Stack restored</string>
     <string name="stack_stashed">Stack stashed</string>
     <string name="stash">Stash</string>
-    <string name="stash_card">Stashed card</string>
+    <string name="stash_card">Stash card</string>
+    <string name="stashed_card">Stashed card</string>
     <string name="subtitle">Subtitle</string>
     <string name="tags">Tags</string>
     <string name="text">Text</string>
