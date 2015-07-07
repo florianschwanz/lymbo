@@ -134,7 +134,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
                                         String uuid = card.getId();
-                                        int pos = position;
                                         String frontTitle = ((TitleComponent) card.getSides().get(0).getFirst(EComponent.TITLE)).getValue();
                                         String backTitle = ((TitleComponent) card.getSides().get(1).getFirst(EComponent.TITLE)).getValue();
                                         ArrayList<String> tagsLymbo = new ArrayList<>();
@@ -152,7 +151,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                                         EditCardDialogFragment dialog = new EditCardDialogFragment();
                                         Bundle bundle = new Bundle();
                                         bundle.putString(c.getResources().getString(R.string.bundle_uuid), uuid);
-                                        bundle.putInt(c.getResources().getString(R.string.bundle_pos), pos);
                                         bundle.putString(c.getResources().getString(R.string.bundle_front_title), frontTitle);
                                         bundle.putString(c.getResources().getString(R.string.bundle_back_title), backTitle);
                                         bundle.putStringArrayList(c.getResources().getString(R.string.bundle_tags_lymbo), tagsLymbo);

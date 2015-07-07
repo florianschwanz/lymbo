@@ -5,7 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
+import android.os.Vibrator;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -21,16 +25,23 @@ import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.share.MailSender;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
+import de.interoberlin.lymbo.util.Configuration;
+import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.activities.LymbosActivity;
+import de.interoberlin.lymbo.view.dialogfragments.EditStackDialogFragment;
 
 public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
+    // Context
     private Context c;
     private Activity a;
 
     // Controllers
     private CardsController cardsController;
+
+    // Properties
+    private static int VIBRATION_DURATION;
 
     // --------------------
     // Constructors
@@ -42,6 +53,9 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
 
         this.a = activity;
         this.c = context;
+
+        // Properties
+        VIBRATION_DURATION = Integer.parseInt(Configuration.getProperty(c, EProperty.VIBRATION_DURATION));
     }
 
     // --------------------
@@ -83,6 +97,37 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                     tvTitle.setText(lymbo.getTitle());
                 if (lymbo.getSubtitle() != null)
                     tvSubtitle.setText(lymbo.getSubtitle());
+
+                // Context menu
+                llStack.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                    @Override
+                    public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+
+                        if (!lymbo.isAsset()) {
+                            contextMenu.add(0, 0, 0, a.getResources().getString(R.string.edit))
+                                    .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                        @Override
+                                        public boolean onMenuItemClick(MenuItem menuItem) {
+                                            String uuid = lymbo.getId();
+                                            String title = lymbo.getTitle();
+                                            String subtitle = lymbo.getSubtitle();
+                                            String author = lymbo.getAuthor();
+
+                                            ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+                                            EditStackDialogFragment dialog = new EditStackDialogFragment();
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString(c.getResources().getString(R.string.bundle_uuid), uuid);
+                                            bundle.putString(c.getResources().getString(R.string.bundle_title), title);
+                                            bundle.putString(c.getResources().getString(R.string.bundle_subtitle), subtitle);
+                                            bundle.putString(c.getResources().getString(R.string.bundle_author), author);
+                                            dialog.setArguments(bundle);
+                                            dialog.show(a.getFragmentManager(), "okay");
+                                            return false;
+                                        }
+                                    });
+                        }
+                    }
+                });
 
                 // Action : open cards view
                 llStack.setOnClickListener(new View.OnClickListener() {

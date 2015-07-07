@@ -23,11 +23,12 @@ import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.AddStackDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.EditStackDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddStackDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddStackDialogFragment.OnCompleteListener, EditStackDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
     private LymbosController lymbosController;
     private CardsController cardsController;
@@ -168,6 +169,15 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
         Lymbo lymbo = lymbosController.getEmptyLymbo(title, subtitle, author);
 
         lymbosController.addStack(lymbo);
+        lymbosAdapter.notifyDataSetChanged();
+        slv.invalidateViews();
+    }
+
+
+    @Override
+    public void onEditStack(String uuid, String title, String subtitle, String author) {
+        lymbosController.updateStack(uuid, title, subtitle, author);
+
         lymbosAdapter.notifyDataSetChanged();
         slv.invalidateViews();
     }
