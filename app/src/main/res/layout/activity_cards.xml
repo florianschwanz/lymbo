@@ -24,6 +24,7 @@
                 android:divider="@color/background"
                 swipe:swipeFrontView="@+id/surface"
                 swipe:swipeBackView="@+id/reveal"
+                swipe:swipeOpenOnLongPress="false"
                 swipe:swipeAnimationTime="0"
                 swipe:swipeOffsetLeft="0dp"
                 swipe:swipeOffsetRight="0dp" />

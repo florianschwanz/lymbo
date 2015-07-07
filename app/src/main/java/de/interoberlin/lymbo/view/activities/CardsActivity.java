@@ -131,7 +131,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         slv.setSwipeMode(SwipeListView.SWIPE_MODE_BOTH);
         slv.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_REVEAL);
         slv.setSwipeActionRight(SwipeListView.SWIPE_ACTION_REVEAL);
-        slv.setSwipeOpenOnLongPress(false);
         slv.setDescendantFocusability(ListView.FOCUS_AFTER_DESCENDANTS);
 
         slv.setSwipeListViewListener(new BaseSwipeListViewListener() {
