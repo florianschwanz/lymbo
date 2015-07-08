@@ -113,14 +113,6 @@
                             android:gravity="start">
 
                             <ImageView
-                                android:id="@+id/ivStash"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:contentDescription="@string/discard"
-                                android:padding="10dp"
-                                android:src="@drawable/ic_action_discard" />
-
-                            <ImageView
                                 android:id="@+id/ivShare"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -155,14 +147,6 @@
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/ivLogo"
-                    android:layout_width="@dimen/stack_image_height"
-                    android:layout_height="@dimen/stack_image_height"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
-                    android:contentDescription="@string/logo" />
 
             </RelativeLayout>
 

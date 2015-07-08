@@ -72,5 +72,6 @@
     <string name="all">All</string>
     <string name="none">None</string>
     <string name="stash_card">Stash card</string>
+    <string name="stash_stack">Stash stack</string>
 
 </resources>

@@ -74,6 +74,7 @@
     <string name="stack_stashed">Stack stashed</string>
     <string name="stash">Stash</string>
     <string name="stash_card">Stash card</string>
+    <string name="stash_stack">Stash stack</string>
     <string name="stashed_card">Stashed card</string>
     <string name="subtitle">Subtitle</string>
     <string name="tags">Tags</string>

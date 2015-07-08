@@ -79,7 +79,6 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 ImageView ivImage = (ImageView) llStack.findViewById(R.id.ivImage);
                 TextView tvTitle = (TextView) llStack.findViewById(R.id.tvTitle);
                 TextView tvSubtitle = (TextView) llStack.findViewById(R.id.tvSubtitle);
-                ImageView ivStash = (ImageView) llStack.findViewById(R.id.ivStash);
                 ImageView ivShare = (ImageView) llStack.findViewById(R.id.ivShare);
                 ImageView ivUpload = (ImageView) llStack.findViewById(R.id.ivUpload);
                 TextView tvCardCount = (TextView) llStack.findViewById(R.id.tvCardCount);
@@ -124,6 +123,34 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                                             return false;
                                         }
                                     });
+                            contextMenu.add(0, 1, 0, a.getResources().getString(R.string.stash_stack))
+                                    .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                        @Override
+                                        public boolean onMenuItemClick(MenuItem menuItem) {
+                                            Animation anim = ViewUtil.collapse(c, llStack);
+                                            llStack.startAnimation(anim);
+
+                                            anim.setAnimationListener(new Animation.AnimationListener() {
+                                                @Override
+                                                public void onAnimationStart(Animation animation) {
+
+                                                }
+
+                                                @Override
+                                                public void onAnimationEnd(Animation animation) {
+                                                    cardsController.stash(lymbo);
+                                                    ((LymbosActivity) a).stash(lymbo);
+                                                    notifyDataSetChanged();
+                                                }
+
+                                                @Override
+                                                public void onAnimationRepeat(Animation animation) {
+
+                                                }
+                                            });
+                                            return false;
+                                        }
+                                    });
                         }
                     }
                 });
@@ -136,34 +163,6 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                         cardsController.init();
                         Intent openStartingPoint = new Intent(c, CardsActivity.class);
                         c.startActivity(openStartingPoint);
-                    }
-                });
-
-                // Action : stash
-                ivStash.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Animation anim = ViewUtil.collapse(c, llStack);
-                        llStack.startAnimation(anim);
-
-                        anim.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                cardsController.stash(lymbo);
-                                ((LymbosActivity) a).stash(lymbo);
-                                notifyDataSetChanged();
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
                     }
                 });
 
