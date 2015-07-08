@@ -82,6 +82,7 @@
                             android:maxLines="4"
                             android:text="@string/subtitle"
                             roboto:typeface="roboto_regular" />
+
                     </LinearLayout>
                 </LinearLayout>
 
@@ -120,14 +121,6 @@
                                 android:src="@drawable/ic_action_discard" />
 
                             <ImageView
-                                android:id="@+id/ivEdit"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:contentDescription="@string/edit"
-                                android:padding="10dp"
-                                android:src="@drawable/ic_action_edit" />
-
-                            <ImageView
                                 android:id="@+id/ivShare"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -150,13 +143,15 @@
                             android:layout_weight="0.5"
                             android:gravity="end">
 
-                            <ImageView
-                                android:id="@+id/ivHint"
+                            <de.interoberlin.lymbo.view.controls.RobotoTextView
+                                android:id="@+id/tvCardCount"
+                                style="@style/CardText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:contentDescription="@string/hint"
-                                android:padding="10dp"
-                                android:src="@drawable/ic_action_about" />
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/card_light_text"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                                roboto:typeface="roboto_regular" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

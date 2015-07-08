@@ -80,10 +80,9 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 TextView tvTitle = (TextView) llStack.findViewById(R.id.tvTitle);
                 TextView tvSubtitle = (TextView) llStack.findViewById(R.id.tvSubtitle);
                 ImageView ivStash = (ImageView) llStack.findViewById(R.id.ivStash);
-                ImageView ivEdit = (ImageView) llStack.findViewById(R.id.ivEdit);
                 ImageView ivShare = (ImageView) llStack.findViewById(R.id.ivShare);
                 ImageView ivUpload = (ImageView) llStack.findViewById(R.id.ivUpload);
-                ImageView ivHint = (ImageView) llStack.findViewById(R.id.ivHint);
+                TextView tvCardCount = (TextView) llStack.findViewById(R.id.tvCardCount);
 
                 // Set values
                 if (lymbo.getImage() != null && !lymbo.getImage().trim().isEmpty()) {
@@ -133,7 +132,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 llStack.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        cardsController.setFullLymbo(c, lymbo);
+                        cardsController.setLymbo(lymbo);
                         cardsController.init();
                         Intent openStartingPoint = new Intent(c, CardsActivity.class);
                         c.startActivity(openStartingPoint);
@@ -168,18 +167,6 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                     }
                 });
 
-                // Action : edit
-        /*if (!lymbo.isAsset()) {
-            ivEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(c, R.string.not_yet_implemented, Toast.LENGTH_SHORT);
-                }
-            });
-        } else {*/
-                ViewUtil.remove(ivEdit);
-        /*}*/
-
                 // Action : send
                 if (!lymbo.isAsset()) {
                     ivShare.setOnClickListener(new View.OnClickListener() {
@@ -205,18 +192,8 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 ViewUtil.remove(ivUpload);
         /*}*/
 
-                // Action : hint
-        /*
-        if (!lymbo.isAsset()) {
-            ivHint.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(c, lymbo.getPath(), Toast.LENGTH_SHORT);
-                }
-            });
-        } else {*/
-                ViewUtil.remove(ivHint);
-        /*}*/
+                // Card count
+                tvCardCount.setText(String.valueOf(lymbo.getCards().size() + " " + c.getResources().getString(R.string.cards)));
 
                 return llStack;
             } else {

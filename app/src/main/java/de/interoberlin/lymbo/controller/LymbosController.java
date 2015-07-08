@@ -271,7 +271,7 @@ public class LymbosController {
 
         // Add lymbos from file system
         for (File f : files) {
-            Lymbo l = LymboLoader.getLymboFromFile(f, true);
+            Lymbo l = LymboLoader.getLymboFromFile(f, false);
             if (l != null) {
                 lymbos.add(l);
                 Log.debug("Found lymbo " + f.getName());
@@ -290,7 +290,7 @@ public class LymbosController {
         try {
             for (String asset : Arrays.asList(activity.getAssets().list(""))) {
                 if (asset.endsWith(LYMBO_FILE_EXTENSION)) {
-                    Lymbo l = LymboLoader.getLymboFromAsset(activity, asset, true);
+                    Lymbo l = LymboLoader.getLymboFromAsset(activity, asset, false);
                     if (l != null) {
                         lymbos.add(l);
                     }
