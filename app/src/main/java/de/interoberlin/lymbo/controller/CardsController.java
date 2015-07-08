@@ -82,6 +82,17 @@ public class CardsController {
         }
     }
 
+    public int getVisibleCardCount() {
+        int count = 0;
+
+        for (Card card : getCards()) {
+            if (card != null && !card.isDiscarded() && card.matchesChapter(getLymbo().getChapters()) && card.matchesTag(getLymbo().getTags()))
+                count++;
+        }
+
+        return count;
+    }
+
     // --------------------
     // Methods - lymbo
     // --------------------

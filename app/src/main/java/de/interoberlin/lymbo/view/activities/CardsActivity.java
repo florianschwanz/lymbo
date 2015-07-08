@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.github.mrengineer13.snackbar.SnackBar;
 
@@ -49,6 +50,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private SwipeListView slv;
     private ImageButton ibFab;
     private LinearLayout toolbarWrapper;
+    private TextView toolbarTextView;
     private RelativeLayout rl;
 
     private LinearLayout phNoCards;
@@ -121,6 +123,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
         toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
         rl = (RelativeLayout) findViewById(R.id.rl);
+
+        toolbarTextView = (TextView) findViewById(R.id.toolbar_text);
 
         srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         srl.setOnRefreshListener(this);
@@ -197,6 +201,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         checkEmptyStack();
         checkGeneratedIds();
 
+        updateCardCount();
+
         updateSwipeRefreshProgressBarTop(srl);
         registerHideableHeaderView(toolbarWrapper);
         registerHideableFooterView(ibFab);
@@ -254,6 +260,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                 cardsAdapter.notifyDataSetChanged();
                 slv.invalidateViews();
+
+                checkEmptyStack();
+                updateCardCount();
             }
         }, REFRESH_DELAY);
     }
@@ -302,6 +311,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
      */
     public void stash(int pos, String uuid) {
         checkEmptyStack();
+        updateCardCount();
 
         slv.invalidateViews();
         recentCardPos = pos;
@@ -323,6 +333,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
      * @param uuid index of the card to be discarded
      */
     public void discard(int pos, String uuid) {
+        checkEmptyStack();
+        updateCardCount();
+
         slv.invalidateViews();
         recentCardPos = pos;
         recentCardId = uuid;
@@ -378,6 +391,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         checkEmptyStack();
 
         slv.invalidateViews();
+
+        checkEmptyStack();
+        updateCardCount();
     }
 
     @Override
@@ -400,6 +416,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
         cardsAdapter.notifyDataSetChanged();
         slv.invalidateViews();
+
+        checkEmptyStack();
+        updateCardCount();
     }
 
     @Override
@@ -416,10 +435,13 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             case EVENT_STASH: {
                 cardsController.restore(recentCardPos, recentCardId);
                 checkEmptyStack();
+                updateCardCount();
                 break;
             }
             case EVENT_DISCARD: {
                 cardsController.retain(recentCardId);
+                checkEmptyStack();
+                updateCardCount();
                 break;
             }
             case EVENT_PUT_TO_END: {
@@ -442,6 +464,10 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     private void checkEmptyStack() {
         phNoCards.setVisibility(cardsController.getCards().isEmpty() ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    public void updateCardCount() {
+        toolbarTextView.setText(String.valueOf(cardsController.getVisibleCardCount()));
     }
 
     private void checkGeneratedIds() {
