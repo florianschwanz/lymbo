@@ -5,9 +5,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import de.interoberlin.lymbo.model.persistence.sqlite.LymboSQLiteOpenHelper;
-import de.interoberlin.lymbo.model.persistence.sqlite.cards.CardStateDatasource;
-import de.interoberlin.lymbo.model.persistence.sqlite.location.LocationDatasource;
-import de.interoberlin.lymbo.model.persistence.sqlite.notes.NoteDatasource;
+import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
+import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackDatasource;
 
 public class App extends Application {
     // Context
@@ -70,20 +69,20 @@ public class App extends Application {
      * Recreates database tables when schema has changed
      */
     public void recreateOnSchemaChange() {
-        LocationDatasource dsLocation = new LocationDatasource(getApplicationContext());
+        TableStackDatasource dsLocation = new TableStackDatasource(getApplicationContext());
         dsLocation.open();
         dsLocation.recreateOnSchemaChange();
         dsLocation.close();
 
-        NoteDatasource dsNote = new NoteDatasource(getApplicationContext());
-        dsNote.open();
-        dsNote.recreateOnSchemaChange();
-        dsNote.close();
-
-        CardStateDatasource dsCardState = new CardStateDatasource(getApplicationContext());
+        TableCardDatasource dsCardState = new TableCardDatasource(getApplicationContext());
         dsCardState.open();
         dsCardState.recreateOnSchemaChange();
         dsCardState.close();
+
+        TableStackDatasource dsStackState = new TableStackDatasource(getApplicationContext());
+        dsStackState.open();
+        dsStackState.recreateOnSchemaChange();
+        dsStackState.close();
     }
 
     // --------------------

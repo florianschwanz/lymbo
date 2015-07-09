@@ -18,9 +18,8 @@ import java.util.List;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
-import de.interoberlin.lymbo.model.persistence.sqlite.LymboSQLiteOpenHelper;
-import de.interoberlin.lymbo.model.persistence.sqlite.location.Location;
-import de.interoberlin.lymbo.model.persistence.sqlite.location.LocationDatasource;
+import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackDatasource;
+import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackEntry;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.mate.lib.model.Log;
@@ -33,7 +32,7 @@ public class LymbosController {
     private Activity activity;
 
     // Database
-    private LocationDatasource datasource;
+    private TableStackDatasource datasource;
 
     // Model
     private List<Lymbo> lymbos;
@@ -151,9 +150,9 @@ public class LymbosController {
         LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
         LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
 
-        datasource = new LocationDatasource(activity);
+        datasource = new TableStackDatasource(activity);
         datasource.open();
-        datasource.updateLocation(lymbo.getPath(), false);
+        datasource.updateStackLocation(lymbo.getId(), lymbo.getPath());
         datasource.close();
     }
 
@@ -170,21 +169,22 @@ public class LymbosController {
         new File(lymbo.getPath()).renameTo(new File(path));
         lymbo.setPath(path);
 
-        datasource = new LocationDatasource(activity);
+        datasource = new TableStackDatasource(activity);
         datasource.open();
-        datasource.updateLocation(lymbo.getPath(), false);
+        datasource.updateStackLocation(lymbo.getId(), lymbo.getPath());
         datasource.close();
     }
 
     public void scan() {
-        datasource = new LocationDatasource(activity);
+        datasource = new TableStackDatasource(activity);
         datasource.open();
 
-        for (File l : findFiles(LYMBO_FILE_EXTENSION)) {
-            String path = l.getAbsolutePath();
+        for (File f : findFiles(LYMBO_FILE_EXTENSION)) {
+            Lymbo lymbo = LymboLoader.getLymboFromFile(f, true);
 
-            if (!datasource.contains(LymboSQLiteOpenHelper.COL_PATH, path)) {
-                datasource.updateLocation(path, false);
+
+            if (lymbo != null && !datasource.contains(TableStackDatasource.colPath.getName(), lymbo.getPath())) {
+                datasource.updateStackLocation(lymbo.getId(), lymbo.getPath());
             }
         }
 
@@ -192,28 +192,28 @@ public class LymbosController {
     }
 
     /**
-     * Loads lymbo files and updates database status
+     * Loads lymbo files and updates databasestatus
      */
     public void load() {
-        datasource = new LocationDatasource(activity);
+        datasource = new TableStackDatasource(activity);
         datasource.open();
 
         // Retrieve lymbo files from locations cache
         Collection<File> lymboFiles = new ArrayList<>();
         Collection<File> lymboFilesStashed = new ArrayList<>();
 
-        for (Location l : datasource.getAllLocations()) {
-            if (new File(l.getPath()).exists()) {
-                Log.info("Loaded " + l.getPath());
+        for (TableStackEntry entry : datasource.getEntries()) {
+            if (entry.getPath() != null && new File(entry.getPath()).exists()) {
+                Log.info("Loaded " + entry.getPath());
 
-                if (l.getStashed() == 0) {
-                    lymboFiles.add(new File(l.getPath()));
-                } else if (l.getStashed() == 1) {
-                    lymboFilesStashed.add(new File(l.getPath()));
+                if (entry.isNormal()) {
+                    lymboFiles.add(new File(entry.getPath()));
+                } else if (entry.isStashed()) {
+                    lymboFilesStashed.add(new File(entry.getPath()));
                 }
             } else {
-                Log.info("Deleted not existing " + l.getPath());
-                datasource.deleteLocation(l);
+                Log.info("Deleted not existing " + entry.getPath());
+                datasource.deleteStackEntry(entry.getUuid());
             }
         }
 
@@ -230,10 +230,16 @@ public class LymbosController {
         loaded = true;
     }
 
-    public void changeLocation(String location, boolean stashed) {
-        datasource = new LocationDatasource(activity);
+    public void changeState(String uuid, boolean stashed) {
+        datasource = new TableStackDatasource(activity);
         datasource.open();
-        datasource.updateLocation(location, stashed);
+
+        if (stashed) {
+            datasource.updateStackStateStashed(uuid);
+        } else {
+            datasource.updateStackStateNormal(uuid);
+        }
+
         datasource.close();
     }
 

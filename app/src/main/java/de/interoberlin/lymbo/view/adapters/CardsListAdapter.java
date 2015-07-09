@@ -443,10 +443,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 s.setVisibility(View.GONE);
                 return s;
             }
-
-
         } else {
-            // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
             return vi.inflate(R.layout.toolbar_space, parent, false);

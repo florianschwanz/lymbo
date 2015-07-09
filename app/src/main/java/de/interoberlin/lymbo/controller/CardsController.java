@@ -17,16 +17,15 @@ import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
-import de.interoberlin.lymbo.model.persistence.sqlite.cards.CardStateDatasource;
-import de.interoberlin.lymbo.model.persistence.sqlite.notes.Note;
-import de.interoberlin.lymbo.model.persistence.sqlite.notes.NoteDatasource;
+import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
+import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardEntry;
 
 public class CardsController {
     // Activity
     private Activity activity;
 
     // Database
-    private NoteDatasource datasource;
+    private TableCardDatasource datasource;
 
     // Model
     private Lymbo lymbo;
@@ -64,13 +63,13 @@ public class CardsController {
         cardsStashed = new ArrayList<>();
 
         if (lymbo != null) {
-            CardStateDatasource dsCardState = new CardStateDatasource(activity);
-            dsCardState.open();
+            datasource = new TableCardDatasource(activity);
+            datasource.open();
 
             for (Card c : lymbo.getCards()) {
-                if (!dsCardState.containsUuid(c.getId()) || !dsCardState.getStashed(c.getId())) {
+                if (!datasource.containsUuid(c.getId()) || datasource.isNormal(c.getId())) {
                     cards.add(c);
-                } else {
+                } else if (datasource.isStashed(c.getId())) {
                     cardsStashed.add(c);
                 }
             }
@@ -78,7 +77,7 @@ public class CardsController {
             addNullElementToCards();
             addNullElementToCardsStashed();
 
-            dsCardState.close();
+            datasource.close();
         }
     }
 
@@ -105,7 +104,7 @@ public class CardsController {
     public void stash(Lymbo lymbo) {
         lymbosController.getLymbos().remove(lymbo);
         lymbosController.getLymbosStashed().add(lymbo);
-        lymbosController.changeLocation(lymbo.getPath(), true);
+        lymbosController.changeState(lymbo.getId(), true);
     }
 
     /**
@@ -116,7 +115,7 @@ public class CardsController {
     public void restore(Lymbo lymbo) {
         lymbosController.getLymbos().add(lymbo);
         lymbosController.getLymbosStashed().remove(lymbo);
-        lymbosController.changeLocation(lymbo.getPath(), false);
+        lymbosController.changeState(lymbo.getId(), false);
     }
 
     /**
@@ -232,7 +231,7 @@ public class CardsController {
 
         getCards().remove(card);
         getCardsStashed().add(card);
-        changeCardState(uuid, true);
+        changeCardStateStashed(uuid);
     }
 
     /**
@@ -247,7 +246,7 @@ public class CardsController {
 
         getCards().remove(card);
         getCardsStashed().add(pos < getCardsStashed().size() ? pos : 0, card);
-        changeCardState(uuid, true);
+        changeCardStateStashed(uuid);
 
         addNullElementToCards();
     }
@@ -263,7 +262,7 @@ public class CardsController {
 
         getCards().add(card);
         getCardsStashed().remove(card);
-        changeCardState(uuid, false);
+        changeCardStateNormal(uuid);
     }
 
     /**
@@ -278,15 +277,29 @@ public class CardsController {
 
         getCards().add(pos < getCards().size() ? pos : 0, card);
         getCardsStashed().remove(card);
-        changeCardState(uuid, false);
+        changeCardStateNormal(uuid);
 
         addNullElementToCards();
     }
 
-    private void changeCardState(String uuid, boolean stashed) {
-        CardStateDatasource dsCardState = new CardStateDatasource(activity);
+    private void changeCardStateNormal(String uuid) {
+        TableCardDatasource dsCardState = new TableCardDatasource(activity);
         dsCardState.open();
-        dsCardState.updateCardState(uuid, stashed);
+        dsCardState.updateCardStateNormal(uuid);
+        dsCardState.close();
+    }
+
+    private void changeCardStateDismissed(String uuid) {
+        TableCardDatasource dsCardState = new TableCardDatasource(activity);
+        dsCardState.open();
+        dsCardState.updateCardStateDismissed(uuid);
+        dsCardState.close();
+    }
+
+    private void changeCardStateStashed(String uuid) {
+        TableCardDatasource dsCardState = new TableCardDatasource(activity);
+        dsCardState.open();
+        dsCardState.updateCardStateStashed(uuid);
         dsCardState.close();
     }
 
@@ -352,21 +365,22 @@ public class CardsController {
     }
 
     public void setNote(Context context, String uuid, String text) {
-        datasource = new NoteDatasource(context);
+        datasource = new TableCardDatasource(context);
         datasource.open();
-        datasource.updateNote(uuid, text);
+        datasource.updateCardNote(uuid, text);
+
+        datasource.printTable();
+
         datasource.close();
     }
 
     public String getNote(Context context, String uuid) {
-        datasource = new NoteDatasource(context);
+        datasource = new TableCardDatasource(context);
         datasource.open();
-
-        Note note = datasource.getNote(uuid);
-
+        TableCardEntry entry = datasource.getEntryByUuid(uuid);
         datasource.close();
 
-        return note != null ? note.getText() : null;
+        return entry != null ? entry.getNote() : null;
     }
 
     /**

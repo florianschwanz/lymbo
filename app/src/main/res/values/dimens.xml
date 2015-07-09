@@ -20,7 +20,7 @@
     <dimen name="toolbar_auto_hide_sensivity">48dp</dimen>
     <dimen name="swipe_refresh_progress_bar_start_margin">-40dp</dimen>
     <dimen name="swipe_refresh_progress_bar_end_margin">16dp</dimen>
-    <dimen name="toolbar_text_padding">8dp</dimen>
+    <dimen name="toolbar_text_padding">10dp</dimen>
 
     <!-- Stack -->
     <dimen name="stack_height">175dp</dimen>
@@ -30,6 +30,7 @@
     <dimen name="stack_bar_padding">8dp</dimen>
     <dimen name="stack_subtitle_spacing">4dp</dimen>
     <dimen name="stack_title_size">27sp</dimen>
+    <dimen name="stack_bottom_bar_min_height">35dp</dimen>
 
     <!-- Card -->
     <dimen name="card_margin">10dp</dimen>
