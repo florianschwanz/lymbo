@@ -72,5 +72,6 @@
     <string name="all">Alle</string>
     <string name="none">Keine</string>
     <string name="stash_card">Karte in Papierkorb legen</string>
+    <string name="new_text">neuer Text</string>
 
 </resources>

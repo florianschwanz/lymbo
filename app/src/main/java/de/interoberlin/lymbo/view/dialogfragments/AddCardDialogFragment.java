@@ -37,11 +37,22 @@ public class AddCardDialogFragment extends DialogFragment {
 
     // Views
     private EditText etFront;
-    private EditText etBack;
-    private LinearLayout llAddTags;
-    private TableLayout tblTags;
-    private ImageView ivAdd;
+    private ImageView ivExpandTextsFront;
+    private TableLayout tblTextFront;
+    private ImageView ivAddTextFront;
 
+    private EditText etBack;
+    private ImageView ivExpandTextsBack;
+    private TableLayout tblTextBack;
+    private ImageView ivAddTextBack;
+
+    private LinearLayout llAddTags;
+    // private ImageView ivExpandTags;
+    private TableLayout tblTags;
+    private ImageView ivAddTag;
+
+    private boolean addTextFrontIsExpanded = false;
+    private boolean addTextBackIsExpanded = false;
     private boolean addTagsIsExpanded = false;
 
     private OnCompleteListener ocListener;
@@ -66,10 +77,45 @@ public class AddCardDialogFragment extends DialogFragment {
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_add_card, null);
 
         etFront = (EditText) v.findViewById(R.id.etFront);
+        ivExpandTextsFront = (ImageView) v.findViewById(R.id.ivExpandTextsFront);
+        tblTextFront = (TableLayout) v.findViewById(R.id.tblTextFront);
+        ivAddTextFront = (ImageView) v.findViewById(R.id.ivAddTextFront);
+
         etBack = (EditText) v.findViewById(R.id.etBack);
+        ivExpandTextsBack = (ImageView) v.findViewById(R.id.ivExpandTextsBack);
+        tblTextBack = (TableLayout) v.findViewById(R.id.tblTextBack);
+        ivAddTextBack = (ImageView) v.findViewById(R.id.ivAddTextBack);
+
         llAddTags = (LinearLayout) v.findViewById(R.id.llAddTags);
         tblTags = (TableLayout) v.findViewById(R.id.tblTags);
-        ivAdd = (ImageView) v.findViewById(R.id.ivAdd);
+        ivAddTag = (ImageView) v.findViewById(R.id.ivAddTag);
+
+        // Add actions
+        ivExpandTextsFront.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (addTextFrontIsExpanded) {
+                    addTextFrontIsExpanded = false;
+                    tblTextFront.startAnimation(ViewUtil.collapse(getActivity(), tblTextFront));
+                } else {
+                    addTextFrontIsExpanded = true;
+                    tblTextFront.startAnimation(ViewUtil.expand(getActivity(), tblTextFront));
+                }
+            }
+        });
+
+        ivExpandTextsBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (addTextBackIsExpanded) {
+                    addTextBackIsExpanded = false;
+                    tblTextBack.startAnimation(ViewUtil.collapse(getActivity(), tblTextBack));
+                } else {
+                    addTextBackIsExpanded = true;
+                    tblTextBack.startAnimation(ViewUtil.expand(getActivity(), tblTextBack));
+                }
+            }
+        });
 
         llAddTags.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +134,8 @@ public class AddCardDialogFragment extends DialogFragment {
             tags = ModelUtil.copy(cardsController.getLymbo().getTags());
         }
 
+        tblTextFront.getLayoutParams().height = 0;
+        tblTextBack.getLayoutParams().height = 0;
         tblTags.getLayoutParams().height = 0;
 
         // Existing tags
@@ -121,8 +169,41 @@ public class AddCardDialogFragment extends DialogFragment {
             }
         }
 
-        // Add button
-        ivAdd.setOnClickListener(new View.OnClickListener() {
+        ivAddTextFront.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TableRow trLast = (TableRow) tblTextFront.getChildAt(tblTextFront.getChildCount() - 2);
+
+                if (trLast == null || trLast.getChildCount() < 2 || !(trLast.getChildAt(1) instanceof EditText) || (trLast.getChildAt(1) instanceof EditText && !((EditText) trLast.getChildAt(1)).getText().toString().isEmpty())) {
+                    // New tag
+                    final TableRow tr = new TableRow(getActivity());
+                    final EditText etText = new EditText(getActivity());
+                    tr.addView(etText);
+                    etText.setHint(R.string.new_text);
+                    etText.requestFocus();
+                    tblTextFront.addView(tr, tblTextFront.getChildCount() - 1);
+                }
+            }
+        });
+
+        ivAddTextBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TableRow trLast = (TableRow) tblTextBack.getChildAt(tblTextBack.getChildCount() - 2);
+
+                if (trLast == null || trLast.getChildCount() < 2 || !(trLast.getChildAt(1) instanceof EditText) || (trLast.getChildAt(1) instanceof EditText && !((EditText) trLast.getChildAt(1)).getText().toString().isEmpty())) {
+                    // New tag
+                    final TableRow tr = new TableRow(getActivity());
+                    final EditText etText = new EditText(getActivity());
+                    tr.addView(etText);
+                    etText.setHint(R.string.new_text);
+                    etText.requestFocus();
+                    tblTextBack.addView(tr, tblTextBack.getChildCount() - 1);
+                }
+            }
+        });
+
+        ivAddTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TableRow trLast = (TableRow) tblTags.getChildAt(tblTags.getChildCount() - 2);
@@ -183,7 +264,7 @@ public class AddCardDialogFragment extends DialogFragment {
                     if (front.isEmpty()) {
                         etFront.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);
                     } else {
-                        ocListener.onAddSimpleCard(etFront.getText().toString(), etBack.getText().toString(), getSelectedTags(tags, tblTags));
+                        ocListener.onAddSimpleCard(etFront.getText().toString(), getTexts(tblTextFront), etBack.getText().toString(), getTexts(tblTextBack), getSelectedTags(tags, tblTags));
                         dismiss();
                     }
                 }
@@ -205,6 +286,22 @@ public class AddCardDialogFragment extends DialogFragment {
     // --------------------
     // Methods
     // --------------------
+
+    private List<String> getTexts(TableLayout tblTexts) {
+        List<String> texts = new ArrayList<>();
+
+        for (int i = 0; i < tblTexts.getChildCount(); i++) {
+            if (tblTexts.getChildAt(i) instanceof TableRow) {
+                TableRow row = (TableRow) tblTexts.getChildAt(i);
+
+                if (row.getChildCount() > 1 && row.getChildAt(0) instanceof CheckBox && ((CheckBox) row.getChildAt(0)).isChecked() && row.getChildAt(1) instanceof EditText && !((EditText) row.getChildAt(1)).getText().toString().isEmpty()) {
+                    texts.add(((EditText) row.getChildAt(1)).getText().toString());
+                }
+            }
+        }
+
+        return texts;
+    }
 
     private List<Tag> getSelectedTags(List<Tag> tags, TableLayout tblTags) {
         List<Tag> selectedTags = new ArrayList<>();
@@ -248,7 +345,7 @@ public class AddCardDialogFragment extends DialogFragment {
     // --------------------
 
     public interface OnCompleteListener {
-        void onAddSimpleCard(String frontText, String backText, List<Tag> tags);
+        void onAddSimpleCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
     }
 
     public void onAttach(Activity activity) {

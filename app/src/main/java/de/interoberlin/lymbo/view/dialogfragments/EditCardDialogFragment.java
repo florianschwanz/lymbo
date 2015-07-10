@@ -36,10 +36,19 @@ public class EditCardDialogFragment extends DialogFragment {
 
     // Views
     private EditText etFront;
+    private ImageView ivExpandTextsFront;
+    private TableLayout tblTextFront;
+    private ImageView ivAddTextFront;
+
     private EditText etBack;
+    private ImageView ivExpandTextsBack;
+    private TableLayout tblTextBack;
+    private ImageView ivAddTextBack;
+
     private LinearLayout llAddTags;
+    // private ImageView ivExpandTags;
     private TableLayout tblTags;
-    private ImageView ivAdd;
+    private ImageView ivAddTag;
 
     private boolean addTagsIsExpanded = false;
 
@@ -65,9 +74,10 @@ public class EditCardDialogFragment extends DialogFragment {
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_add_card, null);
         etFront = (EditText) v.findViewById(R.id.etFront);
         etBack = (EditText) v.findViewById(R.id.etBack);
+
         llAddTags = (LinearLayout) v.findViewById(R.id.llAddTags);
         tblTags = (TableLayout) v.findViewById(R.id.tblTags);
-        ivAdd = (ImageView) v.findViewById(R.id.ivAdd);
+        ivAddTag = (ImageView) v.findViewById(R.id.ivAddTag);
 
         // Get arguments
         Bundle bundle = this.getArguments();
@@ -127,7 +137,7 @@ public class EditCardDialogFragment extends DialogFragment {
         }
 
         // Add button
-        ivAdd.setOnClickListener(new View.OnClickListener() {
+        ivAddTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TableRow trLast = (TableRow) tblTags.getChildAt(tblTags.getChildCount() - 2);
