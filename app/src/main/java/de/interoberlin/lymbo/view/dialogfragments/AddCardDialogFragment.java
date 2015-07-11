@@ -47,7 +47,6 @@ public class AddCardDialogFragment extends DialogFragment {
     private ImageView ivAddTextBack;
 
     private LinearLayout llAddTags;
-    // private ImageView ivExpandTags;
     private TableLayout tblTags;
     private ImageView ivAddTag;
 
@@ -96,9 +95,11 @@ public class AddCardDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 if (addTextFrontIsExpanded) {
                     addTextFrontIsExpanded = false;
+                    ivExpandTextsFront.setImageResource(R.drawable.ic_action_expand);
                     tblTextFront.startAnimation(ViewUtil.collapse(getActivity(), tblTextFront));
                 } else {
                     addTextFrontIsExpanded = true;
+                    ivExpandTextsFront.setImageResource(R.drawable.ic_action_collapse);
                     tblTextFront.startAnimation(ViewUtil.expand(getActivity(), tblTextFront));
                 }
             }
@@ -109,9 +110,11 @@ public class AddCardDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 if (addTextBackIsExpanded) {
                     addTextBackIsExpanded = false;
+                    ivExpandTextsBack.setImageResource(R.drawable.ic_action_expand);
                     tblTextBack.startAnimation(ViewUtil.collapse(getActivity(), tblTextBack));
                 } else {
                     addTextBackIsExpanded = true;
+                    ivExpandTextsBack.setImageResource(R.drawable.ic_action_collapse);
                     tblTextBack.startAnimation(ViewUtil.expand(getActivity(), tblTextBack));
                 }
             }
@@ -172,10 +175,9 @@ public class AddCardDialogFragment extends DialogFragment {
         ivAddTextFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TableRow trLast = (TableRow) tblTextFront.getChildAt(tblTextFront.getChildCount() - 2);
+                TableRow row = (TableRow) tblTextFront.getChildAt(tblTextFront.getChildCount() - 2);
 
-                if (trLast == null || trLast.getChildCount() < 2 || !(trLast.getChildAt(1) instanceof EditText) || (trLast.getChildAt(1) instanceof EditText && !((EditText) trLast.getChildAt(1)).getText().toString().isEmpty())) {
-                    // New tag
+                if (row == null || row.getChildCount() < 1 || !(row.getChildAt(0) instanceof EditText) || (row.getChildAt(0) instanceof EditText && !((EditText) row.getChildAt(0)).getText().toString().isEmpty())) {
                     final TableRow tr = new TableRow(getActivity());
                     final EditText etText = new EditText(getActivity());
                     tr.addView(etText);
@@ -189,10 +191,9 @@ public class AddCardDialogFragment extends DialogFragment {
         ivAddTextBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TableRow trLast = (TableRow) tblTextBack.getChildAt(tblTextBack.getChildCount() - 2);
+                TableRow row = (TableRow) tblTextBack.getChildAt(tblTextBack.getChildCount() - 2);
 
-                if (trLast == null || trLast.getChildCount() < 2 || !(trLast.getChildAt(1) instanceof EditText) || (trLast.getChildAt(1) instanceof EditText && !((EditText) trLast.getChildAt(1)).getText().toString().isEmpty())) {
-                    // New tag
+                if (row == null || row.getChildCount() < 1 || !(row.getChildAt(0) instanceof EditText) || (row.getChildAt(0) instanceof EditText && !((EditText) row.getChildAt(0)).getText().toString().isEmpty())) {
                     final TableRow tr = new TableRow(getActivity());
                     final EditText etText = new EditText(getActivity());
                     tr.addView(etText);
@@ -209,7 +210,6 @@ public class AddCardDialogFragment extends DialogFragment {
                 TableRow trLast = (TableRow) tblTags.getChildAt(tblTags.getChildCount() - 2);
 
                 if (trLast == null || trLast.getChildCount() < 2 || !(trLast.getChildAt(1) instanceof EditText) || (trLast.getChildAt(1) instanceof EditText && !((EditText) trLast.getChildAt(1)).getText().toString().isEmpty())) {
-                    // New tag
                     final TableRow tr = new TableRow(getActivity());
                     final CheckBox cb = new CheckBox(getActivity());
                     final EditText etText = new EditText(getActivity());
@@ -294,8 +294,8 @@ public class AddCardDialogFragment extends DialogFragment {
             if (tblTexts.getChildAt(i) instanceof TableRow) {
                 TableRow row = (TableRow) tblTexts.getChildAt(i);
 
-                if (row.getChildCount() > 1 && row.getChildAt(0) instanceof CheckBox && ((CheckBox) row.getChildAt(0)).isChecked() && row.getChildAt(1) instanceof EditText && !((EditText) row.getChildAt(1)).getText().toString().isEmpty()) {
-                    texts.add(((EditText) row.getChildAt(1)).getText().toString());
+                if (row.getChildCount() > 0  && row.getChildAt(0) instanceof EditText && !((EditText) row.getChildAt(0)).getText().toString().isEmpty()) {
+                    texts.add(((EditText) row.getChildAt(0)).getText().toString());
                 }
             }
         }

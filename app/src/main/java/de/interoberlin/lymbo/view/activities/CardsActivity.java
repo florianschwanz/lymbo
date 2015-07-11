@@ -40,7 +40,7 @@ import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener,DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnLabelSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnLabelSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
     CardsController cardsController;
 
@@ -381,8 +381,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onEditSimpleCard(String uuid, String frontText, String backText, List<Tag> tags) {
-        cardsController.updateCard(uuid, frontText, backText, tags);
+    public void onEditSimpleCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+        cardsController.updateCard(uuid, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
         cardsAdapter.notifyDataSetChanged();
         checkEmptyStack();
 
@@ -426,7 +426,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 cardsController.putLastItemToPos(recentCardPos);
                 break;
             }
-            case EVENT_GENERATED_IDS :{
+            case EVENT_GENERATED_IDS: {
                 lymbo.setContainsGeneratedIds(false);
                 break;
             }
