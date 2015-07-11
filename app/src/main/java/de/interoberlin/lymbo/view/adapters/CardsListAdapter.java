@@ -3,10 +3,8 @@ package de.interoberlin.lymbo.view.adapters;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.view.ContextMenu;
@@ -135,8 +133,22 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                                         String uuid = card.getId();
                                         String frontTitle = ((TitleComponent) card.getSides().get(0).getFirst(EComponent.TITLE)).getValue();
                                         String backTitle = ((TitleComponent) card.getSides().get(1).getFirst(EComponent.TITLE)).getValue();
+                                        ArrayList<String> frontTexts = new ArrayList<>();
+                                        ArrayList<String> backTexts = new ArrayList<>();
                                         ArrayList<String> tagsLymbo = new ArrayList<>();
                                         ArrayList<String> tagsCard = new ArrayList<>();
+
+                                        for (Displayable d : card.getSides().get(0).getComponents()) {
+                                            if (d instanceof TextComponent) {
+                                                frontTexts.add(((TextComponent) d).getValue());
+                                            }
+                                        }
+
+                                        for (Displayable d : card.getSides().get(1).getComponents()) {
+                                            if (d instanceof TextComponent) {
+                                                backTexts.add(((TextComponent) d).getValue());
+                                            }
+                                        }
 
                                         for (Tag tag : cardsController.getLymbo().getTags()) {
                                             tagsLymbo.add(tag.getName());
@@ -152,6 +164,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                                         bundle.putString(c.getResources().getString(R.string.bundle_uuid), uuid);
                                         bundle.putString(c.getResources().getString(R.string.bundle_front_title), frontTitle);
                                         bundle.putString(c.getResources().getString(R.string.bundle_back_title), backTitle);
+                                        bundle.putStringArrayList(c.getResources().getString(R.string.bundle_texts_front), frontTexts);
+                                        bundle.putStringArrayList(c.getResources().getString(R.string.bundle_texts_back), backTexts);
                                         bundle.putStringArrayList(c.getResources().getString(R.string.bundle_tags_lymbo), tagsLymbo);
                                         bundle.putStringArrayList(c.getResources().getString(R.string.bundle_tags_card), tagsCard);
                                         dialog.setArguments(bundle);
@@ -235,8 +249,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 // Note
                 if (note != null && !note.isEmpty()) {
                     tvNote.setText(note);
-                    Drawable wrapDrawable = DrawableCompat.wrap(ivNote.getDrawable());
-                    DrawableCompat.setTint(wrapDrawable, c.getResources().getColor(R.color.colorPrimaryDark));
                 }
 
                 // Tags
@@ -288,8 +300,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
                                     ivNote.setImageResource(R.drawable.ic_action_expand);
-                                    Drawable wrapDrawable = DrawableCompat.wrap(ivNote.getDrawable());
-                                    DrawableCompat.setTint(wrapDrawable, c.getResources().getColor(R.color.colorPrimaryDark));
                                 }
 
                                 @Override
@@ -311,8 +321,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
                                     ivNote.setImageResource(R.drawable.ic_action_collapse);
-                                    Drawable wrapDrawable = DrawableCompat.wrap(ivNote.getDrawable());
-                                    DrawableCompat.setTint(wrapDrawable, c.getResources().getColor(R.color.colorPrimaryDark));
                                 }
 
                                 @Override

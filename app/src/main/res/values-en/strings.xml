@@ -73,5 +73,7 @@
     <string name="none">None</string>
     <string name="stash_card">Stash card</string>
     <string name="stash_stack">Stash stack</string>
+    <string name="new_text">new text</string>
+    <string name="edit_card">Edit card</string>
 
 </resources>

@@ -13,6 +13,7 @@ import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
@@ -158,26 +159,45 @@ public class CardsController {
     /**
      * Returns a simple card
      *
-     * @param frontText text on front side
-     * @param backText  text on back side
-     * @param tags      tags for this card
-     * @return card new simple card
+     * @param frontTitleValue
+     * @param frontTextsValues
+     * @param backTitleValue
+     * @param backTextsValues
+     * @param tags
+     * @return
      */
-    public Card getSimpleCard(String frontText, String backText, List<Tag> tags) {
+    public Card getSimpleCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         Card card = new Card();
+        Side frontSide = new Side();
+        Side backSide = new Side();
 
         TitleComponent frontTitle = new TitleComponent();
-        frontTitle.setValue(frontText);
+        frontTitle.setValue(frontTitleValue);
         frontTitle.setGravity(EGravity.CENTER);
         frontTitle.setFlip(true);
+        frontSide.addComponent(frontTitle);
+
+        for (String frontTextValue : frontTextsValues) {
+            TextComponent frontText = new TextComponent();
+            frontText.setValue(frontTextValue);
+            frontText.setGravity(EGravity.LEFT);
+            frontText.setFlip(true);
+            frontSide.addComponent(frontText);
+        }
 
         TitleComponent backTitle = new TitleComponent();
         backTitle.setGravity(EGravity.CENTER);
-        backTitle.setValue(backText);
+        backTitle.setValue(backTitleValue);
         backTitle.setFlip(true);
+        backSide.addComponent(backTitle);
 
-        Side frontSide = new Side(frontTitle);
-        Side backSide = new Side(backTitle);
+        for (String backTextValue : backTextsValues) {
+            TextComponent backText = new TextComponent();
+            backText.setValue(backTextValue);
+            backText.setGravity(EGravity.LEFT);
+            backText.setFlip(true);
+            backSide.addComponent(backText);
+        }
 
         card.getSides().add(frontSide);
         card.getSides().add(backSide);
@@ -191,26 +211,52 @@ public class CardsController {
     /**
      * Updates a simple card
      *
-     * @param uuid      id of the card to be updated
-     * @param frontText text on front side
-     * @param backText  text on back side
-     * @param tags      tags for this card
+     * @param uuid
+     * @param frontTitleValue
+     * @param frontTextsValues
+     * @param backTitleValue
+     * @param backTextsValues
+     * @param tags
      */
-    public void updateCard(String uuid, String frontText, String backText, List<Tag> tags) {
+    public void updateCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         if (cardsContainsId(uuid)) {
             Card card = getCardById(uuid);
 
             if (card.getSides().size() > 0) {
                 Side frontSide = card.getSides().get(0);
-                if (frontSide.getComponents().size() > 0 && frontSide.getComponents().get(0) instanceof TitleComponent) {
-                    ((TitleComponent) frontSide.getComponents().get(0)).setValue(frontText);
+                frontSide.getComponents().clear();
+
+                TitleComponent frontTitle = new TitleComponent();
+                frontTitle.setValue(frontTitleValue);
+                frontTitle.setGravity(EGravity.CENTER);
+                frontTitle.setFlip(true);
+                frontSide.addComponent(frontTitle);
+
+                for (String frontTextValue : frontTextsValues) {
+                    TextComponent frontText = new TextComponent();
+                    frontText.setValue(frontTextValue);
+                    frontText.setGravity(EGravity.LEFT);
+                    frontText.setFlip(true);
+                    frontSide.addComponent(frontText);
                 }
             }
 
             if (card.getSides().size() > 1) {
                 Side backSide = card.getSides().get(1);
-                if (backSide.getComponents().size() > 0 && backSide.getComponents().get(0) instanceof TitleComponent) {
-                    ((TitleComponent) backSide.getComponents().get(0)).setValue(backText);
+                backSide.getComponents().clear();
+
+                TitleComponent backTitle = new TitleComponent();
+                backTitle.setGravity(EGravity.CENTER);
+                backTitle.setValue(backTitleValue);
+                backTitle.setFlip(true);
+                backSide.addComponent(backTitle);
+
+                for (String backTextValue : backTextsValues) {
+                    TextComponent backText = new TextComponent();
+                    backText.setValue(backTextValue);
+                    backText.setGravity(EGravity.LEFT);
+                    backText.setFlip(true);
+                    backSide.addComponent(backText);
                 }
             }
 
