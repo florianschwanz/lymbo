@@ -329,24 +329,24 @@ public class CardsController {
     }
 
     private void changeCardStateNormal(String uuid) {
-        TableCardDatasource dsCardState = new TableCardDatasource(activity);
-        dsCardState.open();
-        dsCardState.updateCardStateNormal(uuid);
-        dsCardState.close();
+        datasource = new TableCardDatasource(activity);
+        datasource.open();
+        datasource.updateCardStateNormal(uuid);
+        datasource.close();
     }
 
     private void changeCardStateDismissed(String uuid) {
-        TableCardDatasource dsCardState = new TableCardDatasource(activity);
-        dsCardState.open();
-        dsCardState.updateCardStateDismissed(uuid);
-        dsCardState.close();
+        datasource = new TableCardDatasource(activity);
+        datasource.open();
+        datasource.updateCardStateDismissed(uuid);
+        datasource.close();
     }
 
     private void changeCardStateStashed(String uuid) {
-        TableCardDatasource dsCardState = new TableCardDatasource(activity);
-        dsCardState.open();
-        dsCardState.updateCardStateStashed(uuid);
-        dsCardState.close();
+        datasource = new TableCardDatasource(activity);
+        datasource.open();
+        datasource.updateCardStateStashed(uuid);
+        datasource.close();
     }
 
     public void shuffle() {
@@ -410,16 +410,6 @@ public class CardsController {
         addNullElementToCards();
     }
 
-    public void setNote(Context context, String uuid, String text) {
-        datasource = new TableCardDatasource(context);
-        datasource.open();
-        datasource.updateCardNote(uuid, text);
-
-        datasource.printTable();
-
-        datasource.close();
-    }
-
     public String getNote(Context context, String uuid) {
         datasource = new TableCardDatasource(context);
         datasource.open();
@@ -427,6 +417,34 @@ public class CardsController {
         datasource.close();
 
         return entry != null ? entry.getNote() : null;
+    }
+
+    public void setNote(Context context, String uuid, String text) {
+        datasource = new TableCardDatasource(context);
+        datasource.open();
+        datasource.updateCardNote(uuid, text);
+        datasource.close();
+    }
+
+    public boolean isFavorite(Context context, String uuid) {
+        datasource = new TableCardDatasource(context);
+        datasource.open();
+        TableCardEntry entry = datasource.getEntryByUuid(uuid);
+        datasource.close();
+
+        return entry != null ? entry.isFavorite() : false;
+    }
+
+    public void toggleFavorite(Context context, String uuid, boolean favorite) {
+        datasource = new TableCardDatasource(context);
+        datasource.open();
+        System.out.println("\nBEFORE");
+        System.out.println("Change to " + String.valueOf(favorite));
+        datasource.printTable();
+        datasource.updateCardFavorite(uuid, favorite);
+        System.out.println("\nAFTER");
+        datasource.printTable();
+        datasource.close();
     }
 
     /**

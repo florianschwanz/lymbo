@@ -3,6 +3,7 @@
 
     <string name="about">About</string>
     <string name="add_card">Add card</string>
+    <string name="add_card_to_favorites">Added card to favorites</string>
     <string name="add_stack">Add stack</string>
     <string name="add_tags">Add tags</string>
     <string name="all">All</string>
@@ -68,6 +69,7 @@
     <string name="okay">Okay</string>
     <string name="path">Path</string>
     <string name="put_card_to_end">Put card to end</string>
+    <string name="remove_card_from_favorites">Removed card from favorites</string>
     <string name="search_lymbo_files">Searching for lymbo files</string>
     <string name="select_answer">Select at least one answer</string>
     <string name="send">Send</string>

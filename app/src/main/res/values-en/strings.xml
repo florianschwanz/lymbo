@@ -75,5 +75,7 @@
     <string name="stash_stack">Stash stack</string>
     <string name="new_text">new text</string>
     <string name="edit_card">Edit card</string>
+    <string name="add_card_to_favorites">Added card to favorites</string>
+    <string name="remove_card_from_favorites">Removed card from favorites</string>
 
 </resources>

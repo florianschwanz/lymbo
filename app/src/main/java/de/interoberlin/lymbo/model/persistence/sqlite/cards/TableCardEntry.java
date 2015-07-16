@@ -5,6 +5,7 @@ public class TableCardEntry {
     private String uuid;
     private String note;
     private int state;
+    private boolean favorite;
 
     // --------------------
     // Constructors
@@ -14,10 +15,11 @@ public class TableCardEntry {
 
     }
 
-    public TableCardEntry(String uuid, String note, int state) {
+    public TableCardEntry(String uuid, String note, int state, boolean favorite) {
         this.uuid = uuid;
         this.note = note;
         this.state = state;
+        this.favorite = favorite;
     }
 
     // --------------------
@@ -58,5 +60,13 @@ public class TableCardEntry {
 
     public boolean isStashed() {
         return getState() == TableCardDatasource.STATE_STASHED;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 }
