@@ -31,6 +31,7 @@ public class CardsController {
     // Model
     private Lymbo lymbo;
     private List<Card> cards;
+    private List<Card> cardsDismissed;
     private List<Card> cardsStashed;
     private LymbosController lymbosController;
 
@@ -61,6 +62,7 @@ public class CardsController {
         lymbosController = LymbosController.getInstance(activity);
 
         cards = new ArrayList<>();
+        cardsDismissed = new ArrayList<>();
         cardsStashed = new ArrayList<>();
 
         if (lymbo != null) {
@@ -70,12 +72,15 @@ public class CardsController {
             for (Card c : lymbo.getCards()) {
                 if (!datasource.containsUuid(c.getId()) || datasource.isNormal(c.getId())) {
                     cards.add(c);
+                } else if (datasource.isDismissed(c.getId())) {
+                    cardsDismissed.add(c);
                 } else if (datasource.isStashed(c.getId())) {
                     cardsStashed.add(c);
                 }
             }
 
             addNullElementToCards();
+            addNullElementToCardsDismissed();
             addNullElementToCardsStashed();
 
             datasource.close();
@@ -86,7 +91,7 @@ public class CardsController {
         int count = 0;
 
         for (Card card : getCards()) {
-            if (card != null && !card.isDiscarded() && card.matchesChapter(getLymbo().getChapters()) && card.matchesTag(getLymbo().getTags()))
+            if (card != null && card.matchesChapter(getLymbo().getChapters()) && card.matchesTag(getLymbo().getTags()))
                 count++;
         }
 
@@ -137,9 +142,19 @@ public class CardsController {
      * Resets all cards
      */
     public void reset() {
-        for (Card card : cards) {
-            if (card != null) {
-                card.reset();
+        synchronized (cardsDismissed) {
+            for (Card card : cardsDismissed) {
+                if (card != null) {
+                    retain(card.getId());
+                }
+            }
+        }
+
+        synchronized (cards) {
+            for (Card card : cards) {
+                if (card != null) {
+                    card.reset();
+                }
             }
         }
     }
@@ -154,58 +169,6 @@ public class CardsController {
         cards.add(card);
         addNullElementToCards();
         save();
-    }
-
-    /**
-     * Returns a simple card
-     *
-     * @param frontTitleValue
-     * @param frontTextsValues
-     * @param backTitleValue
-     * @param backTextsValues
-     * @param tags
-     * @return
-     */
-    public Card getSimpleCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
-        Card card = new Card();
-        Side frontSide = new Side();
-        Side backSide = new Side();
-
-        TitleComponent frontTitle = new TitleComponent();
-        frontTitle.setValue(frontTitleValue);
-        frontTitle.setGravity(EGravity.CENTER);
-        frontTitle.setFlip(true);
-        frontSide.addComponent(frontTitle);
-
-        for (String frontTextValue : frontTextsValues) {
-            TextComponent frontText = new TextComponent();
-            frontText.setValue(frontTextValue);
-            frontText.setGravity(EGravity.LEFT);
-            frontText.setFlip(true);
-            frontSide.addComponent(frontText);
-        }
-
-        TitleComponent backTitle = new TitleComponent();
-        backTitle.setGravity(EGravity.CENTER);
-        backTitle.setValue(backTitleValue);
-        backTitle.setFlip(true);
-        backSide.addComponent(backTitle);
-
-        for (String backTextValue : backTextsValues) {
-            TextComponent backText = new TextComponent();
-            backText.setValue(backTextValue);
-            backText.setGravity(EGravity.LEFT);
-            backText.setFlip(true);
-            backSide.addComponent(backText);
-        }
-
-        card.getSides().add(frontSide);
-        card.getSides().add(backSide);
-        card.setFlip(true);
-
-        card.setTags(tags);
-
-        return card;
     }
 
     /**
@@ -314,7 +277,7 @@ public class CardsController {
     /**
      * Restores a card
      *
-     * @param pos  position where the card will be resored
+     * @param pos  position where the card will be restored
      * @param uuid id of the card to be restored
      */
     public void restore(int pos, String uuid) {
@@ -323,6 +286,50 @@ public class CardsController {
 
         getCards().add(pos < getCards().size() ? pos : 0, card);
         getCardsStashed().remove(card);
+        changeCardStateNormal(uuid);
+
+        addNullElementToCards();
+    }
+
+    /**
+     * Discards a card from the current stack
+     *
+     * @param uuid index of the card to be discarded
+     */
+    public void discard(String uuid) {
+        Card card = getCardById(uuid);
+
+        getCards().remove(card);
+        getCardsDismissed().add(card);
+        changeCardStateDismissed(uuid);
+    }
+
+    /**
+     * Retains a card that has been removed
+     *
+     * @param uuid index of the card to be retained
+     */
+    public void retain(String uuid) {
+        Card card = getCardById(uuid);
+        card.setRestoring(true);
+
+        getCardsDismissed().remove(card);
+        getCards().add(card);
+        changeCardStateNormal(uuid);
+    }
+
+    /**
+     * Retains a card that has been removed
+     *
+     * @param pos  position where the card will be retained
+     * @param uuid id of the card to be retained
+     */
+    public void retain(int pos, String uuid) {
+        Card card = getCardById(uuid);
+        card.setRestoring(true);
+
+        getCards().add(pos < getCards().size() ? pos : 0, card);
+        getCardsDismissed().remove(card);
         changeCardStateNormal(uuid);
 
         addNullElementToCards();
@@ -352,28 +359,6 @@ public class CardsController {
     public void shuffle() {
         Collections.shuffle(cards);
         addNullElementToCards();
-    }
-
-    /**
-     * Discards a card from the current stack
-     *
-     * @param uuid index of the card to be discarded
-     */
-    public void discard(String uuid) {
-        Card card = getCardById(uuid);
-        card.setDiscarded(true);
-    }
-
-    /**
-     * Retains a card that has been removed
-     *
-     * @param uuid index of the card to be retained
-     */
-    public void retain(String uuid) {
-        Card card = getCardById(uuid);
-        card.reset();
-        card.setRestoring(true);
-        card.setDiscarded(false);
     }
 
     /**
@@ -439,6 +424,13 @@ public class CardsController {
     /**
      * This is necessary to display the first element below the toolbar
      */
+    public void addNullElementToCardsDismissed() {
+        addNullElement(cardsDismissed);
+    }
+
+    /**
+     * This is necessary to display the first element below the toolbar
+     */
     public void addNullElementToCardsStashed() {
         addNullElement(cardsStashed);
     }
@@ -483,6 +475,11 @@ public class CardsController {
     public List<Card> getCards() {
         addNullElementToCards();
         return cards;
+    }
+
+    public List<Card> getCardsDismissed() {
+        addNullElementToCardsDismissed();
+        return cardsDismissed;
     }
 
     public List<Card> getCardsStashed() {

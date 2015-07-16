@@ -87,7 +87,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
     private View getCardView(final int position, final Card card, final ViewGroup parent) {
         if (card != null) {
-            if (!card.isDiscarded() && card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
+            if (card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
                 // Layout inflater
                 LayoutInflater vi;
                 vi = LayoutInflater.from(getContext());

@@ -9,6 +9,9 @@ import de.interoberlin.lymbo.controller.App;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
+import de.interoberlin.lymbo.model.card.components.TextComponent;
+import de.interoberlin.lymbo.model.card.components.TitleComponent;
+import de.interoberlin.lymbo.model.card.enums.EGravity;
 
 public class Card {
     private String id;
@@ -21,7 +24,6 @@ public class Card {
     private boolean flip;
     private boolean edit;
     private int sideVisible;
-    private boolean discarded;
 
     private boolean revealed = false;
     private boolean restoring = false;
@@ -33,6 +35,47 @@ public class Card {
 
     public Card() {
         init();
+    }
+
+    public Card(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+        super();
+
+        Side frontSide = new Side();
+        Side backSide = new Side();
+
+        TitleComponent frontTitle = new TitleComponent();
+        frontTitle.setValue(frontTitleValue);
+        frontTitle.setGravity(EGravity.CENTER);
+        frontTitle.setFlip(true);
+        frontSide.addComponent(frontTitle);
+
+        for (String frontTextValue : frontTextsValues) {
+            TextComponent frontText = new TextComponent();
+            frontText.setValue(frontTextValue);
+            frontText.setGravity(EGravity.LEFT);
+            frontText.setFlip(true);
+            frontSide.addComponent(frontText);
+        }
+
+        TitleComponent backTitle = new TitleComponent();
+        backTitle.setGravity(EGravity.CENTER);
+        backTitle.setValue(backTitleValue);
+        backTitle.setFlip(true);
+        backSide.addComponent(backTitle);
+
+        for (String backTextValue : backTextsValues) {
+            TextComponent backText = new TextComponent();
+            backText.setValue(backTextValue);
+            backText.setGravity(EGravity.LEFT);
+            backText.setFlip(true);
+            backSide.addComponent(backText);
+        }
+
+        getSides().add(frontSide);
+        getSides().add(backSide);
+        setFlip(true);
+
+        setTags(tags);
     }
 
     // -------------------------
@@ -47,7 +90,6 @@ public class Card {
         tags = new ArrayList<>();
         edit = false;
         sideVisible = 0;
-        discarded = false;
     }
 
     /**
@@ -55,7 +97,6 @@ public class Card {
      */
     public void reset() {
         sideVisible = 0;
-        discarded = false;
 
         for (Side side : getSides()) {
             for (Displayable component : side.getComponents()) {
@@ -183,14 +224,6 @@ public class Card {
 
     public void setSideVisible(int sideVisible) {
         this.sideVisible = sideVisible;
-    }
-
-    public boolean isDiscarded() {
-        return discarded;
-    }
-
-    public void setDiscarded(boolean discarded) {
-        this.discarded = discarded;
     }
 
     public boolean isRevealed() {

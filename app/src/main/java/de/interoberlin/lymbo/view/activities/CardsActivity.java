@@ -384,7 +384,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public void onAddSimpleCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
-        Card card = cardsController.getSimpleCard(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+        Card card = new Card(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
 
         cardsController.addCard(card);
         cardsAdapter.notifyDataSetChanged();
@@ -439,7 +439,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 break;
             }
             case EVENT_DISCARD: {
-                cardsController.retain(recentCardId);
+                cardsController.retain(recentCardPos, recentCardId);
                 checkEmptyStack();
                 updateCardCount();
                 break;
