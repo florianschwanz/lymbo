@@ -27,6 +27,7 @@ public class TableCardDatasource {
     public static final Column colUuid = new Column("uuid", Type.TEXT_PRIMARY_KEY);
     public static final Column colNote = new Column("note", Type.TEXT);
     public static final Column colState = new Column("state", Type.INTEGER);
+    public static final Column colFavorite = new Column("favorite", Type.INTEGER);
 
     public static final int STATE_NORMAL = 0;
     public static final int STATE_DISMISSED = 2;
@@ -36,6 +37,7 @@ public class TableCardDatasource {
         columnHolder.add(colUuid);
         columnHolder.add(colNote);
         columnHolder.add(colState);
+        columnHolder.add(colFavorite);
     }
 
     // --------------------
@@ -72,7 +74,8 @@ public class TableCardDatasource {
 
         createStatement += colUuid.getName() + " " + colUuid.getType().getName() + ", ";
         createStatement += colNote.getName() + " " + colNote.getType().getName() + ", ";
-        createStatement += colState.getName() + " " + colState.getType().getName();
+        createStatement += colState.getName() + " " + colState.getType().getName() + ", ";
+        createStatement += colFavorite.getName() + " " + colFavorite.getType().getName();
 
         createStatement += ");";
 
@@ -115,6 +118,7 @@ public class TableCardDatasource {
         tableCardEntry.setUuid(cursor.getString(0));
         tableCardEntry.setNote(cursor.getString(1));
         tableCardEntry.setState(cursor.getInt(2));
+        tableCardEntry.setFavorite(cursor.getInt(3) == 1);
         return tableCardEntry;
     }
 
@@ -264,6 +268,22 @@ public class TableCardDatasource {
         return !getEntries(colUuid, uuid, colState, STATE_STASHED).isEmpty();
     }
 
+    /**
+     * Determines whether an entry is marked as favorite
+     *
+     * @param uuid uuid
+     * @return
+     */
+    public boolean isFavorite(String uuid) {
+        for (TableCardEntry entry : getAllCards()) {
+            if (entry.getUuid().equals(uuid)) {
+                return entry.isFavorite();
+            }
+        }
+
+        return false;
+    }
+
     // --------------------
     // Methods - Delete
     // --------------------
@@ -355,6 +375,24 @@ public class TableCardDatasource {
         }
     }
 
+    /**
+     * Updates the field favorite of a card identified by {@param uuid}
+     *
+     * @param uuid favorite of entry identified by this uuid will be set
+     */
+    public void updateCardFavorite(String uuid, boolean favorite) {
+        if (containsUuid(uuid)) {
+            ContentValues values = new ContentValues();
+            values.put(colFavorite.getName(), favorite ? 1 : 0);
+            database.update(table, values, colUuid.getName() + "='" + uuid + "'", null);
+        } else {
+            ContentValues values = new ContentValues();
+            values.put(colUuid.getName(), uuid);
+            values.put(colFavorite.getName(), favorite ? 1 : 0);
+            database.insert(table, null, values);
+        }
+    }
+
     // --------------------
     // Methods - Debug
     // --------------------
@@ -362,7 +400,7 @@ public class TableCardDatasource {
     public void printTable() {
         for (TableCardEntry entry : getEntries()) {
             if (entry != null) {
-                System.out.println(entry.getUuid() + "\t" + entry.getState() + "\t" + entry.getNote());
+                System.out.println(entry.getUuid() + "\t" + entry.getState() + "\t" + entry.getNote() + "\t" + String.valueOf(entry.isFavorite()));
             }
         }
     }

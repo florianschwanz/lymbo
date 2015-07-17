@@ -81,13 +81,12 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     @Override
     public View getView(final int position, View v, ViewGroup parent) {
         final Card card = getItem(position);
-
         return getCardView(position, card, parent);
     }
 
     private View getCardView(final int position, final Card card, final ViewGroup parent) {
         if (card != null) {
-            if (card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
+            if ((!cardsController.isDisplayOnlyFavorites() || (cardsController.isDisplayOnlyFavorites() && cardsController.isFavorite(c, card.getId()))) && card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
                 // Layout inflater
                 LayoutInflater vi;
                 vi = LayoutInflater.from(getContext());
@@ -102,6 +101,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
                 final TextView tvDenominator = (TextView) flCard.findViewById(R.id.tvDenominator);
                 final ImageView ivNote = (ImageView) flCard.findViewById(R.id.ivNote);
+                final ImageView ivFavorite = (ImageView) flCard.findViewById(R.id.ivFavorite);
                 final ImageView ivHint = (ImageView) flCard.findViewById(R.id.ivHint);
 
                 final LinearLayout llNoteBar = (LinearLayout) flCard.findViewById(R.id.llNoteBar);
@@ -239,10 +239,15 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 a.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
                 final int displayWidth = displaymetrics.widthPixels;
 
+                // Set one side visible
                 rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
 
                 if (!card.isNoteExpanded())
                     llNoteBar.getLayoutParams().height = 0;
+                if (cardsController.isFavorite(c, card.getId()))
+                    ivFavorite.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_action_important));
+                else
+                    ivFavorite.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_action_not_important));
 
                 String note = cardsController.getNote(c, card.getId());
 
@@ -345,6 +350,16 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                         editNoteDialogFragment.show(a.getFragmentManager(), "okay");
                     }
                 });
+
+                // Action : favorite
+                ivFavorite.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        boolean currentlyFavorite = cardsController.isFavorite(c, card.getId());
+                        toggleFavorite(position, card.getId(), flCard, !currentlyFavorite);
+                    }
+                });
+
 
                 // Action : hint
                 if (card.getHint() != null) {
@@ -523,6 +538,17 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
         cardsController.putToEnd(uuid);
         ((CardsActivity) a).putToEnd(pos, uuid);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Toggles the favorite state of an item
+     *
+     * @param uuid position of item
+     */
+    private void toggleFavorite(int pos, String uuid, FrameLayout flCard, boolean favorite) {
+        cardsController.toggleFavorite(c, uuid, favorite);
+        ((CardsActivity) a).toggleFavorite(pos, uuid, favorite);
         notifyDataSetChanged();
     }
 

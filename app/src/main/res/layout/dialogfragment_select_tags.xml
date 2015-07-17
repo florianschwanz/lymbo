@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/dialog_fragment_padding"
+    android:theme="@style/Theme.AppCompat.Light.Dialog">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <de.interoberlin.lymbo.view.controls.RobotoTextView
+                android:id="@+id/tvFavorite"
+                style="@style/CardText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:text="@string/display_favorites_only"
+                roboto:typeface="roboto_regular" />
+
+            <ImageView
+                android:id="@+id/ivFavorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/tag_padding"
+                android:contentDescription="@string/hint"
+                android:src="@drawable/ic_action_not_important" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="14dp"
+            android:background="@color/stroke" />
+
+        <de.interoberlin.lymbo.view.controls.RobotoTextView
+            android:id="@+id/tvChapters"
+            style="@style/CardText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:ellipsize="end"
+            android:text="@string/chapters"
+            roboto:typeface="roboto_regular" />
+
+        <TableLayout
+            android:id="@+id/tblChapters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="14dp"
+            android:background="@color/stroke" />
+
+        <de.interoberlin.lymbo.view.controls.RobotoTextView
+            android:id="@+id/tvTags"
+            style="@style/CardText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:ellipsize="end"
+            android:text="@string/tags"
+            roboto:typeface="roboto_regular" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/dialog_fragment_padding">
+
+            <TextView
+                android:id="@+id/tvAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/all"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/card_text" />
+
+            <TextView
+                android:id="@+id/tvNone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/none"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/card_text" />
+        </LinearLayout>
+
+        <TableLayout
+            android:id="@+id/tblTags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</ScrollView>

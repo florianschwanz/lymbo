@@ -41,7 +41,7 @@ import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnLabelSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnTagsSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
     CardsController cardsController;
 
@@ -370,6 +370,20 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 .show();
     }
 
+    /**
+     * Toggles the favorite state of an item
+     *
+     * @param uuid index of the card
+     */
+    public void toggleFavorite(int pos, String uuid, boolean favorite) {
+        slv.invalidateViews();
+        new SnackBar.Builder(this)
+                .withMessageId(favorite ? R.string.add_card_to_favorites : R.string.remove_card_from_favorites)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.SHORT_SNACK)
+                .show();
+    }
+
     private int getFirst() {
         int first = slv.getFirstVisiblePosition();
         if (slv.getChildAt(0).getTop() < 0)
@@ -411,7 +425,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onLabelSelected() {
+    public void onTagsSelected() {
         cardsController.selectLabel();
 
         cardsAdapter.notifyDataSetChanged();
