@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -24,7 +25,7 @@ public class SelectTagsDialogFragment extends DialogFragment {
     // Controllers
     CardsController cardsController;
 
-    private OnLabelSelectedListener onLabelSelectedListener;
+    private OnTagsSelectedListener onTagsSelectedListener;
 
     // --------------------
     // Constructors
@@ -42,14 +43,33 @@ public class SelectTagsDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         cardsController = CardsController.getInstance(getActivity());
 
-        Context c = getActivity();
+        final Context c = getActivity();
 
         // Load layout
-        final View v = View.inflate(c, R.layout.dialogfragment_select_labels, null);
+        final View v = View.inflate(c, R.layout.dialogfragment_select_tags, null);
+        final ImageView ivFavorite = (ImageView) v.findViewById(R.id.ivFavorite);
         final TableLayout tblChapters = (TableLayout) v.findViewById(R.id.tblChapters);
         final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
         final TextView tvAll = (TextView) v.findViewById(R.id.tvAll);
         final TextView tvNone = (TextView) v.findViewById(R.id.tvNone);
+
+        if (cardsController.isDisplayOnlyFavorites())
+            ivFavorite.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_action_important));
+        else
+            ivFavorite.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_action_not_important));
+
+        ivFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cardsController.isDisplayOnlyFavorites()) {
+                    cardsController.setDisplayOnlyFavorites(false);
+                    ivFavorite.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_action_not_important));
+                } else {
+                    cardsController.setDisplayOnlyFavorites(true);
+                    ivFavorite.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_action_important));
+                }
+            }
+        });
 
         for (final Tag t : cardsController.getLymbo().getChapters()) {
             final TableRow tr = new TableRow(c);
@@ -124,13 +144,13 @@ public class SelectTagsDialogFragment extends DialogFragment {
         // Load dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v);
-            builder.setTitle(R.string.tags);
+        builder.setTitle(R.string.tags);
 
         // Add positive button
         builder.setPositiveButton(R.string.okay, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                onLabelSelectedListener.onLabelSelected();
+                onTagsSelectedListener.onTagsSelected();
                 dismiss();
             }
         });
@@ -177,15 +197,15 @@ public class SelectTagsDialogFragment extends DialogFragment {
     // Callback interfaces
     // --------------------
 
-    public interface OnLabelSelectedListener {
-        void onLabelSelected();
+    public interface OnTagsSelectedListener {
+        void onTagsSelected();
     }
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         try {
-            this.onLabelSelectedListener = (OnLabelSelectedListener) activity;
+            this.onTagsSelectedListener = (OnTagsSelectedListener) activity;
         } catch (final ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnCompleteListener");
         }

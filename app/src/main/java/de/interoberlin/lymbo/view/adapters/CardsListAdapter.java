@@ -81,13 +81,12 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
     @Override
     public View getView(final int position, View v, ViewGroup parent) {
         final Card card = getItem(position);
-
         return getCardView(position, card, parent);
     }
 
     private View getCardView(final int position, final Card card, final ViewGroup parent) {
         if (card != null) {
-            if (!card.isDiscarded() && card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
+            if (!card.isDiscarded() && (!cardsController.isDisplayOnlyFavorites() || (cardsController.isDisplayOnlyFavorites() && cardsController.isFavorite(c, card.getId()))) && card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
                 // Layout inflater
                 LayoutInflater vi;
                 vi = LayoutInflater.from(getContext());
@@ -352,7 +351,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                     }
                 });
 
-                // Action : Favorite
+                // Action : favorite
                 ivFavorite.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

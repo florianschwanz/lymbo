@@ -34,6 +34,8 @@ public class CardsController {
     private List<Card> cardsStashed;
     private LymbosController lymbosController;
 
+    private boolean displayOnlyFavorites;
+
     private static CardsController instance;
 
     // --------------------
@@ -62,6 +64,7 @@ public class CardsController {
 
         cards = new ArrayList<>();
         cardsStashed = new ArrayList<>();
+        displayOnlyFavorites = false;
 
         if (lymbo != null) {
             datasource = new TableCardDatasource(activity);
@@ -410,6 +413,13 @@ public class CardsController {
         addNullElementToCards();
     }
 
+    /**
+     * Returns the note of a card
+     *
+     * @param context
+     * @param uuid    id of the card
+     * @return
+     */
     public String getNote(Context context, String uuid) {
         datasource = new TableCardDatasource(context);
         datasource.open();
@@ -419,6 +429,13 @@ public class CardsController {
         return entry != null ? entry.getNote() : null;
     }
 
+    /**
+     * Sets the note of a card
+     *
+     * @param context
+     * @param uuid    id of a card
+     * @param text    text of the note
+     */
     public void setNote(Context context, String uuid, String text) {
         datasource = new TableCardDatasource(context);
         datasource.open();
@@ -426,6 +443,13 @@ public class CardsController {
         datasource.close();
     }
 
+    /**
+     * Determines whether a card belongs to the favorites
+     *
+     * @param context context
+     * @param uuid    id of the card
+     * @return
+     */
     public boolean isFavorite(Context context, String uuid) {
         datasource = new TableCardDatasource(context);
         datasource.open();
@@ -435,15 +459,17 @@ public class CardsController {
         return entry != null ? entry.isFavorite() : false;
     }
 
+    /**
+     * Changes the favorite status of a card
+     *
+     * @param context  context
+     * @param uuid     id of the card
+     * @param favorite whether or not to set a card as a favorite
+     */
     public void toggleFavorite(Context context, String uuid, boolean favorite) {
         datasource = new TableCardDatasource(context);
         datasource.open();
-        System.out.println("\nBEFORE");
-        System.out.println("Change to " + String.valueOf(favorite));
-        datasource.printTable();
         datasource.updateCardFavorite(uuid, favorite);
-        System.out.println("\nAFTER");
-        datasource.printTable();
         datasource.close();
     }
 
@@ -461,6 +487,9 @@ public class CardsController {
         addNullElement(cardsStashed);
     }
 
+    /**
+     * This is necessary to display the first element below the toolbar
+     */
     private void addNullElement(List<Card> list) {
         if (list != null) {
             list.removeAll(Collections.singleton(null));
@@ -526,5 +555,13 @@ public class CardsController {
         }
 
         return null;
+    }
+
+    public boolean isDisplayOnlyFavorites() {
+        return displayOnlyFavorites;
+    }
+
+    public void setDisplayOnlyFavorites(boolean displayOnlyFavorites) {
+        this.displayOnlyFavorites = displayOnlyFavorites;
     }
 }

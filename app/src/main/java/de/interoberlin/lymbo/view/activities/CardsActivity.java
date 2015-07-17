@@ -41,7 +41,7 @@ import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnLabelSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnTagsSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
     CardsController cardsController;
 
@@ -425,7 +425,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onLabelSelected() {
+    public void onTagsSelected() {
         cardsController.selectLabel();
 
         cardsAdapter.notifyDataSetChanged();

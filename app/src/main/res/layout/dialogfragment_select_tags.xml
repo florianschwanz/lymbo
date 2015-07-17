@@ -11,6 +11,36 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <de.interoberlin.lymbo.view.controls.RobotoTextView
+                android:id="@+id/tvFavorite"
+                style="@style/CardText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:text="@string/display_favorites_only"
+                roboto:typeface="roboto_regular" />
+
+            <ImageView
+                android:id="@+id/ivFavorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/tag_padding"
+                android:contentDescription="@string/hint"
+                android:src="@drawable/ic_action_not_important" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="14dp"
+            android:background="@color/stroke" />
+
         <de.interoberlin.lymbo.view.controls.RobotoTextView
             android:id="@+id/tvChapters"
             style="@style/CardText"

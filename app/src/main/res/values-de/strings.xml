@@ -77,5 +77,6 @@
     <string name="edit_card">Karte bearbeiten</string>
     <string name="add_card_to_favorites">Karte zu Favoriten hinzugefügt</string>
     <string name="remove_card_from_favorites">Karte aus Favoriten entfernt</string>
+    <string name="display_favorites_only">Nur Favoriten anzeigen</string>
 
 </resources>
