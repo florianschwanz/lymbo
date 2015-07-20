@@ -38,7 +38,7 @@ public class Card {
     }
 
     public Card(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
-        // init();
+        init();
 
         Side frontSide = new Side();
         Side backSide = new Side();
