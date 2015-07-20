@@ -36,12 +36,14 @@
     <string name="correct">correct</string>
     <string name="could_not_find_any_cards">Could not find any cards</string>
     <string name="desc_image">Image component</string>
+    <string name="describe_the_error">Describe the error</string>
     <string name="discard_card">Discarded card</string>
     <string name="display_favorites_only">Display favorites only</string>
     <string name="download_the_attachment">Download the attachment to use this lymbo</string>
     <string name="discard">Discard</string>
     <string name="edit">Edit</string>
     <string name="edit_card">Edit card</string>
+    <string name="error_occured">An error occured :(</string>
     <string name="field_must_not_be_empty">Field must not be empty</string>
     <string name="fraction">/</string>
     <string name="front">Front</string>
@@ -49,6 +51,7 @@
     <string name="hint">Hint</string>
     <string name="log">Log</string>
     <string name="logo">Logo</string>
+    <string name="lymbo_error_log">Lymbo Error Log</string>
     <string name="lymbo_for_you">Lymbo for you</string>
     <string name="lymbos">Lymbos</string>
     <string name="lymbos_stash">Lymbos Stash</string>
@@ -71,6 +74,7 @@
     <string name="path">Path</string>
     <string name="put_card_to_end">Put card to end</string>
     <string name="remove_card_from_favorites">Removed card from favorites</string>
+    <string name="report_error_question">Do you want to send the error log to the developer? This helps a lot fixing this issue.</string>
     <string name="search_lymbo_files">Searching for lymbo files</string>
     <string name="select_answer">Select at least one answer</string>
     <string name="send">Send</string>

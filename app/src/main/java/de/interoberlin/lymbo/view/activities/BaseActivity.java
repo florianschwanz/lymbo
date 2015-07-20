@@ -21,6 +21,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
 import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.view.dialogfragments.ReportErrorDialogFragment;
 
 public abstract class BaseActivity extends ActionBarActivity {
     // Views
@@ -35,6 +36,11 @@ public abstract class BaseActivity extends ActionBarActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    protected void handleException(Exception e) {
+        LoggingUtil.writeException(this, e);
+        new ReportErrorDialogFragment().show(getFragmentManager(), "okay");
     }
 
     protected abstract int getLayoutResource();

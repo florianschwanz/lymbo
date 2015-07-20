@@ -37,11 +37,12 @@ import de.interoberlin.lymbo.view.dialogfragments.AddCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.ReportErrorDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnTagsSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnTagsSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, ReportErrorDialogFragment.OnCompleteListener {
     // Controllers
     CardsController cardsController;
 
@@ -114,7 +115,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_CARDS));
             VIBRATION_DURATION = Integer.parseInt(Configuration.getProperty(this, EProperty.VIBRATION_DURATION));
         } catch (Exception e) {
-            LoggingUtil.writeException(this, e);
+            handleException(e);
         }
     }
 
@@ -214,7 +215,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             registerHideableFooterView(ibFab);
             enableActionBarAutoHide(slv);
         } catch (Exception e) {
-            LoggingUtil.writeException(this, e);
+            handleException(e);
         }
     }
 
@@ -419,7 +420,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             checkEmptyStack();
             updateCardCount();
         } catch (Exception e) {
-            LoggingUtil.writeException(this, e);
+            handleException(e);
         }
     }
 
@@ -483,6 +484,11 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
         cardsAdapter.notifyDataSetChanged();
         slv.invalidateViews();
+    }
+
+    @Override
+    public void onReportDialogDialogComplete() {
+        LoggingUtil.sendErrorLog(this, this);
     }
 
     // --------------------

@@ -18,6 +18,7 @@ public class MailSender {
 
     /**
      * Uses an intent
+     *
      * @param c
      * @param a
      * @param lymbo
