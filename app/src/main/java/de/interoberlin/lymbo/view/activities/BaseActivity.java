@@ -23,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import de.interoberlin.lymbo.R;
 
 public abstract class BaseActivity extends ActionBarActivity {
+    // Views
     private Toolbar toolbar;
 
     @Override

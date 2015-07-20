@@ -75,6 +75,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     // Properties
     private static int REFRESH_DELAY;
     private static int VIBRATION_DURATION;
+    private static String LYMBO_SAVE_PATH;
 
     // --------------------
     // Methods - Lifecycle
@@ -82,131 +83,139 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        cardsController = CardsController.getInstance(this);
+        try {
+            super.onCreate(savedInstanceState);
+            cardsController = CardsController.getInstance(this);
 
-        // Restore instance state
-        if (savedInstanceState != null) {
-            // Restore cards
-            Lymbo l = null;
-            if (savedInstanceState.getString(BUNDLE_LYMBO_PATH) != null) {
-                if (savedInstanceState.getBoolean(BUNDLE_ASSET)) {
-                    l = LymboLoader.getLymboFromAsset(this, savedInstanceState.getString(BUNDLE_LYMBO_PATH), false);
-                } else {
-                    l = LymboLoader.getLymboFromFile(new File(savedInstanceState.getString(BUNDLE_LYMBO_PATH)), false);
+            // Restore instance state
+            if (savedInstanceState != null) {
+                // Restore cards
+                Lymbo l = null;
+                if (savedInstanceState.getString(BUNDLE_LYMBO_PATH) != null) {
+                    if (savedInstanceState.getBoolean(BUNDLE_ASSET)) {
+                        l = LymboLoader.getLymboFromAsset(this, savedInstanceState.getString(BUNDLE_LYMBO_PATH), false);
+                    } else {
+                        l = LymboLoader.getLymboFromFile(new File(savedInstanceState.getString(BUNDLE_LYMBO_PATH)), false);
+                    }
                 }
+
+                cardsController.setLymbo(l);
+                cardsController.init();
             }
 
-            cardsController.setLymbo(l);
-            cardsController.init();
+            if (cardsController.getLymbo() == null) {
+                finish();
+            }
+
+            setActionBarIcon(R.drawable.ic_ab_drawer);
+            setDisplayHomeAsUpEnabled(true);
+
+            // Properties
+            REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_CARDS));
+            VIBRATION_DURATION = Integer.parseInt(Configuration.getProperty(this, EProperty.VIBRATION_DURATION));
+        } catch (Exception e) {
+            LoggingUtil.writeException(this, e);
         }
-
-        if (cardsController.getLymbo() == null) {
-            finish();
-        }
-
-        setActionBarIcon(R.drawable.ic_ab_drawer);
-        setDisplayHomeAsUpEnabled(true);
-
-        // Properties
-        REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_CARDS));
-        VIBRATION_DURATION = Integer.parseInt(Configuration.getProperty(this, EProperty.VIBRATION_DURATION));
     }
 
     public void onResume() {
-        super.onResume();
-        lymbo = cardsController.getLymbo();
-        cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
+        try {
+            super.onResume();
+            lymbo = cardsController.getLymbo();
+            cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
-        drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
+            drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
-        rl = (RelativeLayout) findViewById(R.id.rl);
+            toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
+            rl = (RelativeLayout) findViewById(R.id.rl);
 
-        toolbarTextView = (TextView) findViewById(R.id.toolbar_text);
+            toolbarTextView = (TextView) findViewById(R.id.toolbar_text);
 
-        srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        srl.setOnRefreshListener(this);
-        srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
+            srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+            srl.setOnRefreshListener(this);
+            srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
 
-        slv = (SwipeListView) findViewById(R.id.slv);
-        slv.setAdapter(cardsAdapter);
-        slv.setSwipeMode(SwipeListView.SWIPE_MODE_BOTH);
-        slv.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_REVEAL);
-        slv.setSwipeActionRight(SwipeListView.SWIPE_ACTION_REVEAL);
-        slv.setDescendantFocusability(ListView.FOCUS_AFTER_DESCENDANTS);
+            slv = (SwipeListView) findViewById(R.id.slv);
+            slv.setAdapter(cardsAdapter);
+            slv.setSwipeMode(SwipeListView.SWIPE_MODE_BOTH);
+            slv.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_REVEAL);
+            slv.setSwipeActionRight(SwipeListView.SWIPE_ACTION_REVEAL);
+            slv.setDescendantFocusability(ListView.FOCUS_AFTER_DESCENDANTS);
 
-        slv.setSwipeListViewListener(new BaseSwipeListViewListener() {
-            @Override
-            public void onOpened(int position, boolean toRight) {
-                if (!cardsController.getCards().isEmpty())
-                    cardsController.getCards().get(position).setRevealed(true);
-                srl.setEnabled(true);
+            slv.setSwipeListViewListener(new BaseSwipeListViewListener() {
+                @Override
+                public void onOpened(int position, boolean toRight) {
+                    if (!cardsController.getCards().isEmpty())
+                        cardsController.getCards().get(position).setRevealed(true);
+                    srl.setEnabled(true);
+                }
+
+                @Override
+                public void onClosed(int position, boolean fromRight) {
+                    if (!cardsController.getCards().isEmpty())
+                        cardsController.getCards().get(position).setRevealed(false);
+                    srl.setEnabled(true);
+                }
+
+                @Override
+                public void onListChanged() {
+                }
+
+                @Override
+                public void onMove(int position, float x) {
+                }
+
+                @Override
+                public void onStartOpen(int position, int action, boolean right) {
+                    srl.setEnabled(false);
+                }
+
+                @Override
+                public void onStartClose(int position, boolean right) {
+                    srl.setEnabled(false);
+                }
+
+                @Override
+                public void onClickFrontView(int position) {
+                }
+
+                @Override
+                public void onClickBackView(int position) {
+                }
+
+                @Override
+                public void onDismiss(int[] reverseSortedPositions) {
+                }
+            });
+
+            ibFab = (ImageButton) findViewById(R.id.fab);
+            ibFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new AddCardDialogFragment().show(getFragmentManager(), "okay");
+                }
+            });
+
+            if (lymbo.isAsset()) {
+                ibFab.setVisibility(View.INVISIBLE);
             }
 
-            @Override
-            public void onClosed(int position, boolean fromRight) {
-                if (!cardsController.getCards().isEmpty())
-                    cardsController.getCards().get(position).setRevealed(false);
-                srl.setEnabled(true);
-            }
+            phNoCards = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.placeholder_no_cards, null, false);
+            rl.addView(phNoCards);
 
-            @Override
-            public void onListChanged() {
-            }
+            checkEmptyStack();
+            checkGeneratedIds();
 
-            @Override
-            public void onMove(int position, float x) {
-            }
+            updateCardCount();
 
-            @Override
-            public void onStartOpen(int position, int action, boolean right) {
-                srl.setEnabled(false);
-            }
-
-            @Override
-            public void onStartClose(int position, boolean right) {
-                srl.setEnabled(false);
-            }
-
-            @Override
-            public void onClickFrontView(int position) {
-            }
-
-            @Override
-            public void onClickBackView(int position) {
-            }
-
-            @Override
-            public void onDismiss(int[] reverseSortedPositions) {
-            }
-        });
-
-        ibFab = (ImageButton) findViewById(R.id.fab);
-        ibFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AddCardDialogFragment().show(getFragmentManager(), "okay");
-            }
-        });
-
-        if (lymbo.isAsset()) {
-            ibFab.setVisibility(View.INVISIBLE);
+            updateSwipeRefreshProgressBarTop(srl);
+            registerHideableHeaderView(toolbarWrapper);
+            registerHideableFooterView(ibFab);
+            enableActionBarAutoHide(slv);
+        } catch (Exception e) {
+            LoggingUtil.writeException(this, e);
         }
-
-        phNoCards = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.placeholder_no_cards, null, false);
-        rl.addView(phNoCards);
-
-        checkEmptyStack();
-        checkGeneratedIds();
-
-        updateCardCount();
-
-        updateSwipeRefreshProgressBarTop(srl);
-        registerHideableHeaderView(toolbarWrapper);
-        registerHideableFooterView(ibFab);
-        enableActionBarAutoHide(slv);
     }
 
     @Override
@@ -398,16 +407,20 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public void onAddSimpleCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
-        Card card = new Card(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+        try {
+            Card card = new Card(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
 
-        cardsController.addCard(card);
-        cardsAdapter.notifyDataSetChanged();
-        checkEmptyStack();
+            cardsController.addCard(card);
+            cardsAdapter.notifyDataSetChanged();
+            checkEmptyStack();
 
-        slv.invalidateViews();
+            slv.invalidateViews();
 
-        checkEmptyStack();
-        updateCardCount();
+            checkEmptyStack();
+            updateCardCount();
+        } catch (Exception e) {
+            LoggingUtil.writeException(this, e);
+        }
     }
 
     @Override

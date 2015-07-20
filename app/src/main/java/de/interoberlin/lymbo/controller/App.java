@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import de.interoberlin.lymbo.model.persistence.sqlite.LymboSQLiteOpenHelper;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackDatasource;
+import de.interoberlin.lymbo.util.Configuration;
+import de.interoberlin.lymbo.util.EProperty;
 
 public class App extends Application {
     // Context
@@ -15,6 +17,9 @@ public class App extends Application {
     // Database
     private static SQLiteDatabase sqliteDatabase;
     private static LymboSQLiteOpenHelper sqliteOpenLymboSQLiteOpenHelper;
+
+    // Properties
+    private static String LYMBO_SAVE_PATH;
 
     private static App instance;
 
@@ -49,7 +54,12 @@ public class App extends Application {
             recreateOnSchemaChange();
         }
 
+        // Properties
+        readProperties();
+    }
 
+    private void readProperties() {
+        LYMBO_SAVE_PATH = Configuration.getProperty(this, EProperty.LYMBO_SAVE_PATH);
     }
 
     @Override
