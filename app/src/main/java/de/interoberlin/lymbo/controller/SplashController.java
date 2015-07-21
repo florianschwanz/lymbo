@@ -13,9 +13,6 @@ public class SplashController {
 
     private List<String> messages = new ArrayList<>();
 
-    private static float offsetX = 0F;
-    private static float offsetY = 0F;
-
     private static SplashController instance;
 
     // --------------------
@@ -52,21 +49,4 @@ public class SplashController {
     public List<String> getMessages() {
         return this.messages;
     }
-
-    public float getOffsetX() {
-        return offsetX;
-    }
-
-    public void setOffsetX(float offsetX) {
-        SplashController.offsetX = offsetX;
-    }
-
-    public float getOffsetY() {
-        return offsetY;
-    }
-
-    public void setOffsetY(float offsetY) {
-        SplashController.offsetY = offsetY;
-    }
-
 }
