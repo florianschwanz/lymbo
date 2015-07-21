@@ -82,5 +82,10 @@
     <string name="report_error_question">Willst du die Fehlermeldung an den Entwicklern weiterleiten? Das hilft bei der Lösung des Problems.</string>
     <string name="lymbo_error_log">Lymbo Error Log</string>
     <string name="describe_the_error">Beschreibe den Fehler</string>
+    <string name="give_feedback_question">Feedback ist für uns wichtig, um diese App stetig weiterzuentwickeln. Schickt uns gern Anregungen, Kritik und Wünsche.</string>
+    <string name="feedback">Feedback</string>
+    <string name="thanks">Danke!</string>
+    <string name="write_your_comment_here">Schreib deinen Kommentar hier hin</string>
+    <string name="send_mail">Nachricht senden</string>
 
 </resources>

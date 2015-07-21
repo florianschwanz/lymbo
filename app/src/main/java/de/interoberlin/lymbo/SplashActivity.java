@@ -1,12 +1,11 @@
 package de.interoberlin.lymbo;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
@@ -20,7 +19,7 @@ import java.util.Collections;
 
 import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.controller.SplashController;
-import de.interoberlin.lymbo.controller.accelerometer.Simulation;
+import de.interoberlin.lymbo.controller.accelerometer.Accelerator;
 import de.interoberlin.lymbo.view.activities.LymbosActivity;
 import de.interoberlin.sauvignon.lib.controller.loader.SvgLoader;
 import de.interoberlin.sauvignon.lib.model.svg.SVG;
@@ -30,22 +29,21 @@ import de.interoberlin.sauvignon.lib.model.svg.transform.transform.SVGTransformT
 import de.interoberlin.sauvignon.lib.model.util.SVGPaint;
 import de.interoberlin.sauvignon.lib.view.SVGPanel;
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends Activity implements Accelerator.OnTiltListener {
+    public static Activity activity;
+
     // Controllers
     SplashController splashController;
     LymbosController lymbosController;
-
-    private static Context context;
-    private static Activity activity;
 
     // Views
     private static LinearLayout llSVG;
     private static LinearLayout llLogo;
     private static TextView tvMessage;
 
-    private static SensorManager sensorManager;
-    private WindowManager windowManager;
-    private static Display display;
+    // Accelerometer
+    private SensorManager sensorManager;
+    private Sensor accelerator;
 
     private static SVG svg;
     private static SVGPanel panel;
@@ -58,14 +56,12 @@ public class SplashActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = this;
+
         splashController = SplashController.getInstance(this);
         lymbosController = LymbosController.getInstance(this);
 
         setContentView(R.layout.activity_splash);
-
-        // Get activity and context
-        activity = this;
-        context = getApplicationContext();
 
         // Load layout
         llSVG = (LinearLayout) findViewById(R.id.llSVG);
@@ -74,11 +70,10 @@ public class SplashActivity extends Activity {
 
         // Get instances of managers
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        display = windowManager.getDefaultDisplay();
+        accelerator = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        svg = SvgLoader.getSVGFromAsset(context, "lymbo.svg");
-        panel = new SVGPanel(activity);
+        svg = SvgLoader.getSVGFromAsset(this, "lymbo.svg");
+        panel = new SVGPanel(this);
         panel.setSVG(svg);
         panel.setBackgroundColor(new SVGPaint(255, 208, 227, 153));
         panel.setOnClickListener(new View.OnClickListener() {
@@ -92,15 +87,12 @@ public class SplashActivity extends Activity {
             }
         });
 
-        ivLogo = new ImageView(activity);
+        ivLogo = new ImageView(this);
         ivLogo.setImageDrawable(loadFromAssets("lymbo.png"));
 
         // Add views
         llSVG.addView(panel, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         llLogo.addView(ivLogo, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-
-        // Initialize UI
-        uiInit();
 
         // Initial message
         tvMessage.setText(R.string.search_lymbo_files);
@@ -122,7 +114,7 @@ public class SplashActivity extends Activity {
                     }
                 }
 
-                showMessage(context.getResources().getString(R.string.splash_found_1) + " " + lymbosController.getLymbos().size() + " " + context.getResources().getString(R.string.splash_found_2));
+                showMessage(getResources().getString(R.string.splash_found_1) + " " + lymbosController.getLymbos().size() + " " + getResources().getString(R.string.splash_found_2));
 
                 try {
                     sleep(1000);
@@ -134,21 +126,24 @@ public class SplashActivity extends Activity {
             }
         };
         timer.start();
+
+        Accelerator.getInstance().setDisplay(((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay());
     }
 
     public void onResume() {
         super.onResume();
         panel.resume();
 
-        Simulation.getInstance(activity).start();
+        Accelerator.getInstance().setOnTiltListener(this);
+        sensorManager.registerListener(Accelerator.getInstance(), accelerator, SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
     protected void onPause() {
+        sensorManager.unregisterListener(Accelerator.getInstance());
+
         super.onPause();
         panel.pause();
-
-        Simulation.getInstance(activity).stop();
     }
 
     @Override
@@ -170,11 +165,6 @@ public class SplashActivity extends Activity {
         }
     }
 
-    public void uiInit() {
-        splashController.setOffsetX(0.0F);
-        splashController.setOffsetY(-7.0F);
-    }
-
     public static void showMessage(final int message) {
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -193,15 +183,20 @@ public class SplashActivity extends Activity {
         });
     }
 
-    public static void uiUpdate() {
+    // --------------------
+    // Methods - Callbacks
+    // --------------------
+
+    @Override
+    public void onTilt(final float tiltX, final float tiltY) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 synchronized (svg) {
                     for (AGeometric e : svg.getAllSubElements()) {
                         if (e instanceof SVGRect) {
-                            float x = Simulation.getRawX() * (e.getzIndex() - svg.getMaxZindex() / 2) * -1.2F;
-                            float y = Simulation.getRawY() * (e.getzIndex() - svg.getMaxZindex() / 2) * -1.2F;
+                            float x = tiltX * (e.getzIndex() - svg.getMaxZindex() / 2) * -1.2F;
+                            float y = tiltY * (e.getzIndex() - svg.getMaxZindex() / 2) * -1.2F;
 
                             e.getAnimationSets().clear();
                             e.setAnimationTransform(new SVGTransformTranslate(x, y));
@@ -212,17 +207,5 @@ public class SplashActivity extends Activity {
         });
 
         t.start();
-    }
-
-    // --------------------
-    // Getters / Setters
-    // --------------------
-
-    public Display getDisplay() {
-        return display;
-    }
-
-    public SensorManager getSensorManager() {
-        return sensorManager;
     }
 }
