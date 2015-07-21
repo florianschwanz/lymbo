@@ -29,7 +29,7 @@ import de.interoberlin.sauvignon.lib.model.svg.transform.transform.SVGTransformT
 import de.interoberlin.sauvignon.lib.model.util.SVGPaint;
 import de.interoberlin.sauvignon.lib.view.SVGPanel;
 
-public class SplashActivity extends Activity implements Accelerator.OnTiltListener, Accelerator.OnShakeListener {
+public class SplashActivity extends Activity implements Accelerator.OnTiltListener {
     public static Activity activity;
 
     // Controllers
@@ -135,7 +135,6 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         panel.resume();
 
         Accelerator.getInstance().setOnTiltListener(this);
-        Accelerator.getInstance().setOnShakeListener(this);
         sensorManager.registerListener(Accelerator.getInstance(), accelerator, SensorManager.SENSOR_DELAY_UI);
     }
 
@@ -208,9 +207,5 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         });
 
         t.start();
-    }
-
-    @Override
-    public void onShake(int count) {
     }
 }

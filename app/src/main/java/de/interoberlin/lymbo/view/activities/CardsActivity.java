@@ -120,6 +120,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     public void onResume() {
+        super.onResume();
+
         try {
             super.onResume();
             lymbo = cardsController.getLymbo();
