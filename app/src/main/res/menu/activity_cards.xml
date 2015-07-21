@@ -18,5 +18,15 @@
         app:showAsAction="ifRoom"
         android:orderInCategory="400"
         android:title="@string/menu_labels" />
+    <item
+        android:id="@+id/menu_log"
+        android:orderInCategory="500"
+        android:title="@string/menu_log">
+    </item>
+    <item
+        android:id="@+id/menu_about"
+        android:orderInCategory="600"
+        android:title="@string/menu_about">
+    </item>
 
 </menu>

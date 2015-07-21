@@ -39,6 +39,8 @@ import de.interoberlin.lymbo.view.dialogfragments.EditCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.ReportErrorDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
+import de.interoberlin.mate.lib.view.AboutActivity;
+import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
@@ -252,6 +254,19 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             case R.id.menu_label: {
                 ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
                 new SelectTagsDialogFragment().show(getFragmentManager(), "okay");
+                break;
+            }
+            case R.id.menu_log: {
+                Intent i = new Intent(CardsActivity.this, LogActivity.class);
+                startActivity(i);
+                break;
+            }
+            case R.id.menu_about: {
+                Intent i = new Intent(CardsActivity.this, AboutActivity.class);
+                Bundle b = new Bundle();
+                b.putString("flavor", "interoberlin");
+                i.putExtras(b);
+                startActivity(i);
                 break;
             }
         }
