@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
@@ -93,7 +94,7 @@ public class LymbosController {
         lymbo.setTitle(title);
         lymbo.setSubtitle(subtitle);
         lymbo.setAuthor(author);
-        lymbo.setPath(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + title.trim().replaceAll(" ", "_").toLowerCase() + LYMBO_FILE_EXTENSION);
+        lymbo.setPath(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + title.trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION);
 
         return lymbo;
     }
@@ -131,7 +132,7 @@ public class LymbosController {
             lymbo.setSubtitle(subtitle);
             lymbo.setAuthor(author);
 
-            String path = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + lymbo.getTitle().trim().replaceAll(" ", "_").toLowerCase() + LYMBO_FILE_EXTENSION;
+            String path = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + lymbo.getTitle().trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION;
 
             if (lymbo.getPath().equals(path)) {
                 save(lymbo);

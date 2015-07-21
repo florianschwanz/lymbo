@@ -78,7 +78,6 @@
     <string name="add_card_to_favorites">Karte zu Favoriten hinzugefügt</string>
     <string name="remove_card_from_favorites">Karte aus Favoriten entfernt</string>
     <string name="display_favorites_only">Nur Favoriten anzeigen</string>
-    <string name="error_occured">Es ist ein Fehler aufgetreten :(</string>
     <string name="report_error_question">Willst du die Fehlermeldung an den Entwicklern weiterleiten? Das hilft bei der Lösung des Problems.</string>
     <string name="lymbo_error_log">Lymbo Error Log</string>
     <string name="describe_the_error">Beschreibe den Fehler</string>
@@ -87,5 +86,6 @@
     <string name="thanks">Danke!</string>
     <string name="write_your_comment_here">Schreib deinen Kommentar hier hin</string>
     <string name="send_mail">Nachricht senden</string>
+    <string name="error_occurred">Es is ein Fehler aufgetreten :(</string>
 
 </resources>

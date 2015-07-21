@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
@@ -86,7 +87,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
     private View getCardView(final int position, final Card card, final ViewGroup parent) {
         if (card != null) {
-            if ((!cardsController.isDisplayOnlyFavorites() || (cardsController.isDisplayOnlyFavorites() && cardsController.isFavorite(c, card.getId()))) && card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
+            if ((!cardsController.isDisplayOnlyFavorites() || (cardsController.isFavorite(c, card.getId()))) && card.matchesChapter(cardsController.getLymbo().getChapters()) && card.matchesTag(cardsController.getLymbo().getTags())) {
                 // Layout inflater
                 LayoutInflater vi;
                 vi = LayoutInflater.from(getContext());
@@ -106,7 +107,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
 
                 final LinearLayout llNoteBar = (LinearLayout) flCard.findViewById(R.id.llNoteBar);
                 final TextView tvNote = (TextView) flCard.findViewById(R.id.tvNote);
-                final ImageView ivEditNote = (ImageView) flCard.findViewById(R.id.ivEditNote);
 
                 // Load views : reveal
                 final ImageView ivDiscard = (ImageView) flCard.findViewById(R.id.ivDiscard);
@@ -338,7 +338,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
                 });
 
                 // Action : edit note
-                ivEditNote.setOnClickListener(new View.OnClickListener() {
+                tvNote.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         EditNoteDialogFragment editNoteDialogFragment = new EditNoteDialogFragment();
@@ -622,13 +622,13 @@ public class CardsListAdapter extends ArrayAdapter<Card> {
         // Handle quiz card
         if (current != null && current.contains(EComponent.CHOICE) && next != null && next.contains(EComponent.RESULT)) {
             // Default result : CORRECT
-            ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(c.getResources().getString(R.string.correct).toUpperCase());
+            ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(c.getResources().getString(R.string.correct).toUpperCase(Locale.getDefault()));
             ((ResultComponent) next.getFirst(EComponent.RESULT)).setColor(c.getResources().getColor(R.color.correct));
 
             for (Answer a : ((ChoiceComponent) current.getFirst(EComponent.CHOICE)).getAnswers()) {
                 if (a.isCorrect() != a.isSelected()) {
                     // At least on answer is wrong : WRONG
-                    ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(c.getResources().getString(R.string.wrong).toUpperCase());
+                    ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(c.getResources().getString(R.string.wrong).toUpperCase(Locale.getDefault()));
                     ((ResultComponent) next.getFirst(EComponent.RESULT)).setColor(c.getResources().getColor(R.color.wrong));
                     break;
                 }

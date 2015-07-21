@@ -4,7 +4,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.FloatMath;
 import android.view.Display;
 import android.view.Surface;
 
@@ -82,7 +81,7 @@ public class Accelerator extends Observable implements SensorEventListener {
         float gY = sensorY / SensorManager.GRAVITY_EARTH;
         float gZ = sensorZ / SensorManager.GRAVITY_EARTH;
 
-        float gForce = FloatMath.sqrt(gX * gX + gY * gY + gZ * gZ);
+        double gForce = Math.sqrt(Math.pow(gX, 2) + Math.pow(gY, 2) + Math.pow(gZ, 2));
 
         if (gForce > SHAKE_THRESHOLD_GRAVITY) {
             final long now = System.currentTimeMillis();

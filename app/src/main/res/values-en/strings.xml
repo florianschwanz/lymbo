@@ -78,7 +78,6 @@
     <string name="add_card_to_favorites">Added card to favorites</string>
     <string name="remove_card_from_favorites">Removed card from favorites</string>
     <string name="display_favorites_only">Display favorites only</string>
-    <string name="error_occured">An error occured :(</string>
     <string name="report_error_question">Do you want to send the error log to the developer? This helps a lot fixing this issue.</string>
     <string name="lymbo_error_log">Lymbo Error Log</string>
     <string name="describe_the_error">Describe the error</string>
@@ -87,5 +86,6 @@
     <string name="thanks">Thanks!</string>
     <string name="write_your_comment_here">Write your comment here</string>
     <string name="send_mail">Send mail</string>
+    <string name="error_occurred">An error occurred :(</string>
 
 </resources>
