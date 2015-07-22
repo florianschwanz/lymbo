@@ -42,7 +42,26 @@
         <TableLayout
             android:id="@+id/tblTextFront"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start">
+
+                    <ImageView
+                        android:id="@+id/ivAddTextFront"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_action_new" />
+                </LinearLayout>
+            </TableRow>
+        </TableLayout>
+
 
         <!-- Back -->
 
@@ -71,7 +90,25 @@
         <TableLayout
             android:id="@+id/tblTextBack"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start">
+
+                    <ImageView
+                        android:id="@+id/ivAddTextBack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_action_new" />
+                </LinearLayout>
+            </TableRow>
+        </TableLayout>
 
         <!-- Expand -->
 
@@ -89,23 +126,41 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/desc_image"
-                android:paddingStart="@dimen/stack_bar_padding"
                 android:paddingEnd="@dimen/stack_bar_padding"
+                android:paddingStart="@dimen/stack_bar_padding"
                 android:src="@drawable/ic_action_labels_dark" />
 
             <TextView
                 android:id="@+id/tvExpandTags"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.9"
                 android:text="@string/add_tags"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textAlignment="textStart" />
         </LinearLayout>
 
         <TableLayout
             android:id="@+id/tblTags"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start">
+
+                    <ImageView
+                        android:id="@+id/ivAddTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_action_new" />
+                </LinearLayout>
+            </TableRow>
+        </TableLayout>
     </LinearLayout>
 </ScrollView>
