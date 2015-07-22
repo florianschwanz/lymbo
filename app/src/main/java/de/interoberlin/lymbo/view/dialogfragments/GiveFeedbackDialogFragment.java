@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
 
 import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.controller.App;
 
 public class GiveFeedbackDialogFragment extends DialogFragment {
     private OnGiveFeedbackListener ocListener;
@@ -30,10 +30,10 @@ public class GiveFeedbackDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Context c = getActivity();
+        App.getInstance().setGiveFeedbackDialogActive(true);
 
         // Load layout
-        final View v = View.inflate(c, R.layout.dialogfragment_give_feedback, null);
+        final View v = View.inflate(getActivity(), R.layout.dialogfragment_give_feedback, null);
 
         // Load dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -46,6 +46,7 @@ public class GiveFeedbackDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ocListener.onGiveFeedbackDialogDialogComplete();
+                App.getInstance().setGiveFeedbackDialogActive(false);
                 dismiss();
             }
         });
@@ -53,6 +54,7 @@ public class GiveFeedbackDialogFragment extends DialogFragment {
         builder.setNegativeButton(R.string.cancel, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                App.getInstance().setGiveFeedbackDialogActive(false);
                 dismiss();
             }
         });
@@ -74,7 +76,7 @@ public class GiveFeedbackDialogFragment extends DialogFragment {
     // Callback interfaces
     // --------------------
 
-    public interface OnGiveFeedbackListener{
+    public interface OnGiveFeedbackListener {
         void onGiveFeedbackDialogDialogComplete();
     }
 

@@ -4,14 +4,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -43,39 +41,37 @@ public class SelectTagsDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         cardsController = CardsController.getInstance(getActivity());
 
-        final Context c = getActivity();
-
         // Load layout
-        final View v = View.inflate(c, R.layout.dialogfragment_select_tags, null);
-        final ImageView ivFavorite = (ImageView) v.findViewById(R.id.ivFavorite);
+        final View v = View.inflate(getActivity(), R.layout.dialogfragment_select_tags, null);
+        final TextView tvFavorite = (TextView) v.findViewById(R.id.tvFavorite);
         final TableLayout tblChapters = (TableLayout) v.findViewById(R.id.tblChapters);
         final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
         final TextView tvAll = (TextView) v.findViewById(R.id.tvAll);
         final TextView tvNone = (TextView) v.findViewById(R.id.tvNone);
 
         if (cardsController.isDisplayOnlyFavorites())
-            ivFavorite.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_action_important));
+            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, getActivity().getResources().getDrawable(R.drawable.ic_action_important), null);
         else
-            ivFavorite.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_action_not_important));
+            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_action_not_important), null);
 
-        ivFavorite.setOnClickListener(new View.OnClickListener() {
+        tvFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (cardsController.isDisplayOnlyFavorites()) {
                     cardsController.setDisplayOnlyFavorites(false);
-                    ivFavorite.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_action_not_important));
+                    tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, getActivity().getResources().getDrawable(R.drawable.ic_action_not_important), null);
                 } else {
                     cardsController.setDisplayOnlyFavorites(true);
-                    ivFavorite.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_action_important));
+                    tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, getActivity().getResources().getDrawable(R.drawable.ic_action_important), null);
                 }
             }
         });
 
         for (final Tag t : cardsController.getLymbo().getChapters()) {
-            final TableRow tr = new TableRow(c);
+            final TableRow tr = new TableRow(getActivity());
 
-            final CheckBox cb = new CheckBox(c);
-            final RobotoTextView tvText = new RobotoTextView(c);
+            final CheckBox cb = new CheckBox(getActivity());
+            final RobotoTextView tvText = new RobotoTextView(getActivity());
 
             tr.addView(cb);
             tr.addView(tvText);
@@ -100,10 +96,10 @@ public class SelectTagsDialogFragment extends DialogFragment {
         }
 
         for (final Tag t : cardsController.getLymbo().getTags()) {
-            final TableRow tr = new TableRow(c);
+            final TableRow tr = new TableRow(getActivity());
 
-            final CheckBox cb = new CheckBox(c);
-            final RobotoTextView tvText = new RobotoTextView(c);
+            final CheckBox cb = new CheckBox(getActivity());
+            final RobotoTextView tvText = new RobotoTextView(getActivity());
 
             tr.addView(cb);
             tr.addView(tvText);

@@ -18,6 +18,8 @@ public class App extends Application {
     private static SQLiteDatabase sqliteDatabase;
     private static LymboSQLiteOpenHelper sqliteOpenLymboSQLiteOpenHelper;
 
+    private boolean giveFeedbackDialogActive = false;
+
     // Properties
     private static String LYMBO_SAVE_PATH;
 
@@ -109,5 +111,17 @@ public class App extends Application {
 
     public static LymboSQLiteOpenHelper getSqliteOpenLymboSQLiteOpenHelper() {
         return sqliteOpenLymboSQLiteOpenHelper;
+    }
+
+    // --------------------
+    // Getters / Setters
+    // --------------------
+
+    public boolean isGiveFeedbackDialogActive() {
+        return giveFeedbackDialogActive;
+    }
+
+    public void setGiveFeedbackDialogActive(boolean giveFeedbackDialogActive) {
+        this.giveFeedbackDialogActive = giveFeedbackDialogActive;
     }
 }

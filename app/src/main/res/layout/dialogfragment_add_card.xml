@@ -62,7 +62,6 @@
             </TableRow>
         </TableLayout>
 
-
         <!-- Back -->
 
         <LinearLayout
@@ -132,12 +131,12 @@
 
             <TextView
                 android:id="@+id/tvExpandTags"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.9"
                 android:text="@string/add_tags"
-                android:textAlignment="textStart" />
+                android:textAlignment="textStart"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <TableLayout

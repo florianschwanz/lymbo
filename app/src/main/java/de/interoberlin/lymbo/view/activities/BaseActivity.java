@@ -25,6 +25,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
 import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.controller.App;
 import de.interoberlin.lymbo.controller.accelerometer.Accelerator;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EGradleProperty;
@@ -81,8 +82,10 @@ public abstract class BaseActivity extends ActionBarActivity implements Accelera
 
     @Override
     public void onShake(int count) {
-        ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-        new GiveFeedbackDialogFragment().show(getFragmentManager(), "okay");
+        if (!App.getInstance().isGiveFeedbackDialogActive()) {
+            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+            new GiveFeedbackDialogFragment().show(getFragmentManager(), "okay");
+        }
     }
 
     @Override
