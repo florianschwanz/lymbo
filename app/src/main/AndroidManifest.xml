@@ -39,7 +39,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.activities.CardsActivity"
-            android:label="@string/cards"
+            android:label=""
             android:parentActivityName=".view.activities.LymbosActivity"
             android:screenOrientation="portrait" />
         <activity

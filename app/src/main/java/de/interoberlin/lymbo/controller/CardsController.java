@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
@@ -64,8 +65,8 @@ public class CardsController {
         lymbosController = LymbosController.getInstance(activity);
 
         cards = new ArrayList<>();
-        cardsDismissed = new ArrayList<>();
-        cardsStashed = new ArrayList<>();
+        cardsDismissed = new CopyOnWriteArrayList<>();
+        cardsStashed = new CopyOnWriteArrayList<>();
         displayOnlyFavorites = false;
 
         if (lymbo != null) {
@@ -81,10 +82,6 @@ public class CardsController {
                     cardsStashed.add(c);
                 }
             }
-
-            addNullElementToCards();
-            addNullElementToCardsDismissed();
-            addNullElementToCardsStashed();
 
             datasource.close();
         }
@@ -170,7 +167,6 @@ public class CardsController {
     public void addCard(Card card) {
         lymbo.getCards().add(card);
         cards.add(card);
-        addNullElementToCards();
         save();
     }
 
@@ -257,10 +253,8 @@ public class CardsController {
         card.setRestoring(true);
 
         getCards().remove(card);
-        getCardsStashed().add(pos < getCardsStashed().size() ? pos : 0, card);
+        getCardsStashed().add(pos <= getCardsStashed().size() ? pos-1 : 0, card);
         changeCardStateStashed(uuid);
-
-        addNullElementToCards();
     }
 
     /**
@@ -287,11 +281,9 @@ public class CardsController {
         Card card = getCardById(uuid);
         card.setRestoring(true);
 
-        getCards().add(pos < getCards().size() ? pos : 0, card);
+        getCards().add(pos <= getCards().size() ? pos-1 : 0, card);
         getCardsStashed().remove(card);
         changeCardStateNormal(uuid);
-
-        addNullElementToCards();
     }
 
     /**
@@ -334,8 +326,6 @@ public class CardsController {
         getCards().add(pos < getCards().size() ? pos : 0, card);
         getCardsDismissed().remove(card);
         changeCardStateNormal(uuid);
-
-        addNullElementToCards();
     }
 
     private void changeCardStateNormal(String uuid) {
@@ -361,7 +351,6 @@ public class CardsController {
 
     public void shuffle() {
         Collections.shuffle(cards);
-        addNullElementToCards();
     }
 
     /**
@@ -391,11 +380,6 @@ public class CardsController {
 
         getCards().remove(card);
         getCards().add(pos < getCards().size() ? pos : 0, card);
-        addNullElementToCards();
-    }
-
-    public void selectLabel() {
-        addNullElementToCards();
     }
 
     /**
@@ -458,43 +442,6 @@ public class CardsController {
         datasource.close();
     }
 
-    /**
-     * This is necessary to display the first element below the toolbar
-     */
-    public void addNullElementToCards() {
-        addNullElement(cards);
-    }
-
-    /**
-     * This is necessary to display the first element below the toolbar
-     */
-    public void addNullElementToCardsDismissed() {
-        addNullElement(cardsDismissed);
-    }
-
-    /**
-     * This is necessary to display the first element below the toolbar
-     */
-    public void addNullElementToCardsStashed() {
-        addNullElement(cardsStashed);
-    }
-
-    /**
-     * This is necessary to display the first element below the toolbar
-     */
-    private void addNullElement(List<Card> list) {
-        if (list != null) {
-            list.removeAll(Collections.singleton(null));
-
-            if (!list.isEmpty()) {
-                // Add leading null element
-                if (list.get(0) != null) {
-                    list.add(0, null);
-                }
-            }
-        }
-    }
-
     // --------------------
     // Getters / Setters
     // --------------------
@@ -520,17 +467,14 @@ public class CardsController {
     }
 
     public List<Card> getCards() {
-        addNullElementToCards();
         return cards;
     }
 
     public List<Card> getCardsDismissed() {
-        addNullElementToCardsDismissed();
         return cardsDismissed;
     }
 
     public List<Card> getCardsStashed() {
-        addNullElementToCardsStashed();
         return cardsStashed;
     }
 

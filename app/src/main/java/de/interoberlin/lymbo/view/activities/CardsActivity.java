@@ -55,16 +55,11 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private LinearLayout toolbarWrapper;
     private TextView toolbarTextView;
     private RelativeLayout rl;
-
     private LinearLayout phNoCards;
 
     // Model
     private Lymbo lymbo;
     private CardsListAdapter cardsAdapter;
-
-    // Properties
-    private final String BUNDLE_LYMBO_PATH = "lymbo_path";
-    private final String BUNDLE_ASSET = "asset";
 
     private String recentCardId = "";
     private int recentCardPos = -1;
@@ -76,9 +71,10 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private static final int EVENT_GENERATED_IDS = 3;
 
     // Properties
+    private final String BUNDLE_LYMBO_PATH = "lymbo_path";
+    private final String BUNDLE_ASSET = "asset";
     private static int REFRESH_DELAY;
     private static int VIBRATION_DURATION;
-    private static String LYMBO_SAVE_PATH;
 
     // --------------------
     // Methods - Lifecycle
@@ -122,8 +118,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     public void onResume() {
-        super.onResume();
-
         try {
             super.onResume();
             lymbo = cardsController.getLymbo();
@@ -151,15 +145,15 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             slv.setSwipeListViewListener(new BaseSwipeListViewListener() {
                 @Override
                 public void onOpened(int position, boolean toRight) {
-                    if (!cardsController.getCards().isEmpty())
-                        cardsController.getCards().get(position).setRevealed(true);
+                    if (!cardsAdapter.getFilteredItems().isEmpty())
+                        cardsAdapter.getFilteredItems().get(position).setRevealed(true);
                     srl.setEnabled(true);
                 }
 
                 @Override
                 public void onClosed(int position, boolean fromRight) {
-                    if (!cardsController.getCards().isEmpty())
-                        cardsController.getCards().get(position).setRevealed(false);
+                    if (!cardsAdapter.getFilteredItems().isEmpty())
+                        cardsAdapter.getFilteredItems().get(position).setRevealed(false);
                     srl.setEnabled(true);
                 }
 
@@ -249,8 +243,13 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             }
             case R.id.menu_shuffle: {
                 ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+                /*
                 cardsController.shuffle();
+                cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
+                cardsAdapter.filter();
                 cardsAdapter.notifyDataSetChanged();
+                slv.invalidateViews();
+                */
                 break;
             }
             case R.id.menu_label: {
@@ -285,9 +284,13 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                 cardsController.reset();
 
+                // Update data
+                cardsAdapter.setItems(cardsController.getCards());
+                cardsAdapter.filter();
                 cardsAdapter.notifyDataSetChanged();
-                slv.invalidateViews();
 
+                // Update view
+                slv.invalidateViews();
                 checkEmptyStack();
                 updateCardCount();
             }
@@ -315,6 +318,108 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         savedInstanceState.putBoolean(BUNDLE_ASSET, cardsController.getLymbo().isAsset());
 
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onAddSimpleCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+        try {
+            Card card = new Card(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+
+            // Update data
+            cardsController.addCard(card);
+            cardsAdapter.filter();
+            cardsAdapter.notifyDataSetChanged();
+
+            // Update view
+            slv.invalidateViews();
+            checkEmptyStack();
+            updateCardCount();
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    @Override
+    public void onEditSimpleCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+        // Update data
+        cardsController.updateCard(uuid, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+        cardsAdapter.filter();
+        cardsAdapter.notifyDataSetChanged();
+
+        // Update view
+        slv.invalidateViews();
+        checkEmptyStack();
+        updateCardCount();
+    }
+
+    @Override
+    public void onHintDialogComplete() {
+
+    }
+
+    @Override
+    public void onTagsSelected() {
+        // Update data
+        cardsAdapter.filter();
+        cardsAdapter.notifyDataSetChanged();
+
+        // Update view
+        slv.invalidateViews();
+        checkEmptyStack();
+        updateCardCount();
+    }
+
+    @Override
+    public void onEditNote(String uuid, String note) {
+        // Update data
+        cardsController.setNote(this, uuid, note);
+        cardsAdapter.filter();
+        cardsAdapter.notifyDataSetChanged();
+
+        // Update view
+        slv.invalidateViews();
+        checkEmptyStack();
+        updateCardCount();
+    }
+
+    @Override
+    public void onMessageClick(Parcelable parcelable) {
+        switch (recentEvent) {
+            case EVENT_STASH: {
+                cardsController.restore(recentCardPos, recentCardId);
+                checkEmptyStack();
+                updateCardCount();
+                break;
+            }
+            case EVENT_DISCARD: {
+                cardsController.retain(recentCardPos, recentCardId);
+                checkEmptyStack();
+                updateCardCount();
+                break;
+            }
+            case EVENT_PUT_TO_END: {
+                cardsController.putLastItemToPos(recentCardPos);
+                break;
+            }
+            case EVENT_GENERATED_IDS: {
+                lymbo.setContainsGeneratedIds(false);
+                break;
+            }
+        }
+
+        // Update data
+        cardsAdapter.filter();
+        cardsAdapter.notifyDataSetChanged();
+
+        // Update view
+        slv.invalidateViews();
+        checkEmptyStack();
+        updateCardCount();
+    }
+
+    @Override
+    public void onReportDialogDialogComplete() {
+        LoggingUtil.sendErrorLog(this, this);
     }
 
     // --------------------
@@ -418,99 +523,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
         return first;
     }
-
-    // --------------------
-    // Methods - Callbacks
-    // --------------------
-
-    @Override
-    public void onAddSimpleCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
-        try {
-            Card card = new Card(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
-
-            cardsController.addCard(card);
-            cardsAdapter.notifyDataSetChanged();
-            checkEmptyStack();
-
-            slv.invalidateViews();
-
-            checkEmptyStack();
-            updateCardCount();
-        } catch (Exception e) {
-            handleException(e);
-        }
-    }
-
-    @Override
-    public void onEditSimpleCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
-        cardsController.updateCard(uuid, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
-        cardsAdapter.notifyDataSetChanged();
-        checkEmptyStack();
-
-        slv.invalidateViews();
-    }
-
-    @Override
-    public void onHintDialogComplete() {
-
-    }
-
-    @Override
-    public void onTagsSelected() {
-        cardsController.selectLabel();
-
-        cardsAdapter.notifyDataSetChanged();
-        slv.invalidateViews();
-
-        checkEmptyStack();
-        updateCardCount();
-    }
-
-    @Override
-    public void onEditNote(String uuid, String note) {
-        cardsController.setNote(this, uuid, note);
-
-        cardsAdapter.notifyDataSetChanged();
-        slv.invalidateViews();
-    }
-
-    @Override
-    public void onMessageClick(Parcelable parcelable) {
-        switch (recentEvent) {
-            case EVENT_STASH: {
-                cardsController.restore(recentCardPos, recentCardId);
-                checkEmptyStack();
-                updateCardCount();
-                break;
-            }
-            case EVENT_DISCARD: {
-                cardsController.retain(recentCardPos, recentCardId);
-                checkEmptyStack();
-                updateCardCount();
-                break;
-            }
-            case EVENT_PUT_TO_END: {
-                cardsController.putLastItemToPos(recentCardPos);
-                break;
-            }
-            case EVENT_GENERATED_IDS: {
-                lymbo.setContainsGeneratedIds(false);
-                break;
-            }
-        }
-
-        cardsAdapter.notifyDataSetChanged();
-        slv.invalidateViews();
-    }
-
-    @Override
-    public void onReportDialogDialogComplete() {
-        LoggingUtil.sendErrorLog(this, this);
-    }
-
-    // --------------------
-    // Methods
-    // --------------------
 
     private void checkEmptyStack() {
         phNoCards.setVisibility(cardsController.getCards().isEmpty() ? View.VISIBLE : View.INVISIBLE);

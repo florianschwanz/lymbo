@@ -8,11 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
@@ -22,7 +25,6 @@ import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.util.ViewUtil;
-import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.activities.CardsStashActivity;
 
 public class CardsStashListAdapter extends ArrayAdapter<Card> {
@@ -32,6 +34,12 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     // Controllers
     CardsController cardsController;
 
+    private List<Card> filteredItems = new ArrayList<>();
+    private List<Card> originalItems = new ArrayList<>();
+
+    private CardListFilter cardListFilter;
+    private final Object lock = new Object();
+
     // --------------------
     // Constructors
     // --------------------
@@ -39,14 +47,29 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     public CardsStashListAdapter(Context context, Activity activity, int resource, List<Card> items) {
         super(context, resource, items);
         cardsController = CardsController.getInstance(activity);
+        this.filteredItems = items;
+        this.originalItems = items;
 
         this.c = context;
         this.a = activity;
+
+        filter();
     }
 
     // --------------------
     // Methods
     // --------------------
+
+    @Override
+    public int getCount() {
+        return filteredItems != null ? filteredItems.size() : 0;
+    }
+
+    @Override
+    public Card getItem(int position) {
+        return filteredItems.get(position);
+    }
+
 
     @Override
     public View getView(final int position, View v, ViewGroup parent) {
@@ -114,9 +137,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
                         @Override
                         public void onAnimationEnd(Animation animation) {
-                            cardsController.restore(card.getId());
-                            ((CardsStashActivity) a).restore(position, card.getId());
-                            notifyDataSetChanged();
+                            restore(position, card, flCard);
                         }
 
                         @Override
@@ -162,16 +183,115 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     }
 
     /**
-     * Stashes card
+     * Restores a card
      *
-     * @param uuid   position of item
-     * @param flCard
+     * @param pos    position of item
+     * @param card   card
+     * @param flCard frame layout representing the card
      */
-    private void stash(int pos, String uuid, FrameLayout flCard) {
+    private void restore(int pos, Card card, FrameLayout flCard) {
         ViewUtil.collapse(c, flCard);
 
-        cardsController.stash(uuid);
-        ((CardsActivity) a).stash(pos, uuid);
+        cardsController.retain(card.getId());
+        ((CardsStashActivity) a).restore(pos, card.getId());
+
+        filter();
         notifyDataSetChanged();
+    }
+
+
+    public void filter() {
+        getFilter().filter("");
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (cardListFilter == null) {
+            cardListFilter = new CardListFilter();
+        }
+        return cardListFilter;
+    }
+
+    /**
+     * Determines if a card shall be displayed
+     *
+     * @param card card
+     * @return
+     */
+    protected boolean filterCard(Card card) {
+        return true;
+    }
+
+    // --------------------
+    // Getters / Setters
+    // --------------------
+
+    public List<Card> getFilteredItems() {
+        return filteredItems;
+    }
+
+    public void setItems(List<Card> items) {
+        this.filteredItems = items;
+        this.originalItems = items;
+    }
+
+    // --------------------
+    // Inner classes
+    // --------------------
+
+    public class CardListFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence prefix) {
+            FilterResults results = new FilterResults();
+
+            // Copy items
+            if (filteredItems == null) {
+                synchronized (lock) {
+                    originalItems = new ArrayList<>(filteredItems);
+                }
+            }
+
+            ArrayList<Card> values;
+            synchronized (lock) {
+                values = new ArrayList<>(originalItems);
+            }
+
+            final int count = values.size();
+            final ArrayList<Card> newValues = new ArrayList<>();
+
+            for (int i = 0; i < count; i++) {
+                final Card value = values.get(i);
+                if (filterCard(value)) {
+                    newValues.add(value);
+                }
+            }
+
+            results.values = newValues;
+            results.count = newValues.size();
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredItems = (List<Card>) results.values;
+
+            if (filteredItems != null && !filteredItems.isEmpty()) {
+                filteredItems.removeAll(Collections.singleton(null));
+
+                if (!filteredItems.isEmpty()) {
+                    // Add leading null element
+                    if (filteredItems.get(0) != null) {
+                        filteredItems.add(0, null);
+                    }
+                }
+            }
+
+            if (results.count > 0) {
+                notifyDataSetChanged();
+            } else {
+                notifyDataSetInvalidated();
+            }
+        }
     }
 }

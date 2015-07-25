@@ -48,39 +48,47 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        cardsController = CardsController.getInstance(this);
+        try {
+            super.onCreate(savedInstanceState);
+            cardsController = CardsController.getInstance(this);
 
-        if (cardsController.getLymbo() == null) {
-            finish();
+            if (cardsController.getLymbo() == null) {
+                finish();
+            }
+
+            setActionBarIcon(R.drawable.ic_ab_drawer);
+            setDisplayHomeAsUpEnabled(true);
+
+            REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_CARDS));
+        } catch (Exception e) {
+            handleException(e);
         }
-
-        setActionBarIcon(R.drawable.ic_ab_drawer);
-        setDisplayHomeAsUpEnabled(true);
-
-        REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_CARDS));
     }
 
     public void onResume() {
-        super.onResume();
-        cardsStashAdapter = new CardsStashListAdapter(this, this, R.layout.card_stash, cardsController.getCardsStashed());
+        try {
+            super.onResume();
+            cardsStashAdapter = new CardsStashListAdapter(this, this, R.layout.card_stash, cardsController.getCardsStashed());
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
-        drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
+            drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
+            toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
 
-        srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        srl.setOnRefreshListener(this);
-        srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
+            srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+            srl.setOnRefreshListener(this);
+            srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
 
-        slv = (SwipeListView) findViewById(R.id.slv);
-        slv.setAdapter(cardsStashAdapter);
-        slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
+            slv = (SwipeListView) findViewById(R.id.slv);
+            slv.setAdapter(cardsStashAdapter);
+            slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
 
-        updateSwipeRefreshProgressBarTop(srl);
-        registerHideableHeaderView(toolbarWrapper);
-        enableActionBarAutoHide(slv);
+            updateSwipeRefreshProgressBarTop(srl);
+            registerHideableHeaderView(toolbarWrapper);
+            enableActionBarAutoHide(slv);
+        } catch (Exception e) {
+            handleException(e);
+        }
     }
 
     @Override
