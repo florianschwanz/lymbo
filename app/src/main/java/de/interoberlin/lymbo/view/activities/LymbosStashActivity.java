@@ -85,6 +85,9 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
         updateSwipeRefreshProgressBarTop(srl);
         registerHideableHeaderView(toolbarWrapper);
         enableActionBarAutoHide(slv);
+
+        // Update view
+        updateView();
     }
 
     @Override
@@ -128,29 +131,6 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
     }
 
     // --------------------
-    // Methods
-    // --------------------
-
-    /**
-     * Restores a lymbo
-     *
-     * @param lymbo lymbo to be restored
-     */
-    public void restore(Lymbo lymbo) {
-        slv.invalidateViews();
-
-        recentLymbo = lymbo;
-
-        new SnackBar.Builder(this)
-                .withOnClickListener(this)
-                .withMessageId(R.string.stack_restored)
-                .withActionMessageId(R.string.undo)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
-    }
-
-    // --------------------
     // Methods - Callbacks
     // --------------------
 
@@ -177,8 +157,42 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
         }, REFRESH_DELAY);
     }
 
+    // --------------------
+    // Methods - Actions
+    // --------------------
+
+    /**
+     * Restores a lymbo
+     *
+     * @param lymbo lymbo to be restored
+     */
+    public void restore(Lymbo lymbo) {
+        slv.invalidateViews();
+
+        recentLymbo = lymbo;
+
+        new SnackBar.Builder(this)
+                .withOnClickListener(this)
+                .withMessageId(R.string.stack_restored)
+                .withActionMessageId(R.string.undo)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    // --------------------
+    // Methods
+    // --------------------
+
     @Override
     protected int getLayoutResource() {
-        return R.layout.activity_lymbos_stash;
+        return R.layout.activity_cards;
+    }
+
+    /**
+     * Updates the view
+     */
+    private void updateView() {
+        slv.invalidateViews();
     }
 }

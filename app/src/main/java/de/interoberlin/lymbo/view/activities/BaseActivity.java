@@ -30,6 +30,7 @@ import de.interoberlin.lymbo.controller.accelerometer.Accelerator;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EGradleProperty;
 import de.interoberlin.lymbo.util.EProperty;
+import de.interoberlin.lymbo.util.LoggingUtil;
 import de.interoberlin.lymbo.view.dialogfragments.GiveFeedbackDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.ReportErrorDialogFragment;
 
@@ -39,10 +40,11 @@ public abstract class BaseActivity extends ActionBarActivity implements Accelera
 
     // Accelerometer
     private SensorManager sensorManager;
-    private Sensor accelerator;
-
     // Properties
     private static int VIBRATION_DURATION;
+    private static boolean DEBUG_MODE;
+
+    private Sensor accelerator;
 
     // --------------------
     // Methods - Lifecycle
@@ -64,6 +66,7 @@ public abstract class BaseActivity extends ActionBarActivity implements Accelera
 
         // Properties
         VIBRATION_DURATION = Integer.parseInt(Configuration.getProperty(this, EProperty.VIBRATION_DURATION));
+        DEBUG_MODE = Boolean.parseBoolean(Configuration.getProperty(this, EProperty.DEBUG_MODE));
     }
 
     protected void onResume() {

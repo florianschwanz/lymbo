@@ -15,6 +15,7 @@ import com.github.mrengineer13.snackbar.SnackBar;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
+import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.CardsStashListAdapter;
@@ -34,7 +35,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
     // Model
     private CardsStashListAdapter cardsStashAdapter;
 
-    private String recentCardId = "";
+    private Card recentCard = null;
     private int recentCardPos = -1;
     private int recentEvent = -1;
 
@@ -48,39 +49,53 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        cardsController = CardsController.getInstance(this);
+        try {
+            super.onCreate(savedInstanceState);
+            cardsController = CardsController.getInstance(this);
 
-        if (cardsController.getLymbo() == null) {
-            finish();
+            if (cardsController.getLymbo() == null) {
+                finish();
+            }
+
+            setActionBarIcon(R.drawable.ic_ab_drawer);
+            setDisplayHomeAsUpEnabled(true);
+
+            REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_CARDS));
+        } catch (Exception e) {
+            handleException(e);
         }
-
-        setActionBarIcon(R.drawable.ic_ab_drawer);
-        setDisplayHomeAsUpEnabled(true);
-
-        REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_CARDS));
     }
 
     public void onResume() {
-        super.onResume();
-        cardsStashAdapter = new CardsStashListAdapter(this, this, R.layout.card_stash, cardsController.getCardsStashed());
+        try {
+            super.onResume();
+            cardsStashAdapter = new CardsStashListAdapter(this, this, R.layout.card_stash, cardsController.getCardsStashed());
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
-        drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
+            drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
+            toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
 
-        srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        srl.setOnRefreshListener(this);
-        srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
+            srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+            srl.setOnRefreshListener(this);
+            srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
 
-        slv = (SwipeListView) findViewById(R.id.slv);
-        slv.setAdapter(cardsStashAdapter);
-        slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
+            slv = (SwipeListView) findViewById(R.id.slv);
+            slv.setAdapter(cardsStashAdapter);
+            slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
 
-        updateSwipeRefreshProgressBarTop(srl);
-        registerHideableHeaderView(toolbarWrapper);
-        enableActionBarAutoHide(slv);
+            updateSwipeRefreshProgressBarTop(srl);
+            registerHideableHeaderView(toolbarWrapper);
+            enableActionBarAutoHide(slv);
+
+            // Update data
+            cardsStashAdapter.updateData();
+
+            // Update view
+            updateView();
+        } catch (Exception e) {
+            handleException(e);
+        }
     }
 
     @Override
@@ -124,16 +139,54 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
     }
 
     // --------------------
-    // Methods
+    // Methods - Callbacks
+    // --------------------
+
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                srl.setRefreshing(false);
+                cardsController.reset();
+                cardsStashAdapter.notifyDataSetChanged();
+                slv.invalidateViews();
+            }
+        }, REFRESH_DELAY);
+    }
+
+    @Override
+    public void onMessageClick(Parcelable token) {
+        switch (recentEvent) {
+            case EVENT_RESTORE: {
+                cardsController.stash(recentCardPos, recentCard);
+                break;
+            }
+        }
+
+        // Update data
+        cardsStashAdapter.updateData();
+
+        // Update view
+        updateView();
+    }
+
+    // --------------------
+    // Methods - Actions
     // --------------------
 
     /**
      * Restores a card
+     *
+     * @param pos poistion of the card
+     * @param card card to be restored
      */
-    public void restore(int pos, String uuid) {
-        slv.invalidateViews();
+    public void restore(int pos, Card card) {
+        // Update view
+        updateView();
+
+        recentCard = card;
         recentCardPos = pos;
-        recentCardId = uuid;
         recentEvent = EVENT_RESTORE;
 
         new SnackBar.Builder(this)
@@ -146,38 +199,6 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
     }
 
     // --------------------
-    // Methods - Callbacks
-    // --------------------
-
-    @Override
-    public void onMessageClick(Parcelable token) {
-        switch (recentEvent) {
-            case EVENT_RESTORE: {
-                cardsController.stash(recentCardPos, recentCardId);
-                break;
-            }
-        }
-
-        cardsStashAdapter.notifyDataSetChanged();
-        slv.invalidateViews();
-    }
-
-    @Override
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                srl.setRefreshing(false);
-
-                cardsController.reset();
-
-                cardsStashAdapter.notifyDataSetChanged();
-                slv.invalidateViews();
-            }
-        }, REFRESH_DELAY);
-    }
-
-    // --------------------
     // Methods
     // --------------------
 
@@ -185,4 +206,12 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
     protected int getLayoutResource() {
         return R.layout.activity_cards_stash;
     }
+
+    /**
+     * Updates the view
+     */
+    private void updateView() {
+        slv.invalidateViews();
+    }
+
 }

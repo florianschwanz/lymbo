@@ -324,7 +324,7 @@ public class TableCardDatasource {
      *
      * @param uuid state of entry identified by this uuid will be set to DISMISSED
      */
-    public void updateCardStateDismissed(String uuid) {
+    public void updateCardStateDiscarded(String uuid) {
         if (containsUuid(uuid)) {
             ContentValues values = new ContentValues();
             values.put(colState.getName(), STATE_DISMISSED);

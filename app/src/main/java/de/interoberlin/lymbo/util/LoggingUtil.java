@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.view.activities;
+package de.interoberlin.lymbo.util;
 
 import android.app.Activity;
 import android.content.Context;
