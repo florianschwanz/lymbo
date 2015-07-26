@@ -1,8 +1,8 @@
 package de.interoberlin.lymbo.model.card;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.App;
@@ -84,10 +84,10 @@ public class Card {
 
     private void init() {
         id = UUID.randomUUID().toString();
-        sides = new ArrayList<>();
+        sides = new CopyOnWriteArrayList<>();
         hint = null;
         chapter = null;
-        tags = new ArrayList<>();
+        tags = new CopyOnWriteArrayList<>();
         edit = false;
         sideVisible = 0;
     }

@@ -145,7 +145,7 @@ public class CardsController {
         synchronized (cardsDismissed) {
             for (Card card : cardsDismissed) {
                 if (card != null) {
-                    retain(card.getId());
+                    retain(card);
                 }
             }
         }
@@ -161,10 +161,10 @@ public class CardsController {
 
     /**
      * Adds a new card to the current stack
-     *
-     * @param card card to be added
      */
-    public void addCard(Card card) {
+    public void addCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+        Card card = new Card(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+
         lymbo.getCards().add(card);
         cards.add(card);
         save();
@@ -231,121 +231,113 @@ public class CardsController {
     /**
      * Stashes a card
      *
-     * @param uuid id of the card to be stashed
+     * @param card card
      */
-    public void stash(String uuid) {
-        Card card = getCardById(uuid);
+    public void stash(Card card) {
         card.setRestoring(true);
 
         getCards().remove(card);
         getCardsStashed().add(card);
-        changeCardStateStashed(uuid);
+        changeCardStateStashed(card);
     }
 
     /**
      * Stashes a card
      *
      * @param pos  position where the card will be stashed
-     * @param uuid id of the card to be stashed
+     * @param card card
      */
-    public void stash(int pos, String uuid) {
-        Card card = getCardById(uuid);
+    public void stash(int pos, Card card) {
         card.setRestoring(true);
 
         getCards().remove(card);
-        getCardsStashed().add(pos <= getCardsStashed().size() ? pos-1 : 0, card);
-        changeCardStateStashed(uuid);
+        getCardsStashed().add(pos < getCardsStashed().size() ? pos : 0, card);
+        changeCardStateStashed(card);
     }
 
     /**
      * Restores a card
      *
-     * @param uuid id of the card to be restored
+     * @param card card
      */
-    public void restore(String uuid) {
-        Card card = getCardById(uuid);
+    public void restore(Card card) {
         card.setRestoring(true);
 
         getCards().add(card);
         getCardsStashed().remove(card);
-        changeCardStateNormal(uuid);
+        changeCardStateNormal(card);
     }
 
     /**
      * Restores a card
      *
      * @param pos  position where the card will be restored
-     * @param uuid id of the card to be restored
+     * @param card card
      */
-    public void restore(int pos, String uuid) {
-        Card card = getCardById(uuid);
+    public void restore(int pos, Card card) {
         card.setRestoring(true);
 
-        getCards().add(pos <= getCards().size() ? pos-1 : 0, card);
+        getCards().add(pos < getCards().size() ? pos : 0, card);
         getCardsStashed().remove(card);
-        changeCardStateNormal(uuid);
+        changeCardStateNormal(card);
     }
 
     /**
      * Discards a card from the current stack
      *
-     * @param uuid index of the card to be discarded
+     * @param card card
      */
-    public void discard(String uuid) {
-        Card card = getCardById(uuid);
-
+    public void discard(Card card) {
         getCards().remove(card);
-        getCardsDismissed().add(card);
-        changeCardStateDismissed(uuid);
+        getCardsDiscarded().add(card);
+        changeCardStateDiscarded(card);
     }
 
     /**
      * Retains a card that has been removed
      *
-     * @param uuid index of the card to be retained
+     * @param card card
      */
-    public void retain(String uuid) {
-        Card card = getCardById(uuid);
+    public void retain(Card card) {
         card.setRestoring(true);
 
-        getCardsDismissed().remove(card);
+        getCardsDiscarded().remove(card);
         getCards().add(card);
-        changeCardStateNormal(uuid);
+        changeCardStateNormal(card);
     }
 
     /**
      * Retains a card that has been removed
      *
      * @param pos  position where the card will be retained
-     * @param uuid id of the card to be retained
+     * @param card card
      */
-    public void retain(int pos, String uuid) {
-        Card card = getCardById(uuid);
+    public void retain(int pos, Card card) {
         card.setRestoring(true);
 
         getCards().add(pos < getCards().size() ? pos : 0, card);
-        getCardsDismissed().remove(card);
-        changeCardStateNormal(uuid);
+        getCardsDiscarded().remove(card);
+        changeCardStateNormal(card);
     }
 
-    private void changeCardStateNormal(String uuid) {
+    private void changeCardStateNormal(Card card) {
         datasource = new TableCardDatasource(activity);
         datasource.open();
-        datasource.updateCardStateNormal(uuid);
+        datasource.updateCardStateNormal(card.getId());
         datasource.close();
     }
 
-    private void changeCardStateDismissed(String uuid) {
+    private void changeCardStateDiscarded(Card card) {
         datasource = new TableCardDatasource(activity);
         datasource.open();
-        datasource.updateCardStateDismissed(uuid);
+        datasource.updateCardStateDiscarded(card.getId());
         datasource.close();
     }
 
-    private void changeCardStateStashed(String uuid) {
+    private void changeCardStateStashed(Card card) {
         datasource = new TableCardDatasource(activity);
         datasource.open();
-        datasource.updateCardStateStashed(uuid);
+        datasource.updateCardStateStashed(card.getId());
         datasource.close();
     }
 
@@ -354,12 +346,11 @@ public class CardsController {
     }
 
     /**
-     * Puts a card with a given index to the end
+     * Puts a card to the end
      *
-     * @param uuid index of the card to be moved
+     * @param card card
      */
-    public void putToEnd(String uuid) {
-        Card card = getCardById(uuid);
+    public void putToEnd(Card card) {
         card.reset();
         card.setRestoring(true);
 
@@ -470,7 +461,7 @@ public class CardsController {
         return cards;
     }
 
-    public List<Card> getCardsDismissed() {
+    public List<Card> getCardsDiscarded() {
         return cardsDismissed;
     }
 

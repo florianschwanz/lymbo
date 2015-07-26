@@ -80,8 +80,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         this.c = context;
         this.a = activity;
 
-        filter();
-
         // Properties
         VIBRATION_DURATION = Integer.parseInt(Configuration.getProperty(c, EProperty.VIBRATION_DURATION));
     }
@@ -523,13 +521,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @param flCard frame layout representing the card
      */
     private void stash(int pos, Card card, FrameLayout flCard) {
-        ViewUtil.collapse(c, flCard);
-
-        cardsController.stash(card.getId());
-        ((CardsActivity) a).stash(pos, card.getId());
-
-        filter();
-        notifyDataSetChanged();
+        cardsController.stash(card);
+        ((CardsActivity) a).stash(pos, card);
+        updateData();
     }
 
     /**
@@ -540,13 +534,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @param flCard frame layout representing the card
      */
     private void discard(int pos, Card card, FrameLayout flCard) {
-        ViewUtil.collapse(c, flCard);
-
-        cardsController.discard(card.getId());
-        ((CardsActivity) a).discard(pos, card.getId());
-
-        filter();
-        notifyDataSetChanged();
+        cardsController.discard(card);
+        ((CardsActivity) a).discard(pos, card);
+        updateData();
     }
 
     /**
@@ -557,15 +547,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @param flCard frame layout representing the card
      */
     private void putToEnd(int pos, Card card, FrameLayout flCard) {
-        ViewUtil.collapse(c, flCard);
-
-        card.setRestoring(true);
-        getFilteredItems().remove(card);
-        getFilteredItems().add(card);
-
-        // cardsController.putToEnd(uuid);
-        ((CardsActivity) a).putToEnd(pos, card.getId());
-        notifyDataSetChanged();
+        cardsController.putToEnd(card);
+        ((CardsActivity) a).putToEnd(pos, card);
+        updateData();
     }
 
     /**
@@ -577,8 +561,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      */
     private void toggleFavorite(int pos, Card card, FrameLayout flCard, boolean favorite) {
         cardsController.toggleFavorite(c, card.getId(), favorite);
-        ((CardsActivity) a).toggleFavorite(pos, card.getId(), favorite);
-        notifyDataSetChanged();
+        ((CardsActivity) a).toggleFavorite(favorite);
+        updateData();
     }
 
     /**
@@ -627,7 +611,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     }
 
     /**
-     * Determines if all the right answers are checked
+     * Determines whether at least one answer is selected
      * @param card card
      * @return
      */
@@ -647,6 +631,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         }
     }
 
+    /**
+     * Determines if all the right answers are selected
+     * @param card
+     */
     private void handleQuiz(Card card) {
         Side current = card.getSides().get(card.getSideVisible());
 
@@ -673,7 +661,13 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         }
     }
 
-    public void filter() {
+    public void updateData() {
+        setItems(cardsController.getCards());
+        filter();
+        notifyDataSetChanged();
+    }
+
+    private void filter() {
         getFilter().filter("");
     }
 

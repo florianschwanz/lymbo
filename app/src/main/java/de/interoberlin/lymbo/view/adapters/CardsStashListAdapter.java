@@ -137,7 +137,25 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
                         @Override
                         public void onAnimationEnd(Animation animation) {
-                            restore(position, card, flCard);
+                            Animation anim = ViewUtil.collapse(c, flCard);
+                            flCard.startAnimation(anim);
+
+                            anim.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    restore(position, card, flCard);
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+
+                                }
+                            });
                         }
 
                         @Override
@@ -189,18 +207,19 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
      * @param card   card
      * @param flCard frame layout representing the card
      */
-    private void restore(int pos, Card card, FrameLayout flCard) {
-        ViewUtil.collapse(c, flCard);
+    private void  restore(int pos, Card card, FrameLayout flCard) {
+        cardsController.restore(card);
+        ((CardsStashActivity) a).restore(pos, card);
+        updateData();
+    }
 
-        cardsController.retain(card.getId());
-        ((CardsStashActivity) a).restore(pos, card.getId());
-
+    public void updateData() {
+        setItems(cardsController.getCardsStashed());
         filter();
         notifyDataSetChanged();
     }
 
-
-    public void filter() {
+    private void filter() {
         getFilter().filter("");
     }
 
@@ -225,10 +244,6 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     // --------------------
     // Getters / Setters
     // --------------------
-
-    public List<Card> getFilteredItems() {
-        return filteredItems;
-    }
 
     public void setItems(List<Card> items) {
         this.filteredItems = items;

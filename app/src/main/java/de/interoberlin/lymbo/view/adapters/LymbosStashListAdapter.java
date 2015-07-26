@@ -45,7 +45,10 @@ public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
     @Override
     public View getView(int position, View v, ViewGroup parent) {
         final Lymbo lymbo = getItem(position);
+        return getLymboView(position, lymbo, parent);
+    }
 
+    private View getLymboView(int position, final Lymbo lymbo, ViewGroup parent) {
         if (lymbo != null) {
 
             // Layout inflater

@@ -27,7 +27,7 @@
                 swipe:swipeOpenOnLongPress="false"
                 swipe:swipeAnimationTime="0"
                 swipe:swipeOffsetLeft="0dp"
-                swipe:swipeOffsetRight="0dp" />
+                swipe:swipeOffsetRight="0dp"/>
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <LinearLayout

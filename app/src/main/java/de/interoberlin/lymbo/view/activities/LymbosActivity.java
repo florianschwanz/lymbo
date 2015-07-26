@@ -43,6 +43,10 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     private LymbosListAdapter lymbosAdapter;
 
     private Lymbo recentLymbo = null;
+    private int recentCardPos = -1;
+    private int recentEvent = -1;
+
+    private static final int EVENT_STASH = 2;
 
     private static int REFRESH_DELAY;
 
@@ -52,49 +56,60 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        lymbosController = LymbosController.getInstance(this);
-        cardsController = CardsController.getInstance(this);
+        try {
+            super.onCreate(savedInstanceState);
+            lymbosController = LymbosController.getInstance(this);
+            cardsController = CardsController.getInstance(this);
 
-        if (savedInstanceState != null) {
-            lymbosController.load();
+            if (savedInstanceState != null) {
+                lymbosController.load();
+            }
+
+            setActionBarIcon(R.drawable.ic_ab_drawer);
+            setDisplayHomeAsUpEnabled(false);
+
+            REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_LYMBOS));
+        } catch (Exception e) {
+            handleException(e);
         }
-
-        setActionBarIcon(R.drawable.ic_ab_drawer);
-        setDisplayHomeAsUpEnabled(false);
-
-        REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_LYMBOS));
     }
 
     public void onResume() {
-        super.onResume();
-        lymbosAdapter = new LymbosListAdapter(this, this, R.layout.stack, lymbosController.getLymbos());
+        try {
+            super.onResume();
+            lymbosAdapter = new LymbosListAdapter(this, this, R.layout.stack, lymbosController.getLymbos());
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
-        drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
+            drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
+            toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
 
-        srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        srl.setOnRefreshListener(this);
-        srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
+            srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+            srl.setOnRefreshListener(this);
+            srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
 
-        slv = (SwipeListView) findViewById(R.id.slv);
-        slv.setAdapter(lymbosAdapter);
-        slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
+            slv = (SwipeListView) findViewById(R.id.slv);
+            slv.setAdapter(lymbosAdapter);
+            slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
 
-        ibFab = (ImageButton) findViewById(R.id.fab);
-        ibFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AddStackDialogFragment().show(getFragmentManager(), "okay");
-            }
-        });
+            ibFab = (ImageButton) findViewById(R.id.fab);
+            ibFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new AddStackDialogFragment().show(getFragmentManager(), "okay");
+                }
+            });
 
-        updateSwipeRefreshProgressBarTop(srl);
-        registerHideableHeaderView(toolbarWrapper);
-        registerHideableFooterView(ibFab);
-        enableActionBarAutoHide(slv);
+            updateSwipeRefreshProgressBarTop(srl);
+            registerHideableHeaderView(toolbarWrapper);
+            registerHideableFooterView(ibFab);
+            enableActionBarAutoHide(slv);
+
+            // Update view
+            updateView();
+        } catch (Exception e) {
+            handleException(e);
+        }
     }
 
     @Override
@@ -137,6 +152,10 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
         return true;
     }
 
+    // --------------------
+    // Methods - Callbacks
+    // --------------------
+
     @Override
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
@@ -147,22 +166,24 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
                 lymbosController.scan();
                 lymbosController.load();
 
-                lymbosAdapter.notifyDataSetChanged();
-                slv.invalidateViews();
+                // Update view
+                updateView();
             }
         }, REFRESH_DELAY);
     }
 
     @Override
     public void onMessageClick(Parcelable token) {
-        cardsController.restore(recentLymbo);
-        lymbosAdapter.notifyDataSetChanged();
-        slv.invalidateViews();
-    }
+        switch (recentEvent) {
+            case EVENT_STASH: {
+                cardsController.restore(recentLymbo);
+                break;
+            }
+        }
 
-    // --------------------
-    // Methods - Callbacks
-    // --------------------
+        // Update view
+        updateView();
+    }
 
     @Override
     public void onAddStack(String title, String subtitle, String author) {
@@ -183,23 +204,20 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     }
 
     // --------------------
-    // Methods
+    // Methods - Actions
     // --------------------
-
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.activity_lymbos;
-    }
 
     /**
      * Stashes a lymbo
      *
      * @param lymbo lymbo to be stashed
      */
-    public void stash(Lymbo lymbo) {
+    public void stash(int pos, Lymbo lymbo) {
         slv.invalidateViews();
 
         recentLymbo = lymbo;
+        recentCardPos = pos - 1;
+        recentEvent = EVENT_STASH;
 
         new SnackBar.Builder(this)
                 .withOnClickListener(this)
@@ -208,5 +226,21 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
                 .withStyle(SnackBar.Style.INFO)
                 .withDuration(SnackBar.MED_SNACK)
                 .show();
+    }
+
+    // --------------------
+    // Methods
+    // --------------------
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_cards;
+    }
+
+    /**
+     * Updates the view
+     */
+    private void updateView() {
+        slv.invalidateViews();
     }
 }
