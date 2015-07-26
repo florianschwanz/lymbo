@@ -14,8 +14,8 @@ public class Accelerator extends Observable implements SensorEventListener {
     private int shakeCount;
 
     // Shake settings
-    private final float SHAKE_THRESHOLD_GRAVITY = 2.0F;
-    private final int SHAKE_SLOP_TIME_MS = 500;
+    private final float SHAKE_THRESHOLD_GRAVITY = 2.5F;
+    private final int SHAKE_SLOP_TIME_MS = 650;
     private final int SHAKE_COUNT_RESET_TIME_MS = 3000;
 
     // Offset
