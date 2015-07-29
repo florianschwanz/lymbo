@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.github.mrengineer13.snackbar.SnackBar;
 
@@ -35,6 +36,7 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
     private SwipeRefreshLayout srl;
     private SwipeListView slv;
     private LinearLayout toolbarWrapper;
+    private TextView toolbarTitleView;
 
     // Model
     private List<Lymbo> lymbos;
@@ -73,6 +75,8 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
         drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
+        toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
+        toolbarTitleView.setText(R.string.lymbos_stash);
 
         srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         srl.setOnRefreshListener(this);
@@ -186,7 +190,7 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.activity_cards;
+        return R.layout.activity_lymbos_stash;
     }
 
     /**

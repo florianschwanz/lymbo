@@ -24,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -729,6 +728,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             final int count = values.size();
             final ArrayList<Card> newValues = new ArrayList<>();
 
+            newValues.add(null);
+
             for (int i = 0; i < count; i++) {
                 final Card value = values.get(i);
                 if (filterCard(value)) {
@@ -745,17 +746,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             filteredItems = (List<Card>) results.values;
-
-            if (filteredItems != null && !filteredItems.isEmpty()) {
-                filteredItems.removeAll(Collections.singleton(null));
-
-                if (!filteredItems.isEmpty()) {
-                    // Add leading null element
-                    if (filteredItems.get(0) != null) {
-                        filteredItems.add(0, null);
-                    }
-                }
-            }
 
             if (results.count > 0) {
                 notifyDataSetChanged();

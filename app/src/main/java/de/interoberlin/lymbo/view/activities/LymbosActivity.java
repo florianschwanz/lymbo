@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.github.mrengineer13.snackbar.SnackBar;
 
@@ -38,6 +39,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     private SwipeListView slv;
     private ImageButton ibFab;
     private LinearLayout toolbarWrapper;
+    private TextView toolbarTitleView;
 
     // Model
     private LymbosListAdapter lymbosAdapter;
@@ -66,7 +68,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
             }
 
             setActionBarIcon(R.drawable.ic_ab_drawer);
-            setDisplayHomeAsUpEnabled(false);
+            setDisplayHomeAsUpEnabled(true);
 
             REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_LYMBOS));
         } catch (Exception e) {
@@ -83,6 +85,8 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
             drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
             toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
+            toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
+            toolbarTitleView.setText(R.string.lymbos);
 
             srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
             srl.setOnRefreshListener(this);
@@ -143,9 +147,6 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
                 i.putExtras(b);
                 startActivity(i);
                 break;
-            }
-            default: {
-                return super.onOptionsItemSelected(item);
             }
         }
 
@@ -234,7 +235,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.activity_cards;
+        return R.layout.activity_lymbos;
     }
 
     /**

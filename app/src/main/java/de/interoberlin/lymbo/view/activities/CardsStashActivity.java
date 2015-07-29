@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.github.mrengineer13.snackbar.SnackBar;
 
@@ -31,6 +32,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
     private SwipeRefreshLayout srl;
     private SwipeListView slv;
     private LinearLayout toolbarWrapper;
+    private TextView toolbarTitleView;
 
     // Model
     private CardsStashListAdapter cardsStashAdapter;
@@ -75,6 +77,8 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
             drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
             toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
+            toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
+            toolbarTitleView.setText(R.string.cards_stash);
 
             srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
             srl.setOnRefreshListener(this);

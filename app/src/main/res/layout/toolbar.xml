@@ -6,4 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimaryDark"
-    android:textColorPrimary="@color/white" />
+    android:textColorPrimary="@color/white">
+
+    <TextView
+        android:id="@+id/toolbar_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/toolbar_text_padding"
+        android:paddingStart="@dimen/toolbar_text_padding"
+        android:textAlignment="textStart"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+</android.support.v7.widget.Toolbar>

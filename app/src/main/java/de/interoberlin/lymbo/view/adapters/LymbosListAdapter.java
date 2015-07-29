@@ -101,7 +101,6 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 llStack.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
                     @Override
                     public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-
                         if (!lymbo.isAsset()) {
                             contextMenu.add(0, 0, 0, a.getResources().getString(R.string.edit))
                                     .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -212,5 +211,4 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             return vi.inflate(R.layout.toolbar_space, parent, false);
         }
     }
-
 }

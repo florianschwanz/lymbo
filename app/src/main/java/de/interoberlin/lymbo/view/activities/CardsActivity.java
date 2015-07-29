@@ -38,14 +38,13 @@ import de.interoberlin.lymbo.view.dialogfragments.AddCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.ReportErrorDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnTagsSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, ReportErrorDialogFragment.OnCompleteListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnTagsSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
     CardsController cardsController;
 
@@ -128,9 +127,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
             toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
-            rl = (RelativeLayout) findViewById(R.id.rl);
-
             toolbarTextView = (TextView) findViewById(R.id.toolbar_text);
+
+            rl = (RelativeLayout) findViewById(R.id.rl);
 
             srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
             srl.setOnRefreshListener(this);
@@ -142,6 +141,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             slv.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_REVEAL);
             slv.setSwipeActionRight(SwipeListView.SWIPE_ACTION_REVEAL);
             slv.setDescendantFocusability(ListView.FOCUS_AFTER_DESCENDANTS);
+            slv.setFastScrollEnabled(true);
 
             slv.setSwipeListViewListener(new BaseSwipeListViewListener() {
                 @Override
@@ -273,6 +273,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 startActivity(i);
                 break;
             }
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
         }
 
         return true;
@@ -400,11 +403,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
         // Update view
         updateView();
-    }
-
-    @Override
-    public void onReportDialogDialogComplete() {
-        LoggingUtil.sendErrorLog(this, this);
     }
 
     // --------------------

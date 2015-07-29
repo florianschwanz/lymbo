@@ -34,7 +34,7 @@ import de.interoberlin.lymbo.util.LoggingUtil;
 import de.interoberlin.lymbo.view.dialogfragments.GiveFeedbackDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.ReportErrorDialogFragment;
 
-public abstract class BaseActivity extends ActionBarActivity implements Accelerator.OnShakeListener, GiveFeedbackDialogFragment.OnGiveFeedbackListener {
+public abstract class BaseActivity extends ActionBarActivity implements Accelerator.OnShakeListener, GiveFeedbackDialogFragment.OnGiveFeedbackListener, ReportErrorDialogFragment.OnCompleteListener {
     // Views
     private Toolbar toolbar;
 
@@ -104,6 +104,11 @@ public abstract class BaseActivity extends ActionBarActivity implements Accelera
                 {"support@interoberlin.de"});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.feedback) + " " + appName + " " + versionMajor + "." + versionMinor + "." + versionPatch);
         startActivity(Intent.createChooser(emailIntent, getResources().getString(R.string.send_mail)));
+    }
+
+    @Override
+    public void onReportDialogDialogComplete() {
+        LoggingUtil.sendErrorLog(this, this);
     }
 
     protected void handleException(Exception e) {
