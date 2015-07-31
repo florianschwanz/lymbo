@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.App;
@@ -25,8 +24,8 @@ public class Lymbo {
     private String author;
     private List<Card> cards;
 
-    List<Tag> tags;
-    List<Tag> chapters;
+    private List<Tag> tags;
+    private List<Tag> chapters;
 
     private boolean containsGeneratedIds;
 
@@ -53,7 +52,7 @@ public class Lymbo {
         hint = null;
         image = null;
         author = "";
-        cards = new CopyOnWriteArrayList<>();
+        cards = new ArrayList<>();
         error = "";
 
         tags = new ArrayList<>();

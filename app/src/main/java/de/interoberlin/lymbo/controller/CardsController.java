@@ -17,7 +17,6 @@ import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
-import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardEntry;
@@ -87,11 +86,29 @@ public class CardsController {
         }
     }
 
+    /**
+     * Determines whether a given card shall be displayed considering all filters
+     *
+     * @param card
+     * @return
+     */
+    public boolean isVisible(Card card) {
+        return (card != null &&
+                (!isDisplayOnlyFavorites() || (card.isFavorite())) &&
+                card.matchesChapter(getLymbo().getChapters()) &&
+                card.matchesTag(getLymbo().getTags()));
+    }
+
+    /**
+     * Returns the amounts of currently visible cards
+     *
+     * @return
+     */
     public int getVisibleCardCount() {
         int count = 0;
 
         for (Card card : getCards()) {
-            if (card != null && card.matchesChapter(getLymbo().getChapters()) && card.matchesTag(getLymbo().getTags()))
+            if (isVisible(card))
                 count++;
         }
 
@@ -404,32 +421,18 @@ public class CardsController {
     }
 
     /**
-     * Determines whether a card belongs to the favorites
-     *
-     * @param context context
-     * @param uuid    id of the card
-     * @return
-     */
-    public boolean isFavorite(Context context, String uuid) {
-        datasource = new TableCardDatasource(context);
-        datasource.open();
-        TableCardEntry entry = datasource.getEntryByUuid(uuid);
-        datasource.close();
-
-        return entry != null ? entry.isFavorite() : false;
-    }
-
-    /**
      * Changes the favorite status of a card
      *
      * @param context  context
-     * @param uuid     id of the card
+     * @param card     card
      * @param favorite whether or not to set a card as a favorite
      */
-    public void toggleFavorite(Context context, String uuid, boolean favorite) {
+    public void toggleFavorite(Context context, Card card, boolean favorite) {
+        card.setFavorite(favorite);
+
         datasource = new TableCardDatasource(context);
         datasource.open();
-        datasource.updateCardFavorite(uuid, favorite);
+        datasource.updateCardFavorite(card.getId(), favorite);
         datasource.close();
     }
 
@@ -443,14 +446,6 @@ public class CardsController {
 
     public void setLymbo(Lymbo lymbo) {
         this.lymbo = lymbo;
-    }
-
-    public void setFullLymbo(Context c, Lymbo lymbo) {
-        if (lymbo.isAsset()) {
-            this.lymbo = LymboLoader.getLymboFromAsset(c, lymbo.getPath(), false);
-        } else {
-            this.lymbo = LymboLoader.getLymboFromFile(new File(lymbo.getPath()), false);
-        }
     }
 
     public void setCards(List<Card> cards) {

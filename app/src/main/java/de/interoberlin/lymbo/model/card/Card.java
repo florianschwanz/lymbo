@@ -1,8 +1,8 @@
 package de.interoberlin.lymbo.model.card;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.App;
@@ -28,6 +28,8 @@ public class Card {
     private boolean revealed = false;
     private boolean restoring = false;
     private boolean noteExpanded = false;
+
+    private transient boolean favorite = false;
 
     // -------------------------
     // Constructors
@@ -84,10 +86,10 @@ public class Card {
 
     private void init() {
         id = UUID.randomUUID().toString();
-        sides = new CopyOnWriteArrayList<>();
+        sides = new ArrayList<>();
         hint = null;
         chapter = null;
-        tags = new CopyOnWriteArrayList<>();
+        tags = new ArrayList<>();
         edit = false;
         sideVisible = 0;
     }
@@ -248,5 +250,13 @@ public class Card {
 
     public void setNoteExpanded(boolean noteExpanded) {
         this.noteExpanded = noteExpanded;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 }

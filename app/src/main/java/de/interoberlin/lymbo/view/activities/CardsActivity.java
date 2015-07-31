@@ -32,7 +32,6 @@ import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
-import de.interoberlin.lymbo.util.LoggingUtil;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.AddCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
@@ -146,6 +145,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             slv.setSwipeListViewListener(new BaseSwipeListViewListener() {
                 @Override
                 public void onOpened(int position, boolean toRight) {
+
+
                     if (!cardsAdapter.getFilteredItems().isEmpty())
                         cardsAdapter.getFilteredItems().get(position).setRevealed(true);
                     srl.setEnabled(true);
@@ -155,7 +156,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 public void onClosed(int position, boolean fromRight) {
                     if (!cardsAdapter.getFilteredItems().isEmpty())
                         cardsAdapter.getFilteredItems().get(position).setRevealed(false);
-                    srl.setEnabled(true);
                 }
 
                 @Override
@@ -164,16 +164,16 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                 @Override
                 public void onMove(int position, float x) {
+                    srl.setEnabled(x == 0);
                 }
 
                 @Override
                 public void onStartOpen(int position, int action, boolean right) {
-                    srl.setEnabled(false);
+
                 }
 
                 @Override
                 public void onStartClose(int position, boolean right) {
-                    srl.setEnabled(false);
                 }
 
                 @Override

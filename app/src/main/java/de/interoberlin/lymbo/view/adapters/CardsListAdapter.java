@@ -261,7 +261,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
             if (!card.isNoteExpanded())
                 llNoteBar.getLayoutParams().height = 0;
-            if (cardsController.isFavorite(c, card.getId()))
+            if (card.isFavorite())
                 ivFavorite.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_action_important));
             else
                 ivFavorite.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_action_not_important));
@@ -372,8 +372,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             ivFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    boolean currentlyFavorite = cardsController.isFavorite(c, card.getId());
-                    toggleFavorite(position, card, flCard, !currentlyFavorite);
+                    boolean currentlyFavorite = card.isFavorite();
+                    toggleFavorite(position, card, flCard, !card.isFavorite());
                 }
             });
 
@@ -559,7 +559,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @param flCard frame layout representing the card
      */
     private void toggleFavorite(int pos, Card card, FrameLayout flCard, boolean favorite) {
-        cardsController.toggleFavorite(c, card.getId(), favorite);
+        cardsController.toggleFavorite(c, card, favorite);
         ((CardsActivity) a).toggleFavorite(favorite);
         updateData();
     }
@@ -663,7 +663,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     public void updateData() {
         setItems(cardsController.getCards());
         filter();
-        notifyDataSetChanged();
     }
 
     private void filter() {
@@ -685,10 +684,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @return
      */
     protected boolean filterCard(Card card) {
-        return (card != null &&
-                (!cardsController.isDisplayOnlyFavorites() || (cardsController.isFavorite(c, card.getId()))) &&
-                card.matchesChapter(cardsController.getLymbo().getChapters()) &&
-                card.matchesTag(cardsController.getLymbo().getTags()));
+        return cardsController.isVisible(card);
     }
 
     // --------------------

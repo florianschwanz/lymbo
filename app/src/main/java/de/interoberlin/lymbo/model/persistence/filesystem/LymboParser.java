@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.interoberlin.lymbo.controller.App;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
@@ -29,16 +30,19 @@ import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.ChoiceType;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
 import de.interoberlin.lymbo.model.card.enums.EStyle;
+import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
+import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardEntry;
 import de.interoberlin.mate.lib.model.Log;
 import de.interoberlin.sauvignon.lib.controller.parser.SvgParser;
 import de.interoberlin.sauvignon.lib.model.svg.SVG;
 
 public class LymboParser {
-    private static int y = 0;
-
     private static LymboParser instance;
 
+    private TableCardDatasource datasource;
+
     private Map<String, String> defaults = new HashMap<>();
+
     private boolean onlyTopLevel;
     private boolean containsGeneratedIds;
 
@@ -200,8 +204,6 @@ public class LymboParser {
      * @throws java.io.IOException
      */
     private Card parseCard(XmlPullParser parser) throws XmlPullParserException, IOException {
-        Log.info("Parse " + y++);
-
         Log.trace("parseCard()");
         String name;
         parser.require(XmlPullParser.START_TAG, null, "card");
@@ -271,6 +273,14 @@ public class LymboParser {
             card.setChapter(parseTag(chapter));
         if (tags != null)
             card.setTags(parseTags(tags));
+
+        // Read additional information from database
+        datasource = new TableCardDatasource(App.getContext());
+        datasource.open();
+        TableCardEntry entry = datasource.getEntryByUuid(card.getId());
+        datasource.close();
+
+        card.setFavorite(entry != null ? entry.isFavorite() : false);
 
         return card;
     }

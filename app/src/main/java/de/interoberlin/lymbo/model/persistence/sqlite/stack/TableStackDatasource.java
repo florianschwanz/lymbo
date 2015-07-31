@@ -115,16 +115,18 @@ public class TableStackDatasource {
     public List<TableStackEntry> getEntries() {
         List<TableStackEntry> entries = new ArrayList<>();
 
-        Cursor cursor = database.query(table,
-                columnHolder.getColumnNames(), null, null, null, null, null);
+        if (database != null) {
+            Cursor cursor = database.query(table,
+                    columnHolder.getColumnNames(), null, null, null, null, null);
 
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            entries.add(cursorToStack(cursor));
-            cursor.moveToNext();
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                entries.add(cursorToStack(cursor));
+                cursor.moveToNext();
+            }
+
+            cursor.close();
         }
-
-        cursor.close();
 
         return entries;
     }

@@ -160,16 +160,18 @@ public class TableCardDatasource {
     public List<TableCardEntry> getEntries(Column column, String value) {
         List<TableCardEntry> entries = new ArrayList<>();
 
-        Cursor cursor = database.query(table,
-                columnHolder.getColumnNames(), column.getName() + "='" + value + "'", null, null, null, null);
+        if (database != null) {
+            Cursor cursor = database.query(table,
+                    columnHolder.getColumnNames(), column.getName() + "='" + value + "'", null, null, null, null);
 
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            entries.add(cursorToCard(cursor));
-            cursor.moveToNext();
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                entries.add(cursorToCard(cursor));
+                cursor.moveToNext();
+            }
+
+            cursor.close();
         }
-
-        cursor.close();
 
         return entries;
     }
