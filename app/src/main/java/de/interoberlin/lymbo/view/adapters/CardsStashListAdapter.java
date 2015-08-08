@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
@@ -28,15 +27,16 @@ import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsStashActivity;
 
 public class CardsStashListAdapter extends ArrayAdapter<Card> {
+    // Context
     private Context c;
     private Activity a;
 
     // Controllers
     CardsController cardsController;
 
+    // Filter
     private List<Card> filteredItems = new ArrayList<>();
     private List<Card> originalItems = new ArrayList<>();
-
     private CardListFilter cardListFilter;
     private final Object lock = new Object();
 
@@ -47,6 +47,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     public CardsStashListAdapter(Context context, Activity activity, int resource, List<Card> items) {
         super(context, resource, items);
         cardsController = CardsController.getInstance(activity);
+
         this.filteredItems = items;
         this.originalItems = items;
 
@@ -79,109 +80,82 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     }
 
     private View getCardView(final int position, final Card card, final ViewGroup parent) {
-        if (card != null) {
-            // Layout inflater
-            LayoutInflater vi;
-            vi = LayoutInflater.from(getContext());
-            final FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card_stash, parent, false);
+        // Layout inflater
+        LayoutInflater vi;
+        vi = LayoutInflater.from(getContext());
+        final FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card_stash, parent, false);
 
-            // Load views : components
-            final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
+        // Load views : components
+        final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
 
-            // Load views : bottom bar
-            final LinearLayout llTags = (LinearLayout) flCard.findViewById(R.id.llTags);
-            final ImageView ivUndo = (ImageView) flCard.findViewById(R.id.ivUndo);
+        // Load views : bottom bar
+        final LinearLayout llTags = (LinearLayout) flCard.findViewById(R.id.llTags);
+        final ImageView ivUndo = (ImageView) flCard.findViewById(R.id.ivUndo);
 
-            // Add sides
-            for (Side side : card.getSides()) {
-                LayoutInflater li = LayoutInflater.from(c);
-                LinearLayout llSide = (LinearLayout) li.inflate(R.layout.side, parent, false);
-                LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
+        // Add sides
+        for (Side side : card.getSides()) {
+            LayoutInflater li = LayoutInflater.from(c);
+            LinearLayout llSide = (LinearLayout) li.inflate(R.layout.side, parent, false);
+            LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
 
-                // Add components
-                for (Displayable d : side.getComponents()) {
-                    View component = d.getView(c, a, llComponents);
-                    llComponents.addView(component);
-                }
-
-                llSide.setVisibility(View.INVISIBLE);
-
-                rlMain.addView(llSide);
+            // Add components
+            for (Displayable d : side.getComponents()) {
+                View component = d.getView(c, a, llComponents);
+                llComponents.addView(component);
             }
 
-            // Display width
-            DisplayMetrics displaymetrics = new DisplayMetrics();
-            a.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-            final int displayWidth = displaymetrics.widthPixels;
+            llSide.setVisibility(View.INVISIBLE);
 
-            rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
+            rlMain.addView(llSide);
+        }
 
-            // Tags
-            for (Tag tag : card.getTags()) {
-                if (!tag.getName().equals(c.getResources().getString(R.string.no_tag)))
-                    llTags.addView(tag.getView(c, a, llTags));
-            }
+        // Display width
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        a.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        final int displayWidth = displaymetrics.widthPixels;
 
-            // Reveal : undo
-            ivUndo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Animation anim = ViewUtil.toLeft(c, flCard, displayWidth);
-                    flCard.startAnimation(anim);
+        rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
 
-                    anim.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
+        // Tags
+        for (Tag tag : card.getTags()) {
+            if (!tag.getName().equals(c.getResources().getString(R.string.no_tag)))
+                llTags.addView(tag.getView(c, a, llTags));
+        }
 
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            Animation anim = ViewUtil.collapse(c, flCard);
-                            flCard.startAnimation(anim);
-
-                            anim.setAnimationListener(new Animation.AnimationListener() {
-                                @Override
-                                public void onAnimationStart(Animation animation) {
-
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animation animation) {
-                                    restore(position, card, flCard);
-                                }
-
-                                @Override
-                                public void onAnimationRepeat(Animation animation) {
-
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                }
-            });
-
-            if (card.isRestoring()) {
-                flCard.setTranslationX(displayWidth);
-
-                Animation anim = ViewUtil.expand(c, flCard);
+        // Reveal : undo
+        ivUndo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Animation anim = ViewUtil.toLeft(c, flCard, displayWidth);
                 flCard.startAnimation(anim);
 
                 anim.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
-                        card.setRestoring(false);
+
                     }
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        Animation anim = ViewUtil.fromLeft(c, flCard, displayWidth);
+                        Animation anim = ViewUtil.collapse(c, flCard);
                         flCard.startAnimation(anim);
+
+                        anim.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                restore(position, card, flCard);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
                     }
 
                     @Override
@@ -190,14 +164,34 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
                     }
                 });
             }
+        });
 
-            return flCard;
-        } else {
-            // Layout inflater
-            LayoutInflater vi;
-            vi = LayoutInflater.from(getContext());
-            return vi.inflate(R.layout.toolbar_space, parent, false);
+        if (card.isRestoring()) {
+            flCard.setTranslationX(displayWidth);
+
+            Animation anim = ViewUtil.expand(c, flCard);
+            flCard.startAnimation(anim);
+
+            anim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    card.setRestoring(false);
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    Animation anim = ViewUtil.fromLeft(c, flCard, displayWidth);
+                    flCard.startAnimation(anim);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
         }
+
+        return flCard;
     }
 
     /**
@@ -207,19 +201,13 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
      * @param card   card
      * @param flCard frame layout representing the card
      */
-    private void  restore(int pos, Card card, FrameLayout flCard) {
+    private void restore(int pos, Card card, FrameLayout flCard) {
         cardsController.restore(card);
         ((CardsStashActivity) a).restore(pos, card);
-        updateData();
-    }
-
-    public void updateData() {
-        setItems(cardsController.getCardsStashed());
         filter();
-        notifyDataSetChanged();
     }
 
-    private void filter() {
+    public void filter() {
         getFilter().filter("");
     }
 
@@ -238,16 +226,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
      * @return
      */
     protected boolean filterCard(Card card) {
-        return true;
-    }
-
-    // --------------------
-    // Getters / Setters
-    // --------------------
-
-    public void setItems(List<Card> items) {
-        this.filteredItems = items;
-        this.originalItems = items;
+        return card != null;
     }
 
     // --------------------
@@ -260,11 +239,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
             FilterResults results = new FilterResults();
 
             // Copy items
-            if (filteredItems == null) {
-                synchronized (lock) {
-                    originalItems = new ArrayList<>(filteredItems);
-                }
-            }
+            originalItems = cardsController.getCardsStashed();
 
             ArrayList<Card> values;
             synchronized (lock) {
@@ -290,17 +265,6 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             filteredItems = (List<Card>) results.values;
-
-            if (filteredItems != null && !filteredItems.isEmpty()) {
-                filteredItems.removeAll(Collections.singleton(null));
-
-                if (!filteredItems.isEmpty()) {
-                    // Add leading null element
-                    if (filteredItems.get(0) != null) {
-                        filteredItems.add(0, null);
-                    }
-                }
-            }
 
             if (results.count > 0) {
                 notifyDataSetChanged();

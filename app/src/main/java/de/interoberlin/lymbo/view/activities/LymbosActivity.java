@@ -109,8 +109,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
             registerHideableFooterView(ibFab);
             enableActionBarAutoHide(slv);
 
-            // Update view
-            updateView();
+            updateListView();
         } catch (Exception e) {
             handleException(e);
         }
@@ -167,8 +166,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
                 lymbosController.scan();
                 lymbosController.load();
 
-                // Update view
-                updateView();
+                updateListView();
             }
         }, REFRESH_DELAY);
     }
@@ -182,8 +180,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
             }
         }
 
-        // Update view
-        updateView();
+        updateListView();
     }
 
     @Override
@@ -239,9 +236,11 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     }
 
     /**
-     * Updates the view
+     * Updates the list view
      */
-    private void updateView() {
+    private void updateListView() {
+        lymbosAdapter.filter();
+        slv.closeOpenedItems();
         slv.invalidateViews();
     }
 }

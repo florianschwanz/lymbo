@@ -51,6 +51,7 @@
     <string name="generated_missing_ids">Generated missing IDs</string>
     <string name="give_feedback_question">Feedback is very important for us to improve the app. Feel free to send us comments, hints and wishes.</string>
     <string name="hint">Hint</string>
+    <string name="left">Left</string>
     <string name="log">Log</string>
     <string name="logo">Logo</string>
     <string name="lymbo_error_log">Lymbo Error Log</string>
@@ -77,6 +78,7 @@
     <string name="put_card_to_end">Put card to end</string>
     <string name="remove_card_from_favorites">Removed card from favorites</string>
     <string name="report_error_question">Do you want to send the error log to the developer? This helps a lot fixing this issue.</string>
+    <string name="right">right</string>
     <string name="search_lymbo_files">Searching for lymbo files</string>
     <string name="select_answer">Select at least one answer</string>
     <string name="send">Send</string>

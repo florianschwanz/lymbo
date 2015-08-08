@@ -92,11 +92,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
             registerHideableHeaderView(toolbarWrapper);
             enableActionBarAutoHide(slv);
 
-            // Update data
-            cardsStashAdapter.updateData();
-
-            // Update view
-            updateView();
+            updateListView();
         } catch (Exception e) {
             handleException(e);
         }
@@ -168,11 +164,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
             }
         }
 
-        // Update data
-        cardsStashAdapter.updateData();
-
-        // Update view
-        updateView();
+        updateListView();
     }
 
     // --------------------
@@ -186,8 +178,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
      * @param card card to be restored
      */
     public void restore(int pos, Card card) {
-        // Update view
-        updateView();
+        updateListView();
 
         recentCard = card;
         recentCardPos = pos;
@@ -212,10 +203,11 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
     }
 
     /**
-     * Updates the view
+     * Updates the list view
      */
-    private void updateView() {
+    private void updateListView() {
+        cardsStashAdapter.filter();
+        slv.closeOpenedItems();
         slv.invalidateViews();
     }
-
 }

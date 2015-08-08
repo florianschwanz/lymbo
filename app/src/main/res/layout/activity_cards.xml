@@ -1,9 +1,9 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".view.activities.CardsActivity"
     android:id="@+id/dl"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".view.activities.CardsActivity">
 
     <RelativeLayout
         android:id="@+id/rl"
@@ -18,23 +18,25 @@
 
             <de.interoberlin.swipelistview.view.SwipeListView xmlns:swipe="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/slv"
-                android:listSelector="#00000000"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:clipToPadding="false"
                 android:divider="@color/background"
-                swipe:swipeFrontView="@+id/surface"
-                swipe:swipeBackView="@+id/reveal"
-                swipe:swipeOpenOnLongPress="false"
+                android:listSelector="#00000000"
+                android:paddingTop="@dimen/toolbar_height"
                 swipe:swipeAnimationTime="0"
+                swipe:swipeBackView="@+id/reveal"
+                swipe:swipeFrontView="@+id/surface"
                 swipe:swipeOffsetLeft="0dp"
-                swipe:swipeOffsetRight="0dp"/>
+                swipe:swipeOffsetRight="0dp"
+                swipe:swipeOpenOnLongPress="false" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <LinearLayout
             android:id="@+id/toolbar_wrapper"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <include
                 android:id="@+id/toolbar"
@@ -48,15 +50,15 @@
         </LinearLayout>
 
         <ImageButton
-            android:contentDescription="@string/desc_image"
             android:id="@+id/fab"
             android:layout_width="@dimen/fab_button_diameter"
             android:layout_height="@dimen/fab_button_diameter"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginBottom="@dimen/fab_button_margin_bottom"
             android:layout_marginEnd="@dimen/fab_button_margin_right"
             android:background="@drawable/fab_shape"
+            android:contentDescription="@string/desc_image"
             android:src="@drawable/fab_ic_add"
             android:tint="@android:color/white" />
     </RelativeLayout>

@@ -25,10 +25,8 @@ public class Card {
     private boolean edit;
     private int sideVisible;
 
-    private boolean revealed = false;
     private boolean restoring = false;
     private boolean noteExpanded = false;
-
     private transient boolean favorite = false;
 
     // -------------------------
@@ -226,14 +224,6 @@ public class Card {
 
     public void setSideVisible(int sideVisible) {
         this.sideVisible = sideVisible;
-    }
-
-    public boolean isRevealed() {
-        return revealed;
-    }
-
-    public void setRevealed(boolean revealed) {
-        this.revealed = revealed;
     }
 
     public boolean isRestoring() {

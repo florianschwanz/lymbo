@@ -263,7 +263,6 @@ dependencies {
     // Used for file handling
     compile 'commons-io:commons-io:2.4'
     compile 'org.apache.commons:commons-lang3:3.0'
-
     // Used for Material Design
     compile 'com.squareup.picasso:picasso:2.3.4'
     compile 'com.android.support:appcompat-v7:22.1.+'

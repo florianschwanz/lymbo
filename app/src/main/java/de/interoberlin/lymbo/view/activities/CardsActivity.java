@@ -45,7 +45,7 @@ import de.interoberlin.swipelistview.view.SwipeListView;
 
 public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnTagsSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
-    CardsController cardsController;
+    private CardsController cardsController;
 
     // Views
     private SwipeRefreshLayout srl;
@@ -83,6 +83,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
+
             cardsController = CardsController.getInstance(this);
 
             // Restore instance state
@@ -145,17 +146,24 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             slv.setSwipeListViewListener(new BaseSwipeListViewListener() {
                 @Override
                 public void onOpened(int position, boolean toRight) {
-
-
-                    if (!cardsAdapter.getFilteredItems().isEmpty())
-                        cardsAdapter.getFilteredItems().get(position).setRevealed(true);
                     srl.setEnabled(true);
+
+                    Card card = cardsController.getCards().get(position);
+
+                    if (toRight) {
+                        cardsController.discard(card);
+                        snackDiscard(position, card);
+                    } else {
+                        cardsController.putToEnd(card);
+                        snackPutToEnd(position, card);
+                    }
+
+                    updateListView();
                 }
 
                 @Override
                 public void onClosed(int position, boolean fromRight) {
-                    if (!cardsAdapter.getFilteredItems().isEmpty())
-                        cardsAdapter.getFilteredItems().get(position).setRevealed(false);
+                    srl.setEnabled(true);
                 }
 
                 @Override
@@ -164,16 +172,16 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                 @Override
                 public void onMove(int position, float x) {
-                    srl.setEnabled(x == 0);
                 }
 
                 @Override
                 public void onStartOpen(int position, int action, boolean right) {
-
+                    srl.setEnabled(false);
                 }
 
                 @Override
                 public void onStartClose(int position, boolean right) {
+                    srl.setEnabled(false);
                 }
 
                 @Override
@@ -209,11 +217,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             registerHideableFooterView(ibFab);
             enableActionBarAutoHide(slv);
 
-            // Update data
-            cardsAdapter.updateData();
-
-            // Update view
-            updateView();
+            updateListView();
         } catch (Exception e) {
             handleException(e);
         }
@@ -248,11 +252,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                 cardsController.shuffle();
 
-                // Update data
-                cardsAdapter.updateData();
-
-                // Update view
-                updateView();
+                updateListView();
                 break;
             }
             case R.id.menu_label: {
@@ -317,11 +317,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                 cardsController.reset();
 
-                // Update data
-                cardsAdapter.updateData();
-
-                // Update view
-                updateView();
+                updateListView();
             }
         }, REFRESH_DELAY);
     }
@@ -347,11 +343,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             }
         }
 
-        // Update data
-        cardsAdapter.updateData();
-
-        // Update view
-        updateView();
+        updateListView();
     }
 
     @Override
@@ -359,11 +351,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         try {
             cardsController.addCard(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
 
-            // Update data
-            cardsAdapter.updateData();
-
-            // Update view
-            updateView();
+            updateListView();
         } catch (Exception e) {
             handleException(e);
         }
@@ -373,11 +361,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onEditSimpleCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         cardsController.updateCard(uuid, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
 
-        // Update data
-        cardsAdapter.updateData();
-
-        // Update view
-        updateView();
+        updateListView();
     }
 
     @Override
@@ -387,22 +371,14 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public void onTagsSelected() {
-        // Update data
-        cardsAdapter.updateData();
-
-        // Update view
-        updateView();
+        updateListView();
     }
 
     @Override
     public void onEditNote(String uuid, String note) {
         cardsController.setNote(this, uuid, note);
 
-        // Update data
-        cardsAdapter.updateData();
-
-        // Update view
-        updateView();
+        updateListView();
     }
 
     // --------------------
@@ -416,11 +392,10 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
      * @param card card to be stashed
      */
     public void stash(int pos, Card card) {
-        // Update view
-        updateView();
+        updateListView();
 
         recentCard = card;
-        recentCardPos = pos - 1;
+        recentCardPos = pos;
         recentEvent = EVENT_STASH;
 
         new SnackBar.Builder(this)
@@ -438,12 +413,11 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
      * @param pos  poistion of the card
      * @param card card to be discarded
      */
-    public void discard(int pos, Card card) {
-        // Update view
-        updateView();
+    public void snackDiscard(int pos, Card card) {
+        updateListView();
 
         recentCard = card;
-        recentCardPos = pos - 1;
+        recentCardPos = pos;
         recentEvent = EVENT_DISCARD;
 
         new SnackBar.Builder(this)
@@ -461,9 +435,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
      * @param pos  poistion of the card
      * @param card card to be put to the end
      */
-    public void putToEnd(int pos, Card card) {
-        // Update view
-        updateView();
+    public void snackPutToEnd(int pos, Card card) {
+        updateListView();
 
         recentCard = card;
         recentCardPos = pos - 1;
@@ -484,8 +457,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
      * @param favorite whether or not a card has been added to favorites
      */
     public void toggleFavorite(boolean favorite) {
-        // Update view
-        updateView();
+        updateListView();
 
         new SnackBar.Builder(this)
                 .withMessageId(favorite ? R.string.add_card_to_favorites : R.string.remove_card_from_favorites)
@@ -504,9 +476,11 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     /**
-     * Updates the view
+     * Updates the list view
      */
-    private void updateView() {
+    private void updateListView() {
+        cardsAdapter.filter();
+        slv.closeOpenedItems();
         slv.invalidateViews();
         checkEmptyStack();
         updateCardCount();
@@ -526,20 +500,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     public void updateCardCount() {
         toolbarTextView.setText(String.valueOf(cardsController.getVisibleCardCount()));
-    }
-
-    private void checkGeneratedIds() {
-        if (!lymbo.isAsset() && lymbo.isContainsGeneratedIds()) {
-            recentEvent = EVENT_GENERATED_IDS;
-
-            new SnackBar.Builder(this)
-                    .withOnClickListener(this)
-                    .withMessageId(R.string.generated_missing_ids)
-                    .withActionMessageId(R.string.okay)
-                    .withStyle(SnackBar.Style.INFO)
-                    .withDuration(SnackBar.PERMANENT_SNACK)
-                    .show();
-        }
     }
 
     /**

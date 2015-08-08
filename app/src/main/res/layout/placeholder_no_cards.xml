@@ -5,12 +5,10 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="@dimen/card_reveal_margin"
+    android:paddingLeft="@dimen/card_reveal_margin"
+    android:paddingRight="@dimen/card_reveal_margin"
+    android:paddingTop="@dimen/toolbar_height"
     android:weightSum="1">
-
-    <include
-        android:id="@+id/space"
-        layout="@layout/toolbar_space" />
 
     <!-- Image -->
     <LinearLayout

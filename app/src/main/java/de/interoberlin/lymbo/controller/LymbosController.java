@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -106,7 +105,6 @@ public class LymbosController {
      */
     public void addStack(Lymbo lymbo) {
         lymbos.add(lymbo);
-        addNullElement(lymbos);
         save(lymbo);
     }
 
@@ -221,11 +219,9 @@ public class LymbosController {
         lymbos.clear();
         lymbos.addAll(getLymbosFromAssets());
         lymbos.addAll(getLymbosFromFiles(lymboFiles));
-        addNullElement(lymbos);
 
         lymbosStashed.clear();
         lymbosStashed.addAll(getLymbosFromFiles(lymboFilesStashed));
-        addNullElement(lymbosStashed);
 
         datasource.close();
         loaded = true;
@@ -343,37 +339,15 @@ public class LymbosController {
         return externalStorageAvailable && externalStorageWriteable;
     }
 
-    /**
-     * This is necessary to display the first element below the toolbar
-     *
-     * @param list list which shall be extended by a leading null element
-     */
-    public void addNullElement(List<Lymbo> list) {
-        if (list != null) {
-            list.removeAll(Collections.singleton(null));
-
-            if (!list.isEmpty()) {
-                // Add leading null element
-                if (list.get(0) != null) {
-                    list.add(0, null);
-                }
-            }
-        }
-    }
-
     // --------------------
     // Getters / Setters
     // --------------------
 
     public List<Lymbo> getLymbos() {
-        addNullElement(lymbos);
-
         return lymbos;
     }
 
     public List<Lymbo> getLymbosStashed() {
-        addNullElement(lymbosStashed);
-
         return lymbosStashed;
     }
 

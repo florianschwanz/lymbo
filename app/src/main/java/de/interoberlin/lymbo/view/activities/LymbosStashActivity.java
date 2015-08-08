@@ -29,8 +29,8 @@ import de.interoberlin.swipelistview.view.SwipeListView;
 
 public class LymbosStashActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener {
     // Controllers
-    LymbosController lymbosController;
-    CardsController cardsController;
+    private LymbosController lymbosController;
+    private CardsController cardsController;
 
     // Views
     private SwipeRefreshLayout srl;
@@ -90,8 +90,7 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
         registerHideableHeaderView(toolbarWrapper);
         enableActionBarAutoHide(slv);
 
-        // Update view
-        updateView();
+        updateListView();
     }
 
     @Override
@@ -171,7 +170,7 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
      * @param lymbo lymbo to be restored
      */
     public void restore(Lymbo lymbo) {
-        slv.invalidateViews();
+        updateListView();
 
         recentLymbo = lymbo;
 
@@ -194,9 +193,11 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
     }
 
     /**
-     * Updates the view
+     * Updates the list view
      */
-    private void updateView() {
+    private void updateListView() {
+        lymbosStashAdapter.filter();
+        slv.closeOpenedItems();
         slv.invalidateViews();
     }
 }
