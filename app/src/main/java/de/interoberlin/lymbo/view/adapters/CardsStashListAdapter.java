@@ -206,6 +206,10 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         filter();
     }
 
+    public List<Card> getFilteredItems() {
+        return filteredItems;
+    }
+
     public void filter() {
         getFilter().filter("");
     }

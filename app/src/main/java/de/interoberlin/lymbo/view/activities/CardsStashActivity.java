@@ -7,9 +7,12 @@ import android.os.Parcelable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.mrengineer13.snackbar.SnackBar;
@@ -33,6 +36,8 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
     private SwipeListView slv;
     private LinearLayout toolbarWrapper;
     private TextView toolbarTitleView;
+    private RelativeLayout rl;
+    private LinearLayout phNoCards;
 
     // Model
     private CardsStashListAdapter cardsStashAdapter;
@@ -80,6 +85,8 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
             toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
             toolbarTitleView.setText(R.string.cards_stash);
 
+            rl = (RelativeLayout) findViewById(R.id.rl);
+
             srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
             srl.setOnRefreshListener(this);
             srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
@@ -87,6 +94,9 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
             slv = (SwipeListView) findViewById(R.id.slv);
             slv.setAdapter(cardsStashAdapter);
             slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
+
+            phNoCards = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.placeholder_no_cards_in_stash, null, false);
+            rl.addView(phNoCards);
 
             updateSwipeRefreshProgressBarTop(srl);
             registerHideableHeaderView(toolbarWrapper);
@@ -209,5 +219,10 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
         cardsStashAdapter.filter();
         slv.closeOpenedItems();
         slv.invalidateViews();
+        checkEmptyStack();
+    }
+
+    private void checkEmptyStack() {
+        phNoCards.setVisibility(cardsStashAdapter.getFilteredItems().isEmpty() ? View.VISIBLE : View.INVISIBLE);
     }
 }

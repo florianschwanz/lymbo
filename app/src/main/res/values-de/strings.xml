@@ -87,5 +87,6 @@
     <string name="write_your_comment_here">Schreib deinen Kommentar hier hin</string>
     <string name="send_mail">Nachricht senden</string>
     <string name="error_occurred">Es is ein Fehler aufgetreten :(</string>
+    <string name="no_cards_in_stash">Keine Karten im Papierkorb</string>
 
 </resources>

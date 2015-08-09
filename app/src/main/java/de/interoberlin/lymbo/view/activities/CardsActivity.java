@@ -516,7 +516,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     private void checkEmptyStack() {
-        phNoCards.setVisibility(cardsController.getCards().isEmpty() ? View.VISIBLE : View.INVISIBLE);
+        phNoCards.setVisibility(cardsAdapter.getFilteredItems().isEmpty() ? View.VISIBLE : View.INVISIBLE);
     }
 
     public void updateCardCount() {
