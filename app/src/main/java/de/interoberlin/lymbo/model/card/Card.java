@@ -158,6 +158,18 @@ public class Card {
         return false;
     }
 
+    public String toString() {
+        if (getSides().size() > 0 && getSides().get(0).getComponents().size() > 0) {
+            if (getSides().get(0).getComponents().get(0) instanceof TitleComponent) {
+                ((TitleComponent) getSides().get(0).getComponents().get(0)).getValue();
+            } else if (getSides().get(0).getComponents().get(0) instanceof TextComponent) {
+                ((TextComponent) getSides().get(0).getComponents().get(0)).getValue();
+            }
+        }
+
+        return "";
+    }
+
     // -------------------------
     // Getters / Setters
     // -------------------------

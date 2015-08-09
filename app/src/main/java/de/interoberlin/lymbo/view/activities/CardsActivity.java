@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mrengineer13.snackbar.SnackBar;
 
@@ -148,7 +149,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 public void onOpened(int position, boolean toRight) {
                     srl.setEnabled(true);
 
-                    Card card = cardsController.getCards().get(position);
+                    Card card = cardsAdapter.getFilteredItems().get(position);
 
                     if (toRight) {
                         cardsController.discard(card);
@@ -186,6 +187,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                 @Override
                 public void onClickFrontView(int position) {
+                    Card card = cardsAdapter.getFilteredItems().get(0);
+                    Toast.makeText(getBaseContext(), position + " : " + card.toString(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

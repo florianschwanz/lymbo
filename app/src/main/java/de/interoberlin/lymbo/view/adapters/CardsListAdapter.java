@@ -578,6 +578,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         }
     }
 
+    public List<Card> getFilteredItems() {
+        return filteredItems;
+    }
+
     public void filter() {
         getFilter().filter("");
     }
