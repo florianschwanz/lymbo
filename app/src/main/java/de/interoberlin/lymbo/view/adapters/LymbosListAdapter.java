@@ -237,7 +237,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
      * Determines if a lymbo shall be displayed
      *
      * @param lymbo lymbo
-     * @return
+     * @return true if item is visible
      */
     protected boolean filterLymbo(Lymbo lymbo) {
         return lymbo != null;
@@ -277,6 +277,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         protected void publishResults(CharSequence constraint, FilterResults results) {
             filteredItems = (List<Lymbo>) results.values;
 

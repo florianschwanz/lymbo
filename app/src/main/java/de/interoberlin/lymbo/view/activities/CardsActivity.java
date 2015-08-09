@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -56,6 +57,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private TextView toolbarTextView;
     private RelativeLayout rl;
     private LinearLayout phNoCards;
+    private RelativeLayout rlReveal;
+    private ImageView ivDiscard;
+    private ImageView ivPutToEnd;
 
     // Model
     private Lymbo lymbo;
@@ -173,6 +177,20 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                 @Override
                 public void onMove(int position, float x) {
+                    View v = slv.getChildAt(position);
+                    rlReveal = (RelativeLayout) v.findViewById(R.id.reveal);
+                    ivDiscard = (ImageView) v.findViewById(R.id.ivDiscard);
+                    ivPutToEnd = (ImageView) v.findViewById(R.id.ivPutToEnd);
+
+                    if (x > 0) {
+                        rlReveal.setBackgroundColor(getResources().getColor(R.color.action_discard));
+                        ivDiscard.setVisibility(View.VISIBLE);
+                        ivPutToEnd.setVisibility(View.INVISIBLE);
+                    } else {
+                        rlReveal.setBackgroundColor(getResources().getColor(R.color.action_put_to_end));
+                        ivDiscard.setVisibility(View.INVISIBLE);
+                        ivPutToEnd.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 @Override

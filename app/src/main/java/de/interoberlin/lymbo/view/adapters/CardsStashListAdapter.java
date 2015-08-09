@@ -148,7 +148,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
-                                restore(position, card, flCard);
+                                restore(position, card);
                             }
 
                             @Override
@@ -199,9 +199,8 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
      *
      * @param pos    position of item
      * @param card   card
-     * @param flCard frame layout representing the card
      */
-    private void restore(int pos, Card card, FrameLayout flCard) {
+    private void restore(int pos, Card card) {
         cardsController.restore(card);
         ((CardsStashActivity) a).restore(pos, card);
         filter();
@@ -223,7 +222,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
      * Determines if a card shall be displayed
      *
      * @param card card
-     * @return
+     * @return true if item is visible
      */
     protected boolean filterCard(Card card) {
         return card != null;
@@ -263,6 +262,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         protected void publishResults(CharSequence constraint, FilterResults results) {
             filteredItems = (List<Card>) results.values;
 

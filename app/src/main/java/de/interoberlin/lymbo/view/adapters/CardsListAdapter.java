@@ -128,10 +128,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         final LinearLayout llNoteBar = (LinearLayout) flCard.findViewById(R.id.llNoteBar);
         final TextView tvNote = (TextView) flCard.findViewById(R.id.tvNote);
 
-        // Load views : reveal
-        final ImageView ivDiscard = (ImageView) flCard.findViewById(R.id.ivDiscard);
-        final ImageView ivPutToEnd = (ImageView) flCard.findViewById(R.id.ivToEnd);
-
         // Enable flip for the whole card
         if (card.isFlip()) {
             flCard.setOnClickListener(new View.OnClickListener() {
@@ -208,7 +204,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
                                     @Override
                                     public void onAnimationEnd(Animation animation) {
-                                        stash(position, card, flCard);
+                                        stash(position, card);
                                     }
 
                                     @Override
@@ -375,7 +371,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         ivFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleFavorite(position, card, flCard, !card.isFavorite());
+                toggleFavorite(card, !card.isFavorite());
             }
         });
 
@@ -457,11 +453,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     /**
      * Stashes a card
      *
-     * @param pos    position of item
-     * @param card   card
-     * @param flCard frame layout representing the card
+     * @param pos  position of item
+     * @param card card
      */
-    private void stash(int pos, Card card, FrameLayout flCard) {
+    private void stash(int pos, Card card) {
         cardsController.stash(card);
         ((CardsActivity) a).stash(pos, card);
         filter();
@@ -470,11 +465,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     /**
      * Toggles the favorite state of an item
      *
-     * @param pos    position of item
-     * @param card   card
-     * @param flCard frame layout representing the card
+     * @param card card
      */
-    private void toggleFavorite(int pos, Card card, FrameLayout flCard, boolean favorite) {
+    private void toggleFavorite(Card card, boolean favorite) {
         cardsController.toggleFavorite(c, card, favorite);
         ((CardsActivity) a).toggleFavorite(favorite);
         filter();
@@ -529,7 +522,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * Determines whether at least one answer is selected
      *
      * @param card card
-     * @return
+     * @return whether at least one answer is selected
      */
     private boolean checkAnswerSelected(Card card) {
         if (card.getSides().get(card.getSideVisible()).contains(EComponent.CHOICE)) {
@@ -550,7 +543,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     /**
      * Determines if all the right answers are selected
      *
-     * @param card
+     * @param card card
      */
     private void handleQuiz(Card card) {
         Side current = card.getSides().get(card.getSideVisible());
@@ -598,7 +591,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * Determines if a card shall be displayed
      *
      * @param card card
-     * @return
+     * @return true if item is visible
      */
     protected boolean filterCard(Card card) {
         return cardsController.isVisible(card);
@@ -638,6 +631,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         protected void publishResults(CharSequence constraint, FilterResults results) {
             filteredItems = (List<Card>) results.values;
 
