@@ -21,7 +21,7 @@ import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class SelectTagsDialogFragment extends DialogFragment {
     // Controllers
-    CardsController cardsController;
+    private CardsController cardsController;
 
     private OnTagsSelectedListener onTagsSelectedListener;
 
@@ -203,7 +203,7 @@ public class SelectTagsDialogFragment extends DialogFragment {
         try {
             this.onTagsSelectedListener = (OnTagsSelectedListener) activity;
         } catch (final ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnCompleteListener");
+            throw new ClassCastException(activity.toString() + " must implement OnTagsSelectedListener");
         }
     }
 }

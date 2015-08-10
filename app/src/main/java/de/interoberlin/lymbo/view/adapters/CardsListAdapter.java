@@ -48,6 +48,7 @@ import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.SelectLymbosDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
 
 public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
@@ -215,6 +216,30 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                                 return false;
                             }
                         });
+
+                contextMenu.add(0, 2, 0, a.getResources().getString(R.string.copy_card))
+                        .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem menuItem) {
+                                String uuid = card.getId();
+
+                                SelectLymbosDialogFragment dialog = new SelectLymbosDialogFragment();
+                                Bundle bundle = new Bundle();
+                                bundle.putString(c.getResources().getString(R.string.bundle_uuid), uuid);
+                                dialog.setArguments(bundle);
+                                dialog.show(a.getFragmentManager(), "okay");
+                                return false;
+                            }
+                        });
+
+                contextMenu.add(0, 3, 0, a.getResources().getString(R.string.move_card))
+                        .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem menuItem) {
+                                return false;
+                            }
+                        });
+
             }
         });
 

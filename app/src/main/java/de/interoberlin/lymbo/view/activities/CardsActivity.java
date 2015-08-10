@@ -39,13 +39,14 @@ import de.interoberlin.lymbo.view.dialogfragments.AddCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.SelectLymbosDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnTagsSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnTagsSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, SelectLymbosDialogFragment.OnLymbosSelectedListener {
     // Controllers
     private CardsController cardsController;
 
@@ -400,6 +401,11 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         cardsController.setNote(this, uuid, note);
 
         updateListView();
+    }
+
+    @Override
+    public void onLymbosSelected(String lymboId, String cardId) {
+
     }
 
     // --------------------

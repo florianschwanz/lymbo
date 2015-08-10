@@ -87,5 +87,7 @@
     <string name="write_your_comment_here">Schreib deinen Kommentar hier hin</string>
     <string name="send_mail">Nachricht senden</string>
     <string name="error_occurred">Es is ein Fehler aufgetreten :(</string>
+    <string name="copy_card">Karte kopieren</string>
+    <string name="move_card">Karte verschieben</string>
 
 </resources>
