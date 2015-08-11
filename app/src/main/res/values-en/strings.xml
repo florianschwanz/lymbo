@@ -89,5 +89,10 @@
     <string name="error_occurred">An error occurred :(</string>
     <string name="copy_card">Copy card</string>
     <string name="move_card">Move card</string>
+    <string name="copied_card">Copied card</string>
+    <string name="moved_card">Moved card</string>
+    <string name="note_edited">Note edited</string>
+    <string name="edited_card">Edited card</string>
+    <string name="tag_selected">Tag selected</string>
 
 </resources>

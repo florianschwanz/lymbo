@@ -391,24 +391,24 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     @Override
     public void onEditSimpleCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         cardsController.updateCard(uuid, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
-
+        snackEditCard();
         updateListView();
     }
 
     @Override
     public void onHintDialogComplete() {
-
     }
 
     @Override
     public void onTagsSelected() {
+        snackTagSelected();
         updateListView();
     }
 
     @Override
     public void onEditNote(String uuid, String note) {
         cardsController.setNote(this, uuid, note);
-
+        snackEditNote();
         updateListView();
     }
 
@@ -416,6 +416,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onCopyCard(String sourceLymboId, String targetLymboId, String cardUuid) {
         if (sourceLymboId != null && targetLymboId != null && cardUuid != null) {
             cardsController.copyCard(sourceLymboId, targetLymboId, cardUuid);
+            snackCopyCard();
             updateListView();
         }
     }
@@ -424,6 +425,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onMoveCard(String sourceLymboId, String targetLymboId, String cardUuid) {
         if (sourceLymboId != null && targetLymboId != null && cardUuid != null) {
             cardsController.moveCard(sourceLymboId, targetLymboId, cardUuid);
+            snackMoveCard();
             updateListView();
         }
     }
@@ -433,14 +435,12 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     // --------------------
 
     /**
-     * Stashes a card from the current stack
+     * Indicates that a card has been stashed
      *
-     * @param pos  poistion of the card
+     * @param pos  position of the card
      * @param card card to be stashed
      */
     public void stash(int pos, Card card) {
-        updateListView();
-
         recentCard = card;
         recentCardPos = pos;
         recentEvent = EVENT_STASH;
@@ -455,14 +455,12 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     /**
-     * Discards a card from the current stack
+     * Indicates that a card has been discarded
      *
-     * @param pos  poistion of the card
+     * @param pos  position of the card
      * @param card card to be discarded
      */
     public void snackDiscard(int pos, Card card) {
-        updateListView();
-
         recentCard = card;
         recentCardPos = pos;
         recentEvent = EVENT_DISCARD;
@@ -477,14 +475,12 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     /**
-     * Puts a card with a given index to the end
+     * Indicates that a card has been put tho the end
      *
      * @param pos  poistion of the card
      * @param card card to be put to the end
      */
     public void snackPutToEnd(int pos, Card card) {
-        updateListView();
-
         recentCard = card;
         recentCardPos = pos - 1;
         recentEvent = EVENT_PUT_TO_END;
@@ -493,6 +489,67 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 .withOnClickListener(this)
                 .withMessageId(R.string.put_card_to_end)
                 .withActionMessageId(R.string.undo)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    /**
+     * Indicates that a card has been edited
+     */
+    public void snackEditCard() {
+        new SnackBar.Builder(this)
+                .withMessageId(R.string.edited_card)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    /**
+     * Indicates that tags have been selected
+     */
+    public void snackTagSelected() {
+        new SnackBar.Builder(this)
+                .withMessageId(R.string.tag_selected)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    /**
+     * Indicates that a note has been edited
+     */
+    public void snackEditNote() {
+        updateListView();
+
+        new SnackBar.Builder(this)
+                .withMessageId(R.string.note_edited)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    /**
+     * Indicates that a card has been copies
+     */
+    public void snackCopyCard() {
+        updateListView();
+
+        new SnackBar.Builder(this)
+                .withMessageId(R.string.copied_card)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    /**
+     * Indicates that a card has been moved
+     */
+    public void snackMoveCard() {
+        updateListView();
+
+        new SnackBar.Builder(this)
+                .withMessageId(R.string.moved_card)
                 .withStyle(SnackBar.Style.INFO)
                 .withDuration(SnackBar.MED_SNACK)
                 .show();
