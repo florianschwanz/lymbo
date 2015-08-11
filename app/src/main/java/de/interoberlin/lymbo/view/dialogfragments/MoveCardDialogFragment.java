@@ -21,20 +21,22 @@ import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
-public class SelectLymbosDialogFragment extends DialogFragment {
+public class MoveCardDialogFragment extends DialogFragment {
     // Controllers
     private LymbosController lymbosController;
 
-    private OnLymbosSelectedListener onLymbosSelectedListener;
+    private OnMoveCardListener onMoveCardListener;
 
     private List<CheckBox> checkboxes = new ArrayList<>();
-    private Lymbo selectedLymbo = null;
+    private String sourceLymboId = null;
+    private String targetLymboId = null;
+    private String cardUuid = null;
 
     // --------------------
     // Constructors
     // --------------------
 
-    public SelectLymbosDialogFragment() {
+    public MoveCardDialogFragment() {
     }
 
     // --------------------
@@ -47,44 +49,51 @@ public class SelectLymbosDialogFragment extends DialogFragment {
         lymbosController = LymbosController.getInstance(getActivity());
 
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_select_lymbos, null);
+        final View v = View.inflate(getActivity(), R.layout.dialogfragment_move_card, null);
         final TableLayout tblLymbos = (TableLayout) v.findViewById(R.id.tblLymbos);
 
+        // Get arguments
+        Bundle bundle = this.getArguments();
+        sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
+        cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_uuid));
+
         for (final Lymbo l : lymbosController.getLymbos()) {
-            final TableRow tr = new TableRow(getActivity());
+            if (!l.getId().equals(sourceLymboId)) {
+                final TableRow tr = new TableRow(getActivity());
 
-            final CheckBox cb = new CheckBox(getActivity());
-            final RobotoTextView tvText = new RobotoTextView(getActivity());
+                final CheckBox cb = new CheckBox(getActivity());
+                final RobotoTextView tvText = new RobotoTextView(getActivity());
 
-            checkboxes.add(cb);
+                checkboxes.add(cb);
 
-            tr.addView(cb);
-            tr.addView(tvText);
+                tr.addView(cb);
+                tr.addView(tvText);
 
-            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    selectedLymbo = l;
-                    if (b) {
-                        for (CheckBox c : checkboxes) {
-                            c.setChecked(false);
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        targetLymboId = l.getId();
+                        if (b) {
+                            for (CheckBox c : checkboxes) {
+                                c.setChecked(false);
+                            }
+
+                            cb.setChecked(true);
                         }
-
-                        cb.setChecked(true);
                     }
-                }
-            });
+                });
 
-            tvText.setText(l.getTitle());
-            tvText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    selectedLymbo = l;
-                    cb.toggle();
-                }
-            });
+                tvText.setText(l.getTitle());
+                tvText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        targetLymboId = l.getId();
+                        cb.toggle();
+                    }
+                });
 
-            tblLymbos.addView(tr);
+                tblLymbos.addView(tr);
+            }
         }
 
         // Load dialog
@@ -92,15 +101,11 @@ public class SelectLymbosDialogFragment extends DialogFragment {
         builder.setView(v);
         builder.setTitle(R.string.copy_card);
 
-        // Get arguments
-        Bundle bundle = this.getArguments();
-        final String cardId = bundle.getString(getActivity().getResources().getString(R.string.bundle_uuid));
-
         // Add positive button
         builder.setPositiveButton(R.string.okay, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                onLymbosSelectedListener.onLymbosSelected(selectedLymbo.getId(), cardId);
+                onMoveCardListener.onMoveCard(sourceLymboId, targetLymboId, cardUuid);
                 dismiss();
             }
         });
@@ -130,17 +135,17 @@ public class SelectLymbosDialogFragment extends DialogFragment {
     // Callback interfaces
     // --------------------
 
-    public interface OnLymbosSelectedListener {
-        void onLymbosSelected(String lymboId, String cardId);
+    public interface OnMoveCardListener {
+        void onMoveCard(String sourceLymboId, String targetLymboId, String cardId);
     }
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         try {
-            this.onLymbosSelectedListener = (OnLymbosSelectedListener) activity;
+            this.onMoveCardListener = (OnMoveCardListener) activity;
         } catch (final ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnLymbosSelectedListener");
+            throw new ClassCastException(activity.toString() + " must implement OnMoveCardListener");
         }
     }
 }

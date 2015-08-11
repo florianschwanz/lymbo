@@ -11,7 +11,8 @@
     <string name="author">Author</string>
     <string name="back">Back</string>
 
-    <string name="bundle_uuid" translatable="false">bundleUuid</string>
+    <string name="bundle_lymbo_uuid" translatable="false">bundleLymboUuid</string>
+    <string name="bundle_card_uuid" translatable="false">bundleCardUuid</string>
     <string name="bundle_pos" translatable="false">bundlePos</string>
 
     <string name="bundle_title" translatable="false">bundleTitle</string>

@@ -45,10 +45,11 @@ import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
+import de.interoberlin.lymbo.view.dialogfragments.CopyCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.SelectLymbosDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.MoveCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
 
 public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
@@ -178,7 +179,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                                 ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
                                 EditCardDialogFragment dialog = new EditCardDialogFragment();
                                 Bundle bundle = new Bundle();
-                                bundle.putString(c.getResources().getString(R.string.bundle_uuid), uuid);
+                                bundle.putString(c.getResources().getString(R.string.bundle_card_uuid), uuid);
                                 bundle.putString(c.getResources().getString(R.string.bundle_front_title), frontTitle);
                                 bundle.putString(c.getResources().getString(R.string.bundle_back_title), backTitle);
                                 bundle.putStringArrayList(c.getResources().getString(R.string.bundle_texts_front), frontTexts);
@@ -223,9 +224,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                             public boolean onMenuItemClick(MenuItem menuItem) {
                                 String uuid = card.getId();
 
-                                SelectLymbosDialogFragment dialog = new SelectLymbosDialogFragment();
+                                CopyCardDialogFragment dialog = new CopyCardDialogFragment();
                                 Bundle bundle = new Bundle();
-                                bundle.putString(c.getResources().getString(R.string.bundle_uuid), uuid);
+                                bundle.putString(c.getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getLymbo().getId());
+                                bundle.putString(c.getResources().getString(R.string.bundle_card_uuid), uuid);
                                 dialog.setArguments(bundle);
                                 dialog.show(a.getFragmentManager(), "okay");
                                 return false;
@@ -236,6 +238,14 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
+                                String uuid = card.getId();
+
+                                MoveCardDialogFragment dialog = new MoveCardDialogFragment();
+                                Bundle bundle = new Bundle();
+                                bundle.putString(c.getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getLymbo().getId());
+                                bundle.putString(c.getResources().getString(R.string.bundle_card_uuid), uuid);
+                                dialog.setArguments(bundle);
+                                dialog.show(a.getFragmentManager(), "okay");
                                 return false;
                             }
                         });
@@ -419,7 +429,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             ViewUtil.remove(ivHint);
         }
 
-        // Retoring animation
+        // Restoring animation
         if (card.isRestoring()) {
             flCard.setTranslationX(displayWidth);
 

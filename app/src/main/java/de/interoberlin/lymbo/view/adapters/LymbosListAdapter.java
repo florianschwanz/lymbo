@@ -129,7 +129,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                                         ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
                                         EditStackDialogFragment dialog = new EditStackDialogFragment();
                                         Bundle bundle = new Bundle();
-                                        bundle.putString(c.getResources().getString(R.string.bundle_uuid), uuid);
+                                        bundle.putString(c.getResources().getString(R.string.bundle_lymbo_uuid), uuid);
                                         bundle.putString(c.getResources().getString(R.string.bundle_title), title);
                                         bundle.putString(c.getResources().getString(R.string.bundle_subtitle), subtitle);
                                         bundle.putString(c.getResources().getString(R.string.bundle_author), author);
@@ -153,7 +153,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
 
                                             @Override
                                             public void onAnimationEnd(Animation animation) {
-                                                cardsController.stash(lymbo);
+                                                lymbosController.stash(lymbo);
                                                 ((LymbosActivity) a).stash(position, lymbo);
                                                 notifyDataSetChanged();
                                             }

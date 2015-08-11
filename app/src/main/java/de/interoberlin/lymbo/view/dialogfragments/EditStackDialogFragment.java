@@ -85,7 +85,7 @@ public class EditStackDialogFragment extends DialogFragment {
 
         // Get arguments
         Bundle bundle = this.getArguments();
-        final String uuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_uuid));
+        final String lymboUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
 
         AlertDialog dialog = (AlertDialog) getDialog();
 
@@ -103,7 +103,7 @@ public class EditStackDialogFragment extends DialogFragment {
                     if (title.isEmpty()) {
                         etTitle.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);
                     } else {
-                        ocListener.onEditStack(uuid, title, subtitle, author);
+                        ocListener.onEditStack(lymboUuid, title, subtitle, author);
                         dismiss();
                     }
                 }

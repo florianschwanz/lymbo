@@ -98,7 +98,7 @@ public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
 
                         @Override
                         public void onAnimationEnd(Animation animation) {
-                            cardsController.restore(lymbo);
+                            lymbosController.restore(lymbo);
                             ((LymbosStashActivity) a).restore(lymbo);
                             notifyDataSetChanged();
                         }
