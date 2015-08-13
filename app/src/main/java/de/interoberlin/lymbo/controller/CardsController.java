@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.interoberlin.lymbo.model.card.Card;
@@ -418,11 +419,15 @@ public class CardsController {
      * @param sourceLymboId id of source stack
      * @param targetLymboId id of target stack
      * @param cardId        id of card to be copied
+     * @param deepCopy      true if the copy shall be deep
      */
-    public void copyCard(String sourceLymboId, String targetLymboId, String cardId) {
+    public void copyCard(String sourceLymboId, String targetLymboId, String cardId, boolean deepCopy) {
         Lymbo sourceLymbo = lymbosController.getLymboById(sourceLymboId);
         Lymbo targetLymbo = lymbosController.getLymboById(targetLymboId);
         Card card = getCardById(cardId);
+
+        if (deepCopy)
+            card.setId(UUID.randomUUID().toString());
 
         targetLymbo.getCards().add(card);
         lymbosController.save(targetLymbo);

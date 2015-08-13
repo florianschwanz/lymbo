@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,12 +51,21 @@ public class CopyCardDialogFragment extends DialogFragment {
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_copy_card, null);
+        final CheckBox cbDeepCopy = (CheckBox) v.findViewById(R.id.cbDeepCopy);
+        final TextView tvDeepCopy = (TextView) v.findViewById(R.id.tvDeepCopy);
         final TableLayout tblLymbos = (TableLayout) v.findViewById(R.id.tblLymbos);
 
         // Get arguments
         Bundle bundle = this.getArguments();
         sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
         cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_uuid));
+
+        tvDeepCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cbDeepCopy.toggle();
+            }
+        });
 
         for (final Lymbo l : lymbosController.getLymbos()) {
             if (!l.getId().equals(sourceLymboId)) {
@@ -105,7 +115,7 @@ public class CopyCardDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.okay, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                onCopyCardListener.onCopyCard(sourceLymboId, targetLymboId, cardUuid);
+                onCopyCardListener.onCopyCard(sourceLymboId, targetLymboId, cardUuid, cbDeepCopy.isChecked());
                 dismiss();
             }
         });
@@ -136,7 +146,7 @@ public class CopyCardDialogFragment extends DialogFragment {
     // --------------------
 
     public interface OnCopyCardListener {
-        void onCopyCard(String sourceLymboId, String targetLymboId, String cardId);
+        void onCopyCard(String sourceLymboId, String targetLymboId, String cardId, boolean deepCopy);
     }
 
     public void onAttach(Activity activity) {

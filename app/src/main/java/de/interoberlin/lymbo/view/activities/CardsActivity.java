@@ -413,9 +413,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onCopyCard(String sourceLymboId, String targetLymboId, String cardUuid) {
+    public void onCopyCard(String sourceLymboId, String targetLymboId, String cardUuid, boolean deepCopy) {
         if (sourceLymboId != null && targetLymboId != null && cardUuid != null) {
-            cardsController.copyCard(sourceLymboId, targetLymboId, cardUuid);
+            cardsController.copyCard(sourceLymboId, targetLymboId, cardUuid, deepCopy);
             snackCopyCard();
             updateListView();
         }

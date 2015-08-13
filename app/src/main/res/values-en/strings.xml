@@ -94,5 +94,6 @@
     <string name="note_edited">Note edited</string>
     <string name="edited_card">Edited card</string>
     <string name="tag_selected">Tag selected</string>
+    <string name="deep_copy">Deep copy</string>
 
 </resources>
