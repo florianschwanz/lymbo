@@ -11,7 +11,8 @@
     <string name="author">Author</string>
     <string name="back">Back</string>
 
-    <string name="bundle_uuid" translatable="false">bundleUuid</string>
+    <string name="bundle_lymbo_uuid" translatable="false">bundleLymboUuid</string>
+    <string name="bundle_card_uuid" translatable="false">bundleCardUuid</string>
     <string name="bundle_pos" translatable="false">bundlePos</string>
 
     <string name="bundle_title" translatable="false">bundleTitle</string>
@@ -33,8 +34,11 @@
     <string name="cards_stash">Cards Stash</string>
     <string name="chapters">Chapters</string>
     <string name="click_to_continue">Touch on screen to continue</string>
+    <string name="copied_card">Copied card</string>
+    <string name="copy_card">Copy card</string>
     <string name="correct">correct</string>
     <string name="could_not_find_any_cards">Could not find any cards</string>
+    <string name="deep_copy">Deep copy</string>
     <string name="desc_image">Image component</string>
     <string name="describe_the_error">Describe the error</string>
     <string name="discard_card">Discarded card</string>
@@ -43,6 +47,7 @@
     <string name="discard">Discard</string>
     <string name="edit">Edit</string>
     <string name="edit_card">Edit card</string>
+    <string name="edited_card">Edited card</string>
     <string name="error_occurred">An error occurred :(</string>
     <string name="feedback">Feedback</string>
     <string name="field_must_not_be_empty">Field must not be empty</string>
@@ -64,6 +69,8 @@
     <string name="menu_shuffle">Shuffle</string>
     <string name="menu_stash">Stash</string>
     <string name="message">Message</string>
+    <string name="move_card">Move card</string>
+    <string name="moved_card">Moved card</string>
     <string name="new_tag">new tag</string>
     <string name="new_text">new text</string>
     <string name="no_cards">no cards</string>
@@ -73,6 +80,7 @@
     <string name="none">None</string>
     <string name="not_yet_implemented">Not yet implemented</string>
     <string name="note">Note</string>
+    <string name="note_edited">Note edited</string>
     <string name="okay">Okay</string>
     <string name="path">Path</string>
     <string name="put_card_to_end">Put card to end</string>
@@ -94,6 +102,7 @@
     <string name="subtitle">Subtitle</string>
     <string name="tags">Tags</string>
     <string name="text">Text</string>
+    <string name="tag_selected">Tag selected</string>
     <string name="title">Title</string>
     <string name="title_activity_edit_card">CardEditActivity</string>
     <string name="undo">Undo</string>
@@ -103,6 +112,5 @@
     <string name="select_all">all</string>
     <string name="thanks">Thanks!</string>
     <string name="deselect_all">deselect all</string>
-    <string name="error_occured"></string>
 
 </resources>

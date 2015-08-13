@@ -17,7 +17,6 @@ import com.github.mrengineer13.snackbar.SnackBar;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.util.Configuration;
@@ -30,7 +29,6 @@ import de.interoberlin.swipelistview.view.SwipeListView;
 public class LymbosStashActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener {
     // Controllers
     private LymbosController lymbosController;
-    private CardsController cardsController;
 
     // Views
     private SwipeRefreshLayout srl;
@@ -54,7 +52,6 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         lymbosController = LymbosController.getInstance(this);
-        cardsController = CardsController.getInstance(this);
 
         if (savedInstanceState != null) {
             lymbosController.load();
@@ -139,7 +136,7 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
 
     @Override
     public void onMessageClick(Parcelable token) {
-        cardsController.stash(recentLymbo);
+        lymbosController.stash(recentLymbo);
         lymbosStashAdapter.notifyDataSetChanged();
         slv.invalidateViews();
     }

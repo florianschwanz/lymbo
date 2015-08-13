@@ -88,5 +88,13 @@
     <string name="send_mail">Nachricht senden</string>
     <string name="error_occurred">Es is ein Fehler aufgetreten :(</string>
     <string name="no_cards_in_stash">Keine Karten im Papierkorb</string>
+    <string name="copy_card">Karte kopieren</string>
+    <string name="move_card">Karte verschieben</string>
+    <string name="copied_card">Karte kopiert</string>
+    <string name="moved_card">Karte verschoben</string>
+    <string name="note_edited">Notiz bearbeitet</string>
+    <string name="edited_card">Karte bearbeitet</string>
+    <string name="tag_selected">Tag ausgewählt</string>
+    <string name="deep_copy">Deep copy</string>
 
 </resources>

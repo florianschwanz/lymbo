@@ -36,16 +36,18 @@ import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.AddCardDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.CopyCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.MoveCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnTagsSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnTagsSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, CopyCardDialogFragment.OnCopyCardListener, MoveCardDialogFragment.OnMoveCardListener {
     // Controllers
     private CardsController cardsController;
 
@@ -178,18 +180,21 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 @Override
                 public void onMove(int position, float x) {
                     View v = slv.getChildAt(position);
-                    rlReveal = (RelativeLayout) v.findViewById(R.id.reveal);
-                    ivDiscard = (ImageView) v.findViewById(R.id.ivDiscard);
-                    ivPutToEnd = (ImageView) v.findViewById(R.id.ivPutToEnd);
 
-                    if (x > 0) {
-                        rlReveal.setBackgroundColor(getResources().getColor(R.color.action_discard));
-                        ivDiscard.setVisibility(View.VISIBLE);
-                        ivPutToEnd.setVisibility(View.INVISIBLE);
-                    } else {
-                        rlReveal.setBackgroundColor(getResources().getColor(R.color.action_put_to_end));
-                        ivDiscard.setVisibility(View.INVISIBLE);
-                        ivPutToEnd.setVisibility(View.VISIBLE);
+                    if (v != null) {
+                        rlReveal = (RelativeLayout) v.findViewById(R.id.reveal);
+                        ivDiscard = (ImageView) v.findViewById(R.id.ivDiscard);
+                        ivPutToEnd = (ImageView) v.findViewById(R.id.ivPutToEnd);
+
+                        if (x > 0) {
+                            rlReveal.setBackgroundColor(getResources().getColor(R.color.action_discard));
+                            ivDiscard.setVisibility(View.VISIBLE);
+                            ivPutToEnd.setVisibility(View.INVISIBLE);
+                        } else {
+                            rlReveal.setBackgroundColor(getResources().getColor(R.color.action_put_to_end));
+                            ivDiscard.setVisibility(View.INVISIBLE);
+                            ivPutToEnd.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
 
@@ -239,9 +244,14 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             enableActionBarAutoHide(slv);
 
             updateListView();
-        } catch (Exception e) {
+        } catch (
+                Exception e
+                )
+
+        {
             handleException(e);
         }
+
     }
 
     @Override
@@ -381,25 +391,43 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     @Override
     public void onEditSimpleCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         cardsController.updateCard(uuid, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
-
+        snackEditCard();
         updateListView();
     }
 
     @Override
     public void onHintDialogComplete() {
-
     }
 
     @Override
     public void onTagsSelected() {
+        snackTagSelected();
         updateListView();
     }
 
     @Override
     public void onEditNote(String uuid, String note) {
         cardsController.setNote(this, uuid, note);
-
+        snackEditNote();
         updateListView();
+    }
+
+    @Override
+    public void onCopyCard(String sourceLymboId, String targetLymboId, String cardUuid, boolean deepCopy) {
+        if (sourceLymboId != null && targetLymboId != null && cardUuid != null) {
+            cardsController.copyCard(sourceLymboId, targetLymboId, cardUuid, deepCopy);
+            snackCopyCard();
+            updateListView();
+        }
+    }
+
+    @Override
+    public void onMoveCard(String sourceLymboId, String targetLymboId, String cardUuid) {
+        if (sourceLymboId != null && targetLymboId != null && cardUuid != null) {
+            cardsController.moveCard(sourceLymboId, targetLymboId, cardUuid);
+            snackMoveCard();
+            updateListView();
+        }
     }
 
     // --------------------
@@ -407,14 +435,12 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     // --------------------
 
     /**
-     * Stashes a card from the current stack
+     * Indicates that a card has been stashed
      *
-     * @param pos  poistion of the card
+     * @param pos  position of the card
      * @param card card to be stashed
      */
     public void stash(int pos, Card card) {
-        updateListView();
-
         recentCard = card;
         recentCardPos = pos;
         recentEvent = EVENT_STASH;
@@ -429,14 +455,12 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     /**
-     * Discards a card from the current stack
+     * Indicates that a card has been discarded
      *
-     * @param pos  poistion of the card
+     * @param pos  position of the card
      * @param card card to be discarded
      */
     public void snackDiscard(int pos, Card card) {
-        updateListView();
-
         recentCard = card;
         recentCardPos = pos;
         recentEvent = EVENT_DISCARD;
@@ -451,14 +475,12 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     /**
-     * Puts a card with a given index to the end
+     * Indicates that a card has been put tho the end
      *
      * @param pos  poistion of the card
      * @param card card to be put to the end
      */
     public void snackPutToEnd(int pos, Card card) {
-        updateListView();
-
         recentCard = card;
         recentCardPos = pos - 1;
         recentEvent = EVENT_PUT_TO_END;
@@ -467,6 +489,67 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 .withOnClickListener(this)
                 .withMessageId(R.string.put_card_to_end)
                 .withActionMessageId(R.string.undo)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    /**
+     * Indicates that a card has been edited
+     */
+    public void snackEditCard() {
+        new SnackBar.Builder(this)
+                .withMessageId(R.string.edited_card)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    /**
+     * Indicates that tags have been selected
+     */
+    public void snackTagSelected() {
+        new SnackBar.Builder(this)
+                .withMessageId(R.string.tag_selected)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    /**
+     * Indicates that a note has been edited
+     */
+    public void snackEditNote() {
+        updateListView();
+
+        new SnackBar.Builder(this)
+                .withMessageId(R.string.note_edited)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    /**
+     * Indicates that a card has been copies
+     */
+    public void snackCopyCard() {
+        updateListView();
+
+        new SnackBar.Builder(this)
+                .withMessageId(R.string.copied_card)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    /**
+     * Indicates that a card has been moved
+     */
+    public void snackMoveCard() {
+        updateListView();
+
+        new SnackBar.Builder(this)
+                .withMessageId(R.string.moved_card)
                 .withStyle(SnackBar.Style.INFO)
                 .withDuration(SnackBar.MED_SNACK)
                 .show();

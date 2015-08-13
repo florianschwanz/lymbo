@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -141,18 +142,44 @@ public class LymbosController {
     }
 
     /**
+     * Stashes a lymbo
+     *
+     * @param lymbo lymbo to be stashed
+     */
+    public void stash(Lymbo lymbo) {
+        getLymbos().remove(lymbo);
+        getLymbosStashed().add(lymbo);
+        changeState(lymbo.getId(), true);
+    }
+
+    /**
+     * Restores a lymbo
+     *
+     * @param lymbo lymbo to be stashed
+     */
+    public void restore(Lymbo lymbo) {
+        getLymbos().add(lymbo);
+        getLymbosStashed().remove(lymbo);
+        changeState(lymbo.getId(), false);
+    }
+
+    /**
      * Saves lymbo location in database
      *
      * @param lymbo lymbo to be saved
      */
     public void save(Lymbo lymbo) {
-        LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
-        LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
+        if (lymbo.getPath() != null) {
+            lymbo.setModificationDate(new Date().toString());
 
-        datasource = new TableStackDatasource(activity);
-        datasource.open();
-        datasource.updateStackLocation(lymbo.getId(), lymbo.getPath());
-        datasource.close();
+            LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
+            LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
+
+            datasource = new TableStackDatasource(activity);
+            datasource.open();
+            datasource.updateStackLocation(lymbo.getId(), lymbo.getPath());
+            datasource.close();
+        }
     }
 
     /**

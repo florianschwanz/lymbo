@@ -39,7 +39,7 @@ public class ReportErrorDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         Bundle b = getArguments();
         builder.setView(v);
-        builder.setTitle(R.string.error_occured);
+        builder.setTitle(R.string.error_occurred);
 
         // Add positive button
         builder.setPositiveButton(R.string.okay, new OnClickListener() {

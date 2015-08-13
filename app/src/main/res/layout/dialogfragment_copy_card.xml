@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/dialog_fragment_padding"
+    android:theme="@style/Theme.AppCompat.Light.Dialog">
+
+    <LinearLayout
+        android:id="@+id/llDeepCopy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <CheckBox
+            android:id="@+id/cbDeepCopy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="" />
+
+        <de.interoberlin.lymbo.view.controls.RobotoTextView
+            android:id="@+id/tvDeepCopy"
+            style="@style/CardText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/deep_copy"
+            roboto:typeface="roboto_regular" />
+    </LinearLayout>
+
+    <de.interoberlin.lymbo.view.controls.RobotoTextView
+        android:id="@+id/tvLymbos"
+        style="@style/CardText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.50"
+        android:ellipsize="end"
+        android:text="@string/lymbos"
+        roboto:typeface="roboto_regular"
+        android:layout_marginTop="@dimen/divider_caption_margin_top"
+        android:layout_marginBottom="@dimen/divider_caption_margin_bottom"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/stroke" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dialog_fragment_padding"
+        android:theme="@style/Theme.AppCompat.Light.Dialog">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:id="@+id/tblLymbos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

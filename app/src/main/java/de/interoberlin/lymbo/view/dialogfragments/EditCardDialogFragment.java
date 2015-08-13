@@ -284,7 +284,7 @@ public class EditCardDialogFragment extends DialogFragment {
 
         // Get arguments
         Bundle bundle = this.getArguments();
-        final String uuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_uuid));
+        final String cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_uuid));
 
         AlertDialog dialog = (AlertDialog) getDialog();
 
@@ -308,7 +308,7 @@ public class EditCardDialogFragment extends DialogFragment {
                     }
 
                     if (valid) {
-                        ocListener.onEditSimpleCard(uuid, frontTitleValue, frontTextValues, backTitleValue, backTextValues, tags);
+                        ocListener.onEditSimpleCard(cardUuid, frontTitleValue, frontTextValues, backTitleValue, backTextValues, tags);
                         dismiss();
                     }
                 }

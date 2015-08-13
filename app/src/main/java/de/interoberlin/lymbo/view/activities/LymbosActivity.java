@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.github.mrengineer13.snackbar.SnackBar;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.util.Configuration;
@@ -32,7 +31,6 @@ import de.interoberlin.swipelistview.view.SwipeListView;
 public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddStackDialogFragment.OnCompleteListener, EditStackDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
     private LymbosController lymbosController;
-    private CardsController cardsController;
 
     // Views
     private SwipeRefreshLayout srl;
@@ -61,7 +59,6 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
         try {
             super.onCreate(savedInstanceState);
             lymbosController = LymbosController.getInstance(this);
-            cardsController = CardsController.getInstance(this);
 
             if (savedInstanceState != null) {
                 lymbosController.load();
@@ -175,7 +172,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     public void onMessageClick(Parcelable token) {
         switch (recentEvent) {
             case EVENT_STASH: {
-                cardsController.restore(recentLymbo);
+                lymbosController.restore(recentLymbo);
                 break;
             }
         }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.interoberlin.lymbo.model.card.Card;
@@ -25,6 +26,9 @@ public class CardsController {
     // Activity
     private Activity activity;
 
+    // Controllers
+    private LymbosController lymbosController;
+
     // Database
     private TableCardDatasource datasource;
 
@@ -33,7 +37,6 @@ public class CardsController {
     private List<Card> cards;
     private List<Card> cardsDismissed;
     private List<Card> cardsStashed;
-    private LymbosController lymbosController;
 
     private boolean displayOnlyFavorites;
 
@@ -116,30 +119,8 @@ public class CardsController {
     }
 
     // --------------------
-    // Methods - lymbo
+    // Methods
     // --------------------
-
-    /**
-     * Stashes a lymbo
-     *
-     * @param lymbo lymbo to be stashed
-     */
-    public void stash(Lymbo lymbo) {
-        lymbosController.getLymbos().remove(lymbo);
-        lymbosController.getLymbosStashed().add(lymbo);
-        lymbosController.changeState(lymbo.getId(), true);
-    }
-
-    /**
-     * Restores a lymbo
-     *
-     * @param lymbo lymbo to be stashed
-     */
-    public void restore(Lymbo lymbo) {
-        lymbosController.getLymbos().add(lymbo);
-        lymbosController.getLymbosStashed().remove(lymbo);
-        lymbosController.changeState(lymbo.getId(), false);
-    }
 
     /**
      * Writes lymbo object into file
@@ -150,10 +131,6 @@ public class CardsController {
             LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
         }
     }
-
-    // --------------------
-    // Methods - cards
-    // --------------------
 
     /**
      * Resets all cards
@@ -434,6 +411,48 @@ public class CardsController {
         datasource.open();
         datasource.updateCardFavorite(card.getId(), favorite);
         datasource.close();
+    }
+
+    /**
+     * Copies a card from one stack to another
+     *
+     * @param sourceLymboId id of source stack
+     * @param targetLymboId id of target stack
+     * @param cardId        id of card to be copied
+     * @param deepCopy      true if the copy shall be deep
+     */
+    public void copyCard(String sourceLymboId, String targetLymboId, String cardId, boolean deepCopy) {
+        Lymbo sourceLymbo = lymbosController.getLymboById(sourceLymboId);
+        Lymbo targetLymbo = lymbosController.getLymboById(targetLymboId);
+        Card card = getCardById(cardId);
+
+        if (deepCopy)
+            card.setId(UUID.randomUUID().toString());
+
+        targetLymbo.getCards().add(card);
+        lymbosController.save(targetLymbo);
+    }
+
+    /**
+     * Moves a card from one stack to another
+     *
+     * @param sourceLymboId id of source stack
+     * @param targetLymboId id of target stack
+     * @param cardId        id of card to be copied
+     */
+    public void moveCard(String sourceLymboId, String targetLymboId, String cardId) {
+        Lymbo sourceLymbo = lymbosController.getLymboById(sourceLymboId);
+        Lymbo targetLymbo = lymbosController.getLymboById(targetLymboId);
+        Card card = getCardById(cardId);
+
+        targetLymbo.getCards().add(card);
+        lymbosController.save(targetLymbo);
+
+        sourceLymbo.getCards().remove(card);
+        lymbosController.save(sourceLymbo);
+
+        getCards().remove(card);
+        save();
     }
 
     // --------------------
