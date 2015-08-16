@@ -128,7 +128,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         final LinearLayout llNoteBar = (LinearLayout) llCard.findViewById(R.id.llNoteBar);
         final TextView tvNote = (TextView) llCard.findViewById(R.id.tvNote);
-        
+
         // Context menu
         llCard.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override

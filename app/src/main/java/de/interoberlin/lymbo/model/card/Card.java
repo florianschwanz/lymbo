@@ -21,7 +21,6 @@ public class Card {
     private Tag chapter;
     private List<Tag> tags;
 
-    private boolean flip;
     private boolean edit;
     private int sideVisible;
 
@@ -73,7 +72,6 @@ public class Card {
 
         getSides().add(frontSide);
         getSides().add(backSide);
-        setFlip(true);
 
         setTags(tags);
     }
@@ -212,14 +210,6 @@ public class Card {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
-    }
-
-    public boolean isFlip() {
-        return flip;
-    }
-
-    public void setFlip(boolean flip) {
-        this.flip = flip;
     }
 
     public boolean isEdit() {

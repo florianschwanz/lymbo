@@ -259,10 +259,6 @@ public class LymboParser {
 
         if (id != null)
             card.setId(id);
-        if (flip != null)
-            card.setFlip(Boolean.parseBoolean(flip));
-        else if (defaults.containsKey("cardFlip"))
-            card.setFlip(Boolean.parseBoolean(defaults.get("cardFlip")));
         if (edit != null)
             card.setEdit(Boolean.parseBoolean(edit));
         else if (defaults.containsKey("cardEdit"))
