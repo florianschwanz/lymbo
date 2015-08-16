@@ -1,6 +1,7 @@
 package de.interoberlin.lymbo.view.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -347,11 +348,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                srl.setRefreshing(false);
-
-                cardsController.reset();
-
-                updateListView();
+                new LoadCardsTask().execute();
             }
         }, REFRESH_DELAY);
     }
@@ -619,5 +616,31 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 .withStyle(SnackBar.Style.ALERT)
                 .withDuration(SnackBar.MED_SNACK)
                 .show();
+    }
+
+    // --------------------
+    // Inner classes
+    // --------------------
+
+    public class LoadCardsTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            cardsController.reset();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            updateListView();
+
+            srl.setRefreshing(false);
+        }
+
     }
 }
