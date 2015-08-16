@@ -201,6 +201,9 @@ public class LymbosController {
         datasource.close();
     }
 
+    /**
+     * Searches for lymbo files on storage
+     */
     public void scan() {
         datasource = new TableStackDatasource(activity);
         datasource.open();

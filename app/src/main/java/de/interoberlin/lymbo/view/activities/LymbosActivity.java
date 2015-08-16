@@ -1,6 +1,7 @@
 package de.interoberlin.lymbo.view.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -158,12 +159,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                srl.setRefreshing(false);
-
-                lymbosController.scan();
-                lymbosController.load();
-
-                updateListView();
+                new LoadLymbosTask().execute();
             }
         }, REFRESH_DELAY);
     }
@@ -239,5 +235,32 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
         lymbosAdapter.filter();
         slv.closeOpenedItems();
         slv.invalidateViews();
+    }
+
+    // --------------------
+    // Inner classes
+    // --------------------
+
+    public class LoadLymbosTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            lymbosController.scan();
+            lymbosController.load();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            updateListView();
+
+            srl.setRefreshing(false);
+        }
+
     }
 }
