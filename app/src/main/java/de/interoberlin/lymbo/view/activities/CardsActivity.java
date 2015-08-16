@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mrengineer13.snackbar.SnackBar;
 
@@ -210,8 +209,12 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                 @Override
                 public void onClickFrontView(int position) {
-                    Card card = cardsAdapter.getFilteredItems().get(0);
-                    Toast.makeText(getBaseContext(), position + " : " + card.toString(), Toast.LENGTH_SHORT).show();
+                    Card card = cardsAdapter.getItem(position);
+                    LinearLayout llCard = (LinearLayout) slv.getChildAt(position);
+
+                    if (card.getSides().size() > 1) {
+                        cardsAdapter.flip(card, llCard);
+                    }
                 }
 
                 @Override

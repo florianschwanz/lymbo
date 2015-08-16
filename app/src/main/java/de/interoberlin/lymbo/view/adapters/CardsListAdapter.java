@@ -17,7 +17,6 @@ import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -113,35 +112,25 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         // Layout inflater
         LayoutInflater vi;
         vi = LayoutInflater.from(getContext());
-        final FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card, parent, false);
+        final LinearLayout llCard = (LinearLayout) vi.inflate(R.layout.card, parent, false);
 
         // Load views : components
-        final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
+        final RelativeLayout rlMain = (RelativeLayout) llCard.findViewById(R.id.rlMain);
 
         // Load views : bottom bar
-        final LinearLayout llTags = (LinearLayout) flCard.findViewById(R.id.llTags);
-        final LinearLayout llFlip = (LinearLayout) flCard.findViewById(R.id.llFlip);
-        final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
-        final TextView tvDenominator = (TextView) flCard.findViewById(R.id.tvDenominator);
-        final ImageView ivNote = (ImageView) flCard.findViewById(R.id.ivNote);
-        final ImageView ivFavorite = (ImageView) flCard.findViewById(R.id.ivFavorite);
-        final ImageView ivHint = (ImageView) flCard.findViewById(R.id.ivHint);
+        final LinearLayout llTags = (LinearLayout) llCard.findViewById(R.id.llTags);
+        final LinearLayout llFlip = (LinearLayout) llCard.findViewById(R.id.llFlip);
+        final TextView tvNumerator = (TextView) llCard.findViewById(R.id.tvNumerator);
+        final TextView tvDenominator = (TextView) llCard.findViewById(R.id.tvDenominator);
+        final ImageView ivNote = (ImageView) llCard.findViewById(R.id.ivNote);
+        final ImageView ivFavorite = (ImageView) llCard.findViewById(R.id.ivFavorite);
+        final ImageView ivHint = (ImageView) llCard.findViewById(R.id.ivHint);
 
-        final LinearLayout llNoteBar = (LinearLayout) flCard.findViewById(R.id.llNoteBar);
-        final TextView tvNote = (TextView) flCard.findViewById(R.id.tvNote);
-
-        // Enable flip for the whole card
-        if (card.isFlip()) {
-            flCard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    flip(card, flCard);
-                }
-            });
-        }
-
+        final LinearLayout llNoteBar = (LinearLayout) llCard.findViewById(R.id.llNoteBar);
+        final TextView tvNote = (TextView) llCard.findViewById(R.id.tvNote);
+        
         // Context menu
-        flCard.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+        llCard.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
                 contextMenu.add(0, 0, 0, a.getResources().getString(R.string.edit))
@@ -195,8 +184,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
-                                Animation a = ViewUtil.collapse(c, flCard);
-                                flCard.startAnimation(a);
+                                Animation a = ViewUtil.collapse(c, llCard);
+                                llCard.startAnimation(a);
 
                                 a.setAnimationListener(new Animation.AnimationListener() {
                                     @Override
@@ -273,7 +262,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                     component.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            flip(card, flCard);
+                            flip(card, llCard);
                         }
                     });
 
@@ -327,13 +316,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         if (card.getSides().size() > 1) {
             tvNumerator.setText(String.valueOf(card.getSideVisible() + 1));
             tvDenominator.setText(String.valueOf(card.getSides().size()));
-
-            llFlip.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    flip(card, flCard);
-                }
-            });
         } else {
             ViewUtil.remove(llFlip);
         }
@@ -431,10 +413,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         // Restoring animation
         if (card.isRestoring()) {
-            flCard.setTranslationX(displayWidth);
+            llCard.setTranslationX(displayWidth);
 
-            Animation anim = ViewUtil.expand(c, flCard);
-            flCard.startAnimation(anim);
+            Animation anim = ViewUtil.expand(c, llCard);
+            llCard.startAnimation(anim);
 
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -444,8 +426,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    Animation anim = ViewUtil.fromRight(c, flCard, displayWidth);
-                    flCard.startAnimation(anim);
+                    Animation anim = ViewUtil.fromRight(c, llCard, displayWidth);
+                    llCard.startAnimation(anim);
                 }
 
                 @Override
@@ -455,10 +437,16 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             });
         }
 
-        return flCard;
+        return llCard;
     }
 
-    private void flip(final Card card, final FrameLayout flCard) {
+    /**
+     * Flips a card to the next side
+     *
+     * @param card card to be flipped
+     * @param flCard corresponding view
+     */
+    public void flip(final Card card, final LinearLayout flCard) {
         if (!checkAnswerSelected(card))
             return;
 
@@ -514,7 +502,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @param card   card
      * @param flCard frameLayout of card
      */
-    private void changeSide(Card card, FrameLayout flCard) {
+    private void changeSide(Card card, LinearLayout flCard) {
         final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
         final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
 
