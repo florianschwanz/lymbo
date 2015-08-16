@@ -96,5 +96,7 @@
     <string name="edited_card">Karte bearbeitet</string>
     <string name="tag_selected">Tag ausgewählt</string>
     <string name="deep_copy">Deep copy</string>
+    <string name="cards_resetted">Karten zurückgesetzt</string>
+    <string name="lymbos_loaded">Lymbos geladen</string>
 
 </resources>

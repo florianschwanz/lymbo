@@ -96,5 +96,7 @@
     <string name="edited_card">Edited card</string>
     <string name="tag_selected">Tag selected</string>
     <string name="deep_copy">Deep copy</string>
+    <string name="cards_resetted">Cards resetted</string>
+    <string name="lymbos_loaded">Lymbos loaded</string>
 
 </resources>

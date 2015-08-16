@@ -219,6 +219,17 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
                 .show();
     }
 
+    /**
+     * Indicates that lymbos have been loaded
+     */
+    public void snackLymbosLoaded() {
+        new SnackBar.Builder(this)
+                .withMessageId(R.string.lymbos_loaded)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
     // --------------------
     // Methods
     // --------------------

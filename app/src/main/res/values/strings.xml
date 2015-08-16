@@ -31,6 +31,7 @@
     <string name="card">Card</string>
     <string name="card_restored">Card restored</string>
     <string name="cards">Cards</string>
+    <string name="cards_resetted">Cards resetted</string>
     <string name="cards_stash">Cards Stash</string>
     <string name="chapters">Chapters</string>
     <string name="click_to_continue">Touch on screen to continue</string>
@@ -61,6 +62,7 @@
     <string name="lymbo_error_log">Lymbo Error Log</string>
     <string name="lymbo_for_you">Lymbo for you</string>
     <string name="lymbos">Lymbos</string>
+    <string name="lymbos_loaded">Lymbos loaded</string>
     <string name="lymbos_stash">Lymbos Stash</string>
     <string name="menu_log">Log</string>
     <string name="menu_about">About</string>

@@ -455,6 +455,21 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     /**
+     * Toggles the favorite state of an item
+     *
+     * @param favorite whether or not a card has been added to favorites
+     */
+    public void toggleFavorite(boolean favorite) {
+        updateListView();
+
+        new SnackBar.Builder(this)
+                .withMessageId(favorite ? R.string.add_card_to_favorites : R.string.remove_card_from_favorites)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.SHORT_SNACK)
+                .show();
+    }
+
+    /**
      * Indicates that a card has been discarded
      *
      * @param pos  position of the card
@@ -556,17 +571,13 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     /**
-     * Toggles the favorite state of an item
-     *
-     * @param favorite whether or not a card has been added to favorites
+     * Indicates that cards have been resetted
      */
-    public void toggleFavorite(boolean favorite) {
-        updateListView();
-
+    public void snackCardsResetted() {
         new SnackBar.Builder(this)
-                .withMessageId(favorite ? R.string.add_card_to_favorites : R.string.remove_card_from_favorites)
+                .withMessageId(R.string.cards_resetted)
                 .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.SHORT_SNACK)
+                .withDuration(SnackBar.MED_SNACK)
                 .show();
     }
 
@@ -638,6 +649,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             updateListView();
+            snackCardsResetted();
 
             srl.setRefreshing(false);
         }
