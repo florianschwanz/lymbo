@@ -34,9 +34,7 @@ import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
-import de.interoberlin.lymbo.model.card.components.ImageComponent;
 import de.interoberlin.lymbo.model.card.components.ResultComponent;
-import de.interoberlin.lymbo.model.card.components.SVGComponent;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EComponent;
@@ -137,46 +135,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
-                                String uuid = card.getId();
-                                String frontTitle = ((TitleComponent) card.getSides().get(0).getFirst(EComponent.TITLE)).getValue();
-                                String backTitle = ((TitleComponent) card.getSides().get(1).getFirst(EComponent.TITLE)).getValue();
-                                ArrayList<String> frontTexts = new ArrayList<>();
-                                ArrayList<String> backTexts = new ArrayList<>();
-                                ArrayList<String> tagsLymbo = new ArrayList<>();
-                                ArrayList<String> tagsCard = new ArrayList<>();
-
-                                for (Displayable d : card.getSides().get(0).getComponents()) {
-                                    if (d instanceof TextComponent) {
-                                        frontTexts.add(((TextComponent) d).getValue());
-                                    }
-                                }
-
-                                for (Displayable d : card.getSides().get(1).getComponents()) {
-                                    if (d instanceof TextComponent) {
-                                        backTexts.add(((TextComponent) d).getValue());
-                                    }
-                                }
-
-                                for (Tag tag : cardsController.getLymbo().getTags()) {
-                                    tagsLymbo.add(tag.getName());
-                                }
-
-                                for (Tag tag : card.getTags()) {
-                                    tagsCard.add(tag.getName());
-                                }
-
-                                ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-                                EditCardDialogFragment dialog = new EditCardDialogFragment();
-                                Bundle bundle = new Bundle();
-                                bundle.putString(c.getResources().getString(R.string.bundle_card_uuid), uuid);
-                                bundle.putString(c.getResources().getString(R.string.bundle_front_title), frontTitle);
-                                bundle.putString(c.getResources().getString(R.string.bundle_back_title), backTitle);
-                                bundle.putStringArrayList(c.getResources().getString(R.string.bundle_texts_front), frontTexts);
-                                bundle.putStringArrayList(c.getResources().getString(R.string.bundle_texts_back), backTexts);
-                                bundle.putStringArrayList(c.getResources().getString(R.string.bundle_tags_lymbo), tagsLymbo);
-                                bundle.putStringArrayList(c.getResources().getString(R.string.bundle_tags_card), tagsCard);
-                                dialog.setArguments(bundle);
-                                dialog.show(a.getFragmentManager(), "okay");
+                                edit(card, llCard);
                                 return false;
                             }
                         });
@@ -184,25 +143,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
-                                Animation a = ViewUtil.collapse(c, llCard);
-                                llCard.startAnimation(a);
-
-                                a.setAnimationListener(new Animation.AnimationListener() {
-                                    @Override
-                                    public void onAnimationStart(Animation animation) {
-
-                                    }
-
-                                    @Override
-                                    public void onAnimationEnd(Animation animation) {
-                                        stash(position, card);
-                                    }
-
-                                    @Override
-                                    public void onAnimationRepeat(Animation animation) {
-
-                                    }
-                                });
+                                stash(position, card, llCard);
                                 return false;
                             }
                         });
@@ -211,14 +152,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
-                                String uuid = card.getId();
-
-                                CopyCardDialogFragment dialog = new CopyCardDialogFragment();
-                                Bundle bundle = new Bundle();
-                                bundle.putString(c.getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getLymbo().getId());
-                                bundle.putString(c.getResources().getString(R.string.bundle_card_uuid), uuid);
-                                dialog.setArguments(bundle);
-                                dialog.show(a.getFragmentManager(), "okay");
+                                copy(card);
                                 return false;
                             }
                         });
@@ -227,18 +161,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
-                                String uuid = card.getId();
-
-                                MoveCardDialogFragment dialog = new MoveCardDialogFragment();
-                                Bundle bundle = new Bundle();
-                                bundle.putString(c.getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getLymbo().getId());
-                                bundle.putString(c.getResources().getString(R.string.bundle_card_uuid), uuid);
-                                dialog.setArguments(bundle);
-                                dialog.show(a.getFragmentManager(), "okay");
+                                move(card);
                                 return false;
                             }
                         });
-
             }
         });
 
@@ -253,24 +179,15 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                 View component = d.getView(c, a, llComponents);
                 llComponents.addView(component);
 
-                if ((d instanceof TitleComponent && ((TitleComponent) d).isFlip()) ||
-                        (d instanceof TextComponent && ((TextComponent) d).isFlip()) ||
-                        (d instanceof ImageComponent && ((ImageComponent) d).isFlip()) ||
-                        (d instanceof ResultComponent && ((ResultComponent) d).isFlip()) ||
-                        (d instanceof SVGComponent && ((SVGComponent) d).isFlip())
-                        ) {
-                    component.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            flip(card, llCard);
-                        }
-                    });
-
-                }
+                component.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        flip(card, llCard);
+                    }
+                });
             }
 
             llSide.setVisibility(View.INVISIBLE);
-
             rlMain.addView(llSide);
         }
 
@@ -441,36 +358,81 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     }
 
     /**
-     * Flips a card to the next side
+     * Opens dialog to edit card
      *
-     * @param card card to be flipped
-     * @param flCard corresponding view
+     * @param card   card to be edited
+     * @param llCard corresponding view
      */
-    public void flip(final Card card, final LinearLayout flCard) {
-        if (!checkAnswerSelected(card))
-            return;
+    private void edit(final Card card, final LinearLayout llCard) {
+        String uuid = card.getId();
+        String frontTitle = ((TitleComponent) card.getSides().get(0).getFirst(EComponent.TITLE)).getValue();
+        String backTitle = ((TitleComponent) card.getSides().get(1).getFirst(EComponent.TITLE)).getValue();
+        ArrayList<String> frontTexts = new ArrayList<>();
+        ArrayList<String> backTexts = new ArrayList<>();
+        ArrayList<String> tagsLymbo = new ArrayList<>();
+        ArrayList<String> tagsCard = new ArrayList<>();
 
-        final int CARD_FLIP_TIME = c.getResources().getInteger(R.integer.card_flip_time);
-        final int VIBRATION_DURATION_FLIP = c.getResources().getInteger(R.integer.vibration_duration_flip);
-
-        ObjectAnimator animation = ObjectAnimator.ofFloat(flCard, "rotationY", 0.0f, 90.0f);
-        animation.setDuration(CARD_FLIP_TIME / 2);
-        animation.setInterpolator(new AccelerateDecelerateInterpolator());
-        animation.start();
-
-        flCard.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                changeSide(card, flCard);
-
-                ObjectAnimator animation = ObjectAnimator.ofFloat(flCard, "rotationY", -90.0f, 0.0f);
-                animation.setDuration(CARD_FLIP_TIME / 2);
-                animation.setInterpolator(new AccelerateDecelerateInterpolator());
-                animation.start();
+        for (Displayable d : card.getSides().get(0).getComponents()) {
+            if (d instanceof TextComponent) {
+                frontTexts.add(((TextComponent) d).getValue());
             }
-        }, CARD_FLIP_TIME / 2);
+        }
 
-        ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION_FLIP);
+        for (Displayable d : card.getSides().get(1).getComponents()) {
+            if (d instanceof TextComponent) {
+                backTexts.add(((TextComponent) d).getValue());
+            }
+        }
+
+        for (Tag tag : cardsController.getLymbo().getTags()) {
+            tagsLymbo.add(tag.getName());
+        }
+
+        for (Tag tag : card.getTags()) {
+            tagsCard.add(tag.getName());
+        }
+
+        ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+        EditCardDialogFragment dialog = new EditCardDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(c.getResources().getString(R.string.bundle_card_uuid), uuid);
+        bundle.putString(c.getResources().getString(R.string.bundle_front_title), frontTitle);
+        bundle.putString(c.getResources().getString(R.string.bundle_back_title), backTitle);
+        bundle.putStringArrayList(c.getResources().getString(R.string.bundle_texts_front), frontTexts);
+        bundle.putStringArrayList(c.getResources().getString(R.string.bundle_texts_back), backTexts);
+        bundle.putStringArrayList(c.getResources().getString(R.string.bundle_tags_lymbo), tagsLymbo);
+        bundle.putStringArrayList(c.getResources().getString(R.string.bundle_tags_card), tagsCard);
+        dialog.setArguments(bundle);
+        dialog.show(a.getFragmentManager(), "okay");
+    }
+
+    /**
+     * Opens dialog to stash card
+     *
+     * @param position position of item
+     * @param card     card to be stashed
+     * @param llCard   corresponding view
+     */
+    private void stash(final int position, final Card card, final LinearLayout llCard) {
+        Animation a = ViewUtil.collapse(c, llCard);
+        llCard.startAnimation(a);
+
+        a.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                stash(position, card);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     /**
@@ -484,6 +446,73 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         ((CardsActivity) a).stash(pos, card);
         filter();
     }
+
+    /**
+     * Opens dialog to copy card
+     *
+     * @param card card to be copied
+     */
+    private void copy(final Card card) {
+        String uuid = card.getId();
+
+        CopyCardDialogFragment dialog = new CopyCardDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(c.getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getLymbo().getId());
+        bundle.putString(c.getResources().getString(R.string.bundle_card_uuid), uuid);
+        dialog.setArguments(bundle);
+        dialog.show(a.getFragmentManager(), "okay");
+    }
+
+    /**
+     * Opens dialog to move card
+     *
+     * @param card card to be moved
+     */
+    private void move(final Card card) {
+        String uuid = card.getId();
+
+        MoveCardDialogFragment dialog = new MoveCardDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(c.getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getLymbo().getId());
+        bundle.putString(c.getResources().getString(R.string.bundle_card_uuid), uuid);
+        dialog.setArguments(bundle);
+        dialog.show(a.getFragmentManager(), "okay");
+    }
+
+
+    /**
+     * Flips a card to the next side
+     *
+     * @param card   card to be flipped
+     * @param llCard corresponding view
+     */
+    public void flip(final Card card, final LinearLayout llCard) {
+        if (!checkAnswerSelected(card))
+            return;
+
+        final int CARD_FLIP_TIME = c.getResources().getInteger(R.integer.card_flip_time);
+        final int VIBRATION_DURATION_FLIP = c.getResources().getInteger(R.integer.vibration_duration_flip);
+
+        ObjectAnimator animation = ObjectAnimator.ofFloat(llCard, "rotationY", 0.0f, 90.0f);
+        animation.setDuration(CARD_FLIP_TIME / 2);
+        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        animation.start();
+
+        llCard.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                changeSide(card, llCard);
+
+                ObjectAnimator animation = ObjectAnimator.ofFloat(llCard, "rotationY", -90.0f, 0.0f);
+                animation.setDuration(CARD_FLIP_TIME / 2);
+                animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                animation.start();
+            }
+        }, CARD_FLIP_TIME / 2);
+
+        ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION_FLIP);
+    }
+
 
     /**
      * Toggles the favorite state of an item
@@ -506,12 +535,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
         final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
 
-        // Handle components
         handleQuiz(card);
-
-        card.setSideVisible(card.getSideVisible() + 1);
-        card.setSideVisible(card.getSideVisible() % card.getSides().size());
-
+        card.setSideVisible((card.getSideVisible() + 1) % card.getSides().size());
         tvNumerator.setText(String.valueOf(card.getSideVisible() + 1));
 
         for (View v : getAllChildren(rlMain)) {

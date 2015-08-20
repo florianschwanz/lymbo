@@ -2,21 +2,24 @@ package de.interoberlin.lymbo.model.card.components;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.Displayable;
+import de.interoberlin.sauvignon.lib.controller.renderer.SvgRenderer;
 import de.interoberlin.sauvignon.lib.model.svg.SVG;
-import de.interoberlin.sauvignon.lib.model.util.SVGPaint;
-import de.interoberlin.sauvignon.lib.view.SVGPanel;
 
 public class SVGComponent implements Displayable {
-    private String color = "#FFFFFF";
+    private String color = null;
     private SVG svg = null;
-    private SVGPanel panel;
 
     private boolean flip = false;
 
@@ -37,24 +40,25 @@ public class SVGComponent implements Displayable {
         LinearLayout llSVGComponent = (LinearLayout) li.inflate(R.layout.component_svg, parent, false);
 
         if (svg != null) {
-            panel = new SVGPanel(c);
-            panel.setSVG(svg);
+            Bitmap bmp = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bmp);
 
-            if (color.length() == 4) {
-                color = "" + color.charAt(0) + color.charAt(0) + color.charAt(1) + color.charAt(1) + color.charAt(2) + color.charAt(2);
+            // Clear canvas
+            if (color != null) {
+                canvas.drawColor(c.getResources().getColor(R.color.white));
+            } else {
+                canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             }
 
-            int colorA = (255);
-            int colorR = Integer.parseInt(color.substring(1, 3), 16);
-            int colorG = Integer.parseInt(color.substring(3, 5), 16);
-            int colorB = Integer.parseInt(color.substring(5, 7), 16);
+            // Render SVG
+            canvas = SvgRenderer.renderToCanvas(canvas, svg);
 
-            panel.setBackgroundColor(new SVGPaint(colorA, colorR, colorG, colorB));
+            ImageView iv = new ImageView(c);
+            iv.setImageBitmap(bmp);
 
             llSVGComponent.setMinimumWidth((int) svg.getWidth());
             llSVGComponent.setMinimumHeight((int) svg.getHeight());
-            llSVGComponent.addView(panel, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            // panel.display((int) svg.getWidth(), (int) svg.getHeight());
+            llSVGComponent.addView(iv, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         }
 
         return llSVGComponent;
