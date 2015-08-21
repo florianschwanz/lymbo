@@ -27,7 +27,7 @@ import de.interoberlin.sauvignon.lib.model.svg.elements.AGeometric;
 import de.interoberlin.sauvignon.lib.model.svg.elements.rect.SVGRect;
 import de.interoberlin.sauvignon.lib.model.svg.transform.transform.SVGTransformTranslate;
 import de.interoberlin.sauvignon.lib.model.util.SVGPaint;
-import de.interoberlin.sauvignon.lib.view.SVGPanel;
+import de.interoberlin.sauvignon.lib.view.SVGSurfacePanel;
 
 public class SplashActivity extends Activity implements Accelerator.OnTiltListener {
     public static Activity activity;
@@ -46,7 +46,7 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
     private Sensor accelerator;
 
     private static SVG svg;
-    private static SVGPanel panel;
+    private static SVGSurfacePanel panel;
     private static ImageView ivLogo;
 
     // --------------------
@@ -73,7 +73,7 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         accelerator = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         svg = SvgLoader.getSVGFromAsset(this, "lymbo.svg");
-        panel = new SVGPanel(this);
+        panel = new SVGSurfacePanel(this);
         panel.setSVG(svg);
         panel.setBackgroundColor(new SVGPaint(255, 208, 227, 153));
         panel.setOnClickListener(new View.OnClickListener() {
