@@ -211,7 +211,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 @Override
                 public void onClickFrontView(int position) {
                     Card card = cardsAdapter.getItem(position);
-                    LinearLayout llCard = (LinearLayout) slv.getChildAt(position);
+                    LinearLayout llCard = (LinearLayout) cardsAdapter.getView(position, null, slv);
 
                     if (card.getSides().size() > 1) {
                         cardsAdapter.flip(card, llCard);

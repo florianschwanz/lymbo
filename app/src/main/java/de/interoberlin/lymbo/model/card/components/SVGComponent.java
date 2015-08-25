@@ -34,7 +34,14 @@ public class SVGComponent implements Displayable {
         LayoutInflater li = LayoutInflater.from(c);
         LinearLayout llSVGComponent = (LinearLayout) li.inflate(R.layout.component_svg, parent, false);
 
+        llSVGComponent.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
         if (svg != null) {
+            int componentWidth = llSVGComponent.getLayoutParams().width;
+            float orginalSVGWidth = svg.getWidth();
+            float orginalSVGHeight = svg.getHeight();
+            int ratio = (int) (orginalSVGWidth / orginalSVGHeight);
+
             SVGImagePanel svgIp = new SVGImagePanel(c, svg, 500, 500);
 
             llSVGComponent.setMinimumWidth((int) svg.getWidth());
