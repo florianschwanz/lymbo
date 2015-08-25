@@ -99,7 +99,7 @@ public class MoveCardDialogFragment extends DialogFragment {
         // Load dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v);
-        builder.setTitle(R.string.copy_card);
+        builder.setTitle(R.string.move_card);
 
         // Add positive button
         builder.setPositiveButton(R.string.okay, new OnClickListener() {
