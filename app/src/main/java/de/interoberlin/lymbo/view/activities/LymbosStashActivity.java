@@ -122,6 +122,11 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
                 startActivity(i);
                 break;
             }
+            case R.id.menu_settings: {
+                Intent i = new Intent(LymbosStashActivity.this, SettingsActivity.class);
+                startActivity(i);
+                break;
+            }
             default: {
                 return super.onOptionsItemSelected(item);
             }

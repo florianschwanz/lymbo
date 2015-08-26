@@ -48,6 +48,11 @@
         <item name="android:textColorPrimary">@color/white</item>
     </style>
 
+    <style name="Settings">
+        <item name="android:textColor">@color/card_text</item>
+        <item name="android:textColorSecondary">@color/card_light_text</item>
+    </style>
+
     <style name="CardText">
         <item name="android:textSize">@dimen/card_small_text</item>
         <item name="android:textColor">@color/card_text</item>

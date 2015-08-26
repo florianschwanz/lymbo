@@ -308,6 +308,11 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 startActivity(i);
                 break;
             }
+            case R.id.menu_settings: {
+                Intent i = new Intent(CardsActivity.this, SettingsActivity.class);
+                startActivity(i);
+                break;
+            }
             default: {
                 return super.onOptionsItemSelected(item);
             }
