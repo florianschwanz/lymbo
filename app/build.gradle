@@ -271,4 +271,6 @@ dependencies {
     // Used for animation
     compile 'com.github.mrengineer13:snackbar:1.1.0'
     compile 'com.nineoldandroids:library:2.4.0+'
+    // Used for translation
+    compile 'com.google.code.gson:gson:2.3.1'
 }
