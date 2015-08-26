@@ -145,6 +145,11 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
                 startActivity(i);
                 break;
             }
+            case R.id.menu_settings: {
+                Intent i = new Intent(LymbosActivity.this, SettingsActivity.class);
+                startActivity(i);
+                break;
+            }
         }
 
         return true;

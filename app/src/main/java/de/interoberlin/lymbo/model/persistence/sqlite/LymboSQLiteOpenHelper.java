@@ -5,18 +5,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
+import de.interoberlin.lymbo.model.persistence.sqlite.settings.TableSettingsDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackDatasource;
 
 public class LymboSQLiteOpenHelper extends SQLiteOpenHelper {
-    private static Context context;
-
     // Database
     private static final String DATABASE_NAME = "lymbo";
     private static final int DATABASE_VERSION = 3;
 
     public LymboSQLiteOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.context = context;
     }
 
     // --------------------
@@ -50,5 +48,10 @@ public class LymboSQLiteOpenHelper extends SQLiteOpenHelper {
     public void recreateTableStack(SQLiteDatabase db) {
         db.execSQL(TableStackDatasource.getCreateStatement());
         db.execSQL(TableStackDatasource.getDropStatement());
+    }
+
+    public void recreateTableSettings(SQLiteDatabase db) {
+        db.execSQL(TableSettingsDatasource.getCreateStatement());
+        db.execSQL(TableSettingsDatasource.getDropStatement());
     }
 }

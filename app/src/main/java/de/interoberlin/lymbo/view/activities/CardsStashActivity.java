@@ -140,6 +140,11 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
                 startActivity(i);
                 break;
             }
+            case R.id.menu_settings: {
+                Intent i = new Intent(CardsStashActivity.this, SettingsActivity.class);
+                startActivity(i);
+                break;
+            }
             default: {
                 return super.onOptionsItemSelected(item);
             }

@@ -98,5 +98,7 @@
     <string name="deep_copy">Deep copy</string>
     <string name="cards_resetted">Karten zurückgesetzt</string>
     <string name="lymbos_loaded">Lymbos geladen</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="settings">Einstellungen</string>
 
 </resources>
