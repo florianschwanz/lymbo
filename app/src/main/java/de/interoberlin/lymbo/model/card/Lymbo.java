@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.App;
+import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 
 public class Lymbo {
     private String path;
@@ -27,8 +28,9 @@ public class Lymbo {
     private List<Tag> tags;
     private List<Tag> chapters;
 
-    private boolean containsGeneratedIds;
+    private LanguageAspect languageAspect;
 
+    private boolean containsGeneratedIds;
     private String error;
 
     // -------------------------
@@ -211,6 +213,14 @@ public class Lymbo {
 
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+    public LanguageAspect getLanguageAspect() {
+        return languageAspect;
+    }
+
+    public void setLanguageAspect(LanguageAspect languageAspect) {
+        this.languageAspect = languageAspect;
     }
 
     public boolean isContainsGeneratedIds() {
