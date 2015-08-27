@@ -16,8 +16,6 @@ public class ResultComponent implements Displayable {
     private String gravity = "left";
     private int color = 0;
 
-    private boolean flip = false;
-
     // --------------------
     // Constructors
     // --------------------
@@ -74,13 +72,5 @@ public class ResultComponent implements Displayable {
 
     public void setColor(int color) {
         this.color = color;
-    }
-
-    public boolean isFlip() {
-        return flip;
-    }
-
-    public void setFlip(boolean flip) {
-        this.flip = flip;
     }
 }

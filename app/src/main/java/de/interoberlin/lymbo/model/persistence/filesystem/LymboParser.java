@@ -405,10 +405,6 @@ public class LymboParser {
             component.setGravity(parseGravity(gravity));
         else if (defaults.containsKey("titleGravity"))
             component.setGravity(parseGravity(defaults.get("titleGravity")));
-        if (flip != null)
-            component.setFlip(Boolean.parseBoolean(flip));
-        else if (defaults.containsKey("titleFlip"))
-            component.setFlip(Boolean.parseBoolean(defaults.get("titleFlip")));
         if (!translations.isEmpty())
             component.setTranslations(translations);
 
@@ -474,10 +470,6 @@ public class LymboParser {
             component.setStyle(parseStyle(style));
         else if (defaults.containsKey("textStyle"))
             component.setStyle(parseStyle(defaults.get("textStyle")));
-        if (flip != null)
-            component.setFlip(Boolean.parseBoolean(flip));
-        else if (defaults.containsKey("textFlip"))
-            component.setFlip(Boolean.parseBoolean(defaults.get("textFlip")));
         if (!translations.isEmpty())
             component.setTranslations(translations);
 
@@ -513,10 +505,6 @@ public class LymboParser {
         */
 
         // Fill element
-        if (flip != null)
-            component.setFlip(Boolean.parseBoolean(flip));
-        else if (defaults.containsKey("resultFlip"))
-            component.setFlip(Boolean.parseBoolean(defaults.get("resultFlip")));
 
         return component;
     }
@@ -553,10 +541,6 @@ public class LymboParser {
         // Fill element
         if (value != null)
             component.setValue(value);
-        if (flip != null)
-            component.setFlip(Boolean.parseBoolean(flip));
-        else if (defaults.containsKey("imageFlip"))
-            component.setFlip(Boolean.parseBoolean(defaults.get("imageFlip")));
 
         return component;
     }
@@ -693,10 +677,6 @@ public class LymboParser {
             component.setColor(color);
         else if (defaults.containsKey("svgColor"))
             component.setColor(defaults.get("svgColor"));
-        if (flip != null)
-            component.setFlip(Boolean.parseBoolean(flip));
-        else if (defaults.containsKey("svgFlip"))
-            component.setFlip(Boolean.parseBoolean(defaults.get("svgFlip")));
 
         return component;
     }

@@ -17,8 +17,6 @@ import de.interoberlin.lymbo.util.Base64BitmapConverter;
 public class ImageComponent implements Displayable {
     private String value;
 
-    private boolean flip = false;
-
     // --------------------
     // Constructor
     // --------------------
@@ -65,13 +63,5 @@ public class ImageComponent implements Displayable {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public boolean isFlip() {
-        return flip;
-    }
-
-    public void setFlip(boolean flip) {
-        this.flip = flip;
     }
 }

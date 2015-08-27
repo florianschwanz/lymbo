@@ -16,8 +16,6 @@ public class SVGComponent implements Displayable {
     private String color = null;
     private SVG svg = null;
 
-    private boolean flip = false;
-
     // --------------------
     // Constructors
     // --------------------
@@ -75,13 +73,5 @@ public class SVGComponent implements Displayable {
 
     public void setSVG(SVG svg) {
         this.svg = svg;
-    }
-
-    public boolean isFlip() {
-        return flip;
-    }
-
-    public void setFlip(boolean flip) {
-        this.flip = flip;
     }
 }

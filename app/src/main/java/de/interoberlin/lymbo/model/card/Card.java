@@ -45,28 +45,24 @@ public class Card {
         TitleComponent frontTitle = new TitleComponent();
         frontTitle.setValue(frontTitleValue);
         frontTitle.setGravity(EGravity.CENTER);
-        frontTitle.setFlip(true);
         frontSide.addComponent(frontTitle);
 
         for (String frontTextValue : frontTextsValues) {
             TextComponent frontText = new TextComponent();
             frontText.setValue(frontTextValue);
             frontText.setGravity(EGravity.LEFT);
-            frontText.setFlip(true);
             frontSide.addComponent(frontText);
         }
 
         TitleComponent backTitle = new TitleComponent();
         backTitle.setGravity(EGravity.CENTER);
         backTitle.setValue(backTitleValue);
-        backTitle.setFlip(true);
         backSide.addComponent(backTitle);
 
         for (String backTextValue : backTextsValues) {
             TextComponent backText = new TextComponent();
             backText.setValue(backTextValue);
             backText.setGravity(EGravity.LEFT);
-            backText.setFlip(true);
             backSide.addComponent(backText);
         }
 

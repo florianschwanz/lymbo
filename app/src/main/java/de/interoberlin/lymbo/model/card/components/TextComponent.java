@@ -27,8 +27,6 @@ public class TextComponent implements Displayable {
     private EGravity gravity = EGravity.LEFT;
     private EStyle style = EStyle.NORMAL;
 
-    private boolean flip = false;
-
     // --------------------
     // Constructors
     // --------------------
@@ -125,13 +123,5 @@ public class TextComponent implements Displayable {
 
     public void setStyle(EStyle style) {
         this.style = style;
-    }
-
-    public boolean isFlip() {
-        return flip;
-    }
-
-    public void setFlip(boolean flip) {
-        this.flip = flip;
     }
 }
