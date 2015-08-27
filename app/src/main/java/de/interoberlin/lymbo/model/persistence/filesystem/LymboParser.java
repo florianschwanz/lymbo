@@ -150,8 +150,7 @@ public class LymboParser {
 
             if (!onlyTopLevel && name.equals("card")) {
                 cards.add(parseCard(parser));
-            }
-            if (name.equals("language")) {
+            } else if (name.equals("language")) {
                 la = parseLanguageAspect(parser);
             } else {
                 skip(parser);

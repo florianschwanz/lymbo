@@ -98,6 +98,7 @@
     <string name="splash_found_2">Found</string>
     <string name="stack_restored">Stack restored</string>
     <string name="stack_stashed">Stack stashed</string>
+    <string name="stack_types">Stack Types</string>
     <string name="stash">Stash</string>
     <string name="stash_card">Stash card</string>
     <string name="stash_stack">Stash stack</string>

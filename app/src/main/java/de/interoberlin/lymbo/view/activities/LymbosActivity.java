@@ -19,17 +19,19 @@ import com.github.mrengineer13.snackbar.SnackBar;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.LymbosController;
+import de.interoberlin.lymbo.model.card.EStackType;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.AddStackDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditStackDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.SelectStackTypeFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddStackDialogFragment.OnCompleteListener, EditStackDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddStackDialogFragment.OnCompleteListener, EditStackDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, SelectStackTypeFragment.OnStackTypeSelectedListener {
     // Controllers
     private LymbosController lymbosController;
 
@@ -98,7 +100,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
             ibFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new AddStackDialogFragment().show(getFragmentManager(), "okay");
+                    new SelectStackTypeFragment().show(getFragmentManager(), "okay");
                 }
             });
 
@@ -199,6 +201,20 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
         slv.invalidateViews();
     }
 
+    @Override
+    public void onStackTypeSelected(String type) {
+        EStackType stackType = EStackType.fromString(type);
+
+        if (stackType != null) {
+            switch (stackType) {
+                case FREESTYLE: {
+                    new AddStackDialogFragment().show(getFragmentManager(), "okay");
+                    break;
+                }
+            }
+        }
+    }
+
     // --------------------
     // Methods - Actions
     // --------------------
@@ -276,6 +292,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
             updateListView();
 
             srl.setRefreshing(false);
+            snackLymbosLoaded();
         }
 
     }
