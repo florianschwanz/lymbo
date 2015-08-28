@@ -118,6 +118,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         // Load views : bottom bar
         final LinearLayout llTags = (LinearLayout) llCard.findViewById(R.id.llTags);
         final LinearLayout llFlip = (LinearLayout) llCard.findViewById(R.id.llFlip);
+        final LinearLayout llBottom = (LinearLayout) llCard.findViewById(R.id.llBottom);
         final TextView tvNumerator = (TextView) llCard.findViewById(R.id.tvNumerator);
         final TextView tvDenominator = (TextView) llCard.findViewById(R.id.tvDenominator);
         final ImageView ivNote = (ImageView) llCard.findViewById(R.id.ivNote);
@@ -168,6 +169,13 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             }
         });
 
+        rlMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                flip(card, llCard);
+            }
+        });
+
         // Add sides
         for (Side side : card.getSides()) {
             LayoutInflater li = LayoutInflater.from(c);
@@ -179,14 +187,12 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                 View component = d.getView(c, a, llComponents);
                 llComponents.addView(component);
 
-                /*
                 component.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         flip(card, llCard);
                     }
                 });
-                */
             }
 
             llSide.setVisibility(View.INVISIBLE);
@@ -214,6 +220,13 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         if (note != null && !note.isEmpty()) {
             tvNote.setText(note);
         }
+
+        llBottom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                flip(card, llCard);
+            }
+        });
 
         // Tags
         for (Tag tag : card.getTags()) {

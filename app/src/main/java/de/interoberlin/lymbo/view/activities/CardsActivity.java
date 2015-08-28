@@ -177,11 +177,11 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                 @Override
                 public void onMove(int position, float x) {
-                    LinearLayout llCard = (LinearLayout) cardsAdapter.getView(position, null, slv);
+                    View v = slv.getChildAt(position);
 
-                    if (llCard != null) {
-                        rlDiscard = (RelativeLayout) llCard.findViewById(R.id.rlDiscard);
-                        rlPutToEnd = (RelativeLayout) llCard.findViewById(R.id.rlPutToEnd);
+                    if (v != null) {
+                        rlDiscard = (RelativeLayout) v.findViewById(R.id.rlDiscard);
+                        rlPutToEnd = (RelativeLayout) v.findViewById(R.id.rlPutToEnd);
 
                         if (x > 0) {
                             rlDiscard.setVisibility(View.VISIBLE);
@@ -205,12 +205,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                 @Override
                 public void onClickFrontView(int position) {
-                    Card card = cardsAdapter.getItem(position);
-                    LinearLayout llCard = (LinearLayout) cardsAdapter.getView(position, null, slv);
-
-                    if (llCard != null && card.getSides().size() > 1) {
-                        cardsAdapter.flip(card, llCard);
-                    }
                 }
 
                 @Override
