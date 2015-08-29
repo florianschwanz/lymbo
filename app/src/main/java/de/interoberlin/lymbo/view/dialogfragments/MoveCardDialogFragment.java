@@ -25,12 +25,12 @@ public class MoveCardDialogFragment extends DialogFragment {
     // Controllers
     private LymbosController lymbosController;
 
-    private OnMoveCardListener onMoveCardListener;
-
     private List<CheckBox> checkboxes = new ArrayList<>();
     private String sourceLymboId = null;
     private String targetLymboId = null;
     private String cardUuid = null;
+
+    private OnCompleteListener ocListener;
 
     // --------------------
     // Constructors
@@ -105,7 +105,7 @@ public class MoveCardDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.okay, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                onMoveCardListener.onMoveCard(sourceLymboId, targetLymboId, cardUuid);
+                ocListener.onMoveCard(sourceLymboId, targetLymboId, cardUuid);
                 dismiss();
             }
         });
@@ -121,21 +121,11 @@ public class MoveCardDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
     // --------------------
     // Callback interfaces
     // --------------------
 
-    public interface OnMoveCardListener {
+    public interface OnCompleteListener {
         void onMoveCard(String sourceLymboId, String targetLymboId, String cardId);
     }
 
@@ -143,7 +133,7 @@ public class MoveCardDialogFragment extends DialogFragment {
         super.onAttach(activity);
 
         try {
-            this.onMoveCardListener = (OnMoveCardListener) activity;
+            this.ocListener = (OnCompleteListener) activity;
         } catch (final ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnMoveCardListener");
         }

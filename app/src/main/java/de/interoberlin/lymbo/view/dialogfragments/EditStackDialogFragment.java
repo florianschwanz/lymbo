@@ -112,19 +112,9 @@ public class EditStackDialogFragment extends DialogFragment {
 
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-// --------------------
-// Callback interfaces
-// --------------------
+    // --------------------
+    // Callback interfaces
+    // --------------------
 
     public interface OnCompleteListener {
         void onEditStack(String uuid, String title, String subtitle, String author);

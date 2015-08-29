@@ -174,8 +174,8 @@ public class LymboWriter {
     private static void appendLanguageAspects(String tag, LanguageAspect languageAspect) {
         if (languageAspect != null) {
             Map<String, String> attributes = new HashMap<>();
-            attributes.put("from", languageAspect.getFrom().getLang());
-            attributes.put("to", languageAspect.getTo().getLang());
+            attributes.put("from", languageAspect.getFrom().getLangCode());
+            attributes.put("to", languageAspect.getTo().getLangCode());
 
             addTag(tag, attributes);
         }

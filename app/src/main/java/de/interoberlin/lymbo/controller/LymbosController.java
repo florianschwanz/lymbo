@@ -17,10 +17,12 @@ import java.util.List;
 import java.util.Locale;
 
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackEntry;
+import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.mate.lib.model.Log;
@@ -94,6 +96,33 @@ public class LymbosController {
         lymbo.setTitle(title);
         lymbo.setSubtitle(subtitle);
         lymbo.setAuthor(author);
+        lymbo.setPath(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + title.trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION);
+
+        return lymbo;
+    }
+
+
+    /**
+     * Returns an empty lymbo stack
+     *
+     * @param title        title of new stack
+     * @param subtitle     subtitle of new stack
+     * @param author       author of new stack
+     * @param languageFrom source language
+     * @param languageTo   target language
+     * @return
+     */
+    public Lymbo getEmptyLymbo(String title, String subtitle, String author, Language languageFrom, Language languageTo) {
+        Lymbo lymbo = new Lymbo();
+        lymbo.setTitle(title);
+        lymbo.setSubtitle(subtitle);
+        lymbo.setAuthor(author);
+
+        LanguageAspect languageAspect = new LanguageAspect();
+        languageAspect.setFrom(languageFrom);
+        languageAspect.setTo(languageTo);
+        lymbo.setLanguageAspect(languageAspect);
+
         lymbo.setPath(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + title.trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION);
 
         return lymbo;

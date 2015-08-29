@@ -81,16 +81,6 @@ public class EditNoteDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
     // --------------------
     // Callback interfaces
     // --------------------

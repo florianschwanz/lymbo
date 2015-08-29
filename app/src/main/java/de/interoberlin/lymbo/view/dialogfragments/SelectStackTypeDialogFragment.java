@@ -20,17 +20,17 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.EStackType;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
-public class SelectStackTypeFragment extends DialogFragment {
-    private OnStackTypeSelectedListener onStackTypeSelectedListener;
-
+public class SelectStackTypeDialogFragment extends DialogFragment {
     private List<CheckBox> checkboxes = new ArrayList<>();
     private List<String> types = new ArrayList<>();
+
+    private OnCompleteListener ocListener;
 
     // --------------------
     // Constructors
     // --------------------
 
-    public SelectStackTypeFragment() {
+    public SelectStackTypeDialogFragment() {
     }
 
     // --------------------
@@ -92,7 +92,7 @@ public class SelectStackTypeFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 for (int i = 0; i<checkboxes.size(); i++) {
                     if (checkboxes.get(i).isChecked()) {
-                        onStackTypeSelectedListener.onStackTypeSelected(types.get(i));
+                        ocListener.onStackTypeSelected(types.get(i));
                         dismiss();
                     }
                 }
@@ -112,22 +112,11 @@ public class SelectStackTypeFragment extends DialogFragment {
         return builder.create();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-
     // --------------------
     // Callback interfaces
     // --------------------
 
-    public interface OnStackTypeSelectedListener {
+    public interface OnCompleteListener {
         void onStackTypeSelected(String type);
     }
 
@@ -135,7 +124,7 @@ public class SelectStackTypeFragment extends DialogFragment {
         super.onAttach(activity);
 
         try {
-            this.onStackTypeSelectedListener = (OnStackTypeSelectedListener) activity;
+            this.ocListener = (OnCompleteListener) activity;
         } catch (final ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnStackTypeSelectedListener");
         }

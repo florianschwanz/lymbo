@@ -26,12 +26,12 @@ public class CopyCardDialogFragment extends DialogFragment {
     // Controllers
     private LymbosController lymbosController;
 
-    private OnCopyCardListener onCopyCardListener;
-
     private List<CheckBox> checkboxes = new ArrayList<>();
     private String sourceLymboId = null;
     private String targetLymboId = null;
     private String cardUuid = null;
+
+    private OnCompleteListener onCompleteListener;
 
     // --------------------
     // Constructors
@@ -115,7 +115,7 @@ public class CopyCardDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.okay, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                onCopyCardListener.onCopyCard(sourceLymboId, targetLymboId, cardUuid, cbDeepCopy.isChecked());
+                onCompleteListener.onCopyCard(sourceLymboId, targetLymboId, cardUuid, cbDeepCopy.isChecked());
                 dismiss();
             }
         });
@@ -131,21 +131,11 @@ public class CopyCardDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
     // --------------------
     // Callback interfaces
     // --------------------
 
-    public interface OnCopyCardListener {
+    public interface OnCompleteListener {
         void onCopyCard(String sourceLymboId, String targetLymboId, String cardId, boolean deepCopy);
     }
 
@@ -153,7 +143,7 @@ public class CopyCardDialogFragment extends DialogFragment {
         super.onAttach(activity);
 
         try {
-            this.onCopyCardListener = (OnCopyCardListener) activity;
+            this.onCompleteListener = (OnCompleteListener) activity;
         } catch (final ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnCopyCardListener");
         }

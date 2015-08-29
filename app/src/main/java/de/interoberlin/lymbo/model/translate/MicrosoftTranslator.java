@@ -138,8 +138,8 @@ public class MicrosoftTranslator {
     public static String getTranslation(String clientId, String clientSecret, Language from, Language to, String text) throws Exception {
         // Parameters
         ParamHolder ph = new ParamHolder();
-        ph.add(new Param(PARAM_FROM, URLEncoder.encode(from.getLang(), ENCODING)));
-        ph.add(new Param(PARAM_TO, URLEncoder.encode(to.getLang(), ENCODING)));
+        ph.add(new Param(PARAM_FROM, URLEncoder.encode(from.getLangCode(), ENCODING)));
+        ph.add(new Param(PARAM_TO, URLEncoder.encode(to.getLangCode(), ENCODING)));
         ph.add(new Param(PARAM_TEXT, URLEncoder.encode(text, ENCODING)));
 
         // Connection
