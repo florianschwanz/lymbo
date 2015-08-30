@@ -149,5 +149,6 @@
     <string name="lang_ukrainian">Ukrainian</string>
     <string name="lang_urdu">Urdu</string>
     <string name="lang_vietnamese">Vietnamese</string>
+    <string name="add_languages">Add languages</string>
 
 </resources>

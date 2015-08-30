@@ -29,6 +29,7 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.lymbo.model.translate.MicrosoftTranslatorTask;
 import de.interoberlin.lymbo.util.ModelUtil;
@@ -99,7 +100,11 @@ public class AddCardDialogFragment extends DialogFragment {
         });
 
         // Translate button
-        if (lymbo.getLanguageAspect() != null) {
+        LanguageAspect languageAspect = lymbo.getLanguageAspect();
+        Language languageFrom = languageAspect.getFrom();
+        Language languageTo = languageAspect.getTo();
+
+        if (languageFrom != null && languageTo != null) {
             ivTranslate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -273,19 +278,10 @@ public class AddCardDialogFragment extends DialogFragment {
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_add_card, null);
 
         final EditText etFront = (EditText) dialog.findViewById(R.id.etFront);
-        final ImageView ivExpandTextsFront = (ImageView) v.findViewById(R.id.ivExpandTextsFront);
-        final TableLayout tblTextFront = (TableLayout) v.findViewById(R.id.tblTextFront);
-        final ImageView ivAddTextFront = (ImageView) v.findViewById(R.id.ivAddTextFront);
-
-        final EditText etBack = (EditText) v.findViewById(R.id.etBack);
-        final ImageView ivTranslate = (ImageView) v.findViewById(R.id.ivTranslate);
-        final ImageView ivExpandTextsBack = (ImageView) v.findViewById(R.id.ivExpandTextsBack);
-        final TableLayout tblTextBack = (TableLayout) v.findViewById(R.id.tblTextBack);
-        final ImageView ivAddTextBack = (ImageView) v.findViewById(R.id.ivAddTextBack);
-
-        final LinearLayout llAddTags = (LinearLayout) v.findViewById(R.id.llAddTags);
-        final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
-        final ImageView ivAddTag = (ImageView) v.findViewById(R.id.ivAddTag);
+        final TableLayout tblTextFront = (TableLayout) dialog.findViewById(R.id.tblTextFront);
+        final EditText etBack = (EditText) dialog.findViewById(R.id.etBack);
+        final TableLayout tblTextBack = (TableLayout) dialog.findViewById(R.id.tblTextBack);
+        final TableLayout tblTags = (TableLayout) dialog.findViewById(R.id.tblTags);
 
         if (dialog != null) {
             Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);

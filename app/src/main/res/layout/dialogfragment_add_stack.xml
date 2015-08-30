@@ -1,34 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sv"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:fillViewport="false"
     android:padding="@dimen/dialog_fragment_padding"
     android:theme="@style/Theme.AppCompat.Light.Dialog">
 
-    <EditText
-        android:id="@+id/etTitle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="@string/title">
+        android:orientation="vertical">
 
-        <requestFocus />
-    </EditText>
+        <EditText
+            android:id="@+id/etTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title"
+            android:inputType="text">
 
-    <EditText
-        android:id="@+id/etSubtitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="@string/subtitle" />
+            <requestFocus />
+        </EditText>
 
-    <EditText
-        android:id="@+id/etAuthor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="@string/author" />
+        <EditText
+            android:id="@+id/etSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/subtitle"
+            android:inputType="text" />
 
+        <EditText
+            android:id="@+id/etAuthor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/author"
+            android:inputType="text" />
 
-</LinearLayout>
+        <!-- Expand -->
+
+        <LinearLayout
+            android:id="@+id/llAddLanguages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dialog_fragment_padding"
+            android:paddingRight="@dimen/dialog_fragment_padding"
+            android:paddingTop="@dimen/dialog_fragment_padding">
+
+            <ImageView
+                android:id="@+id/ivLanguages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/desc_image"
+                android:paddingEnd="@dimen/stack_bar_padding"
+                android:paddingStart="@dimen/stack_bar_padding"
+                android:src="@drawable/ic_action_web_site" />
+
+            <TextView
+                android:id="@+id/tvExpandLanguages"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.9"
+                android:text="@string/add_languages"
+                android:textAlignment="textStart"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llLanguages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <de.interoberlin.lymbo.view.controls.RobotoTextView
+                android:id="@+id/tvLanguageFrom"
+                style="@style/CardText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/divider_caption_margin_bottom"
+                android:layout_marginTop="@dimen/divider_caption_margin_top"
+                android:layout_weight="0.50"
+                android:ellipsize="end"
+                android:text="@string/source_language"
+                roboto:typeface="roboto_regular" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/stroke" />
+
+            <TableLayout
+                android:id="@+id/tblLanguagesFrom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <de.interoberlin.lymbo.view.controls.RobotoTextView
+                android:id="@+id/tvLanguageTo"
+                style="@style/CardText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/divider_caption_margin_bottom"
+                android:layout_marginTop="@dimen/divider_caption_margin_top"
+                android:layout_weight="0.50"
+                android:ellipsize="end"
+                android:text="@string/target_language"
+                roboto:typeface="roboto_regular" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/stroke" />
+
+            <TableLayout
+                android:id="@+id/tblLanguagesTo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
