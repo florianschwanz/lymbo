@@ -26,7 +26,9 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.share.MailSender;
+import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
@@ -98,6 +100,8 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             TextView tvSubtitle = (TextView) llStack.findViewById(R.id.tvSubtitle);
             ImageView ivShare = (ImageView) llStack.findViewById(R.id.ivShare);
             TextView tvCardCount = (TextView) llStack.findViewById(R.id.tvCardCount);
+            TextView tvLanguageFrom = (TextView) llStack.findViewById(R.id.tvLanguageFrom);
+            TextView tvLanguageTo = (TextView) llStack.findViewById(R.id.tvLanguageTo);
 
             // Set values
             if (lymbo.getImage() != null && !lymbo.getImage().trim().isEmpty()) {
@@ -169,6 +173,19 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                     }
                 }
             });
+
+            // Languages
+            LanguageAspect languageAspect = lymbo.getLanguageAspect();
+            Language languageFrom = languageAspect.getFrom();
+            Language languageTo = languageAspect.getTo();
+
+            if (languageFrom != null && languageTo != null) {
+                tvLanguageFrom.setText(languageFrom.getName(a));
+                tvLanguageTo.setText(languageTo.getName(a));
+            } else {
+                ViewUtil.remove(tvLanguageFrom);
+                ViewUtil.remove(tvLanguageTo);
+            }
 
             // Action : open cards view
             llStack.setOnClickListener(new View.OnClickListener() {

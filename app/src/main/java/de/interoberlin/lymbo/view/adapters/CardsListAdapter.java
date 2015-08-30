@@ -186,13 +186,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             for (Displayable d : side.getComponents()) {
                 View component = d.getView(c, a, llComponents);
                 llComponents.addView(component);
-
-                component.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        flip(card, llCard);
-                    }
-                });
             }
 
             llSide.setVisibility(View.INVISIBLE);
