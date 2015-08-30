@@ -187,7 +187,7 @@ public class AddLanguageStackDialogFragment extends DialogFragment {
 
                     for (int i = 0; i<checkboxesLanguageTo.size(); i++) {
                         if (checkboxesLanguageTo.get(i).isChecked()) {
-                            languageFrom = Language.fromString(languagesTo.get(i));
+                            languageTo = Language.fromString(languagesTo.get(i));
                         }
                     }
 

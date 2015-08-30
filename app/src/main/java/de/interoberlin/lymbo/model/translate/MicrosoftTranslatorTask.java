@@ -1,6 +1,8 @@
 package de.interoberlin.lymbo.model.translate;
 
 
+import android.os.AsyncTask;
+
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -14,7 +16,9 @@ import java.net.URLEncoder;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class MicrosoftTranslator {
+import de.interoberlin.mate.lib.model.Log;
+
+public class MicrosoftTranslatorTask extends AsyncTask<String, Void, String> {
     private static final String TOKEN_URL = "https://datamarket.accesscontrol.windows.net/v2/OAuth2-13";
     private static final String DETECT_URL = "http://api.microsofttranslator.com/V2/Ajax.svc/Detect?";
     private static final String TRANSLATE_URL = "http://api.microsofttranslator.com/V2/Ajax.svc/Translate?";
@@ -32,6 +36,37 @@ public class MicrosoftTranslator {
     private static final String PARAM_TEXT = "text";
 
     private static final int RESPONSE_CODE_OKAY = 200;
+
+    // --------------------
+    // Methods - Lifecycle
+    // --------------------
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+    }
+
+    @Override
+    protected String doInBackground(String... params) {
+        String clientId = params[0];
+        String clientSecret = params[1];
+        Language languageFrom = Language.fromString(params[2]);
+        Language languageTo = Language.fromString(params[3]);
+        String text = params[4];
+
+        try {
+            return getTranslation(clientId, clientSecret, languageFrom, languageTo, text);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        super.onPostExecute(result);
+    }
 
     // --------------------
     // Methods
@@ -69,8 +104,10 @@ public class MicrosoftTranslator {
         wr.close();
 
         try {
-            if (con.getResponseCode() != RESPONSE_CODE_OKAY)
+            if (con.getResponseCode() != RESPONSE_CODE_OKAY) {
+                Log.error("Error getting access token RESPONSE CODE : " + con.getResponseCode());
                 throw new Exception("Error from Microsoft Translator API");
+            }
 
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
@@ -155,9 +192,10 @@ public class MicrosoftTranslator {
         // Execute request
         try {
             if (con.getResponseCode() != RESPONSE_CODE_OKAY) {
+                Log.error("Error translating text RESPONSE CODE : " + con.getResponseCode());
                 throw new Exception("Error from Microsoft Translator API");
             }
-            return inputStreamToString(con.getInputStream());
+            return inputStreamToString(con.getInputStream()).replaceAll("\"", "");
         } finally {
             con.disconnect();
         }
