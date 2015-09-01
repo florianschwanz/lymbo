@@ -172,4 +172,13 @@
     <string name="pref_header_general">General</string>
     <string name="pref_title_translator_api_secret">Translator API secret</string>
 
+    <string name="translator_client_id" translatable="false">lymbo</string>
+
+    <string name="translator_api_secret" translatable="false">translator_api_secret</string>
+    <string name="translator_access_item_token_type" translatable="false">translator_access_item_token_type</string>
+    <string name="translator_access_item_access_token" translatable="false">translator_access_item_access_token</string>
+    <string name="translator_access_item_expires_in" translatable="false">translator_access_item_expires_in</string>
+    <string name="translator_access_item_scope" translatable="false">translator_access_item_scope</string>
+    <string name="translator_access_item_timestamp" translatable="false">translator_access_item_timestamp</string>
+
 </resources>

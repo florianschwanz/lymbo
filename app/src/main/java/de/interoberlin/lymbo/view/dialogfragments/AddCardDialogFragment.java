@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -31,6 +32,7 @@ import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.translate.Language;
+import de.interoberlin.lymbo.model.translate.MicrosoftAccessControlItemTask;
 import de.interoberlin.lymbo.model.translate.MicrosoftTranslatorTask;
 import de.interoberlin.lymbo.util.ModelUtil;
 import de.interoberlin.lymbo.util.ViewUtil;
@@ -103,19 +105,35 @@ public class AddCardDialogFragment extends DialogFragment {
         LanguageAspect languageAspect = lymbo.getLanguageAspect();
         Language languageFrom = languageAspect.getFrom();
         Language languageTo = languageAspect.getTo();
+        boolean languageCard = languageFrom != null && languageTo != null;
 
-        if (languageFrom != null && languageTo != null) {
+        Resources res = getActivity().getResources();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        String translatorApiSecret = prefs.getString(res.getString(R.string.translator_api_secret), null);
+        String accessItemTokenType = prefs.getString(res.getString(R.string.translator_access_item_token_type), null);
+        String accessItemAccessToken = prefs.getString(res.getString(R.string.translator_access_item_access_token), null);
+        int accessItemExpiresIn = prefs.getInt(res.getString(R.string.translator_access_item_expires_in), 0);
+        String accessItemScope = prefs.getString(res.getString(R.string.translator_access_item_scope), null);
+        Long acessItemTimestamp = prefs.getLong(res.getString(R.string.translator_access_item_timestamp), 0L);
+
+        // Re-run getting access
+        if (accessItemAccessToken == null || ((acessItemTimestamp != 0 && accessItemExpiresIn != 0 && (acessItemTimestamp + accessItemExpiresIn*1000 > System.currentTimeMillis()))))
+            new MicrosoftAccessControlItemTask().execute(res.getString(R.string.translator_client_id), translatorApiSecret);
+
+        if (languageCard && accessItemAccessToken != null) {
             ivTranslate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    String clientSecret = prefs.getString("translator_api_secret", "");
+                    Resources res = getActivity().getResources();
 
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    String accessToken = prefs.getString(res.getString(R.string.translator_access_item_access_token), null);
                     Language languageFrom = lymbo.getLanguageAspect().getFrom();
                     Language languageTo = lymbo.getLanguageAspect().getTo();
 
                     try {
-                        String translatedText = new MicrosoftTranslatorTask().execute("lymbo", clientSecret, languageFrom.getLangCode(), languageTo.getLangCode(), etFront.getText().toString()).get();
+                        String translatedText = new MicrosoftTranslatorTask().execute(accessToken, languageFrom.getLangCode(), languageTo.getLangCode(), etFront.getText().toString()).get();
                         etBack.setText(translatedText);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
