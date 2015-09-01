@@ -61,28 +61,71 @@
                             roboto:typeface="roboto_regular" />
                     </LinearLayout>
 
-                    <!-- Subitle -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/selectable_background_cardbank"
-                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
                         android:paddingBottom="@dimen/stack_subtitle_spacing"
-                        android:paddingLeft="@dimen/stack_padding"
-                        android:paddingRight="@dimen/stack_padding"
                         android:paddingTop="@dimen/stack_subtitle_spacing">
 
-                        <de.interoberlin.lymbo.view.controls.RobotoTextView
-                            android:id="@+id/tvSubtitle"
-                            style="@style/CardText"
+                        <!-- Subitle -->
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:ellipsize="end"
-                            android:maxLines="4"
-                            android:text="@string/subtitle"
-                            roboto:typeface="roboto_regular" />
+                            android:background="@drawable/selectable_background_cardbank"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/stack_padding"
+                            android:paddingRight="@dimen/stack_padding">
 
+
+                            <de.interoberlin.lymbo.view.controls.RobotoTextView
+                                android:id="@+id/tvSubtitle"
+                                style="@style/CardText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:ellipsize="end"
+                                android:maxLines="4"
+                                android:text="@string/subtitle"
+                                roboto:typeface="roboto_regular" />
+
+                        </LinearLayout>
+
+                        <!-- Languages -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/selectable_background_cardbank"
+                            android:gravity="end"
+                            android:orientation="vertical"
+                            android:paddingBottom="@dimen/stack_subtitle_spacing"
+                            android:paddingLeft="@dimen/stack_padding"
+                            android:paddingRight="@dimen/stack_padding"
+                            android:paddingTop="@dimen/stack_subtitle_spacing">
+
+                            <de.interoberlin.lymbo.view.controls.RobotoTextView
+                                android:id="@+id/tvLanguageFrom"
+                                style="@style/CardText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:ellipsize="end"
+                                android:maxLines="4"
+                                android:text="@string/subtitle"
+                                roboto:typeface="roboto_regular" />
+
+                            <de.interoberlin.lymbo.view.controls.RobotoTextView
+                                android:id="@+id/tvLanguageTo"
+                                style="@style/CardText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:ellipsize="end"
+                                android:maxLines="4"
+                                android:text="@string/subtitle"
+                                roboto:typeface="roboto_regular" />
+
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -135,8 +178,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textAlignment="textEnd"
-                                android:textColor="@color/card_light_text"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                                android:textColor="@color/card_light_text"
                                 roboto:typeface="roboto_regular" />
                         </LinearLayout>
                     </LinearLayout>

@@ -8,35 +8,53 @@
     android:background="@color/background_floating_material_dark"
     android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/ivDiscard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start|center_vertical"
-        android:contentDescription="@string/desc_image"
-        android:minHeight="@dimen/reveal_icon_size"
-        android:minWidth="@dimen/reveal_icon_size"
-        android:paddingEnd="@dimen/reveal_icon_padding"
-        android:paddingStart="@dimen/reveal_icon_padding"
-        android:src="@drawable/ic_action_accept"
-        android:layout_marginLeft="@dimen/button_margin"
-        android:layout_marginRight="@dimen/button_margin"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+    <RelativeLayout
+        android:id="@+id/rlPutToEnd"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@color/action_put_to_end">
 
-    <ImageView
-        android:id="@+id/ivPutToEnd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|center_vertical"
-        android:contentDescription="@string/desc_image"
-        android:minHeight="@dimen/reveal_icon_size"
-        android:minWidth="@dimen/reveal_icon_size"
-        android:paddingEnd="@dimen/reveal_icon_padding"
-        android:paddingStart="@dimen/reveal_icon_padding"
-        android:src="@drawable/ic_action_replay"
-        android:layout_marginLeft="@dimen/button_margin"
-        android:layout_marginRight="@dimen/button_margin"
-        android:layout_alignTop="@+id/ivDiscard"
-        android:layout_alignParentEnd="true" />
+        <ImageView
+            android:id="@+id/ivPutToEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginLeft="@dimen/button_margin"
+            android:layout_marginRight="@dimen/button_margin"
+            android:contentDescription="@string/desc_image"
+            android:minHeight="@dimen/reveal_icon_size"
+            android:minWidth="@dimen/reveal_icon_size"
+            android:paddingEnd="@dimen/reveal_icon_padding"
+            android:paddingStart="@dimen/reveal_icon_padding"
+            android:src="@drawable/ic_action_replay"
+            android:layout_alignParentStart="false" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlDiscard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@color/action_discard">
+
+        <ImageView
+            android:id="@+id/ivDiscard"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginLeft="@dimen/button_margin"
+            android:layout_marginRight="@dimen/button_margin"
+            android:contentDescription="@string/desc_image"
+            android:minHeight="@dimen/reveal_icon_size"
+            android:minWidth="@dimen/reveal_icon_size"
+            android:paddingEnd="@dimen/reveal_icon_padding"
+            android:paddingStart="@dimen/reveal_icon_padding"
+            android:src="@drawable/ic_action_accept" />
+    </RelativeLayout>
+
+
 </RelativeLayout>

@@ -13,7 +13,7 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.App;
 
 public class GiveFeedbackDialogFragment extends DialogFragment {
-    private OnGiveFeedbackListener ocListener;
+    private OnCompleteListener ocListener;
 
     // --------------------
     // Constructors
@@ -62,21 +62,11 @@ public class GiveFeedbackDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
     // --------------------
     // Callback interfaces
     // --------------------
 
-    public interface OnGiveFeedbackListener {
+    public interface OnCompleteListener {
         void onGiveFeedbackDialogDialogComplete();
     }
 
@@ -84,7 +74,7 @@ public class GiveFeedbackDialogFragment extends DialogFragment {
         super.onAttach(activity);
 
         try {
-            this.ocListener = (OnGiveFeedbackListener) activity;
+            this.ocListener = (OnCompleteListener) activity;
         } catch (final ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnCompleteListener");
         }

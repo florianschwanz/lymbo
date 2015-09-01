@@ -20,6 +20,7 @@ import com.github.mrengineer13.snackbar.SnackBar;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
@@ -182,18 +183,17 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     }
 
     @Override
-    public void onAddStack(String title, String subtitle, String author) {
-        Lymbo lymbo = lymbosController.getEmptyLymbo(title, subtitle, author);
+    public void onAddStack(String title, String subtitle, String author, Language languageFrom, Language languageTo) {
+        Lymbo lymbo = lymbosController.getEmptyLymbo(title, subtitle, author, languageFrom, languageTo);
 
         lymbosController.addStack(lymbo);
         lymbosAdapter.notifyDataSetChanged();
         slv.invalidateViews();
     }
 
-
     @Override
-    public void onEditStack(String uuid, String title, String subtitle, String author) {
-        lymbosController.updateStack(uuid, title, subtitle, author);
+    public void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo) {
+        lymbosController.updateStack(uuid, title, subtitle, author, languageFrom, languageTo);
 
         lymbosAdapter.notifyDataSetChanged();
         slv.invalidateViews();
@@ -276,6 +276,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
             updateListView();
 
             srl.setRefreshing(false);
+            snackLymbosLoaded();
         }
 
     }

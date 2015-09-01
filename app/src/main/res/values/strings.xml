@@ -4,6 +4,7 @@
     <string name="about">About</string>
     <string name="add_card">Add card</string>
     <string name="add_card_to_favorites">Added card to favorites</string>
+    <string name="add_languages">Add languages</string>
     <string name="add_stack">Add stack</string>
     <string name="add_tags">Add tags</string>
     <string name="all">All</string>
@@ -25,6 +26,8 @@
     <string name="bundle_texts_back" translatable="false">bundle_texts_back</string>
     <string name="bundle_tags_lymbo" translatable="false">bundleTagsLymbo</string>
     <string name="bundle_tags_card" translatable="false">bundleTagsCard</string>
+    <string name="bundle_language_from" translatable="false">bundleLanguageFrom</string>
+    <string name="bundle_language_to" translatable="false">bundleLanguageTo</string>
 
     <string name="broken_lymbo_file">Broken lymbo :(</string>
     <string name="cancel">Cancel</string>
@@ -90,20 +93,24 @@
     <string name="remove_card_from_favorites">Removed card from favorites</string>
     <string name="report_error_question">Do you want to send the error log to the developer? This helps a lot fixing this issue.</string>
     <string name="search_lymbo_files">Searching for lymbo files</string>
+    <string name="select_a_language">Select a language</string>
     <string name="select_answer">Select at least one answer</string>
     <string name="send">Send</string>
     <string name="send_mail">Send mail</string>
     <string name="share">Share</string>
+    <string name="source_language">Source language</string>
     <string name="splash_found_1">Found</string>
     <string name="splash_found_2">Found</string>
     <string name="stack_restored">Stack restored</string>
     <string name="stack_stashed">Stack stashed</string>
+    <string name="stack_types">Stack Types</string>
     <string name="stash">Stash</string>
     <string name="stash_card">Stash card</string>
     <string name="stash_stack">Stash stack</string>
     <string name="stashed_card">Stashed card</string>
     <string name="subtitle">Subtitle</string>
     <string name="tags">Tags</string>
+    <string name="target_language">Target language</string>
     <string name="text">Text</string>
     <string name="tag_selected">Tag selected</string>
     <string name="title">Title</string>
@@ -117,10 +124,63 @@
     <string name="thanks">Thanks!</string>
     <string name="deselect_all">deselect all</string>
 
+    <!-- Languages -->
+
+    <string name="lang_auto_detect">Auto detect</string>
+    <string name="lang_arabic">Arabic</string>
+    <string name="lang_bulgarian">Bulgarian</string>
+    <string name="lang_catalan">Catalan</string>
+    <string name="lang_chinese_simplified">Chinese simplified</string>
+    <string name="lang_chinese_traditional">Chinese traditional</string>
+    <string name="lang_czech">Czech</string>
+    <string name="lang_danish">Danish</string>
+    <string name="lang_dutch">Dutch</string>
+    <string name="lang_english">English</string>
+    <string name="lang_estonian">Estonian</string>
+    <string name="lang_finnish">Finnish</string>
+    <string name="lang_french">French</string>
+    <string name="lang_german">German</string>
+    <string name="lang_greek">Greek</string>
+    <string name="lang_haitan_creole">Haitan Creole</string>
+    <string name="lang_hebrew">Hebrew</string>
+    <string name="lang_hindi">Hindi</string>
+    <string name="lang_hmong_daw">Hmong daw</string>
+    <string name="lang_hungarian">Hungarian</string>
+    <string name="lang_indonesian">Indonesian</string>
+    <string name="lang_italian">Italian</string>
+    <string name="lang_japanese">Japanese</string>
+    <string name="lang_korean">Korean</string>
+    <string name="lang_latvian">Latvian</string>
+    <string name="lang_lithuanian">Lithuanian</string>
+    <string name="lang_malay">Malay</string>
+    <string name="lang_norwegian">Norwegian</string>
+    <string name="lang_persian">Persian</string>
+    <string name="lang_polish">Polish</string>
+    <string name="lang_portuguese">Portuguese</string>
+    <string name="lang_romanian">Romanian</string>
+    <string name="lang_russian">Russian</string>
+    <string name="lang_slovak">Slovak</string>
+    <string name="lang_slovenian">Slovenian</string>
+    <string name="lang_spanish">Spanish</string>
+    <string name="lang_swedish">Swedish</string>
+    <string name="lang_thai">Thai</string>
+    <string name="lang_turkish">Turkish</string>
+    <string name="lang_ukrainian">Ukrainian</string>
+    <string name="lang_urdu">Urdu</string>
+    <string name="lang_vietnamese">Vietnamese</string>
 
     <!-- Strings related to Settings -->
 
     <string name="pref_header_general">General</string>
     <string name="pref_title_translator_api_secret">Translator API secret</string>
+
+    <string name="translator_client_id" translatable="false">lymbo</string>
+
+    <string name="translator_api_secret" translatable="false">translator_api_secret</string>
+    <string name="translator_access_item_token_type" translatable="false">translator_access_item_token_type</string>
+    <string name="translator_access_item_access_token" translatable="false">translator_access_item_access_token</string>
+    <string name="translator_access_item_expires_in" translatable="false">translator_access_item_expires_in</string>
+    <string name="translator_access_item_scope" translatable="false">translator_access_item_scope</string>
+    <string name="translator_access_item_timestamp" translatable="false">translator_access_item_timestamp</string>
 
 </resources>

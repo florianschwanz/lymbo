@@ -17,10 +17,12 @@ import java.util.List;
 import java.util.Locale;
 
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackEntry;
+import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.mate.lib.model.Log;
@@ -99,6 +101,35 @@ public class LymbosController {
         return lymbo;
     }
 
+
+    /**
+     * Returns an empty lymbo stack
+     *
+     * @param title        title of new stack
+     * @param subtitle     subtitle of new stack
+     * @param author       author of new stack
+     * @param languageFrom source language
+     * @param languageTo   target language
+     * @return
+     */
+    public Lymbo getEmptyLymbo(String title, String subtitle, String author, Language languageFrom, Language languageTo) {
+        Lymbo lymbo = new Lymbo();
+        lymbo.setTitle(title);
+        lymbo.setSubtitle(subtitle);
+        lymbo.setAuthor(author);
+
+        if (languageFrom != null && languageTo != null) {
+            LanguageAspect languageAspect = new LanguageAspect();
+            languageAspect.setFrom(languageFrom);
+            languageAspect.setTo(languageTo);
+            lymbo.setLanguageAspect(languageAspect);
+        }
+
+        lymbo.setPath(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + title.trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION);
+
+        return lymbo;
+    }
+
     /**
      * Creates a new lymbo stack
      *
@@ -112,12 +143,14 @@ public class LymbosController {
     /**
      * Updates a stack
      *
-     * @param uuid     id of stack to be updated
-     * @param title    title
-     * @param subtitle subtitle
-     * @param author   author
+     * @param uuid         id of stack to be updated
+     * @param title        title
+     * @param subtitle     subtitle
+     * @param author       author
+     * @param languageFrom source language
+     * @param languageTo   target language
      */
-    public void updateStack(String uuid, String title, String subtitle, String author) {
+    public void updateStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo) {
         if (lymbosContainsId(uuid)) {
             Lymbo lymbo = getLymboById(uuid);
 
@@ -130,6 +163,13 @@ public class LymbosController {
             lymbo.setTitle(title);
             lymbo.setSubtitle(subtitle);
             lymbo.setAuthor(author);
+
+            if (languageFrom != null && languageTo != null) {
+                LanguageAspect languageAspect = new LanguageAspect();
+                languageAspect.setFrom(languageFrom);
+                languageAspect.setTo(languageTo);
+                lymbo.setLanguageAspect(languageAspect);
+            }
 
             String path = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + lymbo.getTitle().trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION;
 

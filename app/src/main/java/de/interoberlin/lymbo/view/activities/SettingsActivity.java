@@ -1,10 +1,14 @@
 package de.interoberlin.lymbo.view.activities;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -14,6 +18,9 @@ import android.preference.PreferenceManager;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.controller.App;
+import de.interoberlin.lymbo.model.translate.MicrosoftAccessControlItemTask;
+import de.interoberlin.mate.lib.model.Log;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -35,10 +42,18 @@ public class SettingsActivity extends PreferenceActivity {
      */
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
 
+    private static Activity activity;
+
     // --------------------
     // Methods - Lifecycle
     // --------------------
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activity = this;
+    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -136,6 +151,33 @@ public class SettingsActivity extends PreferenceActivity {
                         index >= 0
                                 ? listPreference.getEntries()[index]
                                 : null);
+            } else if (preference instanceof EditTextPreference) {
+                // For list preferences, look up the correct display value in
+                // the preference's 'entries' list.
+                EditTextPreference editTextPreference = (EditTextPreference) preference;
+
+                // Set the summary to reflect the new value.
+                preference.setSummary(stringValue);
+
+                Context context = App.getContext();
+                Resources res = context.getResources();
+
+                if (editTextPreference.getKey().equals(res.getString(R.string.translator_api_secret))) {
+                    // Retrieve access control item
+                    try {
+                        new MicrosoftAccessControlItemTask().execute(res.getString(R.string.translator_client_id), stringValue);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+                    Log.info("Retrieved access control item");
+                    Log.debug(prefs.getString(res.getString(R.string.translator_access_item_token_type), null));
+                    Log.debug(prefs.getString(res.getString(R.string.translator_access_item_access_token), null));
+                    Log.debug(String.valueOf(prefs.getInt(res.getString(R.string.translator_access_item_expires_in), 0)));
+                    Log.debug(prefs.getString(res.getString(R.string.translator_access_item_scope), null));
+                    Log.debug(String.valueOf(prefs.getLong(res.getString(R.string.translator_access_item_timestamp), 0L)));
+                }
             } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.

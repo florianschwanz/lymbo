@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -47,7 +46,7 @@ import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnTagsSelectedListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, CopyCardDialogFragment.OnCopyCardListener, MoveCardDialogFragment.OnMoveCardListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddCardDialogFragment.OnCompleteListener, EditCardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnCompleteListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, CopyCardDialogFragment.OnCompleteListener, MoveCardDialogFragment.OnCompleteListener {
     // Controllers
     private CardsController cardsController;
 
@@ -59,9 +58,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private TextView toolbarTextView;
     private RelativeLayout rl;
     private LinearLayout phNoCards;
-    private RelativeLayout rlReveal;
-    private ImageView ivDiscard;
-    private ImageView ivPutToEnd;
+    private RelativeLayout rlDiscard;
+    private RelativeLayout rlPutToEnd;
 
     // Model
     private Lymbo lymbo;
@@ -182,18 +180,15 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                     View v = slv.getChildAt(position);
 
                     if (v != null) {
-                        rlReveal = (RelativeLayout) v.findViewById(R.id.reveal);
-                        ivDiscard = (ImageView) v.findViewById(R.id.ivDiscard);
-                        ivPutToEnd = (ImageView) v.findViewById(R.id.ivPutToEnd);
+                        rlDiscard = (RelativeLayout) v.findViewById(R.id.rlDiscard);
+                        rlPutToEnd = (RelativeLayout) v.findViewById(R.id.rlPutToEnd);
 
                         if (x > 0) {
-                            rlReveal.setBackgroundColor(getResources().getColor(R.color.action_discard));
-                            ivDiscard.setVisibility(View.VISIBLE);
-                            ivPutToEnd.setVisibility(View.INVISIBLE);
+                            rlDiscard.setVisibility(View.VISIBLE);
+                            rlPutToEnd.setVisibility(View.INVISIBLE);
                         } else {
-                            rlReveal.setBackgroundColor(getResources().getColor(R.color.action_put_to_end));
-                            ivDiscard.setVisibility(View.INVISIBLE);
-                            ivPutToEnd.setVisibility(View.VISIBLE);
+                            rlDiscard.setVisibility(View.INVISIBLE);
+                            rlPutToEnd.setVisibility(View.VISIBLE);
                         }
                     }
                 }
@@ -210,12 +205,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                 @Override
                 public void onClickFrontView(int position) {
-                    Card card = cardsAdapter.getItem(position);
-                    LinearLayout llCard = (LinearLayout) cardsAdapter.getView(position, null, slv);
-
-                    if (card.getSides().size() > 1) {
-                        cardsAdapter.flip(card, llCard);
-                    }
                 }
 
                 @Override

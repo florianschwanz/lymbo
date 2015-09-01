@@ -316,16 +316,6 @@ public class EditCardDialogFragment extends DialogFragment {
         }
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
     // --------------------
     // Methods
     // --------------------

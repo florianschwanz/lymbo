@@ -1,29 +1,74 @@
 package de.interoberlin.lymbo.model.translate;
 
 
-public enum Language {
-    AUTO_DETECT(""), ARABIC("ar"), BULGARIAN("bg"), CATALAN("ca"), CHINESE_SIMPLIFIED("zh-CHS"), CHINESE_TRADITIONAL("zh-CHT"), CZECH("cs"), DANISH("da"), DUTCH("nl"), ENGLISH("en"), ESTONIAN("et"), FINNISH(
-            "fi"), FRENCH("fr"), GERMAN("de"), GREEK("el"), HAITIAN_CREOLE("ht"), HEBREW("he"), HINDI("hi"), HMONG_DAW("mww"), HUNGARIAN("hu"), INDONESIAN("id"), ITALIAN("it"), JAPANESE("ja"), KOREAN(
-            "ko"), LATVIAN("lv"), LITHUANIAN("lt"), MALAY("ms"), NORWEGIAN("no"), PERSIAN("fa"), POLISH("pl"), PORTUGUESE("pt"), ROMANIAN("ro"), RUSSIAN("ru"), SLOVAK("sk"), SLOVENIAN("sl"), SPANISH(
-            "es"), SWEDISH("sv"), THAI("th"), TURKISH("tr"), UKRAINIAN("uk"), URDU("ur"), VIETNAMESE("vi");
+import android.content.Context;
 
-    private final String lang;
+import de.interoberlin.lymbo.R;
+
+public enum Language {
+    // AUTO_DETECT("", R.string.lang_auto_detect),
+    // ARABIC("ar", R.string.lang_arabic),
+    // BULGARIAN("bg", R.string.lang_bulgarian),
+    // CATALAN("ca", R.string.lang_catalan),
+    // CHINESE_SIMPLIFIED("zh-CHS", R.string.lang_chinese_simplified),
+    // CHINESE_TRADITIONAL("zh-CHT", R.string.lang_chinese_traditional),
+    // CZECH("cs", R.string.lang_czech),
+    // DANISH("da", R.string.lang_danish),
+    DUTCH("nl", R.string.lang_dutch),
+    ENGLISH("en", R.string.lang_english),
+    // ESTONIAN("et", R.string.lang_estonian),
+    // FINNISH("fi", R.string.lang_finnish),
+    FRENCH("fr", R.string.lang_french),
+    GERMAN("de", R.string.lang_german),
+    // GREEK("el", R.string.lang_greek),
+    // HAITIAN_CREOLE("ht", R.string.lang_haitan_creole),
+    // HEBREW("he", R.string.lang_hebrew),
+    // HINDI("hi", R.string.lang_hindi),
+    // HMONG_DAW("mww", R.string.lang_hmong_daw),
+    // HUNGARIAN("hu", R.string.lang_hungarian),
+    // INDONESIAN("id", R.string.lang_indonesian),
+    ITALIAN("it", R.string.lang_italian),
+    // JAPANESE("ja", R.string.lang_japanese),
+    // KOREAN("ko", R.string.lang_korean),
+    // LATVIAN("lv", R.string.lang_latvian),
+    // LITHUANIAN("lt", R.string.lang_lithuanian),
+    // MALAY("ms", R.string.lang_malay),
+    // NORWEGIAN("no", R.string.lang_norwegian),
+    // PERSIAN("fa", R.string.lang_persian),
+    // POLISH("pl", R.string.lang_polish),
+    PORTUGUESE("pt", R.string.lang_portuguese),
+    // ROMANIAN("ro", R.string.lang_romanian),
+    // RUSSIAN("ru", R.string.lang_russian),
+    // SLOVAK("sk", R.string.lang_slovak),
+    // SLOVENIAN("sl", R.string.lang_slovenian),
+    SPANISH("es", R.string.lang_spanish),
+    // SWEDISH("sv", R.string.lang_swedish),
+    // THAI("th", R.string.lang_thai),
+    // TURKISH("tr", R.string.lang_turkish),
+    // UKRAINIAN("uk", R.string.lang_ukrainian),
+    // URDU("ur", R.string.lang_urdu),
+    // VIETNAMESE("vi", R.string.lang_vietnamese),
+    ;
+
+    private final String langCode;
+    private final int name;
 
     // --------------------
     // Constructors
     // --------------------
 
-    Language(final String lang) {
-        this.lang = lang;
+    Language(final String langCode, final int name) {
+        this.langCode = langCode;
+        this.name = name;
     }
 
     // --------------------
     // Methods
     // --------------------
 
-    public static Language fromString(final String pLanguage) {
+    public static Language fromString(final String langCode) {
         for (Language l : values()) {
-            if (l.toString().equals(pLanguage)) {
+            if (l.getLangCode().equals(langCode)) {
                 return l;
             }
         }
@@ -34,7 +79,11 @@ public enum Language {
     // Getters / Setters
     // --------------------
 
-    public String getLang() {
-        return lang;
+    public String getLangCode() {
+        return langCode;
+    }
+
+    public String getName(Context context) {
+        return context.getResources().getString(name);
     }
 }

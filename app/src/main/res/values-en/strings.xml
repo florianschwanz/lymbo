@@ -100,5 +100,55 @@
     <string name="lymbos_loaded">Lymbos loaded</string>
     <string name="menu_settings">Settings</string>
     <string name="settings">Settings</string>
+    <string name="stack_types">Stack Types</string>
+    <string name="source_language">Source language</string>
+    <string name="target_language">Target language</string>
+    <string name="select_a_language">Select a language</string>
+
+    <!-- Languages -->
+
+    <string name="lang_auto_detect">Auto detect</string>
+    <string name="lang_arabic">Arabic</string>
+    <string name="lang_bulgarian">Bulgarian</string>
+    <string name="lang_catalan">Catalan</string>
+    <string name="lang_chinese_simplified">Chinese simplified</string>
+    <string name="lang_chinese_traditional">Chinese traditional</string>
+    <string name="lang_czech">Czech</string>
+    <string name="lang_danish">Danish</string>
+    <string name="lang_dutch">Dutch</string>
+    <string name="lang_english">English</string>
+    <string name="lang_estonian">Estonian</string>
+    <string name="lang_finnish">Finnish</string>
+    <string name="lang_french">French</string>
+    <string name="lang_german">German</string>
+    <string name="lang_greek">Greek</string>
+    <string name="lang_haitan_creole">Haitan Creole</string>
+    <string name="lang_hebrew">Hebrew</string>
+    <string name="lang_hindi">Hindi</string>
+    <string name="lang_hmong_daw">Hmong daw</string>
+    <string name="lang_hungarian">Hungarian</string>
+    <string name="lang_indonesian">Indonesian</string>
+    <string name="lang_italian">Italian</string>
+    <string name="lang_japanese">Japanese</string>
+    <string name="lang_korean">Korean</string>
+    <string name="lang_latvian">Latvian</string>
+    <string name="lang_lithuanian">Lithuanian</string>
+    <string name="lang_malay">Malay</string>
+    <string name="lang_norwegian">Norwegian</string>
+    <string name="lang_persian">Persian</string>
+    <string name="lang_polish">Polish</string>
+    <string name="lang_portuguese">Portuguese</string>
+    <string name="lang_romanian">Romanian</string>
+    <string name="lang_russian">Russian</string>
+    <string name="lang_slovak">Slovak</string>
+    <string name="lang_slovenian">Slovenian</string>
+    <string name="lang_spanish">Spanish</string>
+    <string name="lang_swedish">Swedish</string>
+    <string name="lang_thai">Thai</string>
+    <string name="lang_turkish">Turkish</string>
+    <string name="lang_ukrainian">Ukrainian</string>
+    <string name="lang_urdu">Urdu</string>
+    <string name="lang_vietnamese">Vietnamese</string>
+    <string name="add_languages">Add languages</string>
 
 </resources>

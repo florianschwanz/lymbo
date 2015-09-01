@@ -34,7 +34,7 @@ import de.interoberlin.lymbo.util.LoggingUtil;
 import de.interoberlin.lymbo.view.dialogfragments.GiveFeedbackDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.ReportErrorDialogFragment;
 
-public abstract class BaseActivity extends ActionBarActivity implements Accelerator.OnShakeListener, GiveFeedbackDialogFragment.OnGiveFeedbackListener, ReportErrorDialogFragment.OnCompleteListener {
+public abstract class BaseActivity extends ActionBarActivity implements Accelerator.OnShakeListener, GiveFeedbackDialogFragment.OnCompleteListener, ReportErrorDialogFragment.OnCompleteListener {
     // Views
     private Toolbar toolbar;
 

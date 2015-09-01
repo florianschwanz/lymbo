@@ -20,6 +20,7 @@ import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 import de.interoberlin.lymbo.model.card.components.ImageComponent;
@@ -32,6 +33,7 @@ import de.interoberlin.lymbo.model.card.enums.EGravity;
 import de.interoberlin.lymbo.model.card.enums.EStyle;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardEntry;
+import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.mate.lib.model.Log;
 import de.interoberlin.sauvignon.lib.controller.parser.SvgParser;
 import de.interoberlin.sauvignon.lib.model.svg.SVG;
@@ -124,40 +126,34 @@ public class LymboParser {
         String author = parser.getAttributeValue(null, "author");
 
         // Read attributes - default
-        parseDefault(parser, "cardFlip");
         parseDefault(parser, "cardEdit");
         parseDefault(parser, "sideColor");
-        parseDefault(parser, "sideFlip");
         parseDefault(parser, "titleLines");
         parseDefault(parser, "titleGravity");
-        parseDefault(parser, "titleFlip");
         parseDefault(parser, "textLines");
         parseDefault(parser, "textGravity");
         parseDefault(parser, "textStyle");
-        parseDefault(parser, "textFlip");
-        parseDefault(parser, "resultFlip");
-        parseDefault(parser, "imageFlip");
         parseDefault(parser, "choiceType");
         parseDefault(parser, "svgColor");
-        parseDefault(parser, "svgFlip");
 
         // Read sub elements
         List<Card> cards = new ArrayList<>();
+        LanguageAspect la = new LanguageAspect();
 
-        if (!onlyTopLevel) {
-            while (parser.next() != XmlPullParser.END_TAG) {
-                if (parser.getEventType() != XmlPullParser.START_TAG) {
-                    Log.trace("parseCard() continue");
-                    continue;
-                }
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                Log.trace("parseCard() continue");
+                continue;
+            }
 
-                name = parser.getName();
+            name = parser.getName();
 
-                if (name.equals("card")) {
-                    cards.add(parseCard(parser));
-                } else {
-                    skip(parser);
-                }
+            if (!onlyTopLevel && name.equals("card")) {
+                cards.add(parseCard(parser));
+            } else if (name.equals("language")) {
+                la = parseLanguageAspect(parser);
+            } else {
+                skip(parser);
             }
         }
 
@@ -185,6 +181,7 @@ public class LymboParser {
             lymbo.setAuthor(author);
 
         lymbo.setCards(cards);
+        lymbo.setLanguageAspect(la);
 
         return lymbo;
     }
@@ -804,6 +801,52 @@ public class LymboParser {
         } else {
             return EStyle.NORMAL;
         }
+    }
+
+    /**
+     * Returns a language aspect
+     *
+     * @param parser the XmlPullParser
+     * @return language aspect
+     * @throws org.xmlpull.v1.XmlPullParserException
+     * @throws java.io.IOException
+     */
+    private LanguageAspect parseLanguageAspect(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.trace("parseLanguageAspect()");
+        String name;
+        parser.require(XmlPullParser.START_TAG, null, "language");
+
+        // Create element
+        LanguageAspect la = new LanguageAspect();
+
+        // Read attributes
+        String from = parser.getAttributeValue(null, "from");
+        String to = parser.getAttributeValue(null, "to");
+
+        // Read sub elements
+
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                Log.trace("parseLanguageAspect() continue");
+                continue;
+            }
+
+            name = parser.getName();
+
+            switch (name) {
+                default:
+                    skip(parser);
+            }
+        }
+
+        // Fill element
+
+        if (from != null)
+            la.setFrom(Language.fromString(from));
+        if (to != null)
+            la.setTo(Language.fromString(to));
+
+        return la;
     }
 
 

@@ -26,6 +26,7 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.share.MailSender;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
 import de.interoberlin.lymbo.util.Configuration;
@@ -98,6 +99,8 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             TextView tvSubtitle = (TextView) llStack.findViewById(R.id.tvSubtitle);
             ImageView ivShare = (ImageView) llStack.findViewById(R.id.ivShare);
             TextView tvCardCount = (TextView) llStack.findViewById(R.id.tvCardCount);
+            TextView tvLanguageFrom = (TextView) llStack.findViewById(R.id.tvLanguageFrom);
+            TextView tvLanguageTo = (TextView) llStack.findViewById(R.id.tvLanguageTo);
 
             // Set values
             if (lymbo.getImage() != null && !lymbo.getImage().trim().isEmpty()) {
@@ -125,6 +128,13 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                                         String title = lymbo.getTitle();
                                         String subtitle = lymbo.getSubtitle();
                                         String author = lymbo.getAuthor();
+                                        String languageFrom = null;
+                                        String languageTo = null;
+
+                                        if (lymbo.getLanguageAspect() != null) {
+                                            languageFrom = lymbo.getLanguageAspect().getFrom().getLangCode();
+                                            languageTo = lymbo.getLanguageAspect().getTo().getLangCode();
+                                        }
 
                                         ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
                                         EditStackDialogFragment dialog = new EditStackDialogFragment();
@@ -133,6 +143,8 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                                         bundle.putString(c.getResources().getString(R.string.bundle_title), title);
                                         bundle.putString(c.getResources().getString(R.string.bundle_subtitle), subtitle);
                                         bundle.putString(c.getResources().getString(R.string.bundle_author), author);
+                                        bundle.putString(c.getResources().getString(R.string.bundle_language_from), languageFrom);
+                                        bundle.putString(c.getResources().getString(R.string.bundle_language_to), languageTo);
                                         dialog.setArguments(bundle);
                                         dialog.show(a.getFragmentManager(), "okay");
                                         return false;
@@ -169,6 +181,16 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                     }
                 }
             });
+
+            // Languages
+            LanguageAspect languageAspect = lymbo.getLanguageAspect();
+            if (languageAspect != null && languageAspect.getFrom() != null && languageAspect.getTo() != null) {
+                tvLanguageFrom.setText(languageAspect.getFrom().getName(a));
+                tvLanguageTo.setText(languageAspect.getTo().getName(a));
+            } else {
+                ViewUtil.remove(tvLanguageFrom);
+                ViewUtil.remove(tvLanguageTo);
+            }
 
             // Action : open cards view
             llStack.setOnClickListener(new View.OnClickListener() {

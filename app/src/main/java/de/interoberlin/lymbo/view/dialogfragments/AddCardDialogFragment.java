@@ -6,8 +6,11 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -21,10 +24,16 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
+import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
+import de.interoberlin.lymbo.model.translate.Language;
+import de.interoberlin.lymbo.model.translate.MicrosoftAccessControlItemTask;
+import de.interoberlin.lymbo.model.translate.MicrosoftTranslatorTask;
 import de.interoberlin.lymbo.util.ModelUtil;
 import de.interoberlin.lymbo.util.ViewUtil;
 
@@ -34,21 +43,6 @@ public class AddCardDialogFragment extends DialogFragment {
 
     // Model
     private List<Tag> tags;
-
-    // Views
-    private EditText etFront;
-    private ImageView ivExpandTextsFront;
-    private TableLayout tblTextFront;
-    private ImageView ivAddTextFront;
-
-    private EditText etBack;
-    private ImageView ivExpandTextsBack;
-    private TableLayout tblTextBack;
-    private ImageView ivAddTextBack;
-
-    private LinearLayout llAddTags;
-    private TableLayout tblTags;
-    private ImageView ivAddTag;
 
     private boolean addTextFrontIsExpanded = false;
     private boolean addTextBackIsExpanded = false;
@@ -71,23 +65,25 @@ public class AddCardDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         cardsController = CardsController.getInstance(getActivity());
+        final Lymbo lymbo = cardsController.getLymbo();
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_add_card, null);
 
-        etFront = (EditText) v.findViewById(R.id.etFront);
-        ivExpandTextsFront = (ImageView) v.findViewById(R.id.ivExpandTextsFront);
-        tblTextFront = (TableLayout) v.findViewById(R.id.tblTextFront);
-        ivAddTextFront = (ImageView) v.findViewById(R.id.ivAddTextFront);
+        final EditText etFront = (EditText) v.findViewById(R.id.etFront);
+        final ImageView ivExpandTextsFront = (ImageView) v.findViewById(R.id.ivExpandTextsFront);
+        final TableLayout tblTextFront = (TableLayout) v.findViewById(R.id.tblTextFront);
+        final ImageView ivAddTextFront = (ImageView) v.findViewById(R.id.ivAddTextFront);
 
-        etBack = (EditText) v.findViewById(R.id.etBack);
-        ivExpandTextsBack = (ImageView) v.findViewById(R.id.ivExpandTextsBack);
-        tblTextBack = (TableLayout) v.findViewById(R.id.tblTextBack);
-        ivAddTextBack = (ImageView) v.findViewById(R.id.ivAddTextBack);
+        final EditText etBack = (EditText) v.findViewById(R.id.etBack);
+        final ImageView ivTranslate = (ImageView) v.findViewById(R.id.ivTranslate);
+        final ImageView ivExpandTextsBack = (ImageView) v.findViewById(R.id.ivExpandTextsBack);
+        final TableLayout tblTextBack = (TableLayout) v.findViewById(R.id.tblTextBack);
+        final ImageView ivAddTextBack = (ImageView) v.findViewById(R.id.ivAddTextBack);
 
-        llAddTags = (LinearLayout) v.findViewById(R.id.llAddTags);
-        tblTags = (TableLayout) v.findViewById(R.id.tblTags);
-        ivAddTag = (ImageView) v.findViewById(R.id.ivAddTag);
+        final LinearLayout llAddTags = (LinearLayout) v.findViewById(R.id.llAddTags);
+        final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
+        final ImageView ivAddTag = (ImageView) v.findViewById(R.id.ivAddTag);
 
         // Add actions
         ivExpandTextsFront.setOnClickListener(new View.OnClickListener() {
@@ -104,6 +100,53 @@ public class AddCardDialogFragment extends DialogFragment {
                 }
             }
         });
+
+        // Translate button
+        LanguageAspect languageAspect = lymbo.getLanguageAspect();
+        Language languageFrom = languageAspect.getFrom();
+        Language languageTo = languageAspect.getTo();
+        boolean languageCard = languageFrom != null && languageTo != null;
+
+        Resources res = getActivity().getResources();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        String translatorApiSecret = prefs.getString(res.getString(R.string.translator_api_secret), null);
+        String accessItemTokenType = prefs.getString(res.getString(R.string.translator_access_item_token_type), null);
+        String accessItemAccessToken = prefs.getString(res.getString(R.string.translator_access_item_access_token), null);
+        int accessItemExpiresIn = prefs.getInt(res.getString(R.string.translator_access_item_expires_in), 0);
+        String accessItemScope = prefs.getString(res.getString(R.string.translator_access_item_scope), null);
+        Long acessItemTimestamp = prefs.getLong(res.getString(R.string.translator_access_item_timestamp), 0L);
+
+        // Re-run getting access
+        // if (accessItemAccessToken == null || ((acessItemTimestamp != 0 && accessItemExpiresIn != 0 && (acessItemTimestamp + accessItemExpiresIn*1000 > System.currentTimeMillis()))))
+
+        // Get new access token
+        new MicrosoftAccessControlItemTask().execute(res.getString(R.string.translator_client_id), translatorApiSecret);
+
+        if (languageCard && accessItemAccessToken != null) {
+            ivTranslate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Resources res = getActivity().getResources();
+
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    String accessToken = prefs.getString(res.getString(R.string.translator_access_item_access_token), null);
+                    Language languageFrom = lymbo.getLanguageAspect().getFrom();
+                    Language languageTo = lymbo.getLanguageAspect().getTo();
+
+                    try {
+                        String translatedText = new MicrosoftTranslatorTask().execute(accessToken, languageFrom.getLangCode(), languageTo.getLangCode(), etFront.getText().toString()).get();
+                        etBack.setText(translatedText);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+            ViewUtil.remove(ivTranslate);
+        }
 
         ivExpandTextsBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,6 +295,12 @@ public class AddCardDialogFragment extends DialogFragment {
 
         AlertDialog dialog = (AlertDialog) getDialog();
 
+        final EditText etFront = (EditText) dialog.findViewById(R.id.etFront);
+        final TableLayout tblTextFront = (TableLayout) dialog.findViewById(R.id.tblTextFront);
+        final EditText etBack = (EditText) dialog.findViewById(R.id.etBack);
+        final TableLayout tblTextBack = (TableLayout) dialog.findViewById(R.id.tblTextBack);
+        final TableLayout tblTags = (TableLayout) dialog.findViewById(R.id.tblTags);
+
         if (dialog != null) {
             Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(new View.OnClickListener() {
@@ -294,7 +343,7 @@ public class AddCardDialogFragment extends DialogFragment {
             if (tblTexts.getChildAt(i) instanceof TableRow) {
                 TableRow row = (TableRow) tblTexts.getChildAt(i);
 
-                if (row.getChildCount() > 0  && row.getChildAt(0) instanceof EditText && !((EditText) row.getChildAt(0)).getText().toString().isEmpty()) {
+                if (row.getChildCount() > 0 && row.getChildAt(0) instanceof EditText && !((EditText) row.getChildAt(0)).getText().toString().isEmpty()) {
                     texts.add(((EditText) row.getChildAt(0)).getText().toString());
                 }
             }

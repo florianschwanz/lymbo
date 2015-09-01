@@ -15,6 +15,7 @@ import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 
@@ -74,6 +75,8 @@ public class LymboWriter {
         attributes.put("author", lymbo.getAuthor());
 
         addStartTag(tag, attributes);
+
+        appendLanguageAspects("language", lymbo.getLanguageAspect());
 
         for (Card card : lymbo.getCards()) {
             if (card != null)
@@ -160,6 +163,22 @@ public class LymboWriter {
         attributes.put("gravity", component.getGravity().toString());
 
         addTag(tag, attributes);
+    }
+
+    /**
+     * Appends language component to lymbo
+     *
+     * @param tag            tag name to appended
+     * @param languageAspect language aspect to appended
+     */
+    private static void appendLanguageAspects(String tag, LanguageAspect languageAspect) {
+        if (languageAspect != null) {
+            Map<String, String> attributes = new HashMap<>();
+            attributes.put("from", languageAspect.getFrom().getLangCode());
+            attributes.put("to", languageAspect.getTo().getLangCode());
+
+            addTag(tag, attributes);
+        }
     }
 
     // --------------------

@@ -23,7 +23,7 @@ public class SelectTagsDialogFragment extends DialogFragment {
     // Controllers
     private CardsController cardsController;
 
-    private OnTagsSelectedListener onTagsSelectedListener;
+    private OnCompleteListener ocListener;
 
     // --------------------
     // Constructors
@@ -146,7 +146,7 @@ public class SelectTagsDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.okay, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                onTagsSelectedListener.onTagsSelected();
+                ocListener.onTagsSelected();
                 dismiss();
             }
         });
@@ -161,17 +161,6 @@ public class SelectTagsDialogFragment extends DialogFragment {
 
         return builder.create();
     }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
 
     private void setAllTagsTo(TableLayout tblTags, boolean value) {
         for (final Tag t : cardsController.getLymbo().getTags()) {
@@ -193,7 +182,7 @@ public class SelectTagsDialogFragment extends DialogFragment {
     // Callback interfaces
     // --------------------
 
-    public interface OnTagsSelectedListener {
+    public interface OnCompleteListener {
         void onTagsSelected();
     }
 
@@ -201,7 +190,7 @@ public class SelectTagsDialogFragment extends DialogFragment {
         super.onAttach(activity);
 
         try {
-            this.onTagsSelectedListener = (OnTagsSelectedListener) activity;
+            this.ocListener = (OnCompleteListener) activity;
         } catch (final ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnTagsSelectedListener");
         }
