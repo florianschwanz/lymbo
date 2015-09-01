@@ -28,7 +28,6 @@ import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.share.MailSender;
-import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
@@ -185,12 +184,9 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
 
             // Languages
             LanguageAspect languageAspect = lymbo.getLanguageAspect();
-            Language languageFrom = languageAspect.getFrom();
-            Language languageTo = languageAspect.getTo();
-
-            if (languageFrom != null && languageTo != null) {
-                tvLanguageFrom.setText(languageFrom.getName(a));
-                tvLanguageTo.setText(languageTo.getName(a));
+            if (languageAspect != null && languageAspect.getFrom() != null && languageAspect.getTo() != null) {
+                tvLanguageFrom.setText(languageAspect.getFrom().getName(a));
+                tvLanguageTo.setText(languageAspect.getTo().getName(a));
             } else {
                 ViewUtil.remove(tvLanguageFrom);
                 ViewUtil.remove(tvLanguageTo);

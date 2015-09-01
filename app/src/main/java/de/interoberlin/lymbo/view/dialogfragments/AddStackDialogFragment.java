@@ -210,7 +210,7 @@ public class AddStackDialogFragment extends DialogFragment {
                         etTitle.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);
                     }
 
-                    if (!title.isEmpty() && languageFrom != null&& languageTo != null)  {
+                    if (!title.isEmpty())  {
                         ocListener.onAddStack(title, subtitle, author, languageFrom, languageTo);
                         dismiss();
                     }
