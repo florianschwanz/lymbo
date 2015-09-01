@@ -128,6 +128,8 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         timer.start();
 
         Accelerator.getInstance().setDisplay(((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay());
+
+        panel.init();
     }
 
     public void onResume() {
