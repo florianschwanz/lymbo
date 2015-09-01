@@ -74,7 +74,7 @@
                 android:layout_width="34dp"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/desc_image"
-                android:src="@drawable/ic_action_web_site" />
+                android:src="@drawable/ic_action_import_export" />
 
             <EditText
                 android:id="@+id/etBack"
