@@ -118,10 +118,12 @@ public class LymbosController {
         lymbo.setSubtitle(subtitle);
         lymbo.setAuthor(author);
 
-        LanguageAspect languageAspect = new LanguageAspect();
-        languageAspect.setFrom(languageFrom);
-        languageAspect.setTo(languageTo);
-        lymbo.setLanguageAspect(languageAspect);
+        if (languageFrom != null && languageTo != null) {
+            LanguageAspect languageAspect = new LanguageAspect();
+            languageAspect.setFrom(languageFrom);
+            languageAspect.setTo(languageTo);
+            lymbo.setLanguageAspect(languageAspect);
+        }
 
         lymbo.setPath(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + title.trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION);
 
@@ -141,12 +143,14 @@ public class LymbosController {
     /**
      * Updates a stack
      *
-     * @param uuid     id of stack to be updated
-     * @param title    title
-     * @param subtitle subtitle
-     * @param author   author
+     * @param uuid         id of stack to be updated
+     * @param title        title
+     * @param subtitle     subtitle
+     * @param author       author
+     * @param languageFrom source language
+     * @param languageTo   target language
      */
-    public void updateStack(String uuid, String title, String subtitle, String author) {
+    public void updateStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo) {
         if (lymbosContainsId(uuid)) {
             Lymbo lymbo = getLymboById(uuid);
 
@@ -159,6 +163,13 @@ public class LymbosController {
             lymbo.setTitle(title);
             lymbo.setSubtitle(subtitle);
             lymbo.setAuthor(author);
+
+            if (languageFrom != null && languageTo != null) {
+                LanguageAspect languageAspect = new LanguageAspect();
+                languageAspect.setFrom(languageFrom);
+                languageAspect.setTo(languageTo);
+                lymbo.setLanguageAspect(languageAspect);
+            }
 
             String path = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + lymbo.getTitle().trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION;
 

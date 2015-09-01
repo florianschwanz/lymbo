@@ -118,8 +118,10 @@ public class AddCardDialogFragment extends DialogFragment {
         Long acessItemTimestamp = prefs.getLong(res.getString(R.string.translator_access_item_timestamp), 0L);
 
         // Re-run getting access
-        if (accessItemAccessToken == null || ((acessItemTimestamp != 0 && accessItemExpiresIn != 0 && (acessItemTimestamp + accessItemExpiresIn*1000 > System.currentTimeMillis()))))
-            new MicrosoftAccessControlItemTask().execute(res.getString(R.string.translator_client_id), translatorApiSecret);
+        // if (accessItemAccessToken == null || ((acessItemTimestamp != 0 && accessItemExpiresIn != 0 && (acessItemTimestamp + accessItemExpiresIn*1000 > System.currentTimeMillis()))))
+
+        // Get new access token
+        new MicrosoftAccessControlItemTask().execute(res.getString(R.string.translator_client_id), translatorApiSecret);
 
         if (languageCard && accessItemAccessToken != null) {
             ivTranslate.setOnClickListener(new View.OnClickListener() {
@@ -292,8 +294,6 @@ public class AddCardDialogFragment extends DialogFragment {
         super.onStart();
 
         AlertDialog dialog = (AlertDialog) getDialog();
-
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_add_card, null);
 
         final EditText etFront = (EditText) dialog.findViewById(R.id.etFront);
         final TableLayout tblTextFront = (TableLayout) dialog.findViewById(R.id.tblTextFront);

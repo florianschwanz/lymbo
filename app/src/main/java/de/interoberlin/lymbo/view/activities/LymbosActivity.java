@@ -192,8 +192,8 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     }
 
     @Override
-    public void onEditStack(String uuid, String title, String subtitle, String author) {
-        lymbosController.updateStack(uuid, title, subtitle, author);
+    public void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo) {
+        lymbosController.updateStack(uuid, title, subtitle, author, languageFrom, languageTo);
 
         lymbosAdapter.notifyDataSetChanged();
         slv.invalidateViews();

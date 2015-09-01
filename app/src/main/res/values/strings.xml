@@ -26,6 +26,8 @@
     <string name="bundle_texts_back" translatable="false">bundle_texts_back</string>
     <string name="bundle_tags_lymbo" translatable="false">bundleTagsLymbo</string>
     <string name="bundle_tags_card" translatable="false">bundleTagsCard</string>
+    <string name="bundle_language_from" translatable="false">bundleLanguageFrom</string>
+    <string name="bundle_language_to" translatable="false">bundleLanguageTo</string>
 
     <string name="broken_lymbo_file">Broken lymbo :(</string>
     <string name="cancel">Cancel</string>

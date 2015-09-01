@@ -129,6 +129,13 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                                         String title = lymbo.getTitle();
                                         String subtitle = lymbo.getSubtitle();
                                         String author = lymbo.getAuthor();
+                                        String languageFrom = null;
+                                        String languageTo = null;
+
+                                        if (lymbo.getLanguageAspect() != null) {
+                                            languageFrom = lymbo.getLanguageAspect().getFrom().getLangCode();
+                                            languageTo = lymbo.getLanguageAspect().getTo().getLangCode();
+                                        }
 
                                         ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
                                         EditStackDialogFragment dialog = new EditStackDialogFragment();
@@ -137,6 +144,8 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                                         bundle.putString(c.getResources().getString(R.string.bundle_title), title);
                                         bundle.putString(c.getResources().getString(R.string.bundle_subtitle), subtitle);
                                         bundle.putString(c.getResources().getString(R.string.bundle_author), author);
+                                        bundle.putString(c.getResources().getString(R.string.bundle_language_from), languageFrom);
+                                        bundle.putString(c.getResources().getString(R.string.bundle_language_to), languageTo);
                                         dialog.setArguments(bundle);
                                         dialog.show(a.getFragmentManager(), "okay");
                                         return false;
