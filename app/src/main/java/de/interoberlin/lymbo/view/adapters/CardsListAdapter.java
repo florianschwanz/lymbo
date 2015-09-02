@@ -42,9 +42,9 @@ import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
+import de.interoberlin.lymbo.view.dialogfragments.CardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.CopyCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.EditCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.MoveCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
@@ -169,15 +169,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             }
         });
 
-        /*
-        rlMain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                flip(card, llCard);
-            }
-        });
-        */
-
         // Add sides
         for (Side side : card.getSides()) {
             LayoutInflater li = LayoutInflater.from(c);
@@ -215,15 +206,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         if (note != null && !note.isEmpty()) {
             tvNote.setText(note);
         }
-
-        /*
-        llBottom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                flip(card, llCard);
-            }
-        });
-        */
 
         // Tags
         for (Tag tag : card.getTags()) {
@@ -405,7 +387,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         }
 
         ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-        EditCardDialogFragment dialog = new EditCardDialogFragment();
+        CardDialogFragment dialog = new CardDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString(c.getResources().getString(R.string.bundle_card_uuid), uuid);
         bundle.putString(c.getResources().getString(R.string.bundle_front_title), frontTitle);
