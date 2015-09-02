@@ -273,7 +273,12 @@ public class LymboWriter {
         String tagsList = "";
 
         for (Tag t : tags) {
-            tagsList += " " + t.getName();
+            tagsList +=  t.getName() + " ";
+        }
+
+        // Remove trailing blank
+        if (tagsList.length() > 0 && tagsList.charAt(tagsList.length() - 1) == ' ') {
+            tagsList = tagsList.substring(0, tagsList.length() - 1);
         }
 
         return tagsList;

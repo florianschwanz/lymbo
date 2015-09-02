@@ -14,8 +14,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mrengineer13.snackbar.SnackBar;
+
+import java.io.File;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.LymbosController;
@@ -182,8 +185,13 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
         final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
         Lymbo lymbo = lymbosController.getEmptyLymbo(title, subtitle, author, languageFrom, languageTo);
-        lymbosController.addStack(lymbo);
-        lymbosAdapter.notifyDataSetChanged();
+
+        if (!new File(lymbo.getPath()).exists()) {
+            lymbosController.addStack(lymbo);
+            lymbosAdapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(this, getResources().getString(R.string.lymbo_with_same_name_already_exists), Toast.LENGTH_SHORT);
+        }
         slv.invalidateViews();
     }
 

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.github.mrengineer13.snackbar.SnackBar;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
@@ -210,8 +211,15 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             ibFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    ArrayList<String> tagsLymbo = new ArrayList<>();
+                    for (Tag tag : cardsController.getLymbo().getTags()) {
+                        tagsLymbo.add(tag.getName());
+                    }
+
                     CardDialogFragment dialog = new CardDialogFragment();
-                    dialog.setArguments(new Bundle());
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_lymbo), tagsLymbo);
+                    dialog.setArguments(bundle);
                     dialog.show(getFragmentManager(), "okay");
                 }
             });

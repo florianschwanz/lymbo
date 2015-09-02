@@ -97,6 +97,7 @@
     <string name="logo">Logo</string>
     <string name="lymbo_error_log">Lymbo Error Log</string>
     <string name="lymbo_for_you">Lymbo for you</string>
+    <string name="lymbo_with_same_name_already_exists">Lymbo with same name already exists</string>
     <string name="lymbos">Lymbos</string>
     <string name="lymbos_loaded">Lymbos loaded</string>
     <string name="lymbos_stash">Lymbos Stash</string>

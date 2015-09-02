@@ -115,7 +115,7 @@ public class CardDialogFragment extends DialogFragment {
         }
         if (tagsLymbo != null) {
             for (final String tag : tagsLymbo) {
-                if (!tag.equals(getActivity().getResources().getString(R.string.no_tag))) {
+                if (tag != null && !tag.equals(getActivity().getResources().getString(R.string.no_tag))) {
                     final TableRow tr = new TableRow(getActivity());
 
                     final CheckBox cb = new CheckBox(getActivity());
@@ -124,7 +124,7 @@ public class CardDialogFragment extends DialogFragment {
                     tr.addView(cb);
                     tr.addView(tvText);
 
-                    if (tagsCard.contains(tag))
+                    if (tagsCard != null && tagsCard.contains(tag))
                         cb.setChecked(true);
 
                     tvText.setText(tag);

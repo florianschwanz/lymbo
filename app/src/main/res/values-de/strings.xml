@@ -133,5 +133,6 @@
     <string name="title">Titel</string>
     <string name="undo">Rückgängig</string>
     <string name="wrong">falsch</string>
+    <string name="lymbo_with_same_name_already_exists">Lymbo mit diesem Namen existiert bereits</string>
 
 </resources>
