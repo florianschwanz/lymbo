@@ -169,12 +169,14 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             }
         });
 
+        /*
         rlMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 flip(card, llCard);
             }
         });
+        */
 
         // Add sides
         for (Side side : card.getSides()) {
@@ -214,12 +216,14 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             tvNote.setText(note);
         }
 
+        /*
         llBottom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 flip(card, llCard);
             }
         });
+        */
 
         // Tags
         for (Tag tag : card.getTags()) {
@@ -491,27 +495,27 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     /**
      * Flips a card to the next side
      *
-     * @param card   card to be flipped
-     * @param llCard corresponding view
+     * @param card card to be flipped
+     * @param view corresponding view
      */
-    public void flip(final Card card, final LinearLayout llCard) {
+    public void flip(final Card card, final View view) {
         if (!checkAnswerSelected(card))
             return;
 
         final int CARD_FLIP_TIME = c.getResources().getInteger(R.integer.card_flip_time);
         final int VIBRATION_DURATION_FLIP = c.getResources().getInteger(R.integer.vibration_duration_flip);
 
-        ObjectAnimator animation = ObjectAnimator.ofFloat(llCard, "rotationY", 0.0f, 90.0f);
+        ObjectAnimator animation = ObjectAnimator.ofFloat(view, "rotationY", 0.0f, 90.0f);
         animation.setDuration(CARD_FLIP_TIME / 2);
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
         animation.start();
 
-        llCard.postDelayed(new Runnable() {
+        view.postDelayed(new Runnable() {
             @Override
             public void run() {
-                changeSide(card, llCard);
+                changeSide(card, view);
 
-                ObjectAnimator animation = ObjectAnimator.ofFloat(llCard, "rotationY", -90.0f, 0.0f);
+                ObjectAnimator animation = ObjectAnimator.ofFloat(view, "rotationY", -90.0f, 0.0f);
                 animation.setDuration(CARD_FLIP_TIME / 2);
                 animation.setInterpolator(new AccelerateDecelerateInterpolator());
                 animation.start();
@@ -536,12 +540,12 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     /**
      * Displays next side
      *
-     * @param card   card
-     * @param flCard frameLayout of card
+     * @param card card
+     * @param view view of card
      */
-    private void changeSide(Card card, LinearLayout flCard) {
-        final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
-        final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
+    private void changeSide(Card card, View view) {
+        final RelativeLayout rlMain = (RelativeLayout) view.findViewById(R.id.rlMain);
+        final TextView tvNumerator = (TextView) view.findViewById(R.id.tvNumerator);
 
         handleQuiz(card);
         card.setSideVisible((card.getSideVisible() + 1) % card.getSides().size());

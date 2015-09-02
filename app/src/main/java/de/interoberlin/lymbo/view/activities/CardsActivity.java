@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mrengineer13.snackbar.SnackBar;
 
@@ -26,6 +27,7 @@ import java.io.File;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.controller.App;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
@@ -205,6 +207,13 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                 @Override
                 public void onClickFrontView(int position) {
+                    Card card = cardsAdapter.getItem(position);
+                    View view = getViewByPosition(position, slv);
+
+                    if (card.getSides().size() > 1) {
+                        cardsAdapter.flip(card, view);
+                    }
+                    Toast.makeText(App.getContext(), "" + position, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -601,6 +610,25 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             first++;
 
         return first;
+    }
+
+    /**
+     * Returns the child view at a certain position
+     *
+     * @param position position
+     * @param listView list view
+     * @return
+     */
+    public View getViewByPosition(int position, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (position < firstListItemPosition || position > lastListItemPosition) {
+            return listView.getAdapter().getView(position, null, listView);
+        } else {
+            final int childIndex = position - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
     }
 
     private void checkEmptyStack() {
