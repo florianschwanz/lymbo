@@ -10,7 +10,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,17 +47,6 @@ import de.interoberlin.swipelistview.view.SwipeListView;
 public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, CardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnCompleteListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, CopyCardDialogFragment.OnCompleteListener, MoveCardDialogFragment.OnCompleteListener {
     // Controllers
     private CardsController cardsController;
-
-    // Views
-    private SwipeRefreshLayout srl;
-    private SwipeListView slv;
-    private ImageButton ibFab;
-    private LinearLayout toolbarWrapper;
-    private TextView toolbarTextView;
-    private RelativeLayout rl;
-    private LinearLayout phNoCards;
-    private RelativeLayout rlDiscard;
-    private RelativeLayout rlPutToEnd;
 
     // Model
     private Lymbo lymbo;
@@ -127,19 +115,17 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             lymbo = cardsController.getLymbo();
             cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
+            final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
+            final LinearLayout toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
+            final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+            final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
+            final ImageButton ibFab = (ImageButton) findViewById(R.id.fab);
+
             drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-            toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
-            toolbarTextView = (TextView) findViewById(R.id.toolbar_text);
-
-            rl = (RelativeLayout) findViewById(R.id.rl);
-
-            srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
             srl.setOnRefreshListener(this);
             srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
 
-            slv = (SwipeListView) findViewById(R.id.slv);
             slv.setAdapter(cardsAdapter);
             slv.setSwipeMode(SwipeListView.SWIPE_MODE_BOTH);
             slv.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_REVEAL);
@@ -179,8 +165,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                     View v = slv.getChildAt(position);
 
                     if (v != null) {
-                        rlDiscard = (RelativeLayout) v.findViewById(R.id.rlDiscard);
-                        rlPutToEnd = (RelativeLayout) v.findViewById(R.id.rlPutToEnd);
+                        final RelativeLayout rlDiscard = (RelativeLayout) v.findViewById(R.id.rlDiscard);
+                        final RelativeLayout rlPutToEnd = (RelativeLayout) v.findViewById(R.id.rlPutToEnd);
 
                         if (x > 0) {
                             rlDiscard.setVisibility(View.VISIBLE);
@@ -221,7 +207,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 }
             });
 
-            ibFab = (ImageButton) findViewById(R.id.fab);
             ibFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -234,9 +219,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             if (lymbo.isAsset()) {
                 ibFab.setVisibility(View.INVISIBLE);
             }
-
-            phNoCards = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.placeholder_no_cards, null, false);
-            rl.addView(phNoCards);
 
             updateSwipeRefreshProgressBarTop(srl);
             registerHideableHeaderView(toolbarWrapper);
@@ -319,6 +301,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
+
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             slv.smoothScrollToPosition(getFirst() + 2);
             return true;
@@ -595,14 +579,17 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
      * Updates the list view
      */
     private void updateListView() {
+        final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
+
         cardsAdapter.filter();
         slv.closeOpenedItems();
         slv.invalidateViews();
-        checkEmptyStack();
         updateCardCount();
     }
 
     private int getFirst() {
+        final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
+
         int first = slv.getFirstVisiblePosition();
         if (slv.getChildAt(0).getTop() < 0)
             first++;
@@ -615,7 +602,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
      *
      * @param position position
      * @param listView list view
-     * @return
+     * @return view at the given position
      */
     public View getViewByPosition(int position, ListView listView) {
         final int firstListItemPosition = listView.getFirstVisiblePosition();
@@ -629,11 +616,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         }
     }
 
-    private void checkEmptyStack() {
-        phNoCards.setVisibility(cardsAdapter.getFilteredItems().isEmpty() ? View.VISIBLE : View.INVISIBLE);
-    }
-
     public void updateCardCount() {
+        final TextView toolbarTextView = (TextView) findViewById(R.id.toolbar_text);
         toolbarTextView.setText(String.valueOf(cardsController.getVisibleCardCount()));
     }
 
@@ -668,11 +652,12 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+            final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+
             updateListView();
             snackCardsResetted();
 
             srl.setRefreshing(false);
         }
-
     }
 }

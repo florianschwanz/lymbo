@@ -7,12 +7,9 @@ import android.os.Parcelable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.mrengineer13.snackbar.SnackBar;
@@ -30,14 +27,6 @@ import de.interoberlin.swipelistview.view.SwipeListView;
 public class CardsStashActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener {
     // Controllers
     CardsController cardsController;
-
-    // Views
-    private SwipeRefreshLayout srl;
-    private SwipeListView slv;
-    private LinearLayout toolbarWrapper;
-    private TextView toolbarTitleView;
-    private RelativeLayout rl;
-    private LinearLayout phNoCards;
 
     // Model
     private CardsStashListAdapter cardsStashAdapter;
@@ -78,25 +67,21 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
             super.onResume();
             cardsStashAdapter = new CardsStashListAdapter(this, this, R.layout.card_stash, cardsController.getCardsStashed());
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
-            drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
-            toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
-            toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
+            final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
+            final LinearLayout toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
+            final TextView toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
+            final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+            final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
+            
             toolbarTitleView.setText(R.string.cards_stash);
 
-            rl = (RelativeLayout) findViewById(R.id.rl);
+            drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-            srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
             srl.setOnRefreshListener(this);
             srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
 
-            slv = (SwipeListView) findViewById(R.id.slv);
             slv.setAdapter(cardsStashAdapter);
             slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
-
-            phNoCards = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.placeholder_no_cards_in_stash, null, false);
-            rl.addView(phNoCards);
 
             updateSwipeRefreshProgressBarTop(srl);
             registerHideableHeaderView(toolbarWrapper);
@@ -162,6 +147,9 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+                final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
+
                 srl.setRefreshing(false);
                 cardsController.reset();
                 cardsStashAdapter.notifyDataSetChanged();
@@ -221,13 +209,10 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
      * Updates the list view
      */
     private void updateListView() {
+        final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
+
         cardsStashAdapter.filter();
         slv.closeOpenedItems();
         slv.invalidateViews();
-        checkEmptyStack();
-    }
-
-    private void checkEmptyStack() {
-        phNoCards.setVisibility(cardsStashAdapter.getFilteredItems().isEmpty() ? View.VISIBLE : View.INVISIBLE);
     }
 }
