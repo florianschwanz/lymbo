@@ -60,7 +60,7 @@ public class EditStackDialogFragment extends DialogFragment {
         Language languageTo = Language.fromString(bundle.getString(getActivity().getResources().getString(R.string.bundle_language_to)));
 
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_add_stack, null);
+        final View v = View.inflate(getActivity(), R.layout.dialogfragment_stack, null);
 
         final EditText etTitle = (EditText) v.findViewById(R.id.etTitle);
         final EditText  etSubtitle = (EditText) v.findViewById(R.id.etSubtitle);
@@ -89,7 +89,6 @@ public class EditStackDialogFragment extends DialogFragment {
             languagesFrom.add(l.getLangCode());
 
             final TableRow tr = new TableRow(getActivity());
-
             final CheckBox cb = new CheckBox(getActivity());
             final RobotoTextView tvText = new RobotoTextView(getActivity());
 
@@ -129,7 +128,6 @@ public class EditStackDialogFragment extends DialogFragment {
             languagesTo.add(l.getLangCode());
 
             final TableRow tr = new TableRow(getActivity());
-
             final CheckBox cb = new CheckBox(getActivity());
             final RobotoTextView tvText = new RobotoTextView(getActivity());
 

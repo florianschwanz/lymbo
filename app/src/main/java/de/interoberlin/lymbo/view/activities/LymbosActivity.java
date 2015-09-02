@@ -24,13 +24,13 @@ import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
-import de.interoberlin.lymbo.view.dialogfragments.AddStackDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditStackDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.StackDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, AddStackDialogFragment.OnCompleteListener, EditStackDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, StackDialogFragment.OnCompleteListener, EditStackDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
     private LymbosController lymbosController;
 
@@ -99,7 +99,9 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
             ibFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new AddStackDialogFragment().show(getFragmentManager(), "okay");
+                    StackDialogFragment dialog = new StackDialogFragment();
+                    dialog.setArguments(new Bundle());
+                    dialog.show(getFragmentManager(), "okay");
                 }
             });
 

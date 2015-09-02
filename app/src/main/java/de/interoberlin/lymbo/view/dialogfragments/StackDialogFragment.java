@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
-public class AddStackDialogFragment extends DialogFragment {
+public class StackDialogFragment extends DialogFragment {
     private List<CheckBox> checkboxesLanguageFrom = new ArrayList<>();
     private List<String> languagesFrom = new ArrayList<>();
 
@@ -41,7 +40,7 @@ public class AddStackDialogFragment extends DialogFragment {
     // Constructors
     // --------------------
 
-    public AddStackDialogFragment() {
+    public StackDialogFragment() {
     }
 
     // --------------------
@@ -53,12 +52,109 @@ public class AddStackDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_add_stack, null);
+        final View v = View.inflate(getActivity(), R.layout.dialogfragment_stack, null);
+        final EditText etTitle = (EditText) v.findViewById(R.id.etTitle);
+        final EditText etSubtitle = (EditText) v.findViewById(R.id.etSubtitle);
+        final EditText etAuthor = (EditText) v.findViewById(R.id.etAuthor);
         final LinearLayout llAddLanguages = (LinearLayout) v.findViewById(R.id.llAddLanguages);
         final LinearLayout llLanguages = (LinearLayout) v.findViewById(R.id.llLanguages);
         final TableLayout tblLanguagesFrom = (TableLayout) v.findViewById(R.id.tblLanguagesFrom);
         final TableLayout tblLanguagesTo = (TableLayout) v.findViewById(R.id.tblLanguagesTo);
 
+        // Get arguments
+        Bundle bundle = this.getArguments();
+        final String title = bundle.getString(getActivity().getResources().getString(R.string.bundle_title));
+        final String subtitle = bundle.getString(getActivity().getResources().getString(R.string.bundle_subtitle));
+        final String author = bundle.getString(getActivity().getResources().getString(R.string.bundle_author));
+        final Language languageFrom = Language.fromString(bundle.getString(getActivity().getResources().getString(R.string.bundle_language_from)));
+        final Language languageTo = Language.fromString(bundle.getString(getActivity().getResources().getString(R.string.bundle_language_to)));
+
+        // Fill views with arguments
+        if (title != null)
+            etTitle.setText(title);
+        if (subtitle != null)
+            etSubtitle.setText(subtitle);
+        if (author != null)
+            etAuthor.setText(author);
+        for (final Language l : Language.values()) {
+            languagesFrom.add(l.getLangCode());
+
+            final TableRow tr = new TableRow(getActivity());
+            final CheckBox cb = new CheckBox(getActivity());
+            final RobotoTextView tvText = new RobotoTextView(getActivity());
+
+            tr.addView(cb);
+            tr.addView(tvText);
+            checkboxesLanguageFrom.add(cb);
+
+            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (b) {
+                        for (CheckBox c : checkboxesLanguageFrom) {
+                            c.setChecked(false);
+                        }
+
+                        cb.setChecked(true);
+                    }
+                }
+            });
+
+            if (languageFrom == l) {
+                cb.setChecked(true);
+            }
+
+            tvText.setText(l.getName(getActivity()));
+            tvText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    cb.toggle();
+                }
+            });
+
+            tblLanguagesFrom.addView(tr);
+        }
+
+        for (final Language l : Language.values()) {
+            languagesTo.add(l.getLangCode());
+
+            final TableRow tr = new TableRow(getActivity());
+            final CheckBox cb = new CheckBox(getActivity());
+            final RobotoTextView tvText = new RobotoTextView(getActivity());
+
+            tr.addView(cb);
+            tr.addView(tvText);
+            checkboxesLanguageTo.add(cb);
+
+            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (b) {
+                        for (CheckBox c : checkboxesLanguageTo) {
+                            c.setChecked(false);
+                        }
+
+                        cb.setChecked(true);
+                    }
+                }
+            });
+
+            if (languageTo == l) {
+                cb.setChecked(true);
+            }
+
+            tvText.setText(l.getName(getActivity()));
+            tvText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    cb.toggle();
+                }
+            });
+
+            tblLanguagesTo.addView(tr);
+        }
+
+        // Add Actions
         llAddLanguages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,51 +269,54 @@ public class AddStackDialogFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
 
-        AlertDialog dialog = (AlertDialog) getDialog();
+        // Get arguments
+        Bundle bundle = this.getArguments();
+        final String lymboUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
 
+        AlertDialog dialog = (AlertDialog) getDialog();
         final EditText etTitle = (EditText) dialog.findViewById(R.id.etTitle);
         final EditText etSubtitle = (EditText) dialog.findViewById(R.id.etSubtitle);
         final EditText etAuthor = (EditText) dialog.findViewById(R.id.etAuthor);
-        final TextView tvLanguageFrom = (TextView) dialog.findViewById(R.id.tvLanguageFrom);
-        final TextView tvLanguageTo = (TextView) dialog.findViewById(R.id.tvLanguageTo);
 
-        if (dialog != null) {
-            Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
-            positiveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String title = etTitle.getText().toString().trim();
-                    String subtitle = etSubtitle.getText().toString().trim();
-                    String author = etAuthor.getText().toString().trim();
-                    Language languageFrom = null;
-                    Language languageTo = null;
+        Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String title = etTitle.getText().toString().trim();
+                String subtitle = etSubtitle.getText().toString().trim();
+                String author = etAuthor.getText().toString().trim();
+                Language languageFrom = null;
+                Language languageTo = null;
 
-                    for (int i = 0; i<checkboxesLanguageFrom.size(); i++) {
-                        if (checkboxesLanguageFrom.get(i).isChecked()) {
-                            languageFrom = Language.fromString(languagesFrom.get(i));
-                        }
-                    }
-
-                    for (int i = 0; i<checkboxesLanguageTo.size(); i++) {
-                        if (checkboxesLanguageTo.get(i).isChecked()) {
-                            languageTo = Language.fromString(languagesTo.get(i));
-                        }
-                    }
-
-                    Drawable dWarning = getActivity().getResources().getDrawable(R.drawable.ic_action_warning);
-
-                    if (title.isEmpty()) {
-                        etTitle.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);
-                    }
-
-                    if (!title.isEmpty())  {
-                        ocListener.onAddStack(title, subtitle, author, languageFrom, languageTo);
-                        dismiss();
+                for (int i = 0; i < checkboxesLanguageFrom.size(); i++) {
+                    if (checkboxesLanguageFrom.get(i).isChecked()) {
+                        languageFrom = Language.fromString(languagesFrom.get(i));
                     }
                 }
-            });
-        }
 
+                for (int i = 0; i < checkboxesLanguageTo.size(); i++) {
+                    if (checkboxesLanguageTo.get(i).isChecked()) {
+                        languageTo = Language.fromString(languagesTo.get(i));
+                    }
+                }
+
+                Drawable dWarning = getActivity().getResources().getDrawable(R.drawable.ic_action_warning);
+
+                if (title.isEmpty()) {
+                    etTitle.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);
+                }
+
+                if (!title.isEmpty()) {
+                    if (lymboUuid == null) {
+                        ocListener.onAddStack(title, subtitle, author, languageFrom, languageTo);
+                    } else {
+                        ocListener.onEditStack(lymboUuid, title, subtitle, author, languageFrom, languageTo);
+                    }
+
+                    dismiss();
+                }
+            }
+        });
     }
 
     @Override
@@ -236,6 +335,8 @@ public class AddStackDialogFragment extends DialogFragment {
 
     public interface OnCompleteListener {
         void onAddStack(String title, String subtitle, String author, Language languageFrom, Language languageTo);
+
+        void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo);
     }
 
     public void onAttach(Activity activity) {
