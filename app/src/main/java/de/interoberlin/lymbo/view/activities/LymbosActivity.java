@@ -34,22 +34,14 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     // Controllers
     private LymbosController lymbosController;
 
-    // Views
-    private SwipeRefreshLayout srl;
-    private SwipeListView slv;
-    private ImageButton ibFab;
-    private LinearLayout toolbarWrapper;
-    private TextView toolbarTitleView;
-
     // Model
     private LymbosListAdapter lymbosAdapter;
 
     private Lymbo recentLymbo = null;
-    private int recentCardPos = -1;
+    // private int recentCardPos = -1;
     private int recentEvent = -1;
 
     private static final int EVENT_STASH = 2;
-
     private static int REFRESH_DELAY;
 
     // --------------------
@@ -80,22 +72,23 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
             super.onResume();
             lymbosAdapter = new LymbosListAdapter(this, this, R.layout.stack, lymbosController.getLymbos());
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
-            drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+            final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
+            final LinearLayout toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
+            final TextView toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
+            final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+            final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
+            final ImageButton ibFab = (ImageButton) findViewById(R.id.fab);
 
-            toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
-            toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
             toolbarTitleView.setText(R.string.lymbos);
 
-            srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+            drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
             srl.setOnRefreshListener(this);
             srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
 
-            slv = (SwipeListView) findViewById(R.id.slv);
             slv.setAdapter(lymbosAdapter);
             slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
 
-            ibFab = (ImageButton) findViewById(R.id.fab);
             ibFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -186,8 +179,9 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
     @Override
     public void onAddStack(String title, String subtitle, String author, Language languageFrom, Language languageTo) {
-        Lymbo lymbo = lymbosController.getEmptyLymbo(title, subtitle, author, languageFrom, languageTo);
+        final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
+        Lymbo lymbo = lymbosController.getEmptyLymbo(title, subtitle, author, languageFrom, languageTo);
         lymbosController.addStack(lymbo);
         lymbosAdapter.notifyDataSetChanged();
         slv.invalidateViews();
@@ -195,8 +189,9 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
     @Override
     public void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo) {
-        lymbosController.updateStack(uuid, title, subtitle, author, languageFrom, languageTo);
+        final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
+        lymbosController.updateStack(uuid, title, subtitle, author, languageFrom, languageTo);
         lymbosAdapter.notifyDataSetChanged();
         slv.invalidateViews();
     }
@@ -211,10 +206,11 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
      * @param lymbo lymbo to be stashed
      */
     public void stash(int pos, Lymbo lymbo) {
+        final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
         slv.invalidateViews();
 
         recentLymbo = lymbo;
-        recentCardPos = pos - 1;
+        // recentCardPos = pos - 1;
         recentEvent = EVENT_STASH;
 
         new SnackBar.Builder(this)
@@ -250,6 +246,8 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
      * Updates the list view
      */
     private void updateListView() {
+        final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
+
         lymbosAdapter.filter();
         slv.closeOpenedItems();
         slv.invalidateViews();
@@ -275,8 +273,9 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            updateListView();
+            final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 
+            updateListView();
             srl.setRefreshing(false);
             snackLymbosLoaded();
         }

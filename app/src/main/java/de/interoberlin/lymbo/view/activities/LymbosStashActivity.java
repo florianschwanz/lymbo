@@ -14,8 +14,6 @@ import android.widget.TextView;
 
 import com.github.mrengineer13.snackbar.SnackBar;
 
-import java.util.List;
-
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Lymbo;
@@ -30,14 +28,7 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
     // Controllers
     private LymbosController lymbosController;
 
-    // Views
-    private SwipeRefreshLayout srl;
-    private SwipeListView slv;
-    private LinearLayout toolbarWrapper;
-    private TextView toolbarTitleView;
-
     // Model
-    private List<Lymbo> lymbos;
     private LymbosStashListAdapter lymbosStashAdapter;
 
     private Lymbo recentLymbo = null;
@@ -65,21 +56,21 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
 
     public void onResume() {
         super.onResume();
-        lymbos = lymbosController.getLymbosStashed();
-        lymbosStashAdapter = new LymbosStashListAdapter(this, this, R.layout.stack_stash, lymbos);
+        lymbosStashAdapter = new LymbosStashListAdapter(this, this, R.layout.stack_stash, lymbosController.getLymbosStashed());
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
+        final LinearLayout toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
+        final TextView toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
+        final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
+
         drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
-        toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
         toolbarTitleView.setText(R.string.lymbos_stash);
 
-        srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         srl.setOnRefreshListener(this);
         srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
 
-        slv = (SwipeListView) findViewById(R.id.slv);
         slv.setAdapter(lymbosStashAdapter);
         slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
 
@@ -141,6 +132,8 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
 
     @Override
     public void onMessageClick(Parcelable token) {
+        final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
+
         lymbosController.stash(recentLymbo);
         lymbosStashAdapter.notifyDataSetChanged();
         slv.invalidateViews();
@@ -151,6 +144,9 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+                final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
+
                 srl.setRefreshing(false);
 
                 lymbosController.scan();
@@ -198,6 +194,9 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
      * Updates the list view
      */
     private void updateListView() {
+        final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
+
+
         lymbosStashAdapter.filter();
         slv.closeOpenedItems();
         slv.invalidateViews();

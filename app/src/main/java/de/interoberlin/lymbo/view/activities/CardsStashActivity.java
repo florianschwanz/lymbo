@@ -72,7 +72,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
             final TextView toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
             final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
             final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
-            
+
             toolbarTitleView.setText(R.string.cards_stash);
 
             drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
