@@ -118,7 +118,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         // Load views : bottom bar
         final LinearLayout llTags = (LinearLayout) llCard.findViewById(R.id.llTags);
         final LinearLayout llFlip = (LinearLayout) llCard.findViewById(R.id.llFlip);
-        final LinearLayout llBottom = (LinearLayout) llCard.findViewById(R.id.llBottom);
         final TextView tvNumerator = (TextView) llCard.findViewById(R.id.tvNumerator);
         final TextView tvDenominator = (TextView) llCard.findViewById(R.id.tvDenominator);
         final ImageView ivNote = (ImageView) llCard.findViewById(R.id.ivNote);
@@ -136,7 +135,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
-                                edit(card, llCard);
+                                edit(card);
                                 return false;
                             }
                         });
@@ -355,9 +354,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * Opens dialog to edit card
      *
      * @param card   card to be edited
-     * @param llCard corresponding view
      */
-    private void edit(final Card card, final LinearLayout llCard) {
+    private void edit(final Card card) {
         String uuid = card.getId();
         String frontTitle = ((TitleComponent) card.getSides().get(0).getFirst(EComponent.TITLE)).getValue();
         String backTitle = ((TitleComponent) card.getSides().get(1).getFirst(EComponent.TITLE)).getValue();

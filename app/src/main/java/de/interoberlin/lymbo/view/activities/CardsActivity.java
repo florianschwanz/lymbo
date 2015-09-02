@@ -162,7 +162,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                 @Override
                 public void onMove(int position, float x) {
-                    View v = slv.getChildAt(position);
+                    View v = getViewByPosition(position, slv);
 
                     if (v != null) {
                         final RelativeLayout rlDiscard = (RelativeLayout) v.findViewById(R.id.rlDiscard);
