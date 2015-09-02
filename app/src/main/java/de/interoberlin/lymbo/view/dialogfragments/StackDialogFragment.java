@@ -77,81 +77,85 @@ public class StackDialogFragment extends DialogFragment {
         if (author != null)
             etAuthor.setText(author);
         for (final Language l : Language.values()) {
-            languagesFrom.add(l.getLangCode());
+            if (l.isActive()) {
+                languagesFrom.add(l.getLangCode());
 
-            final TableRow tr = new TableRow(getActivity());
-            final CheckBox cb = new CheckBox(getActivity());
-            final RobotoTextView tvText = new RobotoTextView(getActivity());
+                final TableRow tr = new TableRow(getActivity());
+                final CheckBox cb = new CheckBox(getActivity());
+                final RobotoTextView tvText = new RobotoTextView(getActivity());
 
-            tr.addView(cb);
-            tr.addView(tvText);
-            checkboxesLanguageFrom.add(cb);
+                tr.addView(cb);
+                tr.addView(tvText);
+                checkboxesLanguageFrom.add(cb);
 
-            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (b) {
-                        for (CheckBox c : checkboxesLanguageFrom) {
-                            c.setChecked(false);
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if (b) {
+                            for (CheckBox c : checkboxesLanguageFrom) {
+                                c.setChecked(false);
+                            }
+
+                            cb.setChecked(true);
                         }
-
-                        cb.setChecked(true);
                     }
-                }
-            });
+                });
 
-            if (languageFrom == l) {
-                cb.setChecked(true);
+                if (languageFrom == l) {
+                    cb.setChecked(true);
+                }
+
+                tvText.setText(l.getName(getActivity()));
+                tvText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cb.toggle();
+                    }
+                });
+
+                tblLanguagesFrom.addView(tr);
             }
-
-            tvText.setText(l.getName(getActivity()));
-            tvText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cb.toggle();
-                }
-            });
-
-            tblLanguagesFrom.addView(tr);
         }
 
         for (final Language l : Language.values()) {
-            languagesTo.add(l.getLangCode());
+            if (l.isActive()) {
+                languagesTo.add(l.getLangCode());
 
-            final TableRow tr = new TableRow(getActivity());
-            final CheckBox cb = new CheckBox(getActivity());
-            final RobotoTextView tvText = new RobotoTextView(getActivity());
+                final TableRow tr = new TableRow(getActivity());
+                final CheckBox cb = new CheckBox(getActivity());
+                final RobotoTextView tvText = new RobotoTextView(getActivity());
 
-            tr.addView(cb);
-            tr.addView(tvText);
-            checkboxesLanguageTo.add(cb);
+                tr.addView(cb);
+                tr.addView(tvText);
+                checkboxesLanguageTo.add(cb);
 
-            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (b) {
-                        for (CheckBox c : checkboxesLanguageTo) {
-                            c.setChecked(false);
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if (b) {
+                            for (CheckBox c : checkboxesLanguageTo) {
+                                c.setChecked(false);
+                            }
+
+                            cb.setChecked(true);
                         }
-
-                        cb.setChecked(true);
                     }
-                }
-            });
+                });
 
-            if (languageTo == l) {
-                cb.setChecked(true);
+                if (languageTo == l) {
+                    cb.setChecked(true);
+                }
+
+                tvText.setText(l.getName(getActivity()));
+                tvText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cb.toggle();
+                    }
+                });
+
+                tblLanguagesTo.addView(tr);
             }
-
-            tvText.setText(l.getName(getActivity()));
-            tvText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cb.toggle();
-                }
-            });
-
-            tblLanguagesTo.addView(tr);
         }
 
         // Add Actions
