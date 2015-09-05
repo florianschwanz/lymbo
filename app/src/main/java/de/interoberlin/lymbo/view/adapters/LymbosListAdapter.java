@@ -3,8 +3,8 @@ package de.interoberlin.lymbo.view.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.ContextMenu;
@@ -29,8 +29,6 @@ import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.share.MailSender;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
-import de.interoberlin.lymbo.util.Configuration;
-import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.activities.LymbosActivity;
@@ -38,8 +36,8 @@ import de.interoberlin.lymbo.view.dialogfragments.EditStackDialogFragment;
 
 public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
     // Context
-    private Context c;
-    private Activity a;
+    private Context context;
+    private Activity activity;
 
     // Controllers
     private LymbosController lymbosController;
@@ -66,11 +64,11 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
         this.filteredItems = items;
         this.originalItems = items;
 
-        this.a = activity;
-        this.c = context;
+        this.activity = activity;
+        this.context = context;
 
         // Properties
-        VIBRATION_DURATION = Integer.parseInt(Configuration.getProperty(c, EProperty.VIBRATION_DURATION));
+        VIBRATION_DURATION = getResources().getInteger(R.integer.vibration_duration);
 
         filter();
     }
@@ -105,8 +103,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             // Set values
             if (lymbo.getImage() != null && !lymbo.getImage().trim().isEmpty()) {
                 Bitmap b = Base64BitmapConverter.decodeBase64(lymbo.getImage());
-                BitmapDrawable bd = new BitmapDrawable(b);
-                ivImage.setBackgroundDrawable(bd);
+                ivImage.setImageBitmap(b);
             } else {
                 ivImage.getLayoutParams().height = 0;
             }
@@ -120,7 +117,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 @Override
                 public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
                     if (!lymbo.isAsset()) {
-                        contextMenu.add(0, 0, 0, a.getResources().getString(R.string.edit))
+                        contextMenu.add(0, 0, 0, getResources().getString(R.string.edit))
                                 .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
@@ -136,25 +133,25 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                                             languageTo = lymbo.getLanguageAspect().getTo().getLangCode();
                                         }
 
-                                        ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+                                        vibrate(VIBRATION_DURATION);
                                         EditStackDialogFragment dialog = new EditStackDialogFragment();
                                         Bundle bundle = new Bundle();
-                                        bundle.putString(c.getResources().getString(R.string.bundle_lymbo_uuid), uuid);
-                                        bundle.putString(c.getResources().getString(R.string.bundle_title), title);
-                                        bundle.putString(c.getResources().getString(R.string.bundle_subtitle), subtitle);
-                                        bundle.putString(c.getResources().getString(R.string.bundle_author), author);
-                                        bundle.putString(c.getResources().getString(R.string.bundle_language_from), languageFrom);
-                                        bundle.putString(c.getResources().getString(R.string.bundle_language_to), languageTo);
+                                        bundle.putString(context.getResources().getString(R.string.bundle_lymbo_uuid), uuid);
+                                        bundle.putString(context.getResources().getString(R.string.bundle_title), title);
+                                        bundle.putString(context.getResources().getString(R.string.bundle_subtitle), subtitle);
+                                        bundle.putString(context.getResources().getString(R.string.bundle_author), author);
+                                        bundle.putString(context.getResources().getString(R.string.bundle_language_from), languageFrom);
+                                        bundle.putString(context.getResources().getString(R.string.bundle_language_to), languageTo);
                                         dialog.setArguments(bundle);
-                                        dialog.show(a.getFragmentManager(), "okay");
+                                        dialog.show(activity.getFragmentManager(), "okay");
                                         return false;
                                     }
                                 });
-                        contextMenu.add(0, 1, 0, a.getResources().getString(R.string.stash_stack))
+                        contextMenu.add(0, 1, 0, getResources().getString(R.string.stash_stack))
                                 .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
-                                        Animation anim = ViewUtil.collapse(c, llStack);
+                                        Animation anim = ViewUtil.collapse(context, llStack);
                                         llStack.startAnimation(anim);
 
                                         anim.setAnimationListener(new Animation.AnimationListener() {
@@ -166,7 +163,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                                             @Override
                                             public void onAnimationEnd(Animation animation) {
                                                 lymbosController.stash(lymbo);
-                                                ((LymbosActivity) a).stash(position, lymbo);
+                                                ((LymbosActivity) activity).stash(lymbo);
                                                 notifyDataSetChanged();
                                             }
 
@@ -185,8 +182,8 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             // Languages
             LanguageAspect languageAspect = lymbo.getLanguageAspect();
             if (languageAspect != null && languageAspect.getFrom() != null && languageAspect.getTo() != null) {
-                tvLanguageFrom.setText(languageAspect.getFrom().getName(a));
-                tvLanguageTo.setText(languageAspect.getTo().getName(a));
+                tvLanguageFrom.setText(languageAspect.getFrom().getName(activity));
+                tvLanguageTo.setText(languageAspect.getTo().getName(activity));
             } else {
                 ViewUtil.remove(tvLanguageFrom);
                 ViewUtil.remove(tvLanguageTo);
@@ -198,8 +195,8 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 public void onClick(View view) {
                     cardsController.setLymbo(lymbo);
                     cardsController.init();
-                    Intent openStartingPoint = new Intent(c, CardsActivity.class);
-                    c.startActivity(openStartingPoint);
+                    Intent openStartingPoint = new Intent(context, CardsActivity.class);
+                    context.startActivity(openStartingPoint);
                 }
             });
 
@@ -208,7 +205,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                 ivShare.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        MailSender.sendLymbo(c, a, lymbo);
+                        MailSender.sendLymbo(context, activity, lymbo);
                     }
                 });
             } else {
@@ -216,7 +213,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             }
 
             // Card count
-            tvCardCount.setText(String.valueOf(lymbo.getCards().size() + " " + c.getResources().getString(R.string.cards)));
+            tvCardCount.setText(String.valueOf(lymbo.getCards().size() + " " + context.getResources().getString(R.string.cards)));
 
             return llStack;
         } else {
@@ -231,7 +228,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             TextView tvError = (TextView) llStack.findViewById(R.id.tvError);
 
             // Set values
-            tvTitle.setText(a.getResources().getString(R.string.broken_lymbo_file));
+            tvTitle.setText(getResources().getString(R.string.broken_lymbo_file));
 
             if (lymbo.getPath() != null)
                 tvPath.setText(lymbo.getPath());
@@ -241,6 +238,10 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
 
             return llStack;
         }
+    }
+
+    public List<Lymbo> getFilteredItems() {
+        return filteredItems;
     }
 
     public void filter() {
@@ -263,6 +264,18 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
      */
     protected boolean filterLymbo(Lymbo lymbo) {
         return lymbo != null;
+    }
+
+    // --------------------
+    // Methods - Util
+    // --------------------
+
+    private void vibrate (int vibrationDuration) {
+        ((Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(vibrationDuration);
+    }
+
+    private Resources getResources() {
+        return activity.getResources();
     }
 
     // --------------------

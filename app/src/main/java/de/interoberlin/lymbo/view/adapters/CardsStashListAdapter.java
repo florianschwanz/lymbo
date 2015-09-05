@@ -2,6 +2,8 @@ package de.interoberlin.lymbo.view.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
+import android.os.Vibrator;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +30,8 @@ import de.interoberlin.lymbo.view.activities.CardsStashActivity;
 
 public class CardsStashListAdapter extends ArrayAdapter<Card> {
     // Context
-    private Context c;
-    private Activity a;
+    private Context context;
+    private Activity activity;
 
     // Controllers
     CardsController cardsController;
@@ -51,8 +53,8 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         this.filteredItems = items;
         this.originalItems = items;
 
-        this.c = context;
-        this.a = activity;
+        this.context = context;
+        this.activity = activity;
 
         filter();
     }
@@ -94,13 +96,13 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
         // Add sides
         for (Side side : card.getSides()) {
-            LayoutInflater li = LayoutInflater.from(c);
+            LayoutInflater li = LayoutInflater.from(context);
             LinearLayout llSide = (LinearLayout) li.inflate(R.layout.side, parent, false);
             LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
 
             // Add components
             for (Displayable d : side.getComponents()) {
-                View component = d.getView(c, a, llComponents);
+                View component = d.getView(context, activity, llComponents);
                 llComponents.addView(component);
             }
 
@@ -111,22 +113,22 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
         // Display width
         DisplayMetrics displaymetrics = new DisplayMetrics();
-        a.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         final int displayWidth = displaymetrics.widthPixels;
 
         rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
 
         // Tags
         for (Tag tag : card.getTags()) {
-            if (!tag.getName().equals(c.getResources().getString(R.string.no_tag)))
-                llTags.addView(tag.getView(c, a, llTags));
+            if (!tag.getName().equals(context.getResources().getString(R.string.no_tag)))
+                llTags.addView(tag.getView(context, activity, llTags));
         }
 
         // Reveal : undo
         ivUndo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Animation anim = ViewUtil.toLeft(c, flCard, displayWidth);
+                Animation anim = ViewUtil.toLeft(context, flCard, displayWidth);
                 flCard.startAnimation(anim);
 
                 anim.setAnimationListener(new Animation.AnimationListener() {
@@ -137,7 +139,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        Animation anim = ViewUtil.collapse(c, flCard);
+                        Animation anim = ViewUtil.collapse(context, flCard);
                         flCard.startAnimation(anim);
 
                         anim.setAnimationListener(new Animation.AnimationListener() {
@@ -169,7 +171,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         if (card.isRestoring()) {
             flCard.setTranslationX(displayWidth);
 
-            Animation anim = ViewUtil.expand(c, flCard);
+            Animation anim = ViewUtil.expand(context, flCard);
             flCard.startAnimation(anim);
 
             anim.setAnimationListener(new Animation.AnimationListener() {
@@ -180,7 +182,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    Animation anim = ViewUtil.fromLeft(c, flCard, displayWidth);
+                    Animation anim = ViewUtil.fromLeft(context, flCard, displayWidth);
                     flCard.startAnimation(anim);
                 }
 
@@ -202,7 +204,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
      */
     private void restore(int pos, Card card) {
         cardsController.restore(card);
-        ((CardsStashActivity) a).restore(pos, card);
+        ((CardsStashActivity) activity).restore(pos, card);
         filter();
     }
 
@@ -230,6 +232,18 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
      */
     protected boolean filterCard(Card card) {
         return card != null;
+    }
+
+    // --------------------
+    // Methods - Util
+    // --------------------
+
+    private void vibrate (int vibrationDuration) {
+        ((Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(vibrationDuration);
+    }
+
+    private Resources getResources() {
+        return activity.getResources();
     }
 
     // --------------------

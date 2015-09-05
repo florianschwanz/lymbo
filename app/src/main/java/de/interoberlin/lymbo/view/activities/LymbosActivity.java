@@ -24,8 +24,6 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.translate.Language;
-import de.interoberlin.lymbo.util.Configuration;
-import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.EditStackDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.StackDialogFragment;
@@ -64,7 +62,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
             setActionBarIcon(R.drawable.ic_ab_drawer);
             setDisplayHomeAsUpEnabled(true);
 
-            REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_LYMBOS));
+            REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_lymbos);
         } catch (Exception e) {
             handleException(e);
         }
@@ -190,7 +188,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
             lymbosController.addStack(lymbo);
             lymbosAdapter.notifyDataSetChanged();
         } else {
-            Toast.makeText(this, getResources().getString(R.string.lymbo_with_same_name_already_exists), Toast.LENGTH_SHORT);
+            Toast.makeText(this, getResources().getString(R.string.lymbo_with_same_name_already_exists), Toast.LENGTH_SHORT).show();
         }
         slv.invalidateViews();
     }
@@ -213,12 +211,11 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
      *
      * @param lymbo lymbo to be stashed
      */
-    public void stash(int pos, Lymbo lymbo) {
+    public void stash(Lymbo lymbo) {
         final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
         slv.invalidateViews();
 
         recentLymbo = lymbo;
-        // recentCardPos = pos - 1;
         recentEvent = EVENT_STASH;
 
         new SnackBar.Builder(this)

@@ -1,6 +1,7 @@
 package de.interoberlin.lymbo.controller;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Environment;
 
 import org.apache.commons.io.FileUtils;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
@@ -23,14 +25,9 @@ import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackEntry;
 import de.interoberlin.lymbo.model.translate.Language;
-import de.interoberlin.lymbo.util.Configuration;
-import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.mate.lib.model.Log;
 
 public class LymbosController {
-    // Application
-    private App app;
-
     // Activity
     private Activity activity;
 
@@ -72,35 +69,14 @@ public class LymbosController {
     // --------------------
 
     public void init() {
-        app = App.getInstance();
-
         lymbos = new ArrayList<>();
         lymbosStashed = new ArrayList<>();
 
         // Properties
-        LYMBO_FILE_EXTENSION = Configuration.getProperty(activity, EProperty.LYMBO_FILE_EXTENSION);
-        LYMBO_LOOKUP_PATH = Configuration.getProperty(activity, EProperty.LYMBO_LOOKUP_PATH);
-        LYMBO_SAVE_PATH = Configuration.getProperty(activity, EProperty.LYMBO_SAVE_PATH);
+        LYMBO_FILE_EXTENSION = getResources().getString(R.string.lymbo_file_extension);
+        LYMBO_LOOKUP_PATH = getResources().getString(R.string.lymbo_lookup_path);
+        LYMBO_SAVE_PATH = getResources().getString(R.string.lymbo_save_path);
     }
-
-    /**
-     * Returns an empty lymbo stack
-     *
-     * @param title    title of new stack
-     * @param subtitle subtitle of new stack
-     * @param author   author of new stack
-     * @return empty lymbo stack
-     */
-    public Lymbo getEmptyLymbo(String title, String subtitle, String author) {
-        Lymbo lymbo = new Lymbo();
-        lymbo.setTitle(title);
-        lymbo.setSubtitle(subtitle);
-        lymbo.setAuthor(author);
-        lymbo.setPath(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + title.trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION);
-
-        return lymbo;
-    }
-
 
     /**
      * Returns an empty lymbo stack
@@ -110,7 +86,7 @@ public class LymbosController {
      * @param author       author of new stack
      * @param languageFrom source language
      * @param languageTo   target language
-     * @return
+     * @return an empty lymbo
      */
     public Lymbo getEmptyLymbo(String title, String subtitle, String author, Language languageFrom, Language languageTo) {
         Lymbo lymbo = new Lymbo();
@@ -156,27 +132,29 @@ public class LymbosController {
 
             Lymbo fullLymbo = LymboLoader.getLymboFromFile(new File(lymbo.getPath()), false);
 
-            lymbo.setCards(fullLymbo.getCards());
-            lymbo.setHint(fullLymbo.getHint());
-            lymbo.setImage(fullLymbo.getImage());
+            if (fullLymbo != null) {
+                lymbo.setCards(fullLymbo.getCards());
+                lymbo.setHint(fullLymbo.getHint());
+                lymbo.setImage(fullLymbo.getImage());
 
-            lymbo.setTitle(title);
-            lymbo.setSubtitle(subtitle);
-            lymbo.setAuthor(author);
+                lymbo.setTitle(title);
+                lymbo.setSubtitle(subtitle);
+                lymbo.setAuthor(author);
 
-            if (languageFrom != null && languageTo != null) {
-                LanguageAspect languageAspect = new LanguageAspect();
-                languageAspect.setFrom(languageFrom);
-                languageAspect.setTo(languageTo);
-                lymbo.setLanguageAspect(languageAspect);
-            }
+                if (languageFrom != null && languageTo != null) {
+                    LanguageAspect languageAspect = new LanguageAspect();
+                    languageAspect.setFrom(languageFrom);
+                    languageAspect.setTo(languageTo);
+                    lymbo.setLanguageAspect(languageAspect);
+                }
 
-            String path = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + lymbo.getTitle().trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION;
+                String path = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + lymbo.getTitle().trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION;
 
-            if (lymbo.getPath().equals(path)) {
-                save(lymbo);
-            } else {
-                saveAs(lymbo, path);
+                if (lymbo.getPath().equals(path)) {
+                    save(lymbo);
+                } else {
+                    saveAs(lymbo, path);
+                }
             }
         }
     }
@@ -407,6 +385,14 @@ public class LymbosController {
         }
 
         return externalStorageAvailable && externalStorageWriteable;
+    }
+
+    // --------------------
+    // Methods - Util
+    // --------------------
+
+    private Resources getResources() {
+        return activity.getResources();
     }
 
     // --------------------

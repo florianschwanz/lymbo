@@ -10,30 +10,14 @@ import java.util.Properties;
 import de.interoberlin.mate.lib.model.Log;
 
 public class Configuration {
-
-    private static final String PROPERTIES_FILE = "lymbo.properties";
     private static final String GRADLE_PROPERTIES_FILE = "gradle.properties";
 
-    public static String getProperty(Context c, EProperty property) {
-        try {
-            InputStream inputStream = c.getAssets().open(PROPERTIES_FILE);
-            Properties props = new Properties();
-            props.load(inputStream);
-            return props.getProperty(property.getPropertyName());
-        } catch (IOException e) {
-            Log.error(e.toString());
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public static String getProperty(Context c, EGradleProperty property) {
+    public static String getGradleProperty(Context c, String property) {
         try {
             InputStream inputStream = c.getAssets().open(GRADLE_PROPERTIES_FILE);
             Properties props = new Properties();
             props.load(inputStream);
-            return props.getProperty(property.getPropertyName());
+            return props.getProperty(property);
         } catch (IOException e) {
             Log.error(e.toString());
             e.printStackTrace();

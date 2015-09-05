@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.util.ViewUtil;
@@ -24,12 +23,11 @@ import de.interoberlin.lymbo.view.activities.LymbosStashActivity;
 
 public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
     // Context
-    Context c;
-    Activity a;
+    private Context context;
+    private Activity activity;
 
     // Controllers
     private LymbosController lymbosController;
-    private CardsController cardsController;
 
     // Filter
     private List<Lymbo> filteredItems = new ArrayList<>();
@@ -44,13 +42,12 @@ public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
     public LymbosStashListAdapter(Activity activity, Context context, int resource, List<Lymbo> items) {
         super(context, resource, items);
         lymbosController = LymbosController.getInstance(activity);
-        cardsController = CardsController.getInstance(activity);
 
         this.filteredItems = items;
         this.originalItems = items;
 
-        this.a = activity;
-        this.c = context;
+        this.activity = activity;
+        this.context = context;
 
         filter();
     }
@@ -87,7 +84,7 @@ public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
             ivUndo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Animation anim = ViewUtil.collapse(c, llStack);
+                    Animation anim = ViewUtil.collapse(context, llStack);
                     llStack.startAnimation(anim);
 
                     anim.setAnimationListener(new Animation.AnimationListener() {
@@ -99,7 +96,7 @@ public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
                         @Override
                         public void onAnimationEnd(Animation animation) {
                             lymbosController.restore(lymbo);
-                            ((LymbosStashActivity) a).restore(lymbo);
+                            ((LymbosStashActivity) activity).restore(lymbo);
                             notifyDataSetChanged();
                         }
 
@@ -115,6 +112,10 @@ public class LymbosStashListAdapter extends ArrayAdapter<Lymbo> {
         }
 
         return llStack;
+    }
+
+    public List<Lymbo> getFilteredItems() {
+        return filteredItems;
     }
 
     public void filter() {

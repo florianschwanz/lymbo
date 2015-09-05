@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="group_id">groupId</string>
+    <string name="artifact_id">artifactId</string>
+    <string name="version_code">versionCode</string>
+    <string name="version_major">versionMajor</string>
+    <string name="version_minor">versionMinor</string>
+    <string name="version_patch">versionPatch</string>
+    <string name="license">license</string>
+    <string name="website">website</string>
+    <string name="project_url">projectUrl</string>
+    <string name="sourcecode">sourcecode</string>
+    <string name="issuetracker">issuetracker</string>
+    <string name="summary">summary</string>
+</resources>

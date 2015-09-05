@@ -92,8 +92,8 @@ public class CardsController {
     /**
      * Determines whether a given card shall be displayed considering all filters
      *
-     * @param card
-     * @return
+     * @param card card to determine visibility of
+     * @return whether card is visbible or not
      */
     public boolean isVisible(Card card) {
         return (card != null &&
@@ -105,7 +105,7 @@ public class CardsController {
     /**
      * Returns the amounts of currently visible cards
      *
-     * @return
+     * @return number of visible cards
      */
     public int getVisibleCardCount() {
         int count = 0;
@@ -368,7 +368,7 @@ public class CardsController {
      *
      * @param context
      * @param uuid    id of the card
-     * @return
+     * @return note of a card
      */
     public String getNote(Context context, String uuid) {
         datasource = new TableCardDatasource(context);
@@ -382,7 +382,7 @@ public class CardsController {
     /**
      * Sets the note of a card
      *
-     * @param context
+     * @param context context
      * @param uuid    id of a card
      * @param text    text of the note
      */

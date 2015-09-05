@@ -3,6 +3,7 @@ package de.interoberlin.lymbo.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
@@ -16,15 +17,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.util.Configuration;
-import de.interoberlin.lymbo.util.EProperty;
 
 public class LoggingUtil {
-    private static String logFileName = "lymbo.log";
     private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS z");
-
-    // Properties
-    private static String INTEROBERLIN_LOG_PATH;
 
     // --------------------
     // Methods
@@ -32,14 +27,17 @@ public class LoggingUtil {
 
     public static void writeException(Activity activity, Exception e) {
         try {
-            getLogDir(activity).mkdirs();
+            boolean success = getLogDir(activity).mkdirs();
+
+            if (!success)
+                throw new IOException();
 
             FileWriter fw = new FileWriter(getLogFile(activity));
             fw.write(format.format(new Date()) + " ERROR " + getStackTrace(e));
             fw.flush();
             fw.close();
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
 
@@ -51,12 +49,13 @@ public class LoggingUtil {
     }
 
     private static File getLogDir(Activity activity) {
-        INTEROBERLIN_LOG_PATH = Configuration.getProperty(activity, EProperty.INTEROBERLIN_LOG_PATH);
-        return new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + INTEROBERLIN_LOG_PATH);
+        Resources res = activity.getResources();
+        return new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + res.getString(R.string.log_path));
     }
 
     private static File getLogFile(Activity activity) {
-        return new File(getLogDir(activity) + "/" + logFileName);
+        Resources res = activity.getResources();
+        return new File(getLogDir(activity) + "/" + res.getString(R.string.log_file_name));
     }
 
     /**

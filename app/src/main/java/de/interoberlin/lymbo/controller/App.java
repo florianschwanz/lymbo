@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import de.interoberlin.lymbo.model.persistence.sqlite.LymboSQLiteOpenHelper;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackDatasource;
-import de.interoberlin.lymbo.util.Configuration;
-import de.interoberlin.lymbo.util.EProperty;
 
 public class App extends Application {
     // Context
@@ -19,9 +17,6 @@ public class App extends Application {
     private static LymboSQLiteOpenHelper sqliteOpenLymboSQLiteOpenHelper;
 
     private boolean giveFeedbackDialogActive = false;
-
-    // Properties
-    private static String LYMBO_SAVE_PATH;
 
     private static App instance;
 
@@ -51,17 +46,8 @@ public class App extends Application {
 
         // Database
         sqliteOpenLymboSQLiteOpenHelper = new LymboSQLiteOpenHelper(this);
-        if (sqliteOpenLymboSQLiteOpenHelper != null) {
-            sqliteDatabase = sqliteOpenLymboSQLiteOpenHelper.getWritableDatabase();
-            recreateOnSchemaChange();
-        }
-
-        // Properties
-        readProperties();
-    }
-
-    private void readProperties() {
-        LYMBO_SAVE_PATH = Configuration.getProperty(this, EProperty.LYMBO_SAVE_PATH);
+        sqliteDatabase = sqliteOpenLymboSQLiteOpenHelper.getWritableDatabase();
+        recreateOnSchemaChange();
     }
 
     @Override
@@ -103,14 +89,6 @@ public class App extends Application {
 
     public static Context getContext() {
         return context;
-    }
-
-    public static SQLiteDatabase getSqliteDatabase() {
-        return sqliteDatabase;
-    }
-
-    public static LymboSQLiteOpenHelper getSqliteOpenLymboSQLiteOpenHelper() {
-        return sqliteOpenLymboSQLiteOpenHelper;
     }
 
     // --------------------

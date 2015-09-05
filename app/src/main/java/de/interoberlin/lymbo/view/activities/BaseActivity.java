@@ -17,32 +17,27 @@
 package de.interoberlin.lymbo.view.activities;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.App;
 import de.interoberlin.lymbo.controller.accelerometer.Accelerator;
 import de.interoberlin.lymbo.util.Configuration;
-import de.interoberlin.lymbo.util.EGradleProperty;
-import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.util.LoggingUtil;
 import de.interoberlin.lymbo.view.dialogfragments.GiveFeedbackDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.ReportErrorDialogFragment;
 
-public abstract class BaseActivity extends ActionBarActivity implements Accelerator.OnShakeListener, GiveFeedbackDialogFragment.OnCompleteListener, ReportErrorDialogFragment.OnCompleteListener {
-    // Views
-    private Toolbar toolbar;
-
-    // Accelerometer
+public abstract class BaseActivity extends AppCompatActivity implements Accelerator.OnShakeListener, GiveFeedbackDialogFragment.OnCompleteListener, ReportErrorDialogFragment.OnCompleteListener {
     private SensorManager sensorManager;
+
     // Properties
     private static int VIBRATION_DURATION;
-    private static boolean DEBUG_MODE;
 
     private Sensor accelerator;
 
@@ -54,10 +49,15 @@ public abstract class BaseActivity extends ActionBarActivity implements Accelera
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResource());
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        // Load views
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         // Get instances of managers
@@ -65,8 +65,8 @@ public abstract class BaseActivity extends ActionBarActivity implements Accelera
         accelerator = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         // Properties
-        VIBRATION_DURATION = Integer.parseInt(Configuration.getProperty(this, EProperty.VIBRATION_DURATION));
-        DEBUG_MODE = Boolean.parseBoolean(Configuration.getProperty(this, EProperty.DEBUG_MODE));
+        Resources res = getResources();
+        VIBRATION_DURATION = res.getInteger(R.integer.vibration_duration);
     }
 
     protected void onResume() {
@@ -93,10 +93,12 @@ public abstract class BaseActivity extends ActionBarActivity implements Accelera
 
     @Override
     public void onGiveFeedbackDialogDialogComplete() {
-        String appName = getResources().getString(R.string.app_name);
-        String versionMajor = Configuration.getProperty(this, EGradleProperty.VERSION_MAJOR);
-        String versionMinor = Configuration.getProperty(this, EGradleProperty.VERSION_MINOR);
-        String versionPatch = Configuration.getProperty(this, EGradleProperty.VERSION_PATCH);
+        Resources res = getResources();
+
+        String appName = res.getString(R.string.app_name);
+        String versionMajor = Configuration.getGradleProperty(this, res.getString(R.string.version_major));
+        String versionMinor = Configuration.getGradleProperty(this, res.getString(R.string.version_minor));
+        String versionPatch = Configuration.getGradleProperty(this, res.getString(R.string.version_patch));
 
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("message/rfc822");
@@ -123,14 +125,15 @@ public abstract class BaseActivity extends ActionBarActivity implements Accelera
     protected abstract int getLayoutResource();
 
     protected Toolbar getToolbar() {
-        return toolbar;
+        return (Toolbar) findViewById(R.id.toolbar);
     }
 
     protected void setActionBarIcon(int iconRes) {
-        toolbar.setNavigationIcon(iconRes);
+        ((Toolbar) findViewById(R.id.toolbar)).setNavigationIcon(iconRes);
     }
 
     protected void setDisplayHomeAsUpEnabled(boolean enabled) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
     }
 }

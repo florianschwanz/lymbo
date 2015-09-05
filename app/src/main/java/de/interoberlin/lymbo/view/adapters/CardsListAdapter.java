@@ -3,6 +3,7 @@ package de.interoberlin.lymbo.view.adapters;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.widget.CardView;
@@ -38,8 +39,6 @@ import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EComponent;
-import de.interoberlin.lymbo.util.Configuration;
-import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.dialogfragments.CardDialogFragment;
@@ -51,8 +50,8 @@ import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
 
 public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     // Context
-    private Context c;
-    private Activity a;
+    private Context context;
+    private Activity activity;
 
     // Controllers
     private CardsController cardsController;
@@ -77,11 +76,11 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         this.filteredItems = items;
         this.originalItems = items;
 
-        this.c = context;
-        this.a = activity;
+        this.context = context;
+        this.activity = activity;
 
         // Properties
-        VIBRATION_DURATION = Integer.parseInt(Configuration.getProperty(c, EProperty.VIBRATION_DURATION));
+        VIBRATION_DURATION = getResources().getInteger(R.integer.vibration_duration);
 
         filter();
     }
@@ -131,7 +130,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         llCard.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-                contextMenu.add(0, 0, 0, a.getResources().getString(R.string.edit))
+                contextMenu.add(0, 0, 0, getResources().getString(R.string.edit))
                         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -139,7 +138,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                                 return false;
                             }
                         });
-                contextMenu.add(0, 1, 0, a.getResources().getString(R.string.stash_card))
+                contextMenu.add(0, 1, 0, getResources().getString(R.string.stash_card))
                         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -148,7 +147,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                             }
                         });
 
-                contextMenu.add(0, 2, 0, a.getResources().getString(R.string.copy_card))
+                contextMenu.add(0, 2, 0, getResources().getString(R.string.copy_card))
                         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -157,7 +156,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                             }
                         });
 
-                contextMenu.add(0, 3, 0, a.getResources().getString(R.string.move_card))
+                contextMenu.add(0, 3, 0, getResources().getString(R.string.move_card))
                         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -170,13 +169,13 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         // Add sides
         for (Side side : card.getSides()) {
-            LayoutInflater li = LayoutInflater.from(c);
+            LayoutInflater li = LayoutInflater.from(context);
             LinearLayout llSide = (LinearLayout) li.inflate(R.layout.side, parent, false);
             LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
 
             // Add components
             for (Displayable d : side.getComponents()) {
-                View component = d.getView(c, a, llComponents);
+                View component = d.getView(context, activity, llComponents);
                 llComponents.addView(component);
             }
 
@@ -186,7 +185,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         // Display width
         DisplayMetrics displaymetrics = new DisplayMetrics();
-        a.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         final int displayWidth = displaymetrics.widthPixels;
 
         // Set one side visible
@@ -195,11 +194,11 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         if (!card.isNoteExpanded())
             llNoteBar.getLayoutParams().height = 0;
         if (card.isFavorite())
-            ivFavorite.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_action_important));
+            ivFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_important));
         else
-            ivFavorite.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_action_not_important));
+            ivFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_not_important));
 
-        String note = cardsController.getNote(c, card.getId());
+        String note = cardsController.getNote(context, card.getId());
 
         // Note
         if (note != null && !note.isEmpty()) {
@@ -208,13 +207,13 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         // Tags
         for (Tag tag : card.getTags()) {
-            if (!tag.getName().equals(c.getResources().getString(R.string.no_tag))) {
-                CardView cvTag = (CardView) tag.getView(c, a, llTags);
+            if (!tag.getName().equals(getResources().getString(R.string.no_tag))) {
+                CardView cvTag = (CardView) tag.getView(context, activity, llTags);
                 cvTag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-                        new SelectTagsDialogFragment().show(a.getFragmentManager(), "okay");
+                        vibrate(VIBRATION_DURATION);
+                        new SelectTagsDialogFragment().show(activity.getFragmentManager(), "okay");
                     }
                 });
 
@@ -235,7 +234,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             @Override
             public void onClick(View view) {
                 if (card.isNoteExpanded()) {
-                    Animation anim = ViewUtil.collapse(c, llNoteBar);
+                    Animation anim = ViewUtil.collapse(context, llNoteBar);
                     llNoteBar.startAnimation(anim);
                     card.setNoteExpanded(false);
 
@@ -256,7 +255,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                         }
                     });
                 } else {
-                    Animation anim = ViewUtil.expand(c, llNoteBar);
+                    Animation anim = ViewUtil.expand(context, llNoteBar);
                     llNoteBar.startAnimation(anim);
                     card.setNoteExpanded(true);
 
@@ -290,7 +289,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                 b.putCharSequence("note", tvNote.getText());
 
                 editNoteDialogFragment.setArguments(b);
-                editNoteDialogFragment.show(a.getFragmentManager(), "okay");
+                editNoteDialogFragment.show(activity.getFragmentManager(), "okay");
             }
         });
 
@@ -310,11 +309,11 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                 public void onClick(View v) {
                     DisplayHintDialogFragment displayHintDialogFragment = new DisplayHintDialogFragment();
                     Bundle b = new Bundle();
-                    b.putCharSequence("title", a.getResources().getString(R.string.hint));
+                    b.putCharSequence("title", getResources().getString(R.string.hint));
                     b.putCharSequence("message", card.getHint());
 
                     displayHintDialogFragment.setArguments(b);
-                    displayHintDialogFragment.show(a.getFragmentManager(), "okay");
+                    displayHintDialogFragment.show(activity.getFragmentManager(), "okay");
                 }
             });
         } else {
@@ -325,7 +324,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         if (card.isRestoring()) {
             llCard.setTranslationX(displayWidth);
 
-            Animation anim = ViewUtil.expand(c, llCard);
+            Animation anim = ViewUtil.expand(context, llCard);
             llCard.startAnimation(anim);
 
             anim.setAnimationListener(new Animation.AnimationListener() {
@@ -336,7 +335,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    Animation anim = ViewUtil.fromRight(c, llCard, displayWidth);
+                    Animation anim = ViewUtil.fromRight(context, llCard, displayWidth);
                     llCard.startAnimation(anim);
                 }
 
@@ -384,18 +383,18 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             tagsCard.add(tag.getName());
         }
 
-        ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+        vibrate(VIBRATION_DURATION);
         CardDialogFragment dialog = new CardDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(c.getResources().getString(R.string.bundle_card_uuid), uuid);
-        bundle.putString(c.getResources().getString(R.string.bundle_front_title), frontTitle);
-        bundle.putString(c.getResources().getString(R.string.bundle_back_title), backTitle);
-        bundle.putStringArrayList(c.getResources().getString(R.string.bundle_texts_front), frontTexts);
-        bundle.putStringArrayList(c.getResources().getString(R.string.bundle_texts_back), backTexts);
-        bundle.putStringArrayList(c.getResources().getString(R.string.bundle_tags_lymbo), tagsLymbo);
-        bundle.putStringArrayList(c.getResources().getString(R.string.bundle_tags_card), tagsCard);
+        bundle.putString(getResources().getString(R.string.bundle_card_uuid), uuid);
+        bundle.putString(getResources().getString(R.string.bundle_front_title), frontTitle);
+        bundle.putString(getResources().getString(R.string.bundle_back_title), backTitle);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_texts_front), frontTexts);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_texts_back), backTexts);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_lymbo), tagsLymbo);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_card), tagsCard);
         dialog.setArguments(bundle);
-        dialog.show(a.getFragmentManager(), "okay");
+        dialog.show(activity.getFragmentManager(), "okay");
     }
 
     /**
@@ -406,7 +405,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @param llCard   corresponding view
      */
     private void stash(final int position, final Card card, final LinearLayout llCard) {
-        Animation a = ViewUtil.collapse(c, llCard);
+        Animation a = ViewUtil.collapse(context, llCard);
         llCard.startAnimation(a);
 
         a.setAnimationListener(new Animation.AnimationListener() {
@@ -435,7 +434,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      */
     private void stash(int pos, Card card) {
         cardsController.stash(card);
-        ((CardsActivity) a).stash(pos, card);
+        ((CardsActivity) activity).stash(pos, card);
         filter();
     }
 
@@ -449,10 +448,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         CopyCardDialogFragment dialog = new CopyCardDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(c.getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getLymbo().getId());
-        bundle.putString(c.getResources().getString(R.string.bundle_card_uuid), uuid);
+        bundle.putString(getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getLymbo().getId());
+        bundle.putString(getResources().getString(R.string.bundle_card_uuid), uuid);
         dialog.setArguments(bundle);
-        dialog.show(a.getFragmentManager(), "okay");
+        dialog.show(activity.getFragmentManager(), "okay");
     }
 
     /**
@@ -465,10 +464,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         MoveCardDialogFragment dialog = new MoveCardDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(c.getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getLymbo().getId());
-        bundle.putString(c.getResources().getString(R.string.bundle_card_uuid), uuid);
+        bundle.putString(getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getLymbo().getId());
+        bundle.putString(getResources().getString(R.string.bundle_card_uuid), uuid);
         dialog.setArguments(bundle);
-        dialog.show(a.getFragmentManager(), "okay");
+        dialog.show(activity.getFragmentManager(), "okay");
     }
 
 
@@ -482,8 +481,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         if (!checkAnswerSelected(card))
             return;
 
-        final int CARD_FLIP_TIME = c.getResources().getInteger(R.integer.card_flip_time);
-        final int VIBRATION_DURATION_FLIP = c.getResources().getInteger(R.integer.vibration_duration_flip);
+        final int CARD_FLIP_TIME = getResources().getInteger(R.integer.card_flip_time);
+        final int VIBRATION_DURATION_FLIP = getResources().getInteger(R.integer.vibration_duration_flip);
 
         ObjectAnimator animation = ObjectAnimator.ofFloat(view, "rotationY", 0.0f, 90.0f);
         animation.setDuration(CARD_FLIP_TIME / 2);
@@ -502,7 +501,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             }
         }, CARD_FLIP_TIME / 2);
 
-        ((Vibrator) a.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION_FLIP);
+        vibrate(VIBRATION_DURATION_FLIP);
     }
 
 
@@ -512,8 +511,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @param card card
      */
     private void toggleFavorite(Card card, boolean favorite) {
-        cardsController.toggleFavorite(c, card, favorite);
-        ((CardsActivity) a).toggleFavorite(favorite);
+        cardsController.toggleFavorite(context, card, favorite);
+        ((CardsActivity) activity).toggleFavorite(favorite);
         filter();
     }
 
@@ -572,7 +571,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                 }
             }
 
-            ((CardsActivity) a).alertSelectAnswer();
+            ((CardsActivity) activity).alertSelectAnswer();
 
             return false;
         } else {
@@ -595,14 +594,14 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         // Handle quiz card
         if (current != null && current.contains(EComponent.CHOICE) && next != null && next.contains(EComponent.RESULT)) {
             // Default result : CORRECT
-            ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(c.getResources().getString(R.string.correct).toUpperCase(Locale.getDefault()));
-            ((ResultComponent) next.getFirst(EComponent.RESULT)).setColor(c.getResources().getColor(R.color.correct));
+            ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(getResources().getString(R.string.correct).toUpperCase(Locale.getDefault()));
+            ((ResultComponent) next.getFirst(EComponent.RESULT)).setColor(getResources().getColor(R.color.correct));
 
             for (Answer a : ((ChoiceComponent) current.getFirst(EComponent.CHOICE)).getAnswers()) {
                 if (a.isCorrect() != a.isSelected()) {
                     // At least on answer is wrong : WRONG
-                    ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(c.getResources().getString(R.string.wrong).toUpperCase(Locale.getDefault()));
-                    ((ResultComponent) next.getFirst(EComponent.RESULT)).setColor(c.getResources().getColor(R.color.wrong));
+                    ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(getResources().getString(R.string.wrong).toUpperCase(Locale.getDefault()));
+                    ((ResultComponent) next.getFirst(EComponent.RESULT)).setColor(getResources().getColor(R.color.wrong));
                     break;
                 }
             }
@@ -635,6 +634,18 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      */
     protected boolean filterCard(Card card) {
         return cardsController.isVisible(card);
+    }
+
+    // --------------------
+    // Methods - Util
+    // --------------------
+
+    private void vibrate (int vibrationDuration) {
+        ((Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(vibrationDuration);
+    }
+
+    private Resources getResources() {
+        return activity.getResources();
     }
 
     // --------------------

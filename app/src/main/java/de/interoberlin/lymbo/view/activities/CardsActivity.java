@@ -31,8 +31,6 @@ import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
-import de.interoberlin.lymbo.util.Configuration;
-import de.interoberlin.lymbo.util.EProperty;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.CardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.CopyCardDialogFragment;
@@ -103,8 +101,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             setDisplayHomeAsUpEnabled(true);
 
             // Properties
-            REFRESH_DELAY = Integer.parseInt(Configuration.getProperty(this, EProperty.REFRESH_DELAY_CARDS));
-            VIBRATION_DURATION = Integer.parseInt(Configuration.getProperty(this, EProperty.VIBRATION_DURATION));
+            REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_cards);
+            VIBRATION_DURATION = getResources().getInteger(R.integer.vibration_duration);
         } catch (Exception e) {
             handleException(e);
         }
