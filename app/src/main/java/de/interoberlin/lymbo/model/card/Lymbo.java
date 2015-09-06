@@ -25,6 +25,7 @@ public class Lymbo {
     private String author;
     private List<Card> cards;
 
+    private List<Tag> categories;
     private List<Tag> tags;
     private List<Tag> chapters;
 
@@ -56,6 +57,10 @@ public class Lymbo {
         author = "";
         cards = new ArrayList<>();
         error = "";
+
+        categories = new ArrayList<>();
+        String noCategory = App.getContext().getResources().getString(R.string.no_category);
+        categories.add(new Tag(noCategory));
 
         tags = new ArrayList<>();
         String noTag = App.getContext().getResources().getString(R.string.no_tag);
@@ -118,6 +123,33 @@ public class Lymbo {
         for (Tag t : tags) {
             if (t.getName().equalsIgnoreCase(tag.getName()))
                 return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determines whether at least one of this lymbos's categories matches a given list of categories
+     *
+     * @param cs list of categories
+     * @return
+     */
+    public boolean matchesCategory(List<Tag> cs) {
+        String noTag = App.getContext().getResources().getString(R.string.no_tag);
+
+        if (cs == null || cs.isEmpty()) {
+            return true;
+        } else {
+            for (Tag t : cs) {
+                if ((categories == null || categories.isEmpty()) && t.isChecked() && t.getName().equals(noTag)) {
+                    return true;
+                } else {
+                    for (Tag tag : categories) {
+                        if (t.getName().equals(tag.getName()) && t.isChecked())
+                            return true;
+                    }
+                }
+            }
         }
 
         return false;
@@ -205,6 +237,14 @@ public class Lymbo {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public List<Tag> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Tag> categories) {
+        this.categories = categories;
     }
 
     public List<Card> getCards() {

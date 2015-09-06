@@ -41,8 +41,6 @@ import de.interoberlin.sauvignon.lib.model.svg.SVG;
 public class LymboParser {
     private static LymboParser instance;
 
-    private TableCardDatasource datasource;
-
     private Map<String, String> defaults = new HashMap<>();
 
     private boolean onlyTopLevel;
@@ -124,6 +122,7 @@ public class LymboParser {
         String hint = parser.getAttributeValue(null, "hint");
         String image = parser.getAttributeValue(null, "image");
         String author = parser.getAttributeValue(null, "author");
+        String categories = parser.getAttributeValue(null, "categories");
 
         // Read attributes - default
         parseDefault(parser, "cardEdit");
@@ -179,6 +178,8 @@ public class LymboParser {
             lymbo.setImage(image);
         if (author != null)
             lymbo.setAuthor(author);
+        if (categories != null)
+            lymbo.setCategories(parseTags(categories));
 
         lymbo.setCards(cards);
         lymbo.setLanguageAspect(la);
@@ -210,7 +211,6 @@ public class LymboParser {
 
         // Read attributes
         String id = parser.getAttributeValue(null, "id");
-        String flip = parser.getAttributeValue(null, "flip");
         String edit = parser.getAttributeValue(null, "edit");
         String hint = parser.getAttributeValue(null, "hint");
         String chapter = parser.getAttributeValue(null, "chapter");
@@ -268,12 +268,12 @@ public class LymboParser {
             card.setTags(parseTags(tags));
 
         // Read additional information from database
-        datasource = new TableCardDatasource(App.getContext());
+        TableCardDatasource datasource = new TableCardDatasource(App.getContext());
         datasource.open();
         TableCardEntry entry = datasource.getEntryByUuid(card.getId());
         datasource.close();
 
-        card.setFavorite(entry != null ? entry.isFavorite() : false);
+        card.setFavorite(entry != null && entry.isFavorite());
 
         return card;
     }
@@ -368,7 +368,6 @@ public class LymboParser {
         String value = parser.getAttributeValue(null, "value");
         String lines = parser.getAttributeValue(null, "lines");
         String gravity = parser.getAttributeValue(null, "gravity");
-        String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
         Map<String, String> translations = new HashMap<>();
@@ -429,7 +428,6 @@ public class LymboParser {
         String lines = parser.getAttributeValue(null, "lines");
         String gravity = parser.getAttributeValue(null, "gravity");
         String style = parser.getAttributeValue(null, "style");
-        String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
         Map<String, String> translations = new HashMap<>();
@@ -489,7 +487,6 @@ public class LymboParser {
         ResultComponent component = new ResultComponent();
 
         // Read attributes
-        String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
         parser.next();
@@ -523,7 +520,6 @@ public class LymboParser {
 
         // Read attributes
         String value = parser.getAttributeValue(null, "value");
-        String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
         parser.next();
@@ -656,7 +652,6 @@ public class LymboParser {
         SVG svg = SvgParser.getInstance().parseSVG(parser);
 
         // Read attributes
-        String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
         /*

@@ -73,6 +73,7 @@ public class LymboWriter {
         attributes.put("hint", lymbo.getHint());
         attributes.put("image", lymbo.getImage());
         attributes.put("author", lymbo.getAuthor());
+        attributes.put("categories", getTagsList(lymbo.getCategories()));
 
         addStartTag(tag, attributes);
 

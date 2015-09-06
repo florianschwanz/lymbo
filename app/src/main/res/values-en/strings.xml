@@ -128,10 +128,10 @@
     <string name="tags">Tags</string>
     <string name="target_language">Target language</string>
     <string name="text">Text</string>
-    <string name="thanks">Thanks!</string>
     <string name="title">Title</string>
     <string name="undo">Undo</string>
     <string name="wrong">wrong</string>
     <string name="lymbo_with_same_name_already_exists">Lymbo with same name already exists</string>
+    <string name="no_category">no category</string>
 
 </resources>
