@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- File system -->
-    <string name="log_path">Interoberlin/logs</string>
-    <string name="log_file_name">lymbo.log</string>
-    <string name="lymbo_file_extension">.lymbo</string>
-    <string name="lymbo_lookup_path">.</string>
-    <string name="lymbo_save_path">Interoberlin/lymbo</string>
+    <string name="log_path" translatable="false">Interoberlin/logs</string>
+    <string name="log_file_name" translatable="false">lymbo.log</string>
+    <string name="lymbo_file_extension" translatable="false">.lymbo</string>
+    <string name="lymbo_lookup_path" translatable="false">.</string>
+    <string name="lymbo_save_path" translatable="false">Interoberlin/lymbo</string>
 
-    <integer name="refresh_delay_lymbos">500</integer>
-    <integer name="refresh_delay_cards">500</integer>
-    <integer name="vibration_duration">50</integer>
+    <integer name="refresh_delay_lymbos" translatable="false">500</integer>
+    <integer name="refresh_delay_cards" translatable="false">500</integer>
+    <integer name="vibration_duration" translatable="false">50</integer>
     <bool name="debug_mode">true</bool>
 
     <!-- Animation time -->
     <integer name="card_flip_time">800</integer>
     <integer name="card_expand_time">300</integer>
-    <integer name="card_expand_dp_per_millisecond">100</integer>
+    <integer name="card_expand_dp_per_millisecond" >100</integer>
     <integer name="card_collapse_time">250</integer>
     <integer name="card_collapse_dp_per_millisecond">100</integer>
 
