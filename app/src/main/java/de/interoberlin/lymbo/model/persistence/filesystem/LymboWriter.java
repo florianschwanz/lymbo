@@ -26,7 +26,7 @@ public class LymboWriter {
     private static StringBuilder result;
 
     public static void createLymboSavePath(File path) {
-        if (path.exists()) {
+        if (!path.exists()) {
             path.mkdirs();
         }
     }

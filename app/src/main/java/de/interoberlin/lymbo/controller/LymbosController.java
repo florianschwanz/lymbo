@@ -185,8 +185,9 @@ public class LymbosController {
      * Saves lymbo location in database
      *
      * @param lymbo lymbo to be saved
+     * @return whether save worked or not
      */
-    public void save(Lymbo lymbo) {
+    public boolean save(Lymbo lymbo) {
         if (lymbo.getPath() != null) {
             lymbo.setModificationDate(new Date().toString());
 
@@ -197,7 +198,11 @@ public class LymbosController {
             datasource.open();
             datasource.updateStackLocation(lymbo.getId(), lymbo.getPath());
             datasource.close();
+
+            return true;
         }
+
+        return false;
     }
 
     /**

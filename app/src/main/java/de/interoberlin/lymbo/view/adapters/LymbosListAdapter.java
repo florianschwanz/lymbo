@@ -85,7 +85,6 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
 
     private View getLymboView(final int position, final Lymbo lymbo, ViewGroup parent) {
         if (lymbo.getError().isEmpty()) {
-
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
