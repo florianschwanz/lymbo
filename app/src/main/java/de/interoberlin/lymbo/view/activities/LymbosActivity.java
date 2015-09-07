@@ -19,19 +19,21 @@ import android.widget.Toast;
 import com.github.mrengineer13.snackbar.SnackBar;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
-import de.interoberlin.lymbo.view.dialogfragments.EditStackDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.StackDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, StackDialogFragment.OnCompleteListener, EditStackDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, StackDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
     private LymbosController lymbosController;
 
@@ -93,8 +95,12 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
             ibFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    ArrayList<String> categoriesAll = lymbosController.getAllCategoriesStrings();
+
                     StackDialogFragment dialog = new StackDialogFragment();
-                    dialog.setArguments(new Bundle());
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArrayList(getResources().getString(R.string.bundle_categories_all), categoriesAll);
+                    dialog.setArguments(bundle);
                     dialog.show(getFragmentManager(), "okay");
                 }
             });
@@ -179,10 +185,10 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     }
 
     @Override
-    public void onAddStack(String title, String subtitle, String author, Language languageFrom, Language languageTo) {
+    public void onAddStack(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> categories) {
         final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
-        Lymbo lymbo = lymbosController.getEmptyLymbo(title, subtitle, author, languageFrom, languageTo);
+        Lymbo lymbo = lymbosController.getEmptyLymbo(title, subtitle, author, languageFrom, languageTo, categories);
 
         if (!new File(lymbo.getPath()).exists()) {
             lymbosController.addStack(lymbo);
@@ -194,10 +200,10 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     }
 
     @Override
-    public void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo) {
+    public void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> categories) {
         final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
-        lymbosController.updateStack(uuid, title, subtitle, author, languageFrom, languageTo);
+        lymbosController.updateStack(uuid, title, subtitle, author, languageFrom, languageTo, categories);
         lymbosAdapter.notifyDataSetChanged();
         slv.invalidateViews();
     }

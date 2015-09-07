@@ -23,7 +23,7 @@
     <dimen name="toolbar_text_padding">10dp</dimen>
 
     <!-- Stack -->
-    <dimen name="stack_height">175dp</dimen>
+    <dimen name="stack_height">200dp</dimen>
     <dimen name="stack_image_height">150dp</dimen>
     <dimen name="stack_corner_radius">2dp</dimen>
     <dimen name="stack_padding">16dp</dimen>

@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v7.widget.CardView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,13 +27,14 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.LymbosController;
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.share.MailSender;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.activities.LymbosActivity;
-import de.interoberlin.lymbo.view.dialogfragments.EditStackDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.StackDialogFragment;
 
 public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
     // Context
@@ -91,13 +93,16 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             final LinearLayout llStack = (LinearLayout) vi.inflate(R.layout.stack, parent, false);
 
             // Load views
-            ImageView ivImage = (ImageView) llStack.findViewById(R.id.ivImage);
-            TextView tvTitle = (TextView) llStack.findViewById(R.id.tvTitle);
-            TextView tvSubtitle = (TextView) llStack.findViewById(R.id.tvSubtitle);
-            ImageView ivShare = (ImageView) llStack.findViewById(R.id.ivShare);
-            TextView tvCardCount = (TextView) llStack.findViewById(R.id.tvCardCount);
-            TextView tvLanguageFrom = (TextView) llStack.findViewById(R.id.tvLanguageFrom);
-            TextView tvLanguageTo = (TextView) llStack.findViewById(R.id.tvLanguageTo);
+            final ImageView ivImage = (ImageView) llStack.findViewById(R.id.ivImage);
+            final TextView tvTitle = (TextView) llStack.findViewById(R.id.tvTitle);
+            final TextView tvSubtitle = (TextView) llStack.findViewById(R.id.tvSubtitle);
+            final ImageView ivShare = (ImageView) llStack.findViewById(R.id.ivShare);
+            final TextView tvCardCount = (TextView) llStack.findViewById(R.id.tvCardCount);
+
+            // Load views : bottom bar
+            final LinearLayout llCategories = (LinearLayout) llStack.findViewById(R.id.llCategories);
+            final TextView tvLanguageFrom = (TextView) llStack.findViewById(R.id.tvLanguageFrom);
+            final TextView tvLanguageTo = (TextView) llStack.findViewById(R.id.tvLanguageTo);
 
             // Set values
             if (lymbo.getImage() != null && !lymbo.getImage().trim().isEmpty()) {
@@ -126,14 +131,22 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                                         String author = lymbo.getAuthor();
                                         String languageFrom = null;
                                         String languageTo = null;
+                                        ArrayList<String> categoriesLymbo = new ArrayList<>();
+                                        ArrayList<String> categoriesAll;
 
-                                        if (lymbo.getLanguageAspect() != null) {
+                                        if (lymbo.getLanguageAspect() != null && lymbo.getLanguageAspect().getFrom() != null && lymbo.getLanguageAspect().getTo() != null) {
                                             languageFrom = lymbo.getLanguageAspect().getFrom().getLangCode();
                                             languageTo = lymbo.getLanguageAspect().getTo().getLangCode();
                                         }
+                                        for (Tag tag : lymbo.getCategories()) {
+                                            categoriesLymbo.add(tag.getName());
+                                        }
+
+                                        categoriesAll = lymbosController.getAllCategoriesStrings();
 
                                         vibrate(VIBRATION_DURATION);
-                                        EditStackDialogFragment dialog = new EditStackDialogFragment();
+
+                                        StackDialogFragment dialog = new StackDialogFragment();
                                         Bundle bundle = new Bundle();
                                         bundle.putString(context.getResources().getString(R.string.bundle_lymbo_uuid), uuid);
                                         bundle.putString(context.getResources().getString(R.string.bundle_title), title);
@@ -141,6 +154,8 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                                         bundle.putString(context.getResources().getString(R.string.bundle_author), author);
                                         bundle.putString(context.getResources().getString(R.string.bundle_language_from), languageFrom);
                                         bundle.putString(context.getResources().getString(R.string.bundle_language_to), languageTo);
+                                        bundle.putStringArrayList(context.getResources().getString(R.string.bundle_categories_lymbo), categoriesLymbo);
+                                        bundle.putStringArrayList(context.getResources().getString(R.string.bundle_categories_all), categoriesAll);
                                         dialog.setArguments(bundle);
                                         dialog.show(activity.getFragmentManager(), "okay");
                                         return false;
@@ -177,6 +192,22 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                     }
                 }
             });
+
+            // Tags
+            for (Tag tag : lymbo.getCategories()) {
+                if (!tag.getName().equals(getResources().getString(R.string.no_category))) {
+                    CardView cvTag = (CardView) tag.getView(context, activity, llCategories);
+                    cvTag.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            vibrate(VIBRATION_DURATION);
+                            // new SelectTagsDialogFragment().show(activity.getFragmentManager(), "okay");
+                        }
+                    });
+
+                    llCategories.addView(cvTag);
+                }
+            }
 
             // Languages
             LanguageAspect languageAspect = lymbo.getLanguageAspect();
@@ -269,7 +300,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
     // Methods - Util
     // --------------------
 
-    private void vibrate (int vibrationDuration) {
+    private void vibrate(int vibrationDuration) {
         ((Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(vibrationDuration);
     }
 

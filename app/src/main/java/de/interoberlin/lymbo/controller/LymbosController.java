@@ -19,6 +19,7 @@ import java.util.Locale;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
@@ -86,13 +87,15 @@ public class LymbosController {
      * @param author       author of new stack
      * @param languageFrom source language
      * @param languageTo   target language
+     * @param categories   list of categories
      * @return an empty lymbo
      */
-    public Lymbo getEmptyLymbo(String title, String subtitle, String author, Language languageFrom, Language languageTo) {
+    public Lymbo getEmptyLymbo(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> categories) {
         Lymbo lymbo = new Lymbo();
         lymbo.setTitle(title);
         lymbo.setSubtitle(subtitle);
         lymbo.setAuthor(author);
+        lymbo.setCategories(categories);
 
         if (languageFrom != null && languageTo != null) {
             LanguageAspect languageAspect = new LanguageAspect();
@@ -125,8 +128,9 @@ public class LymbosController {
      * @param author       author
      * @param languageFrom source language
      * @param languageTo   target language
+     * @param categories   list of categories
      */
-    public void updateStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo) {
+    public void updateStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> categories) {
         if (lymbosContainsId(uuid)) {
             Lymbo lymbo = getLymboById(uuid);
 
@@ -140,6 +144,7 @@ public class LymbosController {
                 lymbo.setTitle(title);
                 lymbo.setSubtitle(subtitle);
                 lymbo.setAuthor(author);
+                lymbo.setCategories(categories);
 
                 if (languageFrom != null && languageTo != null) {
                     LanguageAspect languageAspect = new LanguageAspect();
@@ -390,6 +395,24 @@ public class LymbosController {
         }
 
         return externalStorageAvailable && externalStorageWriteable;
+    }
+
+    /**
+     * Retrieves a distinct list of category names of all lymbos
+     *
+     * @return list of tag names
+     */
+    public ArrayList<String> getAllCategoriesStrings() {
+        ArrayList<String> categoriesAll = new ArrayList<>();
+
+        for (Lymbo lymbo : getLymbos()) {
+            for (Tag tag : lymbo.getCategories()) {
+                if (!categoriesAll.contains(tag.getName()))
+                    categoriesAll.add(tag.getName());
+            }
+        }
+
+        return categoriesAll;
     }
 
     // --------------------

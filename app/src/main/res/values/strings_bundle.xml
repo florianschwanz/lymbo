@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bundle_author" translatable="false">bundleAuthor</string>
+    <string name="bundle_back_title" translatable="false">bundleBackTitle</string>
+    <string name="bundle_card_uuid" translatable="false">bundleCardUuid</string>
+    <string name="bundle_categories_all" translatable="false">bundleCategoriesAll</string>
+    <string name="bundle_categories_lymbo" translatable="false">bundleCategoriesLymbo</string>
+    <string name="bundle_front_title" translatable="false">bundleFrontTitle</string>
+    <string name="bundle_language_from" translatable="false">bundleLanguageFrom</string>
+    <string name="bundle_language_to" translatable="false">bundleLanguageTo</string>
+    <string name="bundle_lymbo_uuid" translatable="false">bundleLymboUuid</string>
+    <string name="bundle_subtitle" translatable="false">bundleSubtitle</string>
+    <string name="bundle_tags_card" translatable="false">bundleTagsCard</string>
+    <string name="bundle_tags_all" translatable="false">bundleTagsAll</string>
+    <string name="bundle_texts_back" translatable="false">bundle_texts_back</string>
+    <string name="bundle_texts_front" translatable="false">bundle_texts_front</string>
+    <string name="bundle_title" translatable="false">bundleTitle</string>
+</resources>

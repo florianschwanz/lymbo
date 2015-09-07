@@ -87,8 +87,8 @@ public class CardDialogFragment extends DialogFragment {
         final String backTitle = bundle.getString(getActivity().getResources().getString(R.string.bundle_back_title));
         final ArrayList<String> textsFront = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_texts_front));
         final ArrayList<String> textsBack = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_texts_back));
-        final ArrayList<String> tagsLymbo = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_lymbo));
         final ArrayList<String> tagsCard = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_card));
+        final ArrayList<String> tagsAll = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_all));
 
         // Fill views with arguments
         if (frontTitle != null)
@@ -113,8 +113,8 @@ public class CardDialogFragment extends DialogFragment {
                 tblTextBack.addView(tr, tblTextBack.getChildCount() - 1);
             }
         }
-        if (tagsLymbo != null) {
-            for (final String tag : tagsLymbo) {
+        if (tagsAll != null) {
+            for (final String tag : tagsAll) {
                 if (tag != null && !tag.equals(getActivity().getResources().getString(R.string.no_tag))) {
                     final TableRow tr = new TableRow(getActivity());
 
@@ -139,7 +139,6 @@ public class CardDialogFragment extends DialogFragment {
                 }
             }
         }
-
 
         // Add actions
         ivExpandTextsFront.setOnClickListener(new View.OnClickListener() {

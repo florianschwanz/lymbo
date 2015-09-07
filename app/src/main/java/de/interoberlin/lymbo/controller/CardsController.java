@@ -451,6 +451,21 @@ public class CardsController {
         save();
     }
 
+    /**
+     * Retrieves a distinct list of tag names of all cards
+     *
+     * @return list of tag names
+     */
+    public ArrayList<String> getAllTagNames() {
+        ArrayList<String> tagsAll = new ArrayList<>();
+        for (Tag tag : getLymbo().getTags()) {
+            if (!tagsAll.contains(tag.getName()))
+                tagsAll.add(tag.getName());
+        }
+
+        return tagsAll;
+    }
+
     // --------------------
     // Getters / Setters
     // --------------------

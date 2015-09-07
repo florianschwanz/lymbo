@@ -119,5 +119,56 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/llAddCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dialog_fragment_padding"
+            android:paddingRight="@dimen/dialog_fragment_padding"
+            android:paddingTop="@dimen/dialog_fragment_padding">
+
+            <ImageView
+                android:id="@+id/ivLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/desc_image"
+                android:paddingEnd="@dimen/stack_bar_padding"
+                android:paddingStart="@dimen/stack_bar_padding"
+                android:src="@drawable/ic_action_labels_dark" />
+
+            <TextView
+                android:id="@+id/tvExpandCategories"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.9"
+                android:text="@string/add_tags"
+                android:textAlignment="textStart"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <TableLayout
+            android:id="@+id/tblCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start">
+
+                    <ImageView
+                        android:id="@+id/ivAddCategory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_action_new" />
+                </LinearLayout>
+            </TableRow>
+        </TableLayout>
+
     </LinearLayout>
 </ScrollView>

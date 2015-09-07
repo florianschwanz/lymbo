@@ -352,7 +352,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     /**
      * Opens dialog to edit card
      *
-     * @param card   card to be edited
+     * @param card card to be edited
      */
     private void edit(final Card card) {
         String uuid = card.getId();
@@ -360,8 +360,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         String backTitle = ((TitleComponent) card.getSides().get(1).getFirst(EComponent.TITLE)).getValue();
         ArrayList<String> frontTexts = new ArrayList<>();
         ArrayList<String> backTexts = new ArrayList<>();
-        ArrayList<String> tagsLymbo = new ArrayList<>();
         ArrayList<String> tagsCard = new ArrayList<>();
+        ArrayList<String> tagsAll = new ArrayList<>();
 
         for (Displayable d : card.getSides().get(0).getComponents()) {
             if (d instanceof TextComponent) {
@@ -375,15 +375,14 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             }
         }
 
-        for (Tag tag : cardsController.getLymbo().getTags()) {
-            tagsLymbo.add(tag.getName());
-        }
-
         for (Tag tag : card.getTags()) {
             tagsCard.add(tag.getName());
         }
 
+        tagsAll = cardsController.getAllTagNames();
+
         vibrate(VIBRATION_DURATION);
+
         CardDialogFragment dialog = new CardDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_card_uuid), uuid);
@@ -391,8 +390,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         bundle.putString(getResources().getString(R.string.bundle_back_title), backTitle);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_texts_front), frontTexts);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_texts_back), backTexts);
-        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_lymbo), tagsLymbo);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_card), tagsCard);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
         dialog.setArguments(bundle);
         dialog.show(activity.getFragmentManager(), "okay");
     }
@@ -640,7 +639,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     // Methods - Util
     // --------------------
 
-    private void vibrate (int vibrationDuration) {
+    private void vibrate(int vibrationDuration) {
         ((Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(vibrationDuration);
     }
 

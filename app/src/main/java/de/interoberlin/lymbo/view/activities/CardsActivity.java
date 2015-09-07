@@ -209,14 +209,11 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             ibFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ArrayList<String> tagsLymbo = new ArrayList<>();
-                    for (Tag tag : cardsController.getLymbo().getTags()) {
-                        tagsLymbo.add(tag.getName());
-                    }
+                    ArrayList<String> tagsAll = cardsController.getAllTagNames();
 
                     CardDialogFragment dialog = new CardDialogFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_lymbo), tagsLymbo);
+                    bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
                     dialog.setArguments(bundle);
                     dialog.show(getFragmentManager(), "okay");
                 }
