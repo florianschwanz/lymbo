@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.github.mrengineer13.snackbar.SnackBar;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,20 +29,19 @@ import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.CardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.CopyCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.MoveCardDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.FilterCardsDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, CardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, SelectTagsDialogFragment.OnCompleteListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, CopyCardDialogFragment.OnCompleteListener, MoveCardDialogFragment.OnCompleteListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, CardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, FilterCardsDialogFragment.OnCompleteListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, CopyCardDialogFragment.OnCompleteListener, MoveCardDialogFragment.OnCompleteListener {
     // Controllers
     private CardsController cardsController;
 
@@ -61,8 +59,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private static final int EVENT_GENERATED_IDS = 3;
 
     // Properties
-    private final String BUNDLE_LYMBO_PATH = "lymbo_path";
-    private final String BUNDLE_ASSET = "asset";
     private static int REFRESH_DELAY;
     private static int VIBRATION_DURATION;
 
@@ -74,28 +70,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
-
             cardsController = CardsController.getInstance(this);
-
-            // Restore instance state
-            if (savedInstanceState != null) {
-                // Restore cards
-                Lymbo l = null;
-                if (savedInstanceState.getString(BUNDLE_LYMBO_PATH) != null) {
-                    if (savedInstanceState.getBoolean(BUNDLE_ASSET)) {
-                        l = LymboLoader.getLymboFromAsset(this, savedInstanceState.getString(BUNDLE_LYMBO_PATH), false);
-                    } else {
-                        l = LymboLoader.getLymboFromFile(new File(savedInstanceState.getString(BUNDLE_LYMBO_PATH)), false);
-                    }
-                }
-
-                cardsController.setLymbo(l);
-                cardsController.init();
-            }
-
-            if (cardsController.getLymbo() == null) {
-                finish();
-            }
+            cardsController.setTagsSelected(cardsController.getTagsAll());
 
             setActionBarIcon(R.drawable.ic_ab_drawer);
             setDisplayHomeAsUpEnabled(true);
@@ -209,7 +185,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             ibFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ArrayList<String> tagsAll = cardsController.getAllTagNames();
+                    ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
 
                     CardDialogFragment dialog = new CardDialogFragment();
                     Bundle bundle = new Bundle();
@@ -273,7 +249,18 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             }
             case R.id.menu_label: {
                 ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-                new SelectTagsDialogFragment().show(getFragmentManager(), "okay");
+
+                ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
+                ArrayList<String> tagsSelected = Tag.getNames(cardsController.getTagsSelected());
+                Boolean displayOnlyFavorites = cardsController.isDisplayOnlyFavorites();
+
+                FilterCardsDialogFragment dialog = new FilterCardsDialogFragment();
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
+                bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
+                bundle.putBoolean(getResources().getString(R.string.bundle_display_only_favorites), displayOnlyFavorites);
+                dialog.setArguments(bundle);
+                dialog.show(getFragmentManager(), "okay");
                 break;
             }
             case R.id.menu_log: {
@@ -321,8 +308,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString(BUNDLE_LYMBO_PATH, cardsController.getLymbo().getPath());
-        savedInstanceState.putBoolean(BUNDLE_ASSET, cardsController.getLymbo().isAsset());
+        savedInstanceState.putString(getResources().getString(R.string.bundle_lymbo_path), cardsController.getLymbo().getPath());
+        savedInstanceState.putBoolean(getResources().getString(R.string.bundle_asset), cardsController.getLymbo().isAsset());
 
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -369,7 +356,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onAddSimpleCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         try {
             cardsController.addCard(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
-
+            cardsController.addTagsSelected(tags);
             updateListView();
         } catch (Exception e) {
             handleException(e);
@@ -379,6 +366,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     @Override
     public void onEditSimpleCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         cardsController.updateCard(uuid, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+        cardsController.addTagsSelected(tags);
         snackEditCard();
         updateListView();
     }
@@ -388,7 +376,10 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onTagsSelected() {
+    public void onTagsSelected(List<Tag> tagsSelected, boolean displayOnlyFavorites) {
+        cardsController.setTagsSelected(tagsSelected);
+        cardsController.setDisplayOnlyFavorites(displayOnlyFavorites);
+
         snackTagSelected();
         updateListView();
     }

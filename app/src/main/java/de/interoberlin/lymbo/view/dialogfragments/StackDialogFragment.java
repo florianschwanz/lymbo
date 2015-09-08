@@ -36,7 +36,7 @@ public class StackDialogFragment extends DialogFragment {
     private List<String> languagesTo = new ArrayList<>();
 
     private boolean addLanguagesIsExpanded = false;
-    private boolean addCategoriesIsExpanded = false;
+    private boolean addTagsIsExpanded = false;
 
     private OnCompleteListener ocListener;
 
@@ -66,9 +66,9 @@ public class StackDialogFragment extends DialogFragment {
         final TableLayout tblLanguagesFrom = (TableLayout) v.findViewById(R.id.tblLanguagesFrom);
         final TableLayout tblLanguagesTo = (TableLayout) v.findViewById(R.id.tblLanguagesTo);
 
-        final LinearLayout llAddCategories = (LinearLayout) v.findViewById(R.id.llAddCategories);
-        final TableLayout tblCategories = (TableLayout) v.findViewById(R.id.tblCategories);
-        final ImageView ivAddCategory = (ImageView) v.findViewById(R.id.ivAddCategory);
+        final LinearLayout llAddTags = (LinearLayout) v.findViewById(R.id.llAddTags);
+        final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
+        final ImageView ivAddTag = (ImageView) v.findViewById(R.id.ivAddTag);
 
         // Get arguments
         Bundle bundle = this.getArguments();
@@ -77,8 +77,8 @@ public class StackDialogFragment extends DialogFragment {
         final String author = bundle.getString(getActivity().getResources().getString(R.string.bundle_author));
         final Language languageFrom = Language.fromString(bundle.getString(getActivity().getResources().getString(R.string.bundle_language_from)));
         final Language languageTo = Language.fromString(bundle.getString(getActivity().getResources().getString(R.string.bundle_language_to)));
-        final ArrayList<String> categoriesLymbo = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_categories_lymbo));
-        final ArrayList<String> categoriesAll = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_categories_all));
+        final ArrayList<String> tagsAll = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_all));
+        final ArrayList<String> tagsSelected = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_selected));
 
         // Fill views with arguments
         if (title != null)
@@ -171,89 +171,92 @@ public class StackDialogFragment extends DialogFragment {
         }
 
         for (final Language l : Language.values()) {
-            languagesFrom.add(l.getLangCode());
+            if (l.isActive()) {
+                languagesFrom.add(l.getLangCode());
 
-            final TableRow tr = new TableRow(getActivity());
+                final TableRow tr = new TableRow(getActivity());
 
-            final CheckBox cb = new CheckBox(getActivity());
-            final RobotoTextView tvText = new RobotoTextView(getActivity());
+                final CheckBox cb = new CheckBox(getActivity());
+                final RobotoTextView tvText = new RobotoTextView(getActivity());
 
-            tr.addView(cb);
-            tr.addView(tvText);
-            checkboxesLanguageFrom.add(cb);
+                tr.addView(cb);
+                tr.addView(tvText);
+                checkboxesLanguageFrom.add(cb);
 
-            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (b) {
-                        for (CheckBox c : checkboxesLanguageFrom) {
-                            c.setChecked(false);
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if (b) {
+                            for (CheckBox c : checkboxesLanguageFrom) {
+                                c.setChecked(false);
+                            }
+
+                            cb.setChecked(true);
                         }
-
-                        cb.setChecked(true);
                     }
-                }
-            });
+                });
 
-            tvText.setText(l.getName(getActivity()));
-            tvText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cb.toggle();
-                }
-            });
+                tvText.setText(l.getName(getActivity()));
+                tvText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cb.toggle();
+                    }
+                });
 
-            tblLanguagesFrom.addView(tr);
+                tblLanguagesFrom.addView(tr);
+            }
         }
 
         for (final Language l : Language.values()) {
-            languagesTo.add(l.getLangCode());
+            if (l.isActive()) {
+                languagesTo.add(l.getLangCode());
 
-            final TableRow tr = new TableRow(getActivity());
+                final TableRow tr = new TableRow(getActivity());
 
-            final CheckBox cb = new CheckBox(getActivity());
-            final RobotoTextView tvText = new RobotoTextView(getActivity());
+                final CheckBox cb = new CheckBox(getActivity());
+                final RobotoTextView tvText = new RobotoTextView(getActivity());
 
-            tr.addView(cb);
-            tr.addView(tvText);
-            checkboxesLanguageTo.add(cb);
+                tr.addView(cb);
+                tr.addView(tvText);
+                checkboxesLanguageTo.add(cb);
 
-            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (b) {
-                        for (CheckBox c : checkboxesLanguageTo) {
-                            c.setChecked(false);
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if (b) {
+                            for (CheckBox c : checkboxesLanguageTo) {
+                                c.setChecked(false);
+                            }
+
+                            cb.setChecked(true);
                         }
-
-                        cb.setChecked(true);
                     }
-                }
-            });
+                });
 
-            tvText.setText(l.getName(getActivity()));
-            tvText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cb.toggle();
-                }
-            });
+                tvText.setText(l.getName(getActivity()));
+                tvText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cb.toggle();
+                    }
+                });
 
-            tblLanguagesTo.addView(tr);
+                tblLanguagesTo.addView(tr);
+            }
         }
 
-        if (categoriesAll != null) {
-            for (final String tag : categoriesAll) {
-                if (tag != null && !tag.equals(getActivity().getResources().getString(R.string.no_category))) {
+        if (tagsAll != null) {
+            for (final String tag : tagsAll) {
+                if (tag != null && !tag.equals(getActivity().getResources().getString(R.string.no_tag))) {
                     final TableRow tr = new TableRow(getActivity());
-
                     final CheckBox cb = new CheckBox(getActivity());
                     final TextView tvText = new TextView(getActivity());
 
                     tr.addView(cb);
                     tr.addView(tvText);
 
-                    if (categoriesLymbo != null && categoriesLymbo.contains(tag))
+                    if (tagsSelected != null && tagsSelected.contains(tag))
                         cb.setChecked(true);
 
                     tvText.setText(tag);
@@ -264,7 +267,7 @@ public class StackDialogFragment extends DialogFragment {
                         }
                     });
 
-                    tblCategories.addView(tr, tblCategories.getChildCount() - 1);
+                    tblTags.addView(tr, tblTags.getChildCount() - 1);
                 }
             }
         }
@@ -283,26 +286,26 @@ public class StackDialogFragment extends DialogFragment {
             }
         });
 
-        llAddCategories.setOnClickListener(new View.OnClickListener() {
+        llAddTags.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (addCategoriesIsExpanded) {
-                    addCategoriesIsExpanded = false;
-                    tblCategories.startAnimation(ViewUtil.collapse(getActivity(), tblCategories));
+                if (addTagsIsExpanded) {
+                    addTagsIsExpanded = false;
+                    tblTags.startAnimation(ViewUtil.collapse(getActivity(), tblTags));
                 } else {
-                    addCategoriesIsExpanded = true;
-                    tblCategories.startAnimation(ViewUtil.expand(getActivity(), tblCategories));
+                    addTagsIsExpanded = true;
+                    tblTags.startAnimation(ViewUtil.expand(getActivity(), tblTags));
                 }
             }
         });
 
         llLanguages.getLayoutParams().height = 0;
-        tblCategories.getLayoutParams().height = 0;
+        tblTags.getLayoutParams().height = 0;
 
-        ivAddCategory.setOnClickListener(new View.OnClickListener() {
+        ivAddTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TableRow trLast = (TableRow) tblCategories.getChildAt(tblCategories.getChildCount() - 2);
+                TableRow trLast = (TableRow) tblTags.getChildAt(tblTags.getChildCount() - 2);
 
                 if (trLast == null || trLast.getChildCount() < 2 || !(trLast.getChildAt(1) instanceof EditText) || (trLast.getChildAt(1) instanceof EditText && !((EditText) trLast.getChildAt(1)).getText().toString().isEmpty())) {
                     final TableRow tr = new TableRow(getActivity());
@@ -313,7 +316,7 @@ public class StackDialogFragment extends DialogFragment {
                     etText.setHint(R.string.new_tag);
                     etText.requestFocus();
                     cb.setChecked(true);
-                    tblCategories.addView(tr, tblCategories.getChildCount() - 1);
+                    tblTags.addView(tr, tblTags.getChildCount() - 1);
                 }
             }
         });
@@ -353,7 +356,7 @@ public class StackDialogFragment extends DialogFragment {
         final EditText etTitle = (EditText) dialog.findViewById(R.id.etTitle);
         final EditText etSubtitle = (EditText) dialog.findViewById(R.id.etSubtitle);
         final EditText etAuthor = (EditText) dialog.findViewById(R.id.etAuthor);
-        final TableLayout tblCategories = (TableLayout) dialog.findViewById(R.id.tblCategories);
+        final TableLayout tblTags = (TableLayout) dialog.findViewById(R.id.tblTags);
 
         Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener(new View.OnClickListener() {
@@ -385,9 +388,9 @@ public class StackDialogFragment extends DialogFragment {
 
                 if (!title.isEmpty()) {
                     if (lymboUuid == null) {
-                        ocListener.onAddStack(title, subtitle, author, languageFrom, languageTo, getSelectedTags(tblCategories));
+                        ocListener.onAddStack(title, subtitle, author, languageFrom, languageTo, getSelectedTags(tblTags));
                     } else {
-                        ocListener.onEditStack(lymboUuid, title, subtitle, author, languageFrom, languageTo, getSelectedTags(tblCategories));
+                        ocListener.onEditStack(lymboUuid, title, subtitle, author, languageFrom, languageTo, getSelectedTags(tblTags));
                     }
 
                     dismiss();
@@ -448,8 +451,8 @@ public class StackDialogFragment extends DialogFragment {
     // --------------------
 
     public interface OnCompleteListener {
-        void onAddStack(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> categories);
-        void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> categories);
+        void onAddStack(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags);
+        void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags);
     }
 
     public void onAttach(Activity activity) {

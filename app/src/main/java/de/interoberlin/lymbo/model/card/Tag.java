@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.util.ColorUtil;
@@ -55,6 +58,26 @@ public class Tag implements Displayable {
         Tag t = new Tag(this.getName());
         t.setChecked(false);
         return t;
+    }
+
+    public boolean containedIn(List<Tag> tags) {
+        for (Tag t : tags) {
+            if (t.getName().equals(this.getName()))
+                return true;
+        }
+
+        return false;
+    }
+
+    static public ArrayList<String> getNames(List<Tag> tags) {
+        ArrayList<String> names = new ArrayList<>();
+
+        for (Tag t : tags) {
+            if (t != null)
+                names.add(t.getName());
+        }
+
+        return names;
     }
 
     // --------------------

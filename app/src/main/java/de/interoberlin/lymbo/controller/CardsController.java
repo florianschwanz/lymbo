@@ -2,6 +2,7 @@ package de.interoberlin.lymbo.controller;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Side;
@@ -37,6 +39,8 @@ public class CardsController {
     private List<Card> cards;
     private List<Card> cardsDismissed;
     private List<Card> cardsStashed;
+
+    private List<Tag> tagsSelected;
 
     private boolean displayOnlyFavorites;
 
@@ -69,6 +73,7 @@ public class CardsController {
         cards = new ArrayList<>();
         cardsDismissed = new CopyOnWriteArrayList<>();
         cardsStashed = new CopyOnWriteArrayList<>();
+        tagsSelected = new ArrayList<>();
         displayOnlyFavorites = false;
 
         if (lymbo != null) {
@@ -98,8 +103,7 @@ public class CardsController {
     public boolean isVisible(Card card) {
         return (card != null &&
                 (!isDisplayOnlyFavorites() || (card.isFavorite())) &&
-                card.matchesChapter(getLymbo().getChapters()) &&
-                card.matchesTag(getLymbo().getTags()));
+                card.matchesTag(getTagsSelected()));
     }
 
     /**
@@ -167,12 +171,12 @@ public class CardsController {
     /**
      * Updates a simple card
      *
-     * @param uuid
-     * @param frontTitleValue
-     * @param frontTextsValues
-     * @param backTitleValue
-     * @param backTextsValues
-     * @param tags
+     * @param uuid id of the card to be updated
+     * @param frontTitleValue front title
+     * @param frontTextsValues front texts
+     * @param backTitleValue back title
+     * @param backTextsValues back texts
+     * @param tags tags
      */
     public void updateCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         if (cardsContainsId(uuid)) {
@@ -366,7 +370,7 @@ public class CardsController {
     /**
      * Returns the note of a card
      *
-     * @param context
+     * @param context context
      * @param uuid    id of the card
      * @return note of a card
      */
@@ -451,17 +455,33 @@ public class CardsController {
         save();
     }
 
-    /**
-     * Retrieves a distinct list of tag names of all cards
-     *
-     * @return list of tag names
-     */
-    public ArrayList<String> getAllTagNames() {
-        ArrayList<String> tagsAll = new ArrayList<>();
-        for (Tag tag : getLymbo().getTags()) {
-            if (!tagsAll.contains(tag.getName()))
-                tagsAll.add(tag.getName());
+    // --------------------
+    // Methods - Util
+    // --------------------
+
+    private Resources getResources() {
+        return activity.getResources();
+    }
+
+    public void addTagsSelected(List<Tag> tags) {
+        for (Tag tag : tags) {
+            if (!tag.containedIn(tagsSelected)) {
+                tagsSelected.add(tag);
+            }
         }
+    }
+
+    public List<Tag> getTagsAll() {
+        List<Tag> tagsAll = new ArrayList<>();
+
+        for (Card card : getCards()) {
+            for (Tag tag : card.getTags()) {
+                if (tag != null && !tag.containedIn(tagsAll) && tag.getName() != getResources().getString(R.string.no_tag))
+                    tagsAll.add(tag);
+            }
+        }
+
+        tagsAll.add(new Tag(getResources().getString(R.string.no_tag)));
 
         return tagsAll;
     }
@@ -492,6 +512,14 @@ public class CardsController {
 
     public List<Card> getCardsStashed() {
         return cardsStashed;
+    }
+
+    public List<Tag> getTagsSelected() {
+        return tagsSelected;
+    }
+
+    public void setTagsSelected(List<Tag> tagsSelected) {
+        this.tagsSelected = tagsSelected;
     }
 
     public boolean cardsContainsId(String uuid) {

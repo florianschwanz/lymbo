@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.os.Vibrator;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -28,12 +29,13 @@ import de.interoberlin.lymbo.model.card.Lymbo;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.lymbo.view.adapters.LymbosListAdapter;
+import de.interoberlin.lymbo.view.dialogfragments.FilterStacksDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.StackDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, StackDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, StackDialogFragment.OnCompleteListener, FilterStacksDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
     private LymbosController lymbosController;
 
@@ -46,6 +48,7 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
     private static final int EVENT_STASH = 2;
     private static int REFRESH_DELAY;
+    private static int VIBRATION_DURATION;
 
     // --------------------
     // Methods - Lifecycle
@@ -56,15 +59,13 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
         try {
             super.onCreate(savedInstanceState);
             lymbosController = LymbosController.getInstance(this);
-
-            if (savedInstanceState != null) {
-                lymbosController.load();
-            }
+            lymbosController.setTagsSelected(lymbosController.getTagsAll());
 
             setActionBarIcon(R.drawable.ic_ab_drawer);
             setDisplayHomeAsUpEnabled(true);
 
             REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_lymbos);
+            VIBRATION_DURATION = getResources().getInteger(R.integer.vibration_duration);
         } catch (Exception e) {
             handleException(e);
         }
@@ -95,11 +96,11 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
             ibFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ArrayList<String> categoriesAll = lymbosController.getAllCategoriesStrings();
+                    ArrayList<String> tagsAll = Tag.getNames(lymbosController.getTagsAll());
 
                     StackDialogFragment dialog = new StackDialogFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putStringArrayList(getResources().getString(R.string.bundle_categories_all), categoriesAll);
+                    bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
                     dialog.setArguments(bundle);
                     dialog.show(getFragmentManager(), "okay");
                 }
@@ -130,6 +131,20 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_label: {
+                ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+
+                ArrayList<String> tagsAll = Tag.getNames(lymbosController.getTagsAll());
+                ArrayList<String> tagsSelected = Tag.getNames(lymbosController.getTagsSelected());
+
+                FilterStacksDialogFragment dialog = new FilterStacksDialogFragment();
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
+                bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
+                dialog.setArguments(bundle);
+                dialog.show(getFragmentManager(), "okay");
+                break;
+            }
             case R.id.menu_stash: {
                 Intent i = new Intent(LymbosActivity.this, LymbosStashActivity.class);
                 startActivity(i);
@@ -185,13 +200,14 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     }
 
     @Override
-    public void onAddStack(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> categories) {
+    public void onAddStack(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
         final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
-        Lymbo lymbo = lymbosController.getEmptyLymbo(title, subtitle, author, languageFrom, languageTo, categories);
+        Lymbo lymbo = lymbosController.getEmptyLymbo(title, subtitle, author, languageFrom, languageTo, tags);
 
         if (!new File(lymbo.getPath()).exists()) {
             lymbosController.addStack(lymbo);
+            lymbosController.addTagsSelected(tags);
             lymbosAdapter.notifyDataSetChanged();
         } else {
             Toast.makeText(this, getResources().getString(R.string.lymbo_with_same_name_already_exists), Toast.LENGTH_SHORT).show();
@@ -200,12 +216,21 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     }
 
     @Override
-    public void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> categories) {
+    public void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
         final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
-        lymbosController.updateStack(uuid, title, subtitle, author, languageFrom, languageTo, categories);
+        lymbosController.updateStack(uuid, title, subtitle, author, languageFrom, languageTo, tags);
+        lymbosController.addTagsSelected(tags);
         lymbosAdapter.notifyDataSetChanged();
         slv.invalidateViews();
+    }
+
+    @Override
+    public void onTagsSelected(List<Tag> tagsSelected) {
+        lymbosController.setTagsSelected(tagsSelected);
+
+        snackTagSelected();
+        updateListView();
     }
 
     // --------------------
@@ -239,6 +264,17 @@ public class LymbosActivity extends SwipeRefreshBaseActivity implements SwipeRef
     public void snackLymbosLoaded() {
         new SnackBar.Builder(this)
                 .withMessageId(R.string.lymbos_loaded)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    /**
+     * Indicates that tags have been slected
+     */
+    public void snackTagSelected() {
+        new SnackBar.Builder(this)
+                .withMessageId(R.string.tag_selected)
                 .withStyle(SnackBar.Style.INFO)
                 .withDuration(SnackBar.MED_SNACK)
                 .show();

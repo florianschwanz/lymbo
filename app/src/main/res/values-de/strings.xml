@@ -17,7 +17,6 @@
     <string name="cards">Karten</string>
     <string name="cards_resetted">Karten zurückgesetzt</string>
     <string name="cards_stash">Karten Papierkorb</string>
-    <string name="chapters">Kapitel</string>
     <string name="click_to_continue">Tippe auf den Bildschirm</string>
     <string name="copied_card">Karte kopiert</string>
     <string name="copy_card">Karte kopieren</string>
@@ -132,6 +131,6 @@
     <string name="undo">Rückgängig</string>
     <string name="wrong">falsch</string>
     <string name="lymbo_with_same_name_already_exists">Lymbo mit diesem Namen existiert bereits</string>
-    <string name="no_category">keine Kategorie</string>
+    <string name="filter">Filter</string>
 
 </resources>

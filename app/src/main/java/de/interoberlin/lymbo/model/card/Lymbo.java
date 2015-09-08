@@ -1,8 +1,6 @@
 package de.interoberlin.lymbo.model.card;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -25,9 +23,7 @@ public class Lymbo {
     private String author;
     private List<Card> cards;
 
-    private List<Tag> categories;
     private List<Tag> tags;
-    private List<Tag> chapters;
 
     private LanguageAspect languageAspect;
 
@@ -58,95 +54,30 @@ public class Lymbo {
         cards = new ArrayList<>();
         error = "";
 
-        categories = new ArrayList<>();
-        String noCategory = App.getContext().getResources().getString(R.string.no_category);
-        categories.add(new Tag(noCategory));
-
         tags = new ArrayList<>();
-        String noTag = App.getContext().getResources().getString(R.string.no_tag);
-        tags.add(new Tag(noTag));
-
-        chapters = new ArrayList<>();
-        String noChapter = App.getContext().getResources().getString(R.string.no_chapter);
-        chapters.add(new Tag(noChapter));
     }
 
     /**
-     * Returns a list of all tags used in this lymbo
+     * Determines whether at least one of this stacks's tags matches a given list of tags
      *
-     * @return a list of tags
+     * @param ts list of tags
+     * @return whether the cards matches one of the lists' tags
      */
-    public List<Tag> getTags() {
-        for (Card c : getCards()) {
-            if (c != null) {
-                for (Tag t : c.getTags()) {
-                    if (!containsTag(tags, t)) {
-                        tags.add(t);
-                    }
-                }
-            }
-        }
-
-        Collections.sort(tags, new Comparator<Tag>() {
-            @Override
-            public int compare(Tag t1, Tag t2) {
-                return t1.getName().compareTo(t2.getName());
-            }
-        });
-
-        return tags;
-    }
-
-    /**
-     * Returns a list of all chapters used in this lymbo
-     *
-     * @return a list of tags representing the chapters found
-     */
-    public List<Tag> getChapters() {
-        for (Card c : getCards()) {
-            if (c != null && c.getChapter() != null && !containsTag(chapters, c.getChapter())) {
-                chapters.add(c.getChapter());
-            }
-        }
-
-        Collections.sort(chapters, new Comparator<Tag>() {
-            @Override
-            public int compare(Tag t1, Tag t2) {
-                return t1.getName().compareTo(t2.getName());
-            }
-        });
-
-        return chapters;
-    }
-
-    private boolean containsTag(List<Tag> tags, Tag tag) {
-        for (Tag t : tags) {
-            if (t.getName().equalsIgnoreCase(tag.getName()))
-                return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determines whether at least one of this lymbos's categories matches a given list of categories
-     *
-     * @param cs list of categories
-     * @return
-     */
-    public boolean matchesCategory(List<Tag> cs) {
+    public boolean matchesTag(List<Tag> ts) {
         String noTag = App.getContext().getResources().getString(R.string.no_tag);
 
-        if (cs == null || cs.isEmpty()) {
+        if (ts == null || ts.isEmpty()) {
             return true;
         } else {
-            for (Tag t : cs) {
-                if ((categories == null || categories.isEmpty()) && t.isChecked() && t.getName().equals(noTag)) {
+            for (Tag t : ts) {
+                if ((tags == null || tags.isEmpty()) && t.isChecked() && t.getName().equals(noTag)) {
                     return true;
                 } else {
-                    for (Tag tag : categories) {
-                        if (t.getName().equals(tag.getName()) && t.isChecked())
-                            return true;
+                    if (tags != null) {
+                        for (Tag tag : tags) {
+                            if (t.getName().equals(tag.getName()) && t.isChecked())
+                                return true;
+                        }
                     }
                 }
             }
@@ -239,20 +170,20 @@ public class Lymbo {
         this.author = author;
     }
 
-    public List<Tag> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(List<Tag> categories) {
-        this.categories = categories;
-    }
-
     public List<Card> getCards() {
         return cards;
     }
 
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     public LanguageAspect getLanguageAspect() {

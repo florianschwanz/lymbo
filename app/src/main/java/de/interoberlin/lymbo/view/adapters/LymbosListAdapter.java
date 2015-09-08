@@ -34,6 +34,7 @@ import de.interoberlin.lymbo.util.Base64BitmapConverter;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.activities.LymbosActivity;
+import de.interoberlin.lymbo.view.dialogfragments.FilterStacksDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.StackDialogFragment;
 
 public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
@@ -80,6 +81,16 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
     // --------------------
 
     @Override
+    public int getCount() {
+        return filteredItems != null ? filteredItems.size() : 0;
+    }
+
+    @Override
+    public Lymbo getItem(int position) {
+        return filteredItems.get(position);
+    }
+
+    @Override
     public View getView(int position, View v, ViewGroup parent) {
         final Lymbo lymbo = getItem(position);
         return getLymboView(position, lymbo, parent);
@@ -100,7 +111,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             final TextView tvCardCount = (TextView) llStack.findViewById(R.id.tvCardCount);
 
             // Load views : bottom bar
-            final LinearLayout llCategories = (LinearLayout) llStack.findViewById(R.id.llCategories);
+            final LinearLayout llTags = (LinearLayout) llStack.findViewById(R.id.llTags);
             final TextView tvLanguageFrom = (TextView) llStack.findViewById(R.id.tvLanguageFrom);
             final TextView tvLanguageTo = (TextView) llStack.findViewById(R.id.tvLanguageTo);
 
@@ -131,18 +142,13 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                                         String author = lymbo.getAuthor();
                                         String languageFrom = null;
                                         String languageTo = null;
-                                        ArrayList<String> categoriesLymbo = new ArrayList<>();
-                                        ArrayList<String> categoriesAll;
+                                        ArrayList<String> tagsAll = Tag.getNames(lymbosController.getTagsAll());
+                                        ArrayList<String> tagsSelected = Tag.getNames(lymbo.getTags());
 
                                         if (lymbo.getLanguageAspect() != null && lymbo.getLanguageAspect().getFrom() != null && lymbo.getLanguageAspect().getTo() != null) {
                                             languageFrom = lymbo.getLanguageAspect().getFrom().getLangCode();
                                             languageTo = lymbo.getLanguageAspect().getTo().getLangCode();
                                         }
-                                        for (Tag tag : lymbo.getCategories()) {
-                                            categoriesLymbo.add(tag.getName());
-                                        }
-
-                                        categoriesAll = lymbosController.getAllCategoriesStrings();
 
                                         vibrate(VIBRATION_DURATION);
 
@@ -154,8 +160,8 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
                                         bundle.putString(context.getResources().getString(R.string.bundle_author), author);
                                         bundle.putString(context.getResources().getString(R.string.bundle_language_from), languageFrom);
                                         bundle.putString(context.getResources().getString(R.string.bundle_language_to), languageTo);
-                                        bundle.putStringArrayList(context.getResources().getString(R.string.bundle_categories_lymbo), categoriesLymbo);
-                                        bundle.putStringArrayList(context.getResources().getString(R.string.bundle_categories_all), categoriesAll);
+                                        bundle.putStringArrayList(context.getResources().getString(R.string.bundle_tags_all), tagsAll);
+                                        bundle.putStringArrayList(context.getResources().getString(R.string.bundle_tags_selected), tagsSelected);
                                         dialog.setArguments(bundle);
                                         dialog.show(activity.getFragmentManager(), "okay");
                                         return false;
@@ -194,18 +200,27 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
             });
 
             // Tags
-            for (Tag tag : lymbo.getCategories()) {
-                if (!tag.getName().equals(getResources().getString(R.string.no_category))) {
-                    CardView cvTag = (CardView) tag.getView(context, activity, llCategories);
+            for (Tag tag : lymbo.getTags()) {
+                if (!tag.getName().equals(getResources().getString(R.string.no_tag))) {
+                    CardView cvTag = (CardView) tag.getView(context, activity, llTags);
                     cvTag.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            vibrate(VIBRATION_DURATION);
-                            // new SelectTagsDialogFragment().show(activity.getFragmentManager(), "okay");
+                            ((Vibrator) activity.getSystemService(Activity.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+
+                            ArrayList<String> tagsAll = Tag.getNames(lymbosController.getTagsAll());
+                            ArrayList<String> tagsSelected = Tag.getNames(lymbosController.getTagsSelected());
+
+                            FilterStacksDialogFragment dialog = new FilterStacksDialogFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
+                            bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
+                            dialog.setArguments(bundle);
+                            dialog.show(activity.getFragmentManager(), "okay");
                         }
                     });
 
-                    llCategories.addView(cvTag);
+                    llTags.addView(cvTag);
                 }
             }
 
@@ -293,7 +308,7 @@ public class LymbosListAdapter extends ArrayAdapter<Lymbo> {
      * @return true if item is visible
      */
     protected boolean filterLymbo(Lymbo lymbo) {
-        return lymbo != null;
+        return lymbosController.isVisible(lymbo);
     }
 
     // --------------------

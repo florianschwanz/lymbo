@@ -18,7 +18,6 @@ public class Card {
     private List<Side> sides;
 
     private String hint;
-    private Tag chapter;
     private List<Tag> tags;
 
     private boolean edit;
@@ -80,7 +79,6 @@ public class Card {
         id = UUID.randomUUID().toString();
         sides = new ArrayList<>();
         hint = null;
-        chapter = null;
         tags = new ArrayList<>();
         edit = false;
         sideVisible = 0;
@@ -104,32 +102,10 @@ public class Card {
     }
 
     /**
-     * Determines whether this card's chapters is contained in a given list
-     *
-     * @param cs list of chapter tags
-     * @return
-     */
-    public boolean matchesChapter(List<Tag> cs) {
-        String noChapter = App.getContext().getResources().getString(R.string.no_chapter);
-
-        if (cs == null || cs.isEmpty()) {
-            return true;
-        } else {
-            for (Tag c : cs) {
-                if (chapter == null && c.isChecked() && c.getName().equals(noChapter) || chapter != null && chapter.getName().equals(c.getName()) && c.isChecked()) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Determines whether at least one of this card's tags matches a given list of tags
      *
      * @param ts list of tags
-     * @return
+     * @return whether the cards matches one of the lists' tags
      */
     public boolean matchesTag(List<Tag> ts) {
         String noTag = App.getContext().getResources().getString(R.string.no_tag);
@@ -141,9 +117,11 @@ public class Card {
                 if ((tags == null || tags.isEmpty()) && t.isChecked() && t.getName().equals(noTag)) {
                     return true;
                 } else {
-                    for (Tag tag : tags) {
-                        if (t.getName().equals(tag.getName()) && t.isChecked())
-                            return true;
+                    if (tags != null) {
+                        for (Tag tag : tags) {
+                            if (t.getName().equals(tag.getName()) && t.isChecked())
+                                return true;
+                        }
                     }
                 }
             }
@@ -190,14 +168,6 @@ public class Card {
 
     public void setHint(String hint) {
         this.hint = hint;
-    }
-
-    public Tag getChapter() {
-        return chapter;
-    }
-
-    public void setChapter(Tag chapter) {
-        this.chapter = chapter;
     }
 
     public List<Tag> getTags() {

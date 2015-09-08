@@ -17,7 +17,6 @@
     <string name="cards">Cards</string>
     <string name="cards_resetted">Cards resetted</string>
     <string name="cards_stash">Cards Stash</string>
-    <string name="chapters">Chapters</string>
     <string name="click_to_continue">Touch on screen to continue</string>
     <string name="copied_card">Copied card</string>
     <string name="copy_card">Copy card</string>
@@ -132,6 +131,6 @@
     <string name="undo">Undo</string>
     <string name="wrong">wrong</string>
     <string name="lymbo_with_same_name_already_exists">Lymbo with same name already exists</string>
-    <string name="no_category">no category</string>
+    <string name="filter">Filter</string>
 
 </resources>

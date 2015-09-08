@@ -66,14 +66,14 @@ public class LymboWriter {
     private static void appendLymbo(String tag, Lymbo lymbo) {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("id", lymbo.getId());
-        attributes.put("creationDate", lymbo.getCreationDate().toString());
-        attributes.put("modificationDate", lymbo.getModificationDate().toString());
+        attributes.put("creationDate", lymbo.getCreationDate());
+        attributes.put("modificationDate", lymbo.getModificationDate());
         attributes.put("title", lymbo.getTitle());
         attributes.put("subtitle", lymbo.getSubtitle());
         attributes.put("hint", lymbo.getHint());
         attributes.put("image", lymbo.getImage());
         attributes.put("author", lymbo.getAuthor());
-        attributes.put("categories", getTagsList(lymbo.getCategories()));
+        attributes.put("tags", getTagsList(lymbo.getTags()));
 
         addStartTag(tag, attributes);
 
@@ -173,7 +173,7 @@ public class LymboWriter {
      * @param languageAspect language aspect to appended
      */
     private static void appendLanguageAspects(String tag, LanguageAspect languageAspect) {
-        if (languageAspect != null) {
+        if (languageAspect != null && languageAspect.getFrom() != null && languageAspect.getTo() != null) {
             Map<String, String> attributes = new HashMap<>();
             attributes.put("from", languageAspect.getFrom().getLangCode());
             attributes.put("to", languageAspect.getTo().getLangCode());

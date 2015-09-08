@@ -122,7 +122,7 @@ public class LymboParser {
         String hint = parser.getAttributeValue(null, "hint");
         String image = parser.getAttributeValue(null, "image");
         String author = parser.getAttributeValue(null, "author");
-        String categories = parser.getAttributeValue(null, "categories");
+        String tags = parser.getAttributeValue(null, "tags");
 
         // Read attributes - default
         parseDefault(parser, "cardEdit");
@@ -178,8 +178,8 @@ public class LymboParser {
             lymbo.setImage(image);
         if (author != null)
             lymbo.setAuthor(author);
-        if (categories != null)
-            lymbo.setCategories(parseTags(categories));
+        if (tags != null)
+            lymbo.setTags(parseTags(tags));
 
         lymbo.setCards(cards);
         lymbo.setLanguageAspect(la);
@@ -213,7 +213,6 @@ public class LymboParser {
         String id = parser.getAttributeValue(null, "id");
         String edit = parser.getAttributeValue(null, "edit");
         String hint = parser.getAttributeValue(null, "hint");
-        String chapter = parser.getAttributeValue(null, "chapter");
         String tags = parser.getAttributeValue(null, "tags");
 
         // Read sub elements
@@ -262,8 +261,6 @@ public class LymboParser {
             card.setEdit(Boolean.parseBoolean(defaults.get("cardEdit")));
         if (hint != null)
             card.setHint(hint);
-        if (chapter != null)
-            card.setChapter(parseTag(chapter));
         if (tags != null)
             card.setTags(parseTags(tags));
 
@@ -752,16 +749,6 @@ public class LymboParser {
         } else {
             return EGravity.LEFT;
         }
-    }
-
-    /**
-     * Returns a tag
-     *
-     * @param tagString string value representing a tag
-     * @return list of tags
-     */
-    private Tag parseTag(String tagString) {
-        return new Tag(tagString);
     }
 
     /**

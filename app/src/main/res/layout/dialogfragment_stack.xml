@@ -120,7 +120,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/llAddCategories"
+            android:id="@+id/llAddTags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -138,7 +138,7 @@
                 android:src="@drawable/ic_action_labels_dark" />
 
             <TextView
-                android:id="@+id/tvExpandCategories"
+                android:id="@+id/tvExpandTags"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.9"
@@ -162,7 +162,7 @@
                     android:gravity="start">
 
                     <ImageView
-                        android:id="@+id/ivAddCategory"
+                        android:id="@+id/ivAddTag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/ic_action_new" />

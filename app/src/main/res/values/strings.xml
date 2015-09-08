@@ -17,7 +17,6 @@
     <string name="cards">Cards</string>
     <string name="cards_resetted">Cards resetted</string>
     <string name="cards_stash">Cards Stash</string>
-    <string name="chapters">Chapters</string>
     <string name="click_to_continue">Touch on screen to continue</string>
     <string name="copied_card">Copied card</string>
     <string name="copy_card">Copy card</string>
@@ -34,6 +33,7 @@
     <string name="error_occurred">An error occurred :(</string>
     <string name="feedback">Feedback</string>
     <string name="field_must_not_be_empty">Field must not be empty</string>
+    <string name="filter">Filter</string>
     <string name="fraction">/</string>
     <string name="front">Front</string>
     <string name="give_feedback_question">Feedback is very important for us to improve the app. Feel free to send us comments, hints and wishes.</string>
@@ -100,8 +100,6 @@
     <string name="new_tag">new tag</string>
     <string name="new_text">new text</string>
     <string name="no_cards_in_stash">No cards in stash</string>
-    <string name="no_category">no category</string>
-    <string name="no_chapter">no chapter</string>
     <string name="no_tag">no tag</string>
     <string name="none">None</string>
     <string name="note">Note</string>

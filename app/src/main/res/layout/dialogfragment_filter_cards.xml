@@ -29,29 +29,6 @@
         </LinearLayout>
 
         <de.interoberlin.lymbo.view.controls.RobotoTextView
-            android:id="@+id/tvChapters"
-            style="@style/CardText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/divider_caption_margin_bottom"
-            android:layout_marginTop="@dimen/divider_caption_margin_top"
-            android:layout_weight="0.50"
-            android:ellipsize="end"
-            android:text="@string/chapters"
-            roboto:typeface="roboto_regular" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="@color/stroke" />
-
-
-        <TableLayout
-            android:id="@+id/tblChapters"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <de.interoberlin.lymbo.view.controls.RobotoTextView
             android:id="@+id/tvTags"
             style="@style/CardText"
             android:layout_width="match_parent"

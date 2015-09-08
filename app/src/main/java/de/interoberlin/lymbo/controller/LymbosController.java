@@ -39,6 +39,8 @@ public class LymbosController {
     private List<Lymbo> lymbos;
     private List<Lymbo> lymbosStashed;
 
+    private List<Tag> tagsSelected;
+
     // Properties
     private static String LYMBO_FILE_EXTENSION;
     private static String LYMBO_LOOKUP_PATH;
@@ -72,11 +74,23 @@ public class LymbosController {
     public void init() {
         lymbos = new ArrayList<>();
         lymbosStashed = new ArrayList<>();
+        tagsSelected = new ArrayList<>();
 
         // Properties
         LYMBO_FILE_EXTENSION = getResources().getString(R.string.lymbo_file_extension);
         LYMBO_LOOKUP_PATH = getResources().getString(R.string.lymbo_lookup_path);
         LYMBO_SAVE_PATH = getResources().getString(R.string.lymbo_save_path);
+    }
+
+    /**
+     * Determines whether a given lymbo shall be displayed considering all filters
+     *
+     * @param lymbo lymbo to determine visibility of
+     * @return whether lymbo is visbible or not
+     */
+    public boolean isVisible(Lymbo lymbo) {
+        return (lymbo != null &&
+                lymbo.matchesTag(getTagsSelected()));
     }
 
     /**
@@ -87,15 +101,14 @@ public class LymbosController {
      * @param author       author of new stack
      * @param languageFrom source language
      * @param languageTo   target language
-     * @param categories   list of categories
      * @return an empty lymbo
      */
-    public Lymbo getEmptyLymbo(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> categories) {
+    public Lymbo getEmptyLymbo(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
         Lymbo lymbo = new Lymbo();
         lymbo.setTitle(title);
         lymbo.setSubtitle(subtitle);
         lymbo.setAuthor(author);
-        lymbo.setCategories(categories);
+        lymbo.setTags(tags);
 
         if (languageFrom != null && languageTo != null) {
             LanguageAspect languageAspect = new LanguageAspect();
@@ -128,9 +141,8 @@ public class LymbosController {
      * @param author       author
      * @param languageFrom source language
      * @param languageTo   target language
-     * @param categories   list of categories
      */
-    public void updateStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> categories) {
+    public void updateStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
         if (lymbosContainsId(uuid)) {
             Lymbo lymbo = getLymboById(uuid);
 
@@ -144,7 +156,7 @@ public class LymbosController {
                 lymbo.setTitle(title);
                 lymbo.setSubtitle(subtitle);
                 lymbo.setAuthor(author);
-                lymbo.setCategories(categories);
+                lymbo.setTags(tags);
 
                 if (languageFrom != null && languageTo != null) {
                     LanguageAspect languageAspect = new LanguageAspect();
@@ -397,24 +409,6 @@ public class LymbosController {
         return externalStorageAvailable && externalStorageWriteable;
     }
 
-    /**
-     * Retrieves a distinct list of category names of all lymbos
-     *
-     * @return list of tag names
-     */
-    public ArrayList<String> getAllCategoriesStrings() {
-        ArrayList<String> categoriesAll = new ArrayList<>();
-
-        for (Lymbo lymbo : getLymbos()) {
-            for (Tag tag : lymbo.getCategories()) {
-                if (!categoriesAll.contains(tag.getName()))
-                    categoriesAll.add(tag.getName());
-            }
-        }
-
-        return categoriesAll;
-    }
-
     // --------------------
     // Methods - Util
     // --------------------
@@ -423,20 +417,27 @@ public class LymbosController {
         return activity.getResources();
     }
 
-    // --------------------
-    // Getters / Setters
-    // --------------------
-
-    public List<Lymbo> getLymbos() {
-        return lymbos;
+    public void addTagsSelected(List<Tag> tags) {
+        for (Tag tag : tags) {
+            if (!tag.containedIn(tagsSelected)) {
+                tagsSelected.add(tag);
+            }
+        }
     }
 
-    public List<Lymbo> getLymbosStashed() {
-        return lymbosStashed;
-    }
+    public ArrayList<Tag> getTagsAll() {
+        ArrayList<Tag> tagsAll = new ArrayList<>();
 
-    public boolean isLoaded() {
-        return loaded;
+        for (Lymbo lymbo : getLymbos()) {
+            for (Tag tag : lymbo.getTags()) {
+                if (tag != null && !tag.containedIn(tagsAll) && tag.getName() != getResources().getString(R.string.no_tag))
+                    tagsAll.add(tag);
+            }
+        }
+
+        tagsAll.add(new Tag(getResources().getString(R.string.no_tag)));
+
+        return tagsAll;
     }
 
     public boolean lymbosContainsId(String uuid) {
@@ -457,5 +458,29 @@ public class LymbosController {
         }
 
         return null;
+    }
+
+    // --------------------
+    // Getters / Setters
+    // --------------------
+
+    public List<Lymbo> getLymbos() {
+        return lymbos;
+    }
+
+    public List<Lymbo> getLymbosStashed() {
+        return lymbosStashed;
+    }
+
+    public List<Tag> getTagsSelected() {
+        return tagsSelected;
+    }
+
+    public void setTagsSelected(List<Tag> tagsSelected) {
+        this.tagsSelected = tagsSelected;
+    }
+
+    public boolean isLoaded() {
+        return loaded;
     }
 }

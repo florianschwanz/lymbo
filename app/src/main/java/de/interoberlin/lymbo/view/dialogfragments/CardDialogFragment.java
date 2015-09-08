@@ -87,8 +87,8 @@ public class CardDialogFragment extends DialogFragment {
         final String backTitle = bundle.getString(getActivity().getResources().getString(R.string.bundle_back_title));
         final ArrayList<String> textsFront = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_texts_front));
         final ArrayList<String> textsBack = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_texts_back));
-        final ArrayList<String> tagsCard = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_card));
         final ArrayList<String> tagsAll = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_all));
+        final ArrayList<String> tagsSelected = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_selected));
 
         // Fill views with arguments
         if (frontTitle != null)
@@ -117,14 +117,13 @@ public class CardDialogFragment extends DialogFragment {
             for (final String tag : tagsAll) {
                 if (tag != null && !tag.equals(getActivity().getResources().getString(R.string.no_tag))) {
                     final TableRow tr = new TableRow(getActivity());
-
                     final CheckBox cb = new CheckBox(getActivity());
                     final TextView tvText = new TextView(getActivity());
 
                     tr.addView(cb);
                     tr.addView(tvText);
 
-                    if (tagsCard != null && tagsCard.contains(tag))
+                    if (tagsSelected != null && tagsSelected.contains(tag))
                         cb.setChecked(true);
 
                     tvText.setText(tag);

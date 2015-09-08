@@ -46,7 +46,7 @@ import de.interoberlin.lymbo.view.dialogfragments.CopyCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.MoveCardDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.SelectTagsDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.FilterCardsDialogFragment;
 
 public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     // Context
@@ -213,7 +213,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                     @Override
                     public void onClick(View view) {
                         vibrate(VIBRATION_DURATION);
-                        new SelectTagsDialogFragment().show(activity.getFragmentManager(), "okay");
+                        new FilterCardsDialogFragment().show(activity.getFragmentManager(), "okay");
                     }
                 });
 
@@ -360,8 +360,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         String backTitle = ((TitleComponent) card.getSides().get(1).getFirst(EComponent.TITLE)).getValue();
         ArrayList<String> frontTexts = new ArrayList<>();
         ArrayList<String> backTexts = new ArrayList<>();
-        ArrayList<String> tagsCard = new ArrayList<>();
-        ArrayList<String> tagsAll = new ArrayList<>();
+        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
+        ArrayList<String> tagsSelected = Tag.getNames(card.getTags());
 
         for (Displayable d : card.getSides().get(0).getComponents()) {
             if (d instanceof TextComponent) {
@@ -375,12 +375,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             }
         }
 
-        for (Tag tag : card.getTags()) {
-            tagsCard.add(tag.getName());
-        }
-
-        tagsAll = cardsController.getAllTagNames();
-
         vibrate(VIBRATION_DURATION);
 
         CardDialogFragment dialog = new CardDialogFragment();
@@ -390,8 +384,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         bundle.putString(getResources().getString(R.string.bundle_back_title), backTitle);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_texts_front), frontTexts);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_texts_back), backTexts);
-        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_card), tagsCard);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         dialog.setArguments(bundle);
         dialog.show(activity.getFragmentManager(), "okay");
     }
