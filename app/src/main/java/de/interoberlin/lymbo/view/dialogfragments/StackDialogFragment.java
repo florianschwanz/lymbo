@@ -60,18 +60,17 @@ public class StackDialogFragment extends DialogFragment {
         final EditText etTitle = (EditText) v.findViewById(R.id.etTitle);
         final EditText etSubtitle = (EditText) v.findViewById(R.id.etSubtitle);
         final EditText etAuthor = (EditText) v.findViewById(R.id.etAuthor);
-
         final LinearLayout llAddLanguages = (LinearLayout) v.findViewById(R.id.llAddLanguages);
         final LinearLayout llLanguages = (LinearLayout) v.findViewById(R.id.llLanguages);
         final TableLayout tblLanguagesFrom = (TableLayout) v.findViewById(R.id.tblLanguagesFrom);
         final TableLayout tblLanguagesTo = (TableLayout) v.findViewById(R.id.tblLanguagesTo);
-
         final LinearLayout llAddTags = (LinearLayout) v.findViewById(R.id.llAddTags);
         final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
         final ImageView ivAddTag = (ImageView) v.findViewById(R.id.ivAddTag);
 
         // Get arguments
         Bundle bundle = this.getArguments();
+        final String dialogTitle = bundle.getString(getResources().getString(R.string.bundle_dialog_title));
         final String title = bundle.getString(getActivity().getResources().getString(R.string.bundle_title));
         final String subtitle = bundle.getString(getActivity().getResources().getString(R.string.bundle_subtitle));
         final String author = bundle.getString(getActivity().getResources().getString(R.string.bundle_author));
@@ -170,82 +169,6 @@ public class StackDialogFragment extends DialogFragment {
             }
         }
 
-        for (final Language l : Language.values()) {
-            if (l.isActive()) {
-                languagesFrom.add(l.getLangCode());
-
-                final TableRow tr = new TableRow(getActivity());
-
-                final CheckBox cb = new CheckBox(getActivity());
-                final RobotoTextView tvText = new RobotoTextView(getActivity());
-
-                tr.addView(cb);
-                tr.addView(tvText);
-                checkboxesLanguageFrom.add(cb);
-
-                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        if (b) {
-                            for (CheckBox c : checkboxesLanguageFrom) {
-                                c.setChecked(false);
-                            }
-
-                            cb.setChecked(true);
-                        }
-                    }
-                });
-
-                tvText.setText(l.getName(getActivity()));
-                tvText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        cb.toggle();
-                    }
-                });
-
-                tblLanguagesFrom.addView(tr);
-            }
-        }
-
-        for (final Language l : Language.values()) {
-            if (l.isActive()) {
-                languagesTo.add(l.getLangCode());
-
-                final TableRow tr = new TableRow(getActivity());
-
-                final CheckBox cb = new CheckBox(getActivity());
-                final RobotoTextView tvText = new RobotoTextView(getActivity());
-
-                tr.addView(cb);
-                tr.addView(tvText);
-                checkboxesLanguageTo.add(cb);
-
-                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        if (b) {
-                            for (CheckBox c : checkboxesLanguageTo) {
-                                c.setChecked(false);
-                            }
-
-                            cb.setChecked(true);
-                        }
-                    }
-                });
-
-                tvText.setText(l.getName(getActivity()));
-                tvText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        cb.toggle();
-                    }
-                });
-
-                tblLanguagesTo.addView(tr);
-            }
-        }
-
         if (tagsAll != null) {
             for (final String tag : tagsAll) {
                 if (tag != null && !tag.equals(getActivity().getResources().getString(R.string.no_tag))) {
@@ -324,7 +247,7 @@ public class StackDialogFragment extends DialogFragment {
         // Load dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v);
-        builder.setTitle(R.string.add_stack);
+        builder.setTitle(dialogTitle);
 
         // Add positive button
         builder.setPositiveButton(R.string.okay, new OnClickListener() {

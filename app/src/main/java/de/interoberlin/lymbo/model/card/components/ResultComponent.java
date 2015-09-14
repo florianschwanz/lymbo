@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.Displayable;
+import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class ResultComponent implements Displayable {

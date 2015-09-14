@@ -21,7 +21,7 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.Displayable;
+import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.Tag;
@@ -85,12 +85,10 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         // Layout inflater
         LayoutInflater vi;
         vi = LayoutInflater.from(getContext());
+
+        // Load views
         final FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card_stash, parent, false);
-
-        // Load views : components
         final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
-
-        // Load views : bottom bar
         final LinearLayout llTags = (LinearLayout) flCard.findViewById(R.id.llTags);
         final ImageView ivUndo = (ImageView) flCard.findViewById(R.id.ivUndo);
 
@@ -207,6 +205,10 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         ((CardsStashActivity) activity).restore(pos, card);
         filter();
     }
+
+    // --------------------
+    // Methods - Filter
+    // --------------------
 
     public List<Card> getFilteredItems() {
         return filteredItems;

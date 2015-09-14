@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.Displayable;
+import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.sauvignon.lib.model.svg.SVG;
 import de.interoberlin.sauvignon.lib.view.SVGImagePanel;
 

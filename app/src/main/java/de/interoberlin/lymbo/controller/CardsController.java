@@ -14,7 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
@@ -29,13 +29,13 @@ public class CardsController {
     private Activity activity;
 
     // Controllers
-    private LymbosController lymbosController;
+    private StacksController stacksController;
 
     // Database
     private TableCardDatasource datasource;
 
     // Model
-    private Lymbo lymbo;
+    private Stack stack;
     private List<Card> cards;
     private List<Card> cardsDismissed;
     private List<Card> cardsStashed;
@@ -68,7 +68,7 @@ public class CardsController {
     // --------------------
 
     public void init() {
-        lymbosController = LymbosController.getInstance(activity);
+        stacksController = StacksController.getInstance(activity);
 
         cards = new ArrayList<>();
         cardsDismissed = new CopyOnWriteArrayList<>();
@@ -76,11 +76,11 @@ public class CardsController {
         tagsSelected = new ArrayList<>();
         displayOnlyFavorites = false;
 
-        if (lymbo != null) {
+        if (stack != null) {
             datasource = new TableCardDatasource(activity);
             datasource.open();
 
-            for (Card c : lymbo.getCards()) {
+            for (Card c : stack.getCards()) {
                 if (!datasource.containsUuid(c.getId()) || datasource.isNormal(c.getId())) {
                     cards.add(c);
                 } else if (datasource.isDismissed(c.getId())) {
@@ -130,9 +130,9 @@ public class CardsController {
      * Writes lymbo object into file
      */
     public void save() {
-        if (lymbo.getPath() != null) {
-            lymbo.setModificationDate(new Date().toString());
-            LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
+        if (stack.getPath() != null) {
+            stack.setModificationDate(new Date().toString());
+            LymboWriter.writeXml(stack, new File(stack.getPath()));
         }
     }
 
@@ -163,7 +163,7 @@ public class CardsController {
     public void addCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         Card card = new Card(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
 
-        lymbo.getCards().add(card);
+        stack.getCards().add(card);
         cards.add(card);
         save();
     }
@@ -422,15 +422,15 @@ public class CardsController {
      * @param deepCopy      true if the copy shall be deep
      */
     public void copyCard(String sourceLymboId, String targetLymboId, String cardId, boolean deepCopy) {
-        Lymbo sourceLymbo = lymbosController.getLymboById(sourceLymboId);
-        Lymbo targetLymbo = lymbosController.getLymboById(targetLymboId);
+        Stack sourceStack = stacksController.getLymboById(sourceLymboId);
+        Stack targetStack = stacksController.getLymboById(targetLymboId);
         Card card = getCardById(cardId);
 
         if (deepCopy)
             card.setId(UUID.randomUUID().toString());
 
-        targetLymbo.getCards().add(card);
-        lymbosController.save(targetLymbo);
+        targetStack.getCards().add(card);
+        stacksController.save(targetStack);
     }
 
     /**
@@ -441,15 +441,15 @@ public class CardsController {
      * @param cardId        id of card to be copied
      */
     public void moveCard(String sourceLymboId, String targetLymboId, String cardId) {
-        Lymbo sourceLymbo = lymbosController.getLymboById(sourceLymboId);
-        Lymbo targetLymbo = lymbosController.getLymboById(targetLymboId);
+        Stack sourceStack = stacksController.getLymboById(sourceLymboId);
+        Stack targetStack = stacksController.getLymboById(targetLymboId);
         Card card = getCardById(cardId);
 
-        targetLymbo.getCards().add(card);
-        lymbosController.save(targetLymbo);
+        targetStack.getCards().add(card);
+        stacksController.save(targetStack);
 
-        sourceLymbo.getCards().remove(card);
-        lymbosController.save(sourceLymbo);
+        sourceStack.getCards().remove(card);
+        stacksController.save(sourceStack);
 
         getCards().remove(card);
         save();
@@ -490,12 +490,12 @@ public class CardsController {
     // Getters / Setters
     // --------------------
 
-    public Lymbo getLymbo() {
-        return lymbo;
+    public Stack getStack() {
+        return stack;
     }
 
-    public void setLymbo(Lymbo lymbo) {
-        this.lymbo = lymbo;
+    public void setStack(Stack stack) {
+        this.stack = stack;
     }
 
     public void setCards(List<Card> cards) {
@@ -523,7 +523,7 @@ public class CardsController {
     }
 
     public boolean cardsContainsId(String uuid) {
-        for (Card c : lymbo.getCards()) {
+        for (Card c : stack.getCards()) {
             if (c.getId().equals(uuid)) {
                 return true;
             }
@@ -533,7 +533,7 @@ public class CardsController {
     }
 
     public Card getCardById(String uuid) {
-        for (Card c : lymbo.getCards()) {
+        for (Card c : stack.getCards()) {
             if (c.getId().equals(uuid)) {
                 return c;
             }

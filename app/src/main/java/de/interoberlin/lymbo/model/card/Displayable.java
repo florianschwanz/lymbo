@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.model;
+package de.interoberlin.lymbo.model.card;
 
 import android.app.Activity;
 import android.content.Context;

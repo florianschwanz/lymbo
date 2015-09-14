@@ -148,7 +148,7 @@
         </LinearLayout>
 
         <TableLayout
-            android:id="@+id/tblCategories"
+            android:id="@+id/tblTags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

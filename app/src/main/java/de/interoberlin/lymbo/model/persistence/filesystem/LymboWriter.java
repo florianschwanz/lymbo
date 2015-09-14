@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.interoberlin.lymbo.model.Displayable;
+import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
@@ -31,10 +31,10 @@ public class LymboWriter {
         }
     }
 
-    public static void writeXml(Lymbo lymbo, File file) {
+    public static void writeXml(Stack stack, File file) {
         try {
             FileWriter fw = new FileWriter(file);
-            fw.write(getXmlString(lymbo));
+            fw.write(getXmlString(stack));
             fw.flush();
             fw.close();
         } catch (IOException e) {
@@ -45,14 +45,14 @@ public class LymboWriter {
     /**
      * Creates an xml formatted string from a lymbo object
      *
-     * @param lymbo lymbo file to get string representation for
+     * @param stack lymbo file to get string representation for
      * @return string representing the lymbo
      */
-    public static String getXmlString(Lymbo lymbo) {
+    public static String getXmlString(Stack stack) {
         result = new StringBuilder();
 
         result.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        appendLymbo("lymbo", lymbo);
+        appendLymbo("lymbo", stack);
 
         return result.toString();
     }
@@ -61,25 +61,25 @@ public class LymboWriter {
      * Appends the lymbo root element to the xml
      *
      * @param tag   tag name to appended
-     * @param lymbo lymbo file to append
+     * @param stack lymbo file to append
      */
-    private static void appendLymbo(String tag, Lymbo lymbo) {
+    private static void appendLymbo(String tag, Stack stack) {
         Map<String, String> attributes = new HashMap<>();
-        attributes.put("id", lymbo.getId());
-        attributes.put("creationDate", lymbo.getCreationDate());
-        attributes.put("modificationDate", lymbo.getModificationDate());
-        attributes.put("title", lymbo.getTitle());
-        attributes.put("subtitle", lymbo.getSubtitle());
-        attributes.put("hint", lymbo.getHint());
-        attributes.put("image", lymbo.getImage());
-        attributes.put("author", lymbo.getAuthor());
-        attributes.put("tags", getTagsList(lymbo.getTags()));
+        attributes.put("id", stack.getId());
+        attributes.put("creationDate", stack.getCreationDate());
+        attributes.put("modificationDate", stack.getModificationDate());
+        attributes.put("title", stack.getTitle());
+        attributes.put("subtitle", stack.getSubtitle());
+        attributes.put("hint", stack.getHint());
+        attributes.put("image", stack.getImage());
+        attributes.put("author", stack.getAuthor());
+        attributes.put("tags", getTagsList(stack.getTags()));
 
         addStartTag(tag, attributes);
 
-        appendLanguageAspects("language", lymbo.getLanguageAspect());
+        appendLanguageAspects("language", stack.getLanguageAspect());
 
-        for (Card card : lymbo.getCards()) {
+        for (Card card : stack.getCards()) {
             if (card != null)
                 appendCard("card", card);
         }
@@ -183,7 +183,7 @@ public class LymboWriter {
     }
 
     // --------------------
-    // Methods - helper
+    // Methods - Helper
     // --------------------
 
     /**

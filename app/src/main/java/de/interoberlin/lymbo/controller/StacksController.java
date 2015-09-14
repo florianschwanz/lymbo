@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
@@ -28,7 +28,7 @@ import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackEntry;
 import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.mate.lib.model.Log;
 
-public class LymbosController {
+public class StacksController {
     // Activity
     private Activity activity;
 
@@ -36,8 +36,8 @@ public class LymbosController {
     private TableStackDatasource datasource;
 
     // Model
-    private List<Lymbo> lymbos;
-    private List<Lymbo> lymbosStashed;
+    private List<Stack> stacks;
+    private List<Stack> lymbosStashed;
 
     private List<Tag> tagsSelected;
 
@@ -48,20 +48,20 @@ public class LymbosController {
 
     private boolean loaded = false;
 
-    private static LymbosController instance;
+    private static StacksController instance;
 
     // --------------------
     // Constructors
     // --------------------
 
-    private LymbosController(Activity activity) {
+    private StacksController(Activity activity) {
         this.activity = activity;
         init();
     }
 
-    public static LymbosController getInstance(Activity activity) {
+    public static StacksController getInstance(Activity activity) {
         if (instance == null) {
-            instance = new LymbosController(activity);
+            instance = new StacksController(activity);
         }
 
         return instance;
@@ -72,7 +72,7 @@ public class LymbosController {
     // --------------------
 
     public void init() {
-        lymbos = new ArrayList<>();
+        stacks = new ArrayList<>();
         lymbosStashed = new ArrayList<>();
         tagsSelected = new ArrayList<>();
 
@@ -85,12 +85,12 @@ public class LymbosController {
     /**
      * Determines whether a given lymbo shall be displayed considering all filters
      *
-     * @param lymbo lymbo to determine visibility of
+     * @param stack lymbo to determine visibility of
      * @return whether lymbo is visbible or not
      */
-    public boolean isVisible(Lymbo lymbo) {
-        return (lymbo != null &&
-                lymbo.matchesTag(getTagsSelected()));
+    public boolean isVisible(Stack stack) {
+        return (stack != null &&
+                stack.matchesTag(getTagsSelected()));
     }
 
     /**
@@ -103,33 +103,33 @@ public class LymbosController {
      * @param languageTo   target language
      * @return an empty lymbo
      */
-    public Lymbo getEmptyLymbo(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
-        Lymbo lymbo = new Lymbo();
-        lymbo.setTitle(title);
-        lymbo.setSubtitle(subtitle);
-        lymbo.setAuthor(author);
-        lymbo.setTags(tags);
+    public Stack getEmptyLymbo(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
+        Stack stack = new Stack();
+        stack.setTitle(title);
+        stack.setSubtitle(subtitle);
+        stack.setAuthor(author);
+        stack.setTags(tags);
 
         if (languageFrom != null && languageTo != null) {
             LanguageAspect languageAspect = new LanguageAspect();
             languageAspect.setFrom(languageFrom);
             languageAspect.setTo(languageTo);
-            lymbo.setLanguageAspect(languageAspect);
+            stack.setLanguageAspect(languageAspect);
         }
 
-        lymbo.setPath(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + title.trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION);
+        stack.setPath(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + title.trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION);
 
-        return lymbo;
+        return stack;
     }
 
     /**
      * Creates a new lymbo stack
      *
-     * @param lymbo lymbo to be created
+     * @param stack lymbo to be created
      */
-    public void addStack(Lymbo lymbo) {
-        lymbos.add(lymbo);
-        save(lymbo);
+    public void addStack(Stack stack) {
+        stacks.add(stack);
+        save(stack);
     }
 
     /**
@@ -144,33 +144,33 @@ public class LymbosController {
      */
     public void updateStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
         if (lymbosContainsId(uuid)) {
-            Lymbo lymbo = getLymboById(uuid);
+            Stack stack = getLymboById(uuid);
 
-            Lymbo fullLymbo = LymboLoader.getLymboFromFile(new File(lymbo.getPath()), false);
+            Stack fullStack = LymboLoader.getLymboFromFile(new File(stack.getPath()), false);
 
-            if (fullLymbo != null) {
-                lymbo.setCards(fullLymbo.getCards());
-                lymbo.setHint(fullLymbo.getHint());
-                lymbo.setImage(fullLymbo.getImage());
+            if (fullStack != null) {
+                stack.setCards(fullStack.getCards());
+                stack.setHint(fullStack.getHint());
+                stack.setImage(fullStack.getImage());
 
-                lymbo.setTitle(title);
-                lymbo.setSubtitle(subtitle);
-                lymbo.setAuthor(author);
-                lymbo.setTags(tags);
+                stack.setTitle(title);
+                stack.setSubtitle(subtitle);
+                stack.setAuthor(author);
+                stack.setTags(tags);
 
                 if (languageFrom != null && languageTo != null) {
                     LanguageAspect languageAspect = new LanguageAspect();
                     languageAspect.setFrom(languageFrom);
                     languageAspect.setTo(languageTo);
-                    lymbo.setLanguageAspect(languageAspect);
+                    stack.setLanguageAspect(languageAspect);
                 }
 
-                String path = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + lymbo.getTitle().trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION;
+                String path = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + stack.getTitle().trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION;
 
-                if (lymbo.getPath().equals(path)) {
-                    save(lymbo);
+                if (stack.getPath().equals(path)) {
+                    save(stack);
                 } else {
-                    saveAs(lymbo, path);
+                    saveAs(stack, path);
                 }
             }
         }
@@ -179,41 +179,41 @@ public class LymbosController {
     /**
      * Stashes a lymbo
      *
-     * @param lymbo lymbo to be stashed
+     * @param stack lymbo to be stashed
      */
-    public void stash(Lymbo lymbo) {
-        getLymbos().remove(lymbo);
-        getLymbosStashed().add(lymbo);
-        changeState(lymbo.getId(), true);
+    public void stash(Stack stack) {
+        getStacks().remove(stack);
+        getLymbosStashed().add(stack);
+        changeState(stack.getId(), true);
     }
 
     /**
      * Restores a lymbo
      *
-     * @param lymbo lymbo to be stashed
+     * @param stack lymbo to be stashed
      */
-    public void restore(Lymbo lymbo) {
-        getLymbos().add(lymbo);
-        getLymbosStashed().remove(lymbo);
-        changeState(lymbo.getId(), false);
+    public void restore(Stack stack) {
+        getStacks().add(stack);
+        getLymbosStashed().remove(stack);
+        changeState(stack.getId(), false);
     }
 
     /**
      * Saves lymbo location in database
      *
-     * @param lymbo lymbo to be saved
+     * @param stack lymbo to be saved
      * @return whether save worked or not
      */
-    public boolean save(Lymbo lymbo) {
-        if (lymbo.getPath() != null) {
-            lymbo.setModificationDate(new Date().toString());
+    public boolean save(Stack stack) {
+        if (stack.getPath() != null) {
+            stack.setModificationDate(new Date().toString());
 
             LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
-            LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
+            LymboWriter.writeXml(stack, new File(stack.getPath()));
 
             datasource = new TableStackDatasource(activity);
             datasource.open();
-            datasource.updateStackLocation(lymbo.getId(), lymbo.getPath());
+            datasource.updateStackLocation(stack.getId(), stack.getPath());
             datasource.close();
 
             return true;
@@ -225,19 +225,19 @@ public class LymbosController {
     /**
      * Saves lymbo under a new name
      *
-     * @param lymbo lymbo to be saved
+     * @param stack lymbo to be saved
      * @param path  new path
      */
-    public void saveAs(Lymbo lymbo, String path) {
+    public void saveAs(Stack stack, String path) {
         LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
-        LymboWriter.writeXml(lymbo, new File(lymbo.getPath()));
+        LymboWriter.writeXml(stack, new File(stack.getPath()));
 
-        new File(lymbo.getPath()).renameTo(new File(path));
-        lymbo.setPath(path);
+        new File(stack.getPath()).renameTo(new File(path));
+        stack.setPath(path);
 
         datasource = new TableStackDatasource(activity);
         datasource.open();
-        datasource.updateStackLocation(lymbo.getId(), lymbo.getPath());
+        datasource.updateStackLocation(stack.getId(), stack.getPath());
         datasource.close();
     }
 
@@ -249,11 +249,11 @@ public class LymbosController {
         datasource.open();
 
         for (File f : findFiles(LYMBO_FILE_EXTENSION)) {
-            Lymbo lymbo = LymboLoader.getLymboFromFile(f, true);
+            Stack stack = LymboLoader.getLymboFromFile(f, true);
 
 
-            if (lymbo != null && !datasource.contains(TableStackDatasource.colPath.getName(), lymbo.getPath())) {
-                datasource.updateStackLocation(lymbo.getId(), lymbo.getPath());
+            if (stack != null && !datasource.contains(TableStackDatasource.colPath.getName(), stack.getPath())) {
+                datasource.updateStackLocation(stack.getId(), stack.getPath());
             }
         }
 
@@ -286,9 +286,9 @@ public class LymbosController {
             }
         }
 
-        lymbos.clear();
-        lymbos.addAll(getLymbosFromAssets());
-        lymbos.addAll(getLymbosFromFiles(lymboFiles));
+        stacks.clear();
+        stacks.addAll(getLymbosFromAssets());
+        stacks.addAll(getLymbosFromFiles(lymboFiles));
 
         lymbosStashed.clear();
         lymbosStashed.addAll(getLymbosFromFiles(lymboFilesStashed));
@@ -339,33 +339,33 @@ public class LymbosController {
     /**
      * Converts lymbo files into lymbo objects
      */
-    private List<Lymbo> getLymbosFromFiles(Collection<File> files) {
-        List<Lymbo> lymbos = new ArrayList<>();
+    private List<Stack> getLymbosFromFiles(Collection<File> files) {
+        List<Stack> stacks = new ArrayList<>();
 
         // Add lymbos from file system
         for (File f : files) {
-            Lymbo l = LymboLoader.getLymboFromFile(f, false);
+            Stack l = LymboLoader.getLymboFromFile(f, false);
             if (l != null) {
-                lymbos.add(l);
+                stacks.add(l);
                 Log.debug("Found lymbo " + f.getName());
             }
         }
 
-        return lymbos;
+        return stacks;
     }
 
     /**
      * Adds lymbos from assets
      */
-    private List<Lymbo> getLymbosFromAssets() {
-        List<Lymbo> lymbos = new ArrayList<>();
+    private List<Stack> getLymbosFromAssets() {
+        List<Stack> stacks = new ArrayList<>();
 
         try {
             for (String asset : Arrays.asList(activity.getAssets().list(""))) {
                 if (asset.endsWith(LYMBO_FILE_EXTENSION)) {
-                    Lymbo l = LymboLoader.getLymboFromAsset(activity, asset, false);
+                    Stack l = LymboLoader.getLymboFromAsset(activity, asset, false);
                     if (l != null) {
-                        lymbos.add(l);
+                        stacks.add(l);
                     }
                 }
             }
@@ -373,7 +373,7 @@ public class LymbosController {
             Log.fatal(ioe.toString());
         }
 
-        return lymbos;
+        return stacks;
     }
 
     /**
@@ -428,8 +428,8 @@ public class LymbosController {
     public ArrayList<Tag> getTagsAll() {
         ArrayList<Tag> tagsAll = new ArrayList<>();
 
-        for (Lymbo lymbo : getLymbos()) {
-            for (Tag tag : lymbo.getTags()) {
+        for (Stack stack : getStacks()) {
+            for (Tag tag : stack.getTags()) {
                 if (tag != null && !tag.containedIn(tagsAll) && tag.getName() != getResources().getString(R.string.no_tag))
                     tagsAll.add(tag);
             }
@@ -441,7 +441,7 @@ public class LymbosController {
     }
 
     public boolean lymbosContainsId(String uuid) {
-        for (Lymbo l : lymbos) {
+        for (Stack l : stacks) {
             if (l != null && l.getId() != null && l.getId().equals(uuid)) {
                 return true;
             }
@@ -450,8 +450,8 @@ public class LymbosController {
         return false;
     }
 
-    public Lymbo getLymboById(String uuid) {
-        for (Lymbo l : lymbos) {
+    public Stack getLymboById(String uuid) {
+        for (Stack l : stacks) {
             if (l != null && l.getId() != null && l.getId().equals(uuid)) {
                 return l;
             }
@@ -464,11 +464,11 @@ public class LymbosController {
     // Getters / Setters
     // --------------------
 
-    public List<Lymbo> getLymbos() {
-        return lymbos;
+    public List<Stack> getStacks() {
+        return stacks;
     }
 
-    public List<Lymbo> getLymbosStashed() {
+    public List<Stack> getLymbosStashed() {
         return lymbosStashed;
     }
 

@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.Displayable;
+import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
 import de.interoberlin.lymbo.model.card.enums.EStyle;
 import de.interoberlin.lymbo.util.Configuration;

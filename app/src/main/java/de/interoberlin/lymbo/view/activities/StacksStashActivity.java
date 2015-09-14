@@ -15,21 +15,21 @@ import android.widget.TextView;
 import com.github.mrengineer13.snackbar.SnackBar;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.LymbosController;
-import de.interoberlin.lymbo.model.card.Lymbo;
-import de.interoberlin.lymbo.view.adapters.LymbosStashListAdapter;
+import de.interoberlin.lymbo.controller.StacksController;
+import de.interoberlin.lymbo.model.card.Stack;
+import de.interoberlin.lymbo.view.adapters.StacksStashListAdapter;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class LymbosStashActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener {
+public class StacksStashActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener {
     // Controllers
-    private LymbosController lymbosController;
+    private StacksController stacksController;
 
     // Model
-    private LymbosStashListAdapter lymbosStashAdapter;
+    private StacksStashListAdapter lymbosStashAdapter;
 
-    private Lymbo recentLymbo = null;
+    private Stack recentStack = null;
 
     private static int REFRESH_DELAY;
 
@@ -40,10 +40,10 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        lymbosController = LymbosController.getInstance(this);
+        stacksController = StacksController.getInstance(this);
 
         if (savedInstanceState != null) {
-            lymbosController.load();
+            stacksController.load();
         }
 
         setActionBarIcon(R.drawable.ic_ab_drawer);
@@ -54,7 +54,7 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
 
     public void onResume() {
         super.onResume();
-        lymbosStashAdapter = new LymbosStashListAdapter(this, this, R.layout.stack_stash, lymbosController.getLymbosStashed());
+        lymbosStashAdapter = new StacksStashListAdapter(this, this, R.layout.stack_stash, stacksController.getLymbosStashed());
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
         final LinearLayout toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
@@ -99,12 +99,12 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_log: {
-                Intent i = new Intent(LymbosStashActivity.this, LogActivity.class);
+                Intent i = new Intent(StacksStashActivity.this, LogActivity.class);
                 startActivity(i);
                 break;
             }
             case R.id.menu_about: {
-                Intent i = new Intent(LymbosStashActivity.this, AboutActivity.class);
+                Intent i = new Intent(StacksStashActivity.this, AboutActivity.class);
                 Bundle b = new Bundle();
                 b.putString("flavor", "interoberlin");
                 i.putExtras(b);
@@ -112,7 +112,7 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
                 break;
             }
             case R.id.menu_settings: {
-                Intent i = new Intent(LymbosStashActivity.this, SettingsActivity.class);
+                Intent i = new Intent(StacksStashActivity.this, SettingsActivity.class);
                 startActivity(i);
                 break;
             }
@@ -132,7 +132,7 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
     public void onMessageClick(Parcelable token) {
         final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
-        lymbosController.stash(recentLymbo);
+        stacksController.stash(recentStack);
         lymbosStashAdapter.notifyDataSetChanged();
         slv.invalidateViews();
     }
@@ -147,8 +147,8 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
 
                 srl.setRefreshing(false);
 
-                lymbosController.scan();
-                lymbosController.load();
+                stacksController.scan();
+                stacksController.load();
 
                 lymbosStashAdapter.notifyDataSetChanged();
                 slv.invalidateViews();
@@ -163,12 +163,12 @@ public class LymbosStashActivity extends SwipeRefreshBaseActivity implements Swi
     /**
      * Restores a lymbo
      *
-     * @param lymbo lymbo to be restored
+     * @param stack lymbo to be restored
      */
-    public void restore(Lymbo lymbo) {
+    public void restore(Stack stack) {
         updateListView();
 
-        recentLymbo = lymbo;
+        recentStack = stack;
 
         new SnackBar.Builder(this)
                 .withOnClickListener(this)

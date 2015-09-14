@@ -29,8 +29,8 @@ import java.util.Locale;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
+import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.components.Answer;
@@ -45,8 +45,8 @@ import de.interoberlin.lymbo.view.dialogfragments.CardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.CopyCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.MoveCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.FilterCardsDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.MoveCardDialogFragment;
 
 public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     // Context
@@ -109,12 +109,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         // Layout inflater
         LayoutInflater vi;
         vi = LayoutInflater.from(getContext());
+
+        // Load views
         final LinearLayout llCard = (LinearLayout) vi.inflate(R.layout.card, parent, false);
-
-        // Load views : components
         final RelativeLayout rlMain = (RelativeLayout) llCard.findViewById(R.id.rlMain);
-
-        // Load views : bottom bar
         final LinearLayout llTags = (LinearLayout) llCard.findViewById(R.id.llTags);
         final LinearLayout llFlip = (LinearLayout) llCard.findViewById(R.id.llFlip);
         final TextView tvNumerator = (TextView) llCard.findViewById(R.id.tvNumerator);
@@ -122,7 +120,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         final ImageView ivNote = (ImageView) llCard.findViewById(R.id.ivNote);
         final ImageView ivFavorite = (ImageView) llCard.findViewById(R.id.ivFavorite);
         final ImageView ivHint = (ImageView) llCard.findViewById(R.id.ivHint);
-
         final LinearLayout llNoteBar = (LinearLayout) llCard.findViewById(R.id.llNoteBar);
         final TextView tvNote = (TextView) llCard.findViewById(R.id.tvNote);
 
@@ -183,7 +180,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             rlMain.addView(llSide);
         }
 
-        // Display width
+        // Get display width
         DisplayMetrics displaymetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         final int displayWidth = displaymetrics.widthPixels;
@@ -200,20 +197,19 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         String note = cardsController.getNote(context, card.getId());
 
-        // Note
+        // Add note
         if (note != null && !note.isEmpty()) {
             tvNote.setText(note);
         }
 
-        // Tags
+        // Add tags
         for (Tag tag : card.getTags()) {
             if (!tag.getName().equals(getResources().getString(R.string.no_tag))) {
                 CardView cvTag = (CardView) tag.getView(context, activity, llTags);
                 cvTag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        vibrate(VIBRATION_DURATION);
-                        new FilterCardsDialogFragment().show(activity.getFragmentManager(), "okay");
+                    selectTags();
                     }
                 });
 
@@ -233,49 +229,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         ivNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (card.isNoteExpanded()) {
-                    Animation anim = ViewUtil.collapse(context, llNoteBar);
-                    llNoteBar.startAnimation(anim);
-                    card.setNoteExpanded(false);
-
-                    anim.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            ivNote.setImageResource(R.drawable.ic_action_expand);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                } else {
-                    Animation anim = ViewUtil.expand(context, llNoteBar);
-                    llNoteBar.startAnimation(anim);
-                    card.setNoteExpanded(true);
-
-                    anim.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            ivNote.setImageResource(R.drawable.ic_action_collapse);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                }
+                toggleNote(card, llNoteBar, ivNote);
             }
         });
 
@@ -283,13 +237,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         tvNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditNoteDialogFragment editNoteDialogFragment = new EditNoteDialogFragment();
-                Bundle b = new Bundle();
-                b.putCharSequence("uuid", card.getId());
-                b.putCharSequence("note", tvNote.getText());
-
-                editNoteDialogFragment.setArguments(b);
-                editNoteDialogFragment.show(activity.getFragmentManager(), "okay");
+                editNote(card, tvNote.getText().toString());
             }
         });
 
@@ -349,6 +297,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         return llCard;
     }
 
+    // --------------------
+    // Methods - Actions
+    // --------------------
+
     /**
      * Opens dialog to edit card
      *
@@ -379,6 +331,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         CardDialogFragment dialog = new CardDialogFragment();
         Bundle bundle = new Bundle();
+        bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.edit_card));
         bundle.putString(getResources().getString(R.string.bundle_card_uuid), uuid);
         bundle.putString(getResources().getString(R.string.bundle_front_title), frontTitle);
         bundle.putString(getResources().getString(R.string.bundle_back_title), backTitle);
@@ -391,7 +344,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     }
 
     /**
-     * Opens dialog to stash card
+     * Stashes a card
      *
      * @param position position of item
      * @param card     card to be stashed
@@ -404,31 +357,19 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         a.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                stash(position, card);
+                cardsController.stash(card);
+                ((CardsActivity) activity).stash(position, card);
+                filter();
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
-    }
-
-    /**
-     * Stashes a card
-     *
-     * @param pos  position of item
-     * @param card card
-     */
-    private void stash(int pos, Card card) {
-        cardsController.stash(card);
-        ((CardsActivity) activity).stash(pos, card);
-        filter();
     }
 
     /**
@@ -441,7 +382,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         CopyCardDialogFragment dialog = new CopyCardDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getLymbo().getId());
+        bundle.putString(getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getStack().getId());
         bundle.putString(getResources().getString(R.string.bundle_card_uuid), uuid);
         dialog.setArguments(bundle);
         dialog.show(activity.getFragmentManager(), "okay");
@@ -457,12 +398,30 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         MoveCardDialogFragment dialog = new MoveCardDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getLymbo().getId());
+        bundle.putString(getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getStack().getId());
         bundle.putString(getResources().getString(R.string.bundle_card_uuid), uuid);
         dialog.setArguments(bundle);
         dialog.show(activity.getFragmentManager(), "okay");
     }
 
+    /**
+     * Opens a dialog to select tags
+     */
+    private void selectTags() {
+        ((Vibrator) activity.getSystemService(Activity.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+
+        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
+        ArrayList<String> tagsSelected = Tag.getNames(cardsController.getTagsSelected());
+        Boolean displayOnlyFavorites = cardsController.isDisplayOnlyFavorites();
+
+        FilterCardsDialogFragment dialog = new FilterCardsDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
+        bundle.putBoolean(getResources().getString(R.string.bundle_display_only_favorites), displayOnlyFavorites);
+        dialog.setArguments(bundle);
+        dialog.show(activity.getFragmentManager(), "okay");
+    }
 
     /**
      * Flips a card to the next side
@@ -497,6 +456,74 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         vibrate(VIBRATION_DURATION_FLIP);
     }
 
+    /**
+     * Collapses / expands the note bar
+     *
+     * @param card      card
+     * @param llNoteBar note bar layout
+     * @param ivNote    button
+     */
+    private void toggleNote(final Card card, final LinearLayout llNoteBar, final ImageView ivNote) {
+        if (card.isNoteExpanded()) {
+            Animation anim = ViewUtil.collapse(context, llNoteBar);
+            llNoteBar.startAnimation(anim);
+            card.setNoteExpanded(false);
+
+            anim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    ivNote.setImageResource(R.drawable.ic_action_expand);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        } else {
+            Animation anim = ViewUtil.expand(context, llNoteBar);
+            llNoteBar.startAnimation(anim);
+            card.setNoteExpanded(true);
+
+            anim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    ivNote.setImageResource(R.drawable.ic_action_collapse);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
+    }
+
+    /**
+     * Opens a dialog to edit a note
+     *
+     * @param card card
+     * @param text note text
+     */
+    public void editNote(Card card, String text) {
+        EditNoteDialogFragment editNoteDialogFragment = new EditNoteDialogFragment();
+        Bundle b = new Bundle();
+        b.putCharSequence("uuid", card.getId());
+        b.putCharSequence("note", text);
+
+        editNoteDialogFragment.setArguments(b);
+        editNoteDialogFragment.show(activity.getFragmentManager(), "okay");
+    }
 
     /**
      * Toggles the favorite state of an item
@@ -602,6 +629,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             notifyDataSetChanged();
         }
     }
+
+    // --------------------
+    // Methods - Filter
+    // --------------------
 
     public List<Card> getFilteredItems() {
         return filteredItems;

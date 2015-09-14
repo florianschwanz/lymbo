@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.Displayable;
+import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
 
 public class ImageComponent implements Displayable {

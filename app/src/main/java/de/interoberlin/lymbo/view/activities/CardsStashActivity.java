@@ -47,7 +47,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
             super.onCreate(savedInstanceState);
             cardsController = CardsController.getInstance(this);
 
-            if (cardsController.getLymbo() == null) {
+            if (cardsController.getStack() == null) {
                 finish();
             }
 

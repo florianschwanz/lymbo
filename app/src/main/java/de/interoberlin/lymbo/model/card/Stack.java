@@ -9,7 +9,7 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.App;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 
-public class Lymbo {
+public class Stack {
     private String path;
     private boolean asset;
 
@@ -34,7 +34,7 @@ public class Lymbo {
     // Constructors
     // -------------------------
 
-    public Lymbo() {
+    public Stack() {
         init();
     }
 

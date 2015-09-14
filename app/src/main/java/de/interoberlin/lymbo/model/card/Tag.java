@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.util.ColorUtil;
 
 public class Tag implements Displayable {

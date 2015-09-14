@@ -17,13 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.LymbosController;
-import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.controller.StacksController;
+import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class MoveCardDialogFragment extends DialogFragment {
     // Controllers
-    private LymbosController lymbosController;
+    private StacksController stacksController;
 
     private List<CheckBox> checkboxes = new ArrayList<>();
     private String sourceLymboId = null;
@@ -46,7 +46,7 @@ public class MoveCardDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        lymbosController = LymbosController.getInstance(getActivity());
+        stacksController = StacksController.getInstance(getActivity());
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_move_card, null);
@@ -57,7 +57,7 @@ public class MoveCardDialogFragment extends DialogFragment {
         sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
         cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_uuid));
 
-        for (final Lymbo l : lymbosController.getLymbos()) {
+        for (final Stack l : stacksController.getStacks()) {
             if (!l.getId().equals(sourceLymboId)) {
                 final TableRow tr = new TableRow(getActivity());
 

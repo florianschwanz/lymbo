@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 import de.interoberlin.lymbo.controller.App;
-import de.interoberlin.lymbo.model.Displayable;
+import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
@@ -73,7 +73,7 @@ public class LymboParser {
      * @return xmlLymbo
      * @throws java.io.IOException
      */
-    public Lymbo parse(InputStream is, boolean onlyTopLevel) throws IOException {
+    public Stack parse(InputStream is, boolean onlyTopLevel) throws IOException {
         this.onlyTopLevel = onlyTopLevel;
         containsGeneratedIds = false;
 
@@ -83,13 +83,13 @@ public class LymboParser {
             parser.setInput(is, null);
             parser.nextTag();
 
-            Lymbo lymbo = parseLymbo(parser, onlyTopLevel);
-            lymbo.setContainsGeneratedIds(containsGeneratedIds);
-            return lymbo;
+            Stack stack = parseLymbo(parser, onlyTopLevel);
+            stack.setContainsGeneratedIds(containsGeneratedIds);
+            return stack;
         } catch (XmlPullParserException xmlppe) {
-            Lymbo lymbo = new Lymbo();
-            lymbo.setError(xmlppe.toString());
-            return lymbo;
+            Stack stack = new Stack();
+            stack.setError(xmlppe.toString());
+            return stack;
         } finally {
             is.close();
         }
@@ -104,14 +104,14 @@ public class LymboParser {
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private Lymbo parseLymbo(XmlPullParser parser, boolean onlyTopLevel) throws XmlPullParserException, IOException {
+    private Stack parseLymbo(XmlPullParser parser, boolean onlyTopLevel) throws XmlPullParserException, IOException {
         Log.trace("parseLymbo()");
         String name;
 
         parser.require(XmlPullParser.START_TAG, null, "lymbo");
 
         // Create element
-        Lymbo lymbo = new Lymbo();
+        Stack stack = new Stack();
 
         // Read attributes
         String id = parser.getAttributeValue(null, "id");
@@ -163,28 +163,28 @@ public class LymboParser {
 
         // Fill element
         if (id != null)
-            lymbo.setId(id);
+            stack.setId(id);
         if (creationDate != null)
-            lymbo.setCreationDate(creationDate);
+            stack.setCreationDate(creationDate);
         if (modificationDate != null)
-            lymbo.setModificationDate(modificationDate);
+            stack.setModificationDate(modificationDate);
         if (title != null)
-            lymbo.setTitle(title);
+            stack.setTitle(title);
         if (subtitle != null)
-            lymbo.setSubtitle(subtitle);
+            stack.setSubtitle(subtitle);
         if (hint != null)
-            lymbo.setHint(hint);
+            stack.setHint(hint);
         if (image != null)
-            lymbo.setImage(image);
+            stack.setImage(image);
         if (author != null)
-            lymbo.setAuthor(author);
+            stack.setAuthor(author);
         if (tags != null)
-            lymbo.setTags(parseTags(tags));
+            stack.setTags(parseTags(tags));
 
-        lymbo.setCards(cards);
-        lymbo.setLanguageAspect(la);
+        stack.setCards(cards);
+        stack.setLanguageAspect(la);
 
-        return lymbo;
+        return stack;
     }
 
     private void parseDefault(XmlPullParser parser, String attribute) {

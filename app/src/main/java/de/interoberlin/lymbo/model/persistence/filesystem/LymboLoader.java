@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
-import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.mate.lib.model.Log;
 
 public class LymboLoader {
@@ -21,10 +21,10 @@ public class LymboLoader {
      * @param lymboPath path to lymbo file
      * @return Lymbo object
      */
-    public static Lymbo getLymboFromAsset(Context c, String lymboPath, boolean onlyTopLevel) {
+    public static Stack getLymboFromAsset(Context c, String lymboPath, boolean onlyTopLevel) {
         try {
             InputStream inputStream = c.getAssets().open(lymboPath);
-            Lymbo l = getLymboFromInputStream(inputStream, onlyTopLevel);
+            Stack l = getLymboFromInputStream(inputStream, onlyTopLevel);
             if (l != null) {
                 l.setPath(lymboPath);
                 l.setAsset(true);
@@ -47,9 +47,9 @@ public class LymboLoader {
      * @param f File
      * @return Lymbo file
      */
-    public static Lymbo getLymboFromFile(File f, boolean onlyTopLevel) {
+    public static Stack getLymboFromFile(File f, boolean onlyTopLevel) {
         try {
-            Lymbo l = getLymboFromInputStream(new FileInputStream(f), onlyTopLevel);
+            Stack l = getLymboFromInputStream(new FileInputStream(f), onlyTopLevel);
             if (l != null) {
                 l.setPath(f.getAbsolutePath());
                 l.setAsset(false);
@@ -71,7 +71,7 @@ public class LymboLoader {
         }
     }
 
-    public static Lymbo getLymboFromInputStream(InputStream is, boolean onlyTopLevel) {
+    public static Stack getLymboFromInputStream(InputStream is, boolean onlyTopLevel) {
         try {
             return LymboParser.getInstance().parse(is, onlyTopLevel);
         } catch (IOException e) {

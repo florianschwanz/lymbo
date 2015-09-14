@@ -132,5 +132,7 @@
     <string name="wrong">falsch</string>
     <string name="lymbo_with_same_name_already_exists">Lymbo mit diesem Namen existiert bereits</string>
     <string name="filter">Filter</string>
+    <string name="edit_card">Karte bearbeiten</string>
+    <string name="edit_stack">Stapel bearbeiten</string>
 
 </resources>

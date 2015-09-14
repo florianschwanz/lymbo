@@ -4,6 +4,7 @@
     <string name="bundle_author" translatable="false">bundleAuthor</string>
     <string name="bundle_back_title" translatable="false">bundleBackTitle</string>
     <string name="bundle_card_uuid" translatable="false">bundleCardUuid</string>
+    <string name="bundle_dialog_title" translatable="false">bundleDialogTitle</string>
     <string name="bundle_display_only_favorites" translatable="false">bundleDisplayOnlyFavorites</string>
     <string name="bundle_front_title" translatable="false">bundleFrontTitle</string>
     <string name="bundle_language_from" translatable="false">bundleLanguageFrom</string>

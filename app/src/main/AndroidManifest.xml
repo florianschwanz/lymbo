@@ -37,18 +37,18 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light" />
         <activity
-            android:name=".view.activities.LymbosActivity"
+            android:name=".view.activities.StacksActivity"
             android:label="@string/lymbos"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.activities.CardsActivity"
             android:label=""
-            android:parentActivityName=".view.activities.LymbosActivity"
+            android:parentActivityName=".view.activities.StacksActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.activities.LymbosStashActivity"
+            android:name=".view.activities.StacksStashActivity"
             android:label="@string/lymbos_stash"
-            android:parentActivityName=".view.activities.LymbosActivity"
+            android:parentActivityName=".view.activities.StacksActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.activities.CardsStashActivity"

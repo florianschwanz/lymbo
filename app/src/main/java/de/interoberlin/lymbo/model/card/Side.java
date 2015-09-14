@@ -3,7 +3,6 @@ package de.interoberlin.lymbo.model.card;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.interoberlin.lymbo.model.Displayable;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 import de.interoberlin.lymbo.model.card.components.ImageComponent;
 import de.interoberlin.lymbo.model.card.components.ResultComponent;

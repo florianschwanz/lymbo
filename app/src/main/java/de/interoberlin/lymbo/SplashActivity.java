@@ -17,10 +17,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 
-import de.interoberlin.lymbo.controller.LymbosController;
+import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.controller.SplashController;
 import de.interoberlin.lymbo.controller.accelerometer.Accelerator;
-import de.interoberlin.lymbo.view.activities.LymbosActivity;
+import de.interoberlin.lymbo.view.activities.StacksActivity;
 import de.interoberlin.sauvignon.lib.controller.loader.SvgLoader;
 import de.interoberlin.sauvignon.lib.model.svg.SVG;
 import de.interoberlin.sauvignon.lib.model.svg.elements.AGeometric;
@@ -34,7 +34,7 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
 
     // Controllers
     SplashController splashController;
-    LymbosController lymbosController;
+    StacksController stacksController;
 
     // Views
     private static LinearLayout llSVG;
@@ -59,7 +59,7 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         activity = this;
 
         splashController = SplashController.getInstance(this);
-        lymbosController = LymbosController.getInstance(this);
+        stacksController = StacksController.getInstance(this);
 
         setContentView(R.layout.activity_splash);
 
@@ -79,8 +79,8 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         panel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (lymbosController.isLoaded()) {
-                    Intent openStartingPoint = new Intent(SplashActivity.this, LymbosActivity.class);
+                if (stacksController.isLoaded()) {
+                    Intent openStartingPoint = new Intent(SplashActivity.this, StacksActivity.class);
                     startActivity(openStartingPoint);
                     finish();
                 }
@@ -100,13 +100,13 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         Thread timer = new Thread() {
             public void run() {
                 splashController.loadMessages();
-                lymbosController.load();
+                stacksController.load();
 
                 Collections.shuffle(splashController.getMessages());
 
                 showMessage(splashController.getMessages().get(0));
 
-                while (!lymbosController.isLoaded()) {
+                while (!stacksController.isLoaded()) {
                     try {
                         sleep(500);
                     } catch (InterruptedException e) {
@@ -114,7 +114,7 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
                     }
                 }
 
-                showMessage(getResources().getString(R.string.splash_found_1) + " " + lymbosController.getLymbos().size() + " " + getResources().getString(R.string.splash_found_2));
+                showMessage(getResources().getString(R.string.splash_found_1) + " " + stacksController.getStacks().size() + " " + getResources().getString(R.string.splash_found_2));
 
                 try {
                     sleep(1000);

@@ -27,15 +27,15 @@ import java.util.List;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.CardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.CopyCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.MoveCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.FilterCardsDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.MoveCardDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
@@ -46,7 +46,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private CardsController cardsController;
 
     // Model
-    private Lymbo lymbo;
+    private Stack stack;
     private CardsListAdapter cardsAdapter;
 
     private Card recentCard = null;
@@ -87,7 +87,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onResume() {
         try {
             super.onResume();
-            lymbo = cardsController.getLymbo();
+            stack = cardsController.getStack();
             cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
 
             final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
@@ -189,13 +189,14 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                     CardDialogFragment dialog = new CardDialogFragment();
                     Bundle bundle = new Bundle();
+                    bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.add_card));
                     bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
                     dialog.setArguments(bundle);
                     dialog.show(getFragmentManager(), "okay");
                 }
             });
 
-            if (lymbo.isAsset()) {
+            if (stack.isAsset()) {
                 ibFab.setVisibility(View.INVISIBLE);
             }
 
@@ -248,19 +249,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 break;
             }
             case R.id.menu_label: {
-                ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-
-                ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
-                ArrayList<String> tagsSelected = Tag.getNames(cardsController.getTagsSelected());
-                Boolean displayOnlyFavorites = cardsController.isDisplayOnlyFavorites();
-
-                FilterCardsDialogFragment dialog = new FilterCardsDialogFragment();
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
-                bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
-                bundle.putBoolean(getResources().getString(R.string.bundle_display_only_favorites), displayOnlyFavorites);
-                dialog.setArguments(bundle);
-                dialog.show(getFragmentManager(), "okay");
+                selectTags();
                 break;
             }
             case R.id.menu_log: {
@@ -308,8 +297,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString(getResources().getString(R.string.bundle_lymbo_path), cardsController.getLymbo().getPath());
-        savedInstanceState.putBoolean(getResources().getString(R.string.bundle_asset), cardsController.getLymbo().isAsset());
+        savedInstanceState.putString(getResources().getString(R.string.bundle_lymbo_path), cardsController.getStack().getPath());
+        savedInstanceState.putBoolean(getResources().getString(R.string.bundle_asset), cardsController.getStack().isAsset());
 
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -344,7 +333,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 break;
             }
             case EVENT_GENERATED_IDS: {
-                lymbo.setContainsGeneratedIds(false);
+                stack.setContainsGeneratedIds(false);
                 break;
             }
         }
@@ -431,6 +420,25 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 .withStyle(SnackBar.Style.INFO)
                 .withDuration(SnackBar.MED_SNACK)
                 .show();
+    }
+
+    /**
+     * Opens a dialog to select tags
+     */
+    private void selectTags() {
+        ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+
+        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
+        ArrayList<String> tagsSelected = Tag.getNames(cardsController.getTagsSelected());
+        Boolean displayOnlyFavorites = cardsController.isDisplayOnlyFavorites();
+
+        FilterCardsDialogFragment dialog = new FilterCardsDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
+        bundle.putBoolean(getResources().getString(R.string.bundle_display_only_favorites), displayOnlyFavorites);
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), "okay");
     }
 
     /**

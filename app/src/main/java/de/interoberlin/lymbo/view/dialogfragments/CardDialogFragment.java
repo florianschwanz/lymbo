@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutionException;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.card.Lymbo;
+import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.translate.Language;
@@ -61,7 +61,7 @@ public class CardDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         cardsController = CardsController.getInstance(getActivity());
-        final Lymbo lymbo = cardsController.getLymbo();
+        final Stack stack = cardsController.getStack();
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_card, null);
@@ -83,12 +83,13 @@ public class CardDialogFragment extends DialogFragment {
 
         // Get arguments
         Bundle bundle = this.getArguments();
-        final String frontTitle = bundle.getString(getActivity().getResources().getString(R.string.bundle_front_title));
-        final String backTitle = bundle.getString(getActivity().getResources().getString(R.string.bundle_back_title));
-        final ArrayList<String> textsFront = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_texts_front));
-        final ArrayList<String> textsBack = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_texts_back));
-        final ArrayList<String> tagsAll = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_all));
-        final ArrayList<String> tagsSelected = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_selected));
+        final String dialogTitle = bundle.getString(getResources().getString(R.string.bundle_dialog_title));
+        final String frontTitle = bundle.getString(getResources().getString(R.string.bundle_front_title));
+        final String backTitle = bundle.getString(getResources().getString(R.string.bundle_back_title));
+        final ArrayList<String> textsFront = bundle.getStringArrayList(getResources().getString(R.string.bundle_texts_front));
+        final ArrayList<String> textsBack = bundle.getStringArrayList(getResources().getString(R.string.bundle_texts_back));
+        final ArrayList<String> tagsAll = bundle.getStringArrayList(getResources().getString(R.string.bundle_tags_all));
+        final ArrayList<String> tagsSelected = bundle.getStringArrayList(getResources().getString(R.string.bundle_tags_selected));
 
         // Fill views with arguments
         if (frontTitle != null)
@@ -171,7 +172,7 @@ public class CardDialogFragment extends DialogFragment {
         });
 
         // Translate button
-        LanguageAspect languageAspect = lymbo.getLanguageAspect();
+        LanguageAspect languageAspect = stack.getLanguageAspect();
         Language languageFrom = languageAspect.getFrom();
         Language languageTo = languageAspect.getTo();
         boolean languageCard = languageFrom != null && languageTo != null;
@@ -200,8 +201,8 @@ public class CardDialogFragment extends DialogFragment {
 
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     String accessToken = prefs.getString(res.getString(R.string.translator_access_item_access_token), null);
-                    Language languageFrom = lymbo.getLanguageAspect().getFrom();
-                    Language languageTo = lymbo.getLanguageAspect().getTo();
+                    Language languageFrom = stack.getLanguageAspect().getFrom();
+                    Language languageTo = stack.getLanguageAspect().getTo();
 
                     try {
                         String translatedText = new MicrosoftTranslatorTask().execute(accessToken, languageFrom.getLangCode(), languageTo.getLangCode(), etFront.getText().toString()).get();
@@ -286,7 +287,7 @@ public class CardDialogFragment extends DialogFragment {
         // Load dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v);
-        builder.setTitle(R.string.add_card);
+        builder.setTitle(dialogTitle);
 
         // Add positive button
         builder.setPositiveButton(R.string.okay, new OnClickListener() {

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.Displayable;
+import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.lymbo.model.card.enums.ChoiceType;
 import de.interoberlin.lymbo.util.Configuration;
 
