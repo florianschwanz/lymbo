@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -59,6 +57,7 @@ public class StackDialogFragment extends DialogFragment {
         final TableLayout tblLanguagesFrom = (TableLayout) v.findViewById(R.id.tblLanguagesFrom);
         final TableLayout tblLanguagesTo = (TableLayout) v.findViewById(R.id.tblLanguagesTo);
         final LinearLayout llAddTags = (LinearLayout) v.findViewById(R.id.llAddTags);
+        final LinearLayout llTags = (LinearLayout) v.findViewById(R.id.llTags);
         final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
         final ImageView ivAddTag = (ImageView) v.findViewById(R.id.ivAddTag);
 
@@ -74,10 +73,16 @@ public class StackDialogFragment extends DialogFragment {
         final ArrayList<String> tagsSelected = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_selected));
 
         // Fill views with arguments
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(v);
+        builder.setTitle(dialogTitle);
+
         if (title != null)
             etTitle.setText(title);
+
         if (subtitle != null)
             etSubtitle.setText(subtitle);
+
         if (author != null)
             etAuthor.setText(author);
 
@@ -208,16 +213,13 @@ public class StackDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 if (addTagsIsExpanded) {
                     addTagsIsExpanded = false;
-                    tblTags.startAnimation(ViewUtil.collapse(getActivity(), tblTags));
+                    llTags.startAnimation(ViewUtil.collapse(getActivity(), llTags));
                 } else {
                     addTagsIsExpanded = true;
-                    tblTags.startAnimation(ViewUtil.expand(getActivity(), tblTags));
+                    llTags.startAnimation(ViewUtil.expand(getActivity(), llTags));
                 }
             }
         });
-
-        llLanguages.getLayoutParams().height = 0;
-        tblTags.getLayoutParams().height = 0;
 
         ivAddTag.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,25 +240,8 @@ public class StackDialogFragment extends DialogFragment {
             }
         });
 
-        // Load dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setView(v);
-        builder.setTitle(dialogTitle);
-
-        // Add positive button
-        builder.setPositiveButton(R.string.okay, new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-
-        // Add negative button
-        builder.setNegativeButton(R.string.cancel, new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dismiss();
-            }
-        });
+        llLanguages.getLayoutParams().height = 0;
+        llTags.getLayoutParams().height = 0;
 
         return builder.create();
     }
