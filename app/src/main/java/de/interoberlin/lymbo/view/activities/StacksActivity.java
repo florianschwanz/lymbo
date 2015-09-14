@@ -76,6 +76,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
             super.onResume();
             lymbosAdapter = new StacksListAdapter(this, this, R.layout.stack, stacksController.getStacks());
 
+            // Load layout
             final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
             final LinearLayout toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
             final TextView toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);

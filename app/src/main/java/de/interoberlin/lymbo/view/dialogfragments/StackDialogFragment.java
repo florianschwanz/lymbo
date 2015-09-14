@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -39,13 +40,6 @@ public class StackDialogFragment extends DialogFragment {
     private boolean addTagsIsExpanded = false;
 
     private OnCompleteListener ocListener;
-
-    // --------------------
-    // Constructors
-    // --------------------
-
-    public StackDialogFragment() {
-    }
 
     // --------------------
     // Methods - Lifecycle
@@ -292,29 +286,24 @@ public class StackDialogFragment extends DialogFragment {
                 Language languageTo = null;
 
                 for (int i = 0; i < checkboxesLanguageFrom.size(); i++) {
-                    if (checkboxesLanguageFrom.get(i).isChecked()) {
+                    if (checkboxesLanguageFrom.get(i).isChecked())
                         languageFrom = Language.fromString(languagesFrom.get(i));
-                    }
                 }
 
                 for (int i = 0; i < checkboxesLanguageTo.size(); i++) {
-                    if (checkboxesLanguageTo.get(i).isChecked()) {
+                    if (checkboxesLanguageTo.get(i).isChecked())
                         languageTo = Language.fromString(languagesTo.get(i));
-                    }
                 }
 
-                Drawable dWarning = getActivity().getResources().getDrawable(R.drawable.ic_action_warning);
+                Drawable dWarning = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_warning);
 
-                if (title.isEmpty()) {
+                if (title.isEmpty())
                     etTitle.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);
-                }
-
-                if (!title.isEmpty()) {
-                    if (lymboUuid == null) {
+                else {
+                    if (lymboUuid == null)
                         ocListener.onAddStack(title, subtitle, author, languageFrom, languageTo, getSelectedTags(tblTags));
-                    } else {
+                    else
                         ocListener.onEditStack(lymboUuid, title, subtitle, author, languageFrom, languageTo, getSelectedTags(tblTags));
-                    }
 
                     dismiss();
                 }
@@ -375,6 +364,7 @@ public class StackDialogFragment extends DialogFragment {
 
     public interface OnCompleteListener {
         void onAddStack(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags);
+
         void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags);
     }
 

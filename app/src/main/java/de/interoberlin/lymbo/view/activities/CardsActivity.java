@@ -90,6 +90,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             stack = cardsController.getStack();
             cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
 
+            // Load layout
             final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
             final LinearLayout toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
             final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
@@ -206,11 +207,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             enableActionBarAutoHide(slv);
 
             updateListView();
-        } catch (
-                Exception e
-                )
-
-        {
+        } catch (Exception e) {
             handleException(e);
         }
 
@@ -365,7 +362,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onTagsSelected(List<Tag> tagsSelected, boolean displayOnlyFavorites) {
+    public void onFilterCards(List<Tag> tagsSelected, boolean displayOnlyFavorites) {
         cardsController.setTagsSelected(tagsSelected);
         cardsController.setDisplayOnlyFavorites(displayOnlyFavorites);
 

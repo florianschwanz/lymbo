@@ -73,7 +73,7 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
             editor.putInt(res.getString(R.string.translator_access_item_expires_in), Integer.valueOf(result.getExpires_in()));
             editor.putString(res.getString(R.string.translator_access_item_scope), result.getScope());
             editor.putLong(res.getString(R.string.translator_access_item_timestamp), System.currentTimeMillis());
-            editor.commit();
+            editor.apply();
         }
     }
 
@@ -125,7 +125,7 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
                 editor.putString(res.getString(R.string.translator_access_item_expires_in), null);
                 editor.putString(res.getString(R.string.translator_access_item_scope), null);
                 editor.putLong(res.getString(R.string.translator_access_item_timestamp), 0L);
-                editor.commit();
+                editor.apply();
                 throw new Exception("Error from Microsoft Translator API");
             }
 

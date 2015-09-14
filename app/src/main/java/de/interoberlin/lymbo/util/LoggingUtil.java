@@ -15,11 +15,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import de.interoberlin.lymbo.R;
 
 public class LoggingUtil {
-    private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS z");
+    private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS z", Locale.US);
 
     // --------------------
     // Methods

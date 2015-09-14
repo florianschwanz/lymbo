@@ -110,8 +110,6 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             final ImageView ivShare = (ImageView) llStack.findViewById(R.id.ivShare);
             final TextView tvCardCount = (TextView) llStack.findViewById(R.id.tvCardCount);
             final LinearLayout llTags = (LinearLayout) llStack.findViewById(R.id.llTags);
-            final TextView tvLanguageFrom = (TextView) llStack.findViewById(R.id.tvLanguageFrom);
-            final TextView tvLanguageTo = (TextView) llStack.findViewById(R.id.tvLanguageTo);
 
             // Set values
             if (stack.getImage() != null && !stack.getImage().trim().isEmpty()) {
@@ -168,11 +166,27 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             // Add languages
             LanguageAspect languageAspect = stack.getLanguageAspect();
             if (languageAspect != null && languageAspect.getFrom() != null && languageAspect.getTo() != null) {
-                tvLanguageFrom.setText(languageAspect.getFrom().getName(activity));
-                tvLanguageTo.setText(languageAspect.getTo().getName(activity));
-            } else {
-                ViewUtil.remove(tvLanguageFrom);
-                ViewUtil.remove(tvLanguageTo);
+                Tag languageFromTag = new Tag(languageAspect.getFrom().getName(context));
+                CardView cvTagLanguageFrom = (CardView) languageFromTag.getView(context, activity, llTags);
+                cvTagLanguageFrom.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectTags();
+                    }
+                });
+
+                llTags.addView(cvTagLanguageFrom);
+
+                Tag languageToTag = new Tag(languageAspect.getTo().getName(context));
+                CardView cvTagLanguageTo = (CardView) languageToTag.getView(context, activity, llTags);
+                cvTagLanguageTo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectTags();
+                    }
+                });
+
+                llTags.addView(cvTagLanguageTo);
             }
 
             // Action : open cards view

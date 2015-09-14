@@ -4,13 +4,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -36,22 +35,11 @@ import de.interoberlin.lymbo.model.translate.MicrosoftTranslatorTask;
 import de.interoberlin.lymbo.util.ViewUtil;
 
 public class CardDialogFragment extends DialogFragment {
-    // Controllers
-    CardsController cardsController;
-
-    // Model
     private boolean addTextFrontIsExpanded = false;
     private boolean addTextBackIsExpanded = false;
     private boolean addTagsIsExpanded = false;
 
     private OnCompleteListener ocListener;
-
-    // --------------------
-    // Constructors
-    // --------------------
-
-    public CardDialogFragment() {
-    }
 
     // --------------------
     // Methods - Lifecycle
@@ -60,24 +48,28 @@ public class CardDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        cardsController = CardsController.getInstance(getActivity());
+        CardsController cardsController = CardsController.getInstance(getActivity());
         final Stack stack = cardsController.getStack();
+        final Resources res = getActivity().getResources();
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_card, null);
 
         final EditText etFront = (EditText) v.findViewById(R.id.etFront);
         final ImageView ivExpandTextsFront = (ImageView) v.findViewById(R.id.ivExpandTextsFront);
+        final LinearLayout llTextFront = (LinearLayout) v.findViewById(R.id.llTextFront);
         final TableLayout tblTextFront = (TableLayout) v.findViewById(R.id.tblTextFront);
         final ImageView ivAddTextFront = (ImageView) v.findViewById(R.id.ivAddTextFront);
 
         final EditText etBack = (EditText) v.findViewById(R.id.etBack);
         final ImageView ivTranslate = (ImageView) v.findViewById(R.id.ivTranslate);
         final ImageView ivExpandTextsBack = (ImageView) v.findViewById(R.id.ivExpandTextsBack);
+        final LinearLayout llTextBack = (LinearLayout) v.findViewById(R.id.llTextBack);
         final TableLayout tblTextBack = (TableLayout) v.findViewById(R.id.tblTextBack);
         final ImageView ivAddTextBack = (ImageView) v.findViewById(R.id.ivAddTextBack);
 
         final LinearLayout llAddTags = (LinearLayout) v.findViewById(R.id.llAddTags);
+        final LinearLayout llTags = (LinearLayout) v.findViewById(R.id.llTags);
         final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
         final ImageView ivAddTag = (ImageView) v.findViewById(R.id.ivAddTag);
 
@@ -92,26 +84,33 @@ public class CardDialogFragment extends DialogFragment {
         final ArrayList<String> tagsSelected = bundle.getStringArrayList(getResources().getString(R.string.bundle_tags_selected));
 
         // Fill views with arguments
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(v);
+        builder.setTitle(dialogTitle);
+
         if (frontTitle != null)
             etFront.setText(frontTitle);
+
         if (backTitle != null)
             etBack.setText(backTitle);
+
         if (textsFront != null) {
             for (String s : textsFront) {
                 final TableRow tr = new TableRow(getActivity());
                 final EditText etText = new EditText(getActivity());
                 tr.addView(etText);
                 etText.setText(s);
-                tblTextFront.addView(tr, tblTextFront.getChildCount() - 1);
+                tblTextFront.addView(tr, tblTextFront.getChildCount());
             }
         }
+
         if (textsBack != null) {
             for (String s : textsBack) {
                 final TableRow tr = new TableRow(getActivity());
                 final EditText etText = new EditText(getActivity());
                 tr.addView(etText);
                 etText.setText(s);
-                tblTextBack.addView(tr, tblTextBack.getChildCount() - 1);
+                tblTextBack.addView(tr, tblTextBack.getChildCount());
             }
         }
         if (tagsAll != null) {
@@ -135,7 +134,7 @@ public class CardDialogFragment extends DialogFragment {
                         }
                     });
 
-                    tblTags.addView(tr, tblTags.getChildCount() - 1);
+                    tblTags.addView(tr, tblTags.getChildCount());
                 }
             }
         }
@@ -144,165 +143,65 @@ public class CardDialogFragment extends DialogFragment {
         ivExpandTextsFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (addTextFrontIsExpanded) {
-                    addTextFrontIsExpanded = false;
-                    ivExpandTextsFront.setImageResource(R.drawable.ic_action_expand);
-                    tblTextFront.startAnimation(ViewUtil.collapse(getActivity(), tblTextFront));
-                } else {
-                    addTextFrontIsExpanded = true;
-                    ivExpandTextsFront.setImageResource(R.drawable.ic_action_collapse);
-                    tblTextFront.startAnimation(ViewUtil.expand(getActivity(), tblTextFront));
-                }
+                expandTextsFront(ivAddTextFront, llTextFront);
             }
         });
 
         ivExpandTextsBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (addTextBackIsExpanded) {
-                    addTextBackIsExpanded = false;
-                    ivExpandTextsBack.setImageResource(R.drawable.ic_action_expand);
-                    tblTextBack.startAnimation(ViewUtil.collapse(getActivity(), tblTextBack));
-                } else {
-                    addTextBackIsExpanded = true;
-                    ivExpandTextsBack.setImageResource(R.drawable.ic_action_collapse);
-                    tblTextBack.startAnimation(ViewUtil.expand(getActivity(), tblTextBack));
-                }
+                expandTextsBack(ivAddTextBack, llTextBack);
             }
         });
 
-        // Translate button
-        LanguageAspect languageAspect = stack.getLanguageAspect();
-        Language languageFrom = languageAspect.getFrom();
-        Language languageTo = languageAspect.getTo();
-        boolean languageCard = languageFrom != null && languageTo != null;
-
-        Resources res = getActivity().getResources();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-        String translatorApiSecret = prefs.getString(res.getString(R.string.translator_api_secret), null);
-        // String accessItemTokenType = prefs.getString(res.getString(R.string.translator_access_item_token_type), null);
-        String accessItemAccessToken = prefs.getString(res.getString(R.string.translator_access_item_access_token), null);
-        // int accessItemExpiresIn = prefs.getInt(res.getString(R.string.translator_access_item_expires_in), 0);
-        // String accessItemScope = prefs.getString(res.getString(R.string.translator_access_item_scope), null);
-        // Long acessItemTimestamp = prefs.getLong(res.getString(R.string.translator_access_item_timestamp), 0L);
-
-        // Re-run getting access
-        // if (accessItemAccessToken == null || ((acessItemTimestamp != 0 && accessItemExpiresIn != 0 && (acessItemTimestamp + accessItemExpiresIn*1000 > System.currentTimeMillis()))))
-
-        // Get new access token
-        new MicrosoftAccessControlItemTask().execute(res.getString(R.string.translator_client_id), translatorApiSecret);
-
-        if (languageCard && accessItemAccessToken != null)
-            ivTranslate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Resources res = getActivity().getResources();
-
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    String accessToken = prefs.getString(res.getString(R.string.translator_access_item_access_token), null);
-                    Language languageFrom = stack.getLanguageAspect().getFrom();
-                    Language languageTo = stack.getLanguageAspect().getTo();
-
-                    try {
-                        String translatedText = new MicrosoftTranslatorTask().execute(accessToken, languageFrom.getLangCode(), languageTo.getLangCode(), etFront.getText().toString()).get();
-                        etBack.setText(translatedText);
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        else {
-            ViewUtil.remove(ivTranslate);
-        }
+        ivTranslate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                translate(stack, etFront, etBack);
+            }
+        });
 
         llAddTags.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (addTagsIsExpanded) {
-                    addTagsIsExpanded = false;
-                    tblTags.startAnimation(ViewUtil.collapse(getActivity(), tblTags));
-                } else {
-                    addTagsIsExpanded = true;
-                    tblTags.startAnimation(ViewUtil.expand(getActivity(), tblTags));
-                }
+                expandTags(tblTags);
             }
         });
-
-        tblTextFront.getLayoutParams().height = 0;
-        tblTextBack.getLayoutParams().height = 0;
-        tblTags.getLayoutParams().height = 0;
 
         ivAddTextFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TableRow row = (TableRow) tblTextFront.getChildAt(tblTextFront.getChildCount() - 2);
-
-                if (row == null || row.getChildCount() < 1 || !(row.getChildAt(0) instanceof EditText) || (row.getChildAt(0) instanceof EditText && !((EditText) row.getChildAt(0)).getText().toString().isEmpty())) {
-                    final TableRow tr = new TableRow(getActivity());
-                    final EditText etText = new EditText(getActivity());
-                    tr.addView(etText);
-                    etText.setHint(R.string.new_text);
-                    etText.requestFocus();
-                    tblTextFront.addView(tr, tblTextFront.getChildCount() - 1);
-                }
+                addText(tblTextFront);
             }
         });
 
         ivAddTextBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TableRow row = (TableRow) tblTextBack.getChildAt(tblTextBack.getChildCount() - 2);
-
-                if (row == null || row.getChildCount() < 1 || !(row.getChildAt(0) instanceof EditText) || (row.getChildAt(0) instanceof EditText && !((EditText) row.getChildAt(0)).getText().toString().isEmpty())) {
-                    final TableRow tr = new TableRow(getActivity());
-                    final EditText etText = new EditText(getActivity());
-                    tr.addView(etText);
-                    etText.setHint(R.string.new_text);
-                    etText.requestFocus();
-                    tblTextBack.addView(tr, tblTextBack.getChildCount() - 1);
-                }
+                addText(tblTextBack);
             }
         });
 
         ivAddTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TableRow trLast = (TableRow) tblTags.getChildAt(tblTags.getChildCount() - 2);
-
-                if (trLast == null || trLast.getChildCount() < 2 || !(trLast.getChildAt(1) instanceof EditText) || (trLast.getChildAt(1) instanceof EditText && !((EditText) trLast.getChildAt(1)).getText().toString().isEmpty())) {
-                    final TableRow tr = new TableRow(getActivity());
-                    final CheckBox cb = new CheckBox(getActivity());
-                    final EditText etText = new EditText(getActivity());
-                    tr.addView(cb);
-                    tr.addView(etText);
-                    etText.setHint(R.string.new_tag);
-                    etText.requestFocus();
-                    cb.setChecked(true);
-                    tblTags.addView(tr, tblTags.getChildCount() - 1);
-                }
+                addTag(tblTags);
             }
         });
 
-        // Load dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setView(v);
-        builder.setTitle(dialogTitle);
+        llTextFront.getLayoutParams().height = 0;
+        llTextBack.getLayoutParams().height = 0;
+        llTags.getLayoutParams().height = 0;
 
-        // Add positive button
-        builder.setPositiveButton(R.string.okay, new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
+        LanguageAspect languageAspect = stack.getLanguageAspect();
+        Language languageFrom = languageAspect.getFrom();
+        Language languageTo = languageAspect.getTo();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String accessItemAccessToken = prefs.getString(res.getString(R.string.translator_access_item_access_token), null);
 
-        // Add negative button
-        builder.setNegativeButton(R.string.cancel, new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dismiss();
-            }
-        });
+        if (languageFrom == null || languageTo == null || accessItemAccessToken == null) {
+            ViewUtil.remove(ivTranslate);
+        }
 
         return builder.create();
     }
@@ -328,7 +227,7 @@ public class CardDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 String front = etFront.getText().toString().trim();
 
-                Drawable dWarning = getActivity().getResources().getDrawable(R.drawable.ic_action_warning);
+                Drawable dWarning = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_warning);
 
                 if (front.isEmpty()) {
                     etFront.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);
@@ -344,14 +243,90 @@ public class CardDialogFragment extends DialogFragment {
         });
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
+    // --------------------
+    // Methods - Actions
+    // --------------------
+
+    private void expandTextsFront(ImageView ivExpandTextsFront, LinearLayout llTextFront) {
+        if (addTextFrontIsExpanded) {
+            addTextFrontIsExpanded = false;
+            ivExpandTextsFront.setImageResource(R.drawable.ic_action_expand);
+            llTextFront.startAnimation(ViewUtil.collapse(getActivity(), llTextFront));
+        } else {
+            addTextFrontIsExpanded = true;
+            ivExpandTextsFront.setImageResource(R.drawable.ic_action_collapse);
+            llTextFront.startAnimation(ViewUtil.expand(getActivity(), llTextFront));
+        }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
+    private void expandTextsBack(ImageView ivExpandTextsBack, LinearLayout llTextBack) {
+        if (addTextBackIsExpanded) {
+            addTextBackIsExpanded = false;
+            ivExpandTextsBack.setImageResource(R.drawable.ic_action_expand);
+            llTextBack.startAnimation(ViewUtil.collapse(getActivity(), llTextBack));
+        } else {
+            addTextBackIsExpanded = true;
+            ivExpandTextsBack.setImageResource(R.drawable.ic_action_collapse);
+            llTextBack.startAnimation(ViewUtil.expand(getActivity(), llTextBack));
+        }
+    }
+
+    private void translate(Stack stack, EditText etFront, EditText etBack) {
+        Resources res = getActivity().getResources();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String translatorApiSecret = prefs.getString(res.getString(R.string.translator_api_secret), null);
+        new MicrosoftAccessControlItemTask().execute(res.getString(R.string.translator_client_id), translatorApiSecret);
+
+        String accessToken = prefs.getString(res.getString(R.string.translator_access_item_access_token), null);
+        Language languageFrom = stack.getLanguageAspect().getFrom();
+        Language languageTo = stack.getLanguageAspect().getTo();
+
+        try {
+            String translatedText = new MicrosoftTranslatorTask().execute(accessToken, languageFrom.getLangCode(), languageTo.getLangCode(), etFront.getText().toString()).get();
+            etBack.setText(translatedText);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void expandTags(TableLayout tblTags) {
+        if (addTagsIsExpanded) {
+            addTagsIsExpanded = false;
+            tblTags.startAnimation(ViewUtil.collapse(getActivity(), tblTags));
+        } else {
+            addTagsIsExpanded = true;
+            tblTags.startAnimation(ViewUtil.expand(getActivity(), tblTags));
+        }
+    }
+
+    private void addText(TableLayout tblText) {
+        TableRow row = (TableRow) tblText.getChildAt(tblText.getChildCount() - 1);
+
+        if (row == null || row.getChildCount() < 1 || !(row.getChildAt(0) instanceof EditText) || (row.getChildAt(0) instanceof EditText && !((EditText) row.getChildAt(0)).getText().toString().isEmpty())) {
+            final TableRow tr = new TableRow(getActivity());
+            final EditText etText = new EditText(getActivity());
+            tr.addView(etText);
+            etText.setHint(R.string.new_text);
+            etText.requestFocus();
+            tblText.addView(tr, tblText.getChildCount());
+        }
+    }
+
+    private void addTag(TableLayout tblTags) {
+        TableRow trLast = (TableRow) tblTags.getChildAt(tblTags.getChildCount() - 1);
+
+        if (trLast == null || trLast.getChildCount() < 2 || !(trLast.getChildAt(1) instanceof EditText) || (trLast.getChildAt(1) instanceof EditText && !((EditText) trLast.getChildAt(1)).getText().toString().isEmpty())) {
+            final TableRow tr = new TableRow(getActivity());
+            final CheckBox cb = new CheckBox(getActivity());
+            final EditText etText = new EditText(getActivity());
+            tr.addView(cb);
+            tr.addView(etText);
+            etText.setHint(R.string.new_tag);
+            etText.requestFocus();
+            cb.setChecked(true);
+            tblTags.addView(tr, tblTags.getChildCount());
+        }
     }
 
     // --------------------

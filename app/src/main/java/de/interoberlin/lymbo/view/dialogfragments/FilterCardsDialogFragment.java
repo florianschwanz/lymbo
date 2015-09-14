@@ -4,9 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -22,16 +21,9 @@ import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class FilterCardsDialogFragment extends DialogFragment {
-    Boolean displayOnlyFavorites;
+    private boolean displayOnlyFavorites;
 
     private OnCompleteListener ocListener;
-
-    // --------------------
-    // Constructors
-    // --------------------
-
-    public FilterCardsDialogFragment() {
-    }
 
     // --------------------
     // Methods - Lifecycle
@@ -54,23 +46,15 @@ public class FilterCardsDialogFragment extends DialogFragment {
         final ArrayList<String> tagsSelected = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_selected));
         displayOnlyFavorites = bundle.getBoolean(getActivity().getResources().getString(R.string.bundle_display_only_favorites));
 
-        if (displayOnlyFavorites)
-            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, getActivity().getResources().getDrawable(R.drawable.ic_action_important), null);
-        else
-            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_action_not_important), null);
+        // Fill views with arguments
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(v);
+        builder.setTitle(R.string.filter);
 
-        tvFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (displayOnlyFavorites) {
-                    displayOnlyFavorites = false;
-                    tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, getActivity().getResources().getDrawable(R.drawable.ic_action_not_important), null);
-                } else {
-                    displayOnlyFavorites = true;
-                    tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, getActivity().getResources().getDrawable(R.drawable.ic_action_important), null);
-                }
-            }
-        });
+        if (displayOnlyFavorites)
+            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_important), null);
+        else
+            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_not_important), null);
 
         for (final String t : tagsAll) {
             final TableRow tr = new TableRow(getActivity());
@@ -97,6 +81,14 @@ public class FilterCardsDialogFragment extends DialogFragment {
             tblTags.addView(tr);
         }
 
+        // Add actions
+        tvFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleDisplayOnlyFavorites(tvFavorite);
+            }
+        });
+
         tvAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,44 +103,8 @@ public class FilterCardsDialogFragment extends DialogFragment {
             }
         });
 
-        // Load dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setView(v);
-        builder.setTitle(R.string.filter);
-
-        // Add positive button
-        builder.setPositiveButton(R.string.okay, new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-
-        // Add negative button
-        builder.setNegativeButton(R.string.cancel, new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dismiss();
-            }
-        });
-
         return builder.create();
     }
-
-    private void setAllTagsTo(TableLayout tblTags, boolean value) {
-        for (int i = 0; i < tblTags.getChildCount(); i++) {
-            if (tblTags.getChildAt(i) instanceof TableRow) {
-                TableRow tr = (TableRow) tblTags.getChildAt(i);
-
-                if (tr.getChildCount() > 0 && tr.getChildAt(0) instanceof CheckBox) {
-                    ((CheckBox) tr.getChildAt(0)).setChecked(value);
-                }
-            }
-        }
-    }
-
-    // --------------------
-    // Callback interfaces
-    // --------------------
 
     @Override
     public void onStart() {
@@ -168,20 +124,49 @@ public class FilterCardsDialogFragment extends DialogFragment {
                     final CheckBox cb = (CheckBox) tr.getChildAt(0);
                     final RobotoTextView tvText = (RobotoTextView) tr.getChildAt(1);
 
-                    if (cb.isChecked()) {
+                    if (cb.isChecked())
                         tagsSelected.add(new Tag(tvText.getText().toString()));
-                    }
                 }
 
-                ocListener.onTagsSelected(tagsSelected, displayOnlyFavorites);
+                ocListener.onFilterCards(tagsSelected, displayOnlyFavorites);
 
                 dismiss();
             }
         });
     }
 
+    // --------------------
+    // Methods - Actions
+    // --------------------
+
+    private void toggleDisplayOnlyFavorites(TextView tvFavorite) {
+        if (displayOnlyFavorites) {
+            displayOnlyFavorites = false;
+            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_not_important), null);
+        } else {
+            displayOnlyFavorites = true;
+            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_important), null);
+        }
+    }
+
+    private void setAllTagsTo(TableLayout tblTags, boolean value) {
+        for (int i = 0; i < tblTags.getChildCount(); i++) {
+            if (tblTags.getChildAt(i) instanceof TableRow) {
+                TableRow tr = (TableRow) tblTags.getChildAt(i);
+
+                if (tr.getChildCount() > 0 && tr.getChildAt(0) instanceof CheckBox) {
+                    ((CheckBox) tr.getChildAt(0)).setChecked(value);
+                }
+            }
+        }
+    }
+
+    // --------------------
+    // Callback interfaces
+    // --------------------
+
     public interface OnCompleteListener {
-        void onTagsSelected(List<Tag> tagsSelected, boolean displayOnlyFavorites);
+        void onFilterCards(List<Tag> tagsSelected, boolean displayOnlyFavorites);
     }
 
     public void onAttach(Activity activity) {

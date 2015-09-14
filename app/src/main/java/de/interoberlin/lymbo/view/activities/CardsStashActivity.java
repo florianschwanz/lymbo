@@ -65,6 +65,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
             super.onResume();
             cardsStashAdapter = new CardsStashListAdapter(this, this, R.layout.card_stash, cardsController.getCardsStashed());
 
+            // Load layout
             final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
             final LinearLayout toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
             final TextView toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);

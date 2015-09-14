@@ -36,31 +36,26 @@
                 android:layout_weight="0.1"
                 android:contentDescription="@string/desc_image"
                 android:src="@drawable/ic_action_expand" />
-
         </LinearLayout>
 
-        <TableLayout
-            android:id="@+id/tblTextFront"
+        <LinearLayout
+            android:id="@+id/llTextFront"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <TableRow
+            <TableLayout
+                android:id="@+id/tblTextFront"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start">
-
-                    <ImageView
-                        android:id="@+id/ivAddTextFront"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/ic_action_new" />
-                </LinearLayout>
-            </TableRow>
-        </TableLayout>
+            <ImageView
+                android:id="@+id/ivAddTextFront"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_action_new"
+                android:contentDescription="@string/desc_image" />
+        </LinearLayout>
 
         <!-- Back -->
 
@@ -93,80 +88,70 @@
 
         </LinearLayout>
 
-        <TableLayout
-            android:id="@+id/tblTextBack"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start">
-
-                    <ImageView
-                        android:id="@+id/ivAddTextBack"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/ic_action_new" />
-                </LinearLayout>
-            </TableRow>
-        </TableLayout>
-
-        <!-- Expand -->
-
         <LinearLayout
-            android:id="@+id/llAddTags"
+            android:id="@+id/llTextBack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/dialog_fragment_padding"
-            android:paddingRight="@dimen/dialog_fragment_padding"
-            android:paddingTop="@dimen/dialog_fragment_padding">
+            android:orientation="vertical">
+
+            <TableLayout
+                android:id="@+id/tblTextBack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <ImageView
-                android:id="@+id/ivLabel"
+                android:id="@+id/ivAddTextBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/desc_image"
-                android:paddingEnd="@dimen/stack_bar_padding"
-                android:paddingStart="@dimen/stack_bar_padding"
-                android:src="@drawable/ic_action_labels_dark" />
-
-            <TextView
-                android:id="@+id/tvExpandTags"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.9"
-                android:text="@string/add_tags"
-                android:textAlignment="textStart"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:background="@drawable/ic_action_new" />
         </LinearLayout>
+    </LinearLayout>
+
+    <!-- Expand -->
+
+    <LinearLayout
+        android:id="@+id/llAddTags"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dialog_fragment_padding"
+        android:paddingRight="@dimen/dialog_fragment_padding"
+        android:paddingTop="@dimen/dialog_fragment_padding">
+
+        <ImageView
+            android:id="@+id/ivLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/desc_image"
+            android:paddingEnd="@dimen/stack_bar_padding"
+            android:paddingStart="@dimen/stack_bar_padding"
+            android:src="@drawable/ic_action_labels_dark" />
+
+        <TextView
+            android:id="@+id/tvExpandTags"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.9"
+            android:text="@string/add_tags"
+            android:textAlignment="textStart"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llTags"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TableLayout
             android:id="@+id/tblTags"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" />
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start">
-
-                    <ImageView
-                        android:id="@+id/ivAddTag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/ic_action_new" />
-                </LinearLayout>
-            </TableRow>
-        </TableLayout>
+        <ImageView
+            android:id="@+id/ivAddTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_action_new" />
     </LinearLayout>
 </ScrollView>

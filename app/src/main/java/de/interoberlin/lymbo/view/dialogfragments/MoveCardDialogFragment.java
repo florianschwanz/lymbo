@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TableLayout;
@@ -22,13 +23,8 @@ import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class MoveCardDialogFragment extends DialogFragment {
-    // Controllers
-    private StacksController stacksController;
-
     private List<CheckBox> checkboxes = new ArrayList<>();
-    private String sourceLymboId = null;
     private String targetLymboId = null;
-    private String cardUuid = null;
 
     private OnCompleteListener ocListener;
 
@@ -46,7 +42,7 @@ public class MoveCardDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        stacksController = StacksController.getInstance(getActivity());
+        StacksController stacksController = StacksController.getInstance(getActivity());
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_move_card, null);
@@ -54,8 +50,12 @@ public class MoveCardDialogFragment extends DialogFragment {
 
         // Get arguments
         Bundle bundle = this.getArguments();
-        sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
-        cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_uuid));
+        final String sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
+
+        // Fill views with arguments
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(v);
+        builder.setTitle(R.string.move_card);
 
         for (final Stack l : stacksController.getStacks()) {
             if (!l.getId().equals(sourceLymboId)) {
@@ -96,16 +96,11 @@ public class MoveCardDialogFragment extends DialogFragment {
             }
         }
 
-        // Load dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setView(v);
-        builder.setTitle(R.string.move_card);
-
         // Add positive button
         builder.setPositiveButton(R.string.okay, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ocListener.onMoveCard(sourceLymboId, targetLymboId, cardUuid);
+
                 dismiss();
             }
         });
@@ -119,6 +114,26 @@ public class MoveCardDialogFragment extends DialogFragment {
         });
 
         return builder.create();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // Get arguments
+        Bundle bundle = this.getArguments();
+        final String sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
+        final String cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_uuid));
+
+        AlertDialog dialog = (AlertDialog) getDialog();
+
+        Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ocListener.onMoveCard(sourceLymboId, targetLymboId, cardUuid);
+            }
+        });
     }
 
     // --------------------

@@ -257,9 +257,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                 public void onClick(View v) {
                     DisplayHintDialogFragment displayHintDialogFragment = new DisplayHintDialogFragment();
                     Bundle b = new Bundle();
-                    b.putCharSequence("title", getResources().getString(R.string.hint));
-                    b.putCharSequence("message", card.getHint());
-
+                    b.putCharSequence(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.hint));
+                    b.putCharSequence(getResources().getString(R.string.bundle_message), card.getHint());
                     displayHintDialogFragment.setArguments(b);
                     displayHintDialogFragment.show(activity.getFragmentManager(), "okay");
                 }

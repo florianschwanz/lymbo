@@ -56,6 +56,7 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
         super.onResume();
         lymbosStashAdapter = new StacksStashListAdapter(this, this, R.layout.stack_stash, stacksController.getLymbosStashed());
 
+        // Load layout
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
         final LinearLayout toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
         final TextView toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);

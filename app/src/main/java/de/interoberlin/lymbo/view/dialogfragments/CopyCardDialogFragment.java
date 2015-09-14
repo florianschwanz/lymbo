@@ -4,10 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TableLayout;
@@ -23,22 +22,10 @@ import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class CopyCardDialogFragment extends DialogFragment {
-    // Controllers
-    private StacksController stacksController;
-
     private List<CheckBox> checkboxes = new ArrayList<>();
-    private String sourceLymboId = null;
     private String targetLymboId = null;
-    private String cardUuid = null;
 
     private OnCompleteListener onCompleteListener;
-
-    // --------------------
-    // Constructors
-    // --------------------
-
-    public CopyCardDialogFragment() {
-    }
 
     // --------------------
     // Methods - Lifecycle
@@ -47,7 +34,7 @@ public class CopyCardDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        stacksController = StacksController.getInstance(getActivity());
+        StacksController stacksController = StacksController.getInstance(getActivity());
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_copy_card, null);
@@ -57,15 +44,12 @@ public class CopyCardDialogFragment extends DialogFragment {
 
         // Get arguments
         Bundle bundle = this.getArguments();
-        sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
-        cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_uuid));
+        String sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
 
-        tvDeepCopy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cbDeepCopy.toggle();
-            }
-        });
+        // Fill views with arguments
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(v);
+        builder.setTitle(R.string.copy_card);
 
         for (final Stack l : stacksController.getStacks()) {
             if (!l.getId().equals(sourceLymboId)) {
@@ -106,29 +90,38 @@ public class CopyCardDialogFragment extends DialogFragment {
             }
         }
 
-        // Load dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setView(v);
-        builder.setTitle(R.string.copy_card);
-
-        // Add positive button
-        builder.setPositiveButton(R.string.okay, new OnClickListener() {
+        // Add actions
+        tvDeepCopy.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                onCompleteListener.onCopyCard(sourceLymboId, targetLymboId, cardUuid, cbDeepCopy.isChecked());
-                dismiss();
-            }
-        });
-
-        // Add negative button
-        builder.setNegativeButton(R.string.cancel, new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dismiss();
+            public void onClick(View view) {
+                cbDeepCopy.toggle();
             }
         });
 
         return builder.create();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // Get arguments
+        Bundle bundle = this.getArguments();
+        final String sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
+        final String cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_uuid));
+
+        AlertDialog dialog = (AlertDialog) getDialog();
+        final CheckBox cbDeepCopy = (CheckBox) dialog.findViewById(R.id.cbDeepCopy);
+
+        Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean deepCopy = cbDeepCopy.isChecked();
+
+                onCompleteListener.onCopyCard(sourceLymboId, targetLymboId, cardUuid, deepCopy);
+            }
+        });
     }
 
     // --------------------
