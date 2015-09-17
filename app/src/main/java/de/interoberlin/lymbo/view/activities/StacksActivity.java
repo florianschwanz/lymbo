@@ -193,8 +193,6 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
     @Override
     public void onAddStack(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
-        final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
-
         Stack stack = stacksController.getEmptyLymbo(title, subtitle, author, languageFrom, languageTo, tags);
 
         if (!new File(stack.getPath()).exists()) {
@@ -204,17 +202,17 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         } else {
             Toast.makeText(this, getResources().getString(R.string.lymbo_with_same_name_already_exists), Toast.LENGTH_SHORT).show();
         }
-        slv.invalidateViews();
+
+        updateListView();
     }
 
     @Override
     public void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
-        final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
-
         stacksController.updateStack(uuid, title, subtitle, author, languageFrom, languageTo, tags);
         stacksController.addTagsSelected(tags);
         lymbosAdapter.notifyDataSetChanged();
-        slv.invalidateViews();
+
+        updateListView();
     }
 
     @Override

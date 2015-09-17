@@ -39,7 +39,7 @@ public class Tag implements Displayable {
         int[] colorsDark = c.getResources().getIntArray(R.array.tag_color_dark);
         int[] colorsLight = c.getResources().getIntArray(R.array.tag_color_light);
 
-        cvTag.setBackgroundColor(ColorUtil.getColorByString(c, name, colorsDark, colorsLight));
+        cvTag.setCardBackgroundColor(ColorUtil.getColorByString(c, name, colorsDark, colorsLight));
 
         // Attribute : value
         tvText.setTextColor(c.getResources().getColor(ColorUtil.getTextColorByString(name, colorsDark, colorsLight)));
