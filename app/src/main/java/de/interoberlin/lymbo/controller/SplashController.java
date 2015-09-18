@@ -5,7 +5,7 @@ import android.app.Activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.interoberlin.lymbo.EMessage;
+import de.interoberlin.lymbo.model.EMessage;
 
 public class SplashController {
     // Activity

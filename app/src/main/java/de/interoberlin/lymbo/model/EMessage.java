@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo;
+package de.interoberlin.lymbo.model;
 
 public enum EMessage {
     SEARCHING_FILES("Searching files"),

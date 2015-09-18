@@ -35,7 +35,7 @@ public enum Language {
     MALAY("ms", R.string.lang_malay),
     NORWEGIAN("no", R.string.lang_norwegian),
     PERSIAN("fa", R.string.lang_persian),
-    POLISH("pl", R.string.lang_polish),
+    POLISH("pl", R.string.lang_polish, true),
     PORTUGUESE("pt", R.string.lang_portuguese, true),
     ROMANIAN("ro", R.string.lang_romanian),
     RUSSIAN("ru", R.string.lang_russian),

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.App;
+import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 
 public class Stack {

@@ -26,8 +26,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.App;
-import de.interoberlin.lymbo.controller.accelerometer.Accelerator;
+import de.interoberlin.lymbo.App;
+import de.interoberlin.lymbo.model.accelerometer.Accelerator;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.LoggingUtil;
 import de.interoberlin.lymbo.view.dialogfragments.GiveFeedbackDialogFragment;

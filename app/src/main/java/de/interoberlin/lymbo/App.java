@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.controller;
+package de.interoberlin.lymbo;
 
 import android.app.Application;
 import android.content.Context;

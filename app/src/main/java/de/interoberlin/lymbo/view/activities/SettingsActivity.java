@@ -18,7 +18,7 @@ import android.preference.PreferenceManager;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.App;
+import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.model.translate.MicrosoftAccessControlItemTask;
 import de.interoberlin.mate.lib.model.Log;
 

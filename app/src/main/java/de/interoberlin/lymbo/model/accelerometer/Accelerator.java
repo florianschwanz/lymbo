@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.controller.accelerometer;
+package de.interoberlin.lymbo.model.accelerometer;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;

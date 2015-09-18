@@ -20,7 +20,7 @@ import java.net.URLEncoder;
 import javax.net.ssl.HttpsURLConnection;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.App;
+import de.interoberlin.lymbo.App;
 import de.interoberlin.mate.lib.model.Log;
 
 public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, AccessControlItem> {

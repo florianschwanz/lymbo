@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo;
+package de.interoberlin.lymbo.view.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,10 +17,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 
+import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.controller.SplashController;
-import de.interoberlin.lymbo.controller.accelerometer.Accelerator;
-import de.interoberlin.lymbo.view.activities.StacksActivity;
+import de.interoberlin.lymbo.model.accelerometer.Accelerator;
 import de.interoberlin.sauvignon.lib.controller.loader.SvgLoader;
 import de.interoberlin.sauvignon.lib.model.svg.SVG;
 import de.interoberlin.sauvignon.lib.model.svg.elements.AGeometric;

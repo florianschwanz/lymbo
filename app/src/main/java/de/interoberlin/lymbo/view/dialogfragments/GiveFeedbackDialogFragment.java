@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.App;
+import de.interoberlin.lymbo.App;
 
 public class GiveFeedbackDialogFragment extends DialogFragment {
     private OnCompleteListener ocListener;
