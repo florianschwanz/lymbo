@@ -1,5 +1,6 @@
 package de.interoberlin.lymbo.model.accelerometer;
 
+import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -9,36 +10,12 @@ import android.view.Surface;
 
 import java.util.Observable;
 
+import de.interoberlin.lymbo.App;
+import de.interoberlin.lymbo.R;
+
 public class Accelerator extends Observable implements SensorEventListener {
     private long shakeTime;
     private int shakeCount;
-
-    // Shake settings
-    private final float SHAKE_THRESHOLD_GRAVITY = 2.5F;
-    private final int SHAKE_SLOP_TIME_MS = 650;
-    private final int SHAKE_COUNT_RESET_TIME_MS = 3000;
-
-    // Offset
-    private float offsetX = 0.0F;
-    private float offsetY = 0.0F;
-
-    // Extremes
-    private final float MAX_VALUE = 10.0f;
-    private final float MIN_VALUE = -10.0f;
-
-    // Factors
-    private final float MAX_FACTOR = 1.0f;
-    private final float MIN_FACTOR = 1.0f;
-
-    // Get sensibilities
-    private float sensibilityX = 1.0f;
-    private float sensibilityY = 1.0f;
-
-    // Measured sensor values
-    float sensorX = 0.0F;
-    float sensorY = 0.0F;
-    float sensorZ = 0.0F;
-
     private Display display;
 
     // Listeners
@@ -72,10 +49,24 @@ public class Accelerator extends Observable implements SensorEventListener {
             return;
         }
 
+        Resources res = App.getContext().getResources();
+
+        int SHAKE_THRESHOLD_GRAVITY = res.getInteger(R.integer.shake_threshold_gravity);
+        int SHAKE_SLOP_TIME = res.getInteger(R.integer.shake_slop_time);
+        int SHAKE_COUNT_RESET_TIME = res.getInteger(R.integer.shake_count_reset_time);
+
+        // Offset
+        float offsetX = 0.0F;
+        float offsetY = 0.0F;
+
+        // Get sensibilities
+        float sensibilityX = 1.0f;
+        float sensibilityY = 1.0f;
+
         // Detect shake
-        sensorX = sensorEvent.values[0];
-        sensorY = sensorEvent.values[1];
-        sensorZ = sensorEvent.values[2];
+        float sensorX = sensorEvent.values[0];
+        float sensorY = sensorEvent.values[1];
+        float sensorZ = sensorEvent.values[2];
 
         float gX = sensorX / SensorManager.GRAVITY_EARTH;
         float gY = sensorY / SensorManager.GRAVITY_EARTH;
@@ -85,11 +76,11 @@ public class Accelerator extends Observable implements SensorEventListener {
 
         if (gForce > SHAKE_THRESHOLD_GRAVITY) {
             final long now = System.currentTimeMillis();
-            if (shakeTime + SHAKE_SLOP_TIME_MS > now) {
+            if (shakeTime + SHAKE_SLOP_TIME > now) {
                 return;
             }
 
-            if (shakeTime + SHAKE_COUNT_RESET_TIME_MS < now) {
+            if (shakeTime + SHAKE_COUNT_RESET_TIME < now) {
                 shakeCount = 0;
             }
 
@@ -141,6 +132,14 @@ public class Accelerator extends Observable implements SensorEventListener {
     // --------------------
 
     private float normalize(float f, float sensibility) {
+        // Factors
+        float MAX_FACTOR = 1.0f;
+        float MIN_FACTOR = 1.0f;
+
+        // Extremes
+        float MAX_VALUE = 10.0f;
+        float MIN_VALUE = -10.0f;
+
         float FACTOR = (((MAX_FACTOR - MIN_FACTOR) / 100) * sensibility) + MIN_FACTOR;
 
         if (f * FACTOR > MAX_VALUE) {

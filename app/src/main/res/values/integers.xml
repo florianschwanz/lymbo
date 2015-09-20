@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="shake_threshold_gravity">3</integer>
+    <integer name="shake_slop_time">800</integer>
+    <integer name="shake_count_reset_time">3000</integer>
+</resources>
