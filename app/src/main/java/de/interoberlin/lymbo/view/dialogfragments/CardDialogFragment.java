@@ -144,14 +144,14 @@ public class CardDialogFragment extends DialogFragment {
         ivExpandTextsFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                expandTextsFront(ivAddTextFront, llTextFront);
+                expandTextsFront(ivExpandTextsFront, llTextFront);
             }
         });
 
         ivExpandTextsBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                expandTextsBack(ivAddTextBack, llTextBack);
+                expandTextsBack(ivExpandTextsBack, llTextBack);
             }
         });
 
@@ -165,7 +165,7 @@ public class CardDialogFragment extends DialogFragment {
         llAddTags.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                expandTags(tblTags);
+                expandTags(llTags);
             }
         });
 
@@ -306,13 +306,13 @@ public class CardDialogFragment extends DialogFragment {
         }
     }
 
-    private void expandTags(TableLayout tblTags) {
+    private void expandTags(LinearLayout llTags) {
         if (addTagsIsExpanded) {
             addTagsIsExpanded = false;
-            tblTags.startAnimation(ViewUtil.collapse(getActivity(), tblTags));
+            llTags.startAnimation(ViewUtil.collapse(getActivity(), llTags));
         } else {
             addTagsIsExpanded = true;
-            tblTags.startAnimation(ViewUtil.expand(getActivity(), tblTags));
+            llTags.startAnimation(ViewUtil.expand(getActivity(), llTags));
         }
     }
 
