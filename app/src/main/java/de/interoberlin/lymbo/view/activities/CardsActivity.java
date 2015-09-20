@@ -481,7 +481,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
      */
     public void snackPutToEnd(int pos, Card card) {
         recentCard = card;
-        recentCardPos = pos - 1;
+        recentCardPos = pos;
         recentEvent = EVENT_PUT_TO_END;
 
         new SnackBar.Builder(this)
