@@ -494,9 +494,9 @@ public class CardsController {
      */
     public void reloadStack(String path, boolean asset) {
         if (asset)
-            LymboLoader.getLymboFromAsset(activity, path, true);
+            stack = LymboLoader.getLymboFromAsset(activity, path, false);
         else
-            stack = LymboLoader.getLymboFromFile(new File(path), true);
+            stack = LymboLoader.getLymboFromFile(new File(path), false);
     }
 
     // --------------------

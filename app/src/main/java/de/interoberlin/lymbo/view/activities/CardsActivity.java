@@ -81,6 +81,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                 cardsController.reloadStack(path, asset);
                 cardsController.init();
+                cardsController.reset();
             }
 
             setActionBarIcon(R.drawable.ic_ab_drawer);
@@ -100,6 +101,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             cardsController = CardsController.getInstance(this);
             stack = cardsController.getStack();
             cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
+
+            System.out.println("FOO stack " + stack);
+            System.out.println("FOO cardsController.getCards() " + cardsController.getCards());
 
             // Load layout
             final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);

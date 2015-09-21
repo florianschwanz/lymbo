@@ -4,7 +4,7 @@
     <string name="log_path" translatable="false">Interoberlin/logs</string>
     <string name="log_file_name" translatable="false">lymbo.log</string>
     <string name="lymbo_file_extension" translatable="false">.lymbo</string>
-    <string name="lymbo_lookup_path" translatable="false">.</string>
+    <string name="lymbo_lookup_path" translatable="false">Interoberlin/lymbo</string>
     <string name="lymbo_save_path" translatable="false">Interoberlin/lymbo</string>
 
     <integer name="refresh_delay_lymbos" translatable="false">500</integer>
