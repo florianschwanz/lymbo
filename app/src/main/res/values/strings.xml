@@ -119,11 +119,13 @@
     <string name="send_mail">Send mail</string>
     <string name="settings">Settings</string>
     <string name="share">Share</string>
+    <string name="show_stacktrace">Show</string>
     <string name="source_language">Source language</string>
     <string name="splash_found_1">Found</string>
     <string name="splash_found_2">Found</string>
     <string name="stack_restored">Stack restored</string>
     <string name="stack_stashed">Stack stashed</string>
+    <string name="stacktrace">Stacktrace</string>
     <string name="stash_card">Stash card</string>
     <string name="stash_stack">Stash stack</string>
     <string name="stashed_card">Stashed card</string>

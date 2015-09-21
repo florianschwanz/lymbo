@@ -20,13 +20,11 @@ import java.util.Locale;
 import de.interoberlin.lymbo.R;
 
 public class LoggingUtil {
-    private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS z", Locale.US);
-
     // --------------------
     // Methods
     // --------------------
 
-    public static void writeException(Activity activity, Exception e) {
+    public static void writeStacktraceToFile(Activity activity, String stacktrace) {
         try {
             boolean success = getLogDir(activity).mkdirs();
 
@@ -34,7 +32,8 @@ public class LoggingUtil {
                 throw new IOException();
 
             FileWriter fw = new FileWriter(getLogFile(activity));
-            fw.write(format.format(new Date()) + " ERROR " + getStackTrace(e));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS z", Locale.US);
+            fw.write(sdf.format(new Date()) + " ERROR " + stacktrace);
             fw.flush();
             fw.close();
         } catch (IOException ioe) {
@@ -56,7 +55,8 @@ public class LoggingUtil {
 
     private static File getLogFile(Activity activity) {
         Resources res = activity.getResources();
-        return new File(getLogDir(activity) + "/" + res.getString(R.string.log_file_name));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss-SSS", Locale.US);
+        return new File(getLogDir(activity) + "/" + sdf.format(new Date()) + "_" + res.getString(R.string.log_file_name));
     }
 
     /**

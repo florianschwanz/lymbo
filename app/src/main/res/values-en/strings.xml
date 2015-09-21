@@ -133,5 +133,7 @@
     <string name="filter">Filter</string>
     <string name="edit_card">Edit card</string>
     <string name="edit_stack">Edit stack</string>
+    <string name="show_stacktrace">Show</string>
+    <string name="stacktrace">Stacktrace</string>
 
 </resources>

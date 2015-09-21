@@ -14,12 +14,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Side;
+import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
+import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardEntry;
@@ -171,12 +172,12 @@ public class CardsController {
     /**
      * Updates a simple card
      *
-     * @param uuid id of the card to be updated
-     * @param frontTitleValue front title
+     * @param uuid             id of the card to be updated
+     * @param frontTitleValue  front title
      * @param frontTextsValues front texts
-     * @param backTitleValue back title
-     * @param backTextsValues back texts
-     * @param tags tags
+     * @param backTitleValue   back title
+     * @param backTextsValues  back texts
+     * @param tags             tags
      */
     public void updateCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         if (cardsContainsId(uuid)) {
@@ -484,6 +485,18 @@ public class CardsController {
         tagsAll.add(new Tag(getResources().getString(R.string.no_tag)));
 
         return tagsAll;
+    }
+
+    /**
+     *
+     * @param path
+     * @param asset
+     */
+    public void reloadStack(String path, boolean asset) {
+        if (asset)
+            LymboLoader.getLymboFromAsset(activity, path, true);
+        else
+            stack = LymboLoader.getLymboFromFile(new File(path), true);
     }
 
     // --------------------

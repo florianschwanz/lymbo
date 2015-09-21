@@ -32,8 +32,9 @@ import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.LoggingUtil;
 import de.interoberlin.lymbo.view.dialogfragments.GiveFeedbackDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.ReportErrorDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.ShowErrorDialogFragment;
 
-public abstract class BaseActivity extends AppCompatActivity implements Accelerator.OnShakeListener, GiveFeedbackDialogFragment.OnCompleteListener, ReportErrorDialogFragment.OnCompleteListener {
+public abstract class BaseActivity extends AppCompatActivity implements Accelerator.OnShakeListener, GiveFeedbackDialogFragment.OnCompleteListener, ReportErrorDialogFragment.OnCompleteListener, ShowErrorDialogFragment.OnCompleteListener {
     private SensorManager sensorManager;
 
     // Properties
@@ -109,13 +110,31 @@ public abstract class BaseActivity extends AppCompatActivity implements Accelera
     }
 
     @Override
-    public void onReportDialogDialogComplete() {
+    public void onSendReport(String stacktrace) {
+        LoggingUtil.writeStacktraceToFile(this, stacktrace);
         LoggingUtil.sendErrorLog(this, this);
     }
 
+    @Override
+    public void onShowErrorDialogComplete(String stacktrace) {
+
+    }
+
+    @Override
+    public void onShowStacktrace(String stacktrace) {
+        ShowErrorDialogFragment dialog = new ShowErrorDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(getResources().getString(R.string.bundle_stacktrace), stacktrace);
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), "okay");
+    }
+
     protected void handleException(Exception e) {
-        LoggingUtil.writeException(this, e);
-        new ReportErrorDialogFragment().show(getFragmentManager(), "okay");
+        ReportErrorDialogFragment dialog = new ReportErrorDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(getResources().getString(R.string.bundle_stacktrace), LoggingUtil.getStackTrace(e));
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), "okay");
     }
 
     // --------------------

@@ -287,11 +287,11 @@ public class StacksController {
         }
 
         stacks.clear();
-        stacks.addAll(getLymbosFromAssets());
-        stacks.addAll(getLymbosFromFiles(lymboFiles));
+        stacks.addAll(getStacksFromAssets());
+        stacks.addAll(getStacksFromFiles(lymboFiles));
 
         lymbosStashed.clear();
-        lymbosStashed.addAll(getLymbosFromFiles(lymboFilesStashed));
+        lymbosStashed.addAll(getStacksFromFiles(lymboFilesStashed));
 
         datasource.close();
         loaded = true;
@@ -339,7 +339,7 @@ public class StacksController {
     /**
      * Converts lymbo files into lymbo objects
      */
-    private List<Stack> getLymbosFromFiles(Collection<File> files) {
+    private List<Stack> getStacksFromFiles(Collection<File> files) {
         List<Stack> stacks = new ArrayList<>();
 
         // Add lymbos from file system
@@ -357,7 +357,7 @@ public class StacksController {
     /**
      * Adds lymbos from assets
      */
-    private List<Stack> getLymbosFromAssets() {
+    private List<Stack> getStacksFromAssets() {
         List<Stack> stacks = new ArrayList<>();
 
         try {

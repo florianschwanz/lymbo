@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
@@ -34,13 +35,17 @@ import de.interoberlin.lymbo.view.dialogfragments.StackDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
+import de.interoberlin.swipelistview.view.SwipeListViewListener;
 
 public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, StackDialogFragment.OnCompleteListener, FilterStacksDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+    //
+
     // Controllers
     private StacksController stacksController;
+    private CardsController cardsController;
 
     // Model
-    private StacksListAdapter lymbosAdapter;
+    private StacksListAdapter stacksAdapter;
 
     private Stack recentStack = null;
     private int recentStackPos = -1;
@@ -60,6 +65,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
             super.onCreate(savedInstanceState);
             stacksController = StacksController.getInstance(this);
             stacksController.setTagsSelected(stacksController.getTagsAll());
+            cardsController = CardsController.getInstance(this);
 
             setActionBarIcon(R.drawable.ic_ab_drawer);
             setDisplayHomeAsUpEnabled(true);
@@ -74,7 +80,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     public void onResume() {
         try {
             super.onResume();
-            lymbosAdapter = new StacksListAdapter(this, this, R.layout.stack, stacksController.getStacks());
+            stacksAdapter = new StacksListAdapter(this, this, R.layout.stack, stacksController.getStacks());
 
             // Load layout
             final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
@@ -91,8 +97,70 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
             srl.setOnRefreshListener(this);
             srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
 
-            slv.setAdapter(lymbosAdapter);
+            slv.setAdapter(stacksAdapter);
             slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
+            slv.setSwipeListViewListener(new SwipeListViewListener() {
+                @Override
+                public void onOpened(int i, boolean b) {
+                }
+
+                @Override
+                public void onClosed(int i, boolean b) {
+                }
+
+                @Override
+                public void onListChanged() {
+                }
+
+                @Override
+                public void onMove(int i, float v) {
+                }
+
+                @Override
+                public void onStartOpen(int i, int i1, boolean b) {
+                }
+
+                @Override
+                public void onStartClose(int i, boolean b) {
+                }
+
+                @Override
+                public void onClickFrontView(int i) {
+                }
+
+                @Override
+                public void onClickBackView(int i) {
+                }
+
+                @Override
+                public void onDismiss(int[] ints) {
+                }
+
+                @Override
+                public int onChangeSwipeMode(int i) {
+                    return 0;
+                }
+
+                @Override
+                public void onChoiceChanged(int i, boolean b) {
+                }
+
+                @Override
+                public void onChoiceStarted() {
+                }
+
+                @Override
+                public void onChoiceEnded() {
+                }
+
+                @Override
+                public void onFirstListItem() {
+                }
+
+                @Override
+                public void onLastListItem() {
+                }
+            });
 
             ibFab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -198,7 +266,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         if (!new File(stack.getPath()).exists()) {
             stacksController.addStack(stack);
             stacksController.addTagsSelected(tags);
-            lymbosAdapter.notifyDataSetChanged();
+            stacksAdapter.notifyDataSetChanged();
         } else {
             Toast.makeText(this, getResources().getString(R.string.lymbo_with_same_name_already_exists), Toast.LENGTH_SHORT).show();
         }
@@ -210,7 +278,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     public void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
         stacksController.updateStack(uuid, title, subtitle, author, languageFrom, languageTo, tags);
         stacksController.addTagsSelected(tags);
-        lymbosAdapter.notifyDataSetChanged();
+        stacksAdapter.notifyDataSetChanged();
 
         updateListView();
     }
@@ -301,7 +369,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     private void updateListView() {
         final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
-        lymbosAdapter.filter();
+        stacksAdapter.filter();
         slv.closeOpenedItems();
         slv.invalidateViews();
     }

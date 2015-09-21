@@ -13,6 +13,7 @@
     <string name="bundle_lymbo_uuid" translatable="false">bundleLymboUuid</string>
     <string name="bundle_message" translatable="false">bundleMessage</string>
     <string name="bundle_note" translatable="false">bundleNote</string>
+    <string name="bundle_stacktrace" translatable="false">bundleStacktrace</string>
     <string name="bundle_subtitle" translatable="false">bundleSubtitle</string>
     <string name="bundle_tags_all" translatable="false">bundleTagsAll</string>
     <string name="bundle_tags_selected" translatable="false">bundleTagsSelected</string>

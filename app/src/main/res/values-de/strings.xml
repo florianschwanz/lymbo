@@ -133,5 +133,7 @@
     <string name="filter">Filter</string>
     <string name="edit_card">Karte bearbeiten</string>
     <string name="edit_stack">Stapel bearbeiten</string>
+    <string name="show_stacktrace">Anzeigen</string>
+    <string name="stacktrace">Stacktrace</string>
 
 </resources>

@@ -70,8 +70,18 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
+
             cardsController = CardsController.getInstance(this);
             cardsController.setTagsSelected(cardsController.getTagsAll());
+
+            // Restore instance state
+            if (savedInstanceState != null) {
+                String path = savedInstanceState.getString(getResources().getString(R.string.bundle_lymbo_path));
+                boolean asset = savedInstanceState.getBoolean(getResources().getString(R.string.bundle_asset));
+
+                cardsController.reloadStack(path, asset);
+                cardsController.init();
+            }
 
             setActionBarIcon(R.drawable.ic_ab_drawer);
             setDisplayHomeAsUpEnabled(true);
@@ -87,6 +97,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onResume() {
         try {
             super.onResume();
+            cardsController = CardsController.getInstance(this);
             stack = cardsController.getStack();
             cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
 
@@ -238,11 +249,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 break;
             }
             case R.id.menu_shuffle: {
-                ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-
-                cardsController.shuffle();
-
-                updateListView();
+                shuffle();
                 break;
             }
             case R.id.menu_label: {
@@ -417,6 +424,16 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 .withStyle(SnackBar.Style.INFO)
                 .withDuration(SnackBar.MED_SNACK)
                 .show();
+    }
+
+    /**
+     * Shuffles visible cards
+     */
+    private void shuffle() {
+        ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+
+        cardsController.shuffle();
+        updateListView();
     }
 
     /**
