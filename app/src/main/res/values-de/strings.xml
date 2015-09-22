@@ -135,5 +135,11 @@
     <string name="edit_stack">Stapel bearbeiten</string>
     <string name="show_stacktrace">Anzeigen</string>
     <string name="stacktrace">Stacktrace</string>
+    <string name="restore_cards">Karten wiederherstellen</string>
+    <string name="restore_cards_question">Willst du alle Karten wiederherstellen?</string>
+    <string name="reset_cards">Karten zurücksetzen</string>
+    <string name="reset_cards_question">Willst du alle Karten zurücksetzen?</string>
+    <string name="scan_for_lymbo_files">Nach lymbo Dateien suchen</string>
+    <string name="scan_for_lymbo_files_question">Willst du auf deinem Gerät nach lymbo Dateien suchen?</string>
 
 </resources>

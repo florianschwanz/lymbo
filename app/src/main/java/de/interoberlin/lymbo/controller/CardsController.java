@@ -488,9 +488,10 @@ public class CardsController {
     }
 
     /**
+     * Realoads a single stack
      *
-     * @param path
-     * @param asset
+     * @param path  path of the stack
+     * @param asset whether the stack is an asset
      */
     public void reloadStack(String path, boolean asset) {
         if (asset)

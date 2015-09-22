@@ -1,6 +1,7 @@
 package de.interoberlin.lymbo.view.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -42,14 +43,19 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
         super.onCreate(savedInstanceState);
         stacksController = StacksController.getInstance(this);
 
-        if (savedInstanceState != null) {
-            stacksController.load();
+        REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_lymbos);
+
+        if (stacksController.getStacks().isEmpty()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    new LoadLymbosTask().execute();
+                }
+            }, REFRESH_DELAY);
         }
 
         setActionBarIcon(R.drawable.ic_ab_drawer);
         setDisplayHomeAsUpEnabled(true);
-
-        REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_lymbos);
     }
 
     public void onResume() {
@@ -69,6 +75,7 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
 
         srl.setOnRefreshListener(this);
         srl.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
+        srl.setEnabled(false);
 
         slv.setAdapter(lymbosStashAdapter);
         slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
@@ -130,31 +137,16 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
     // --------------------
 
     @Override
+    public void onRefresh() {
+    }
+
+    @Override
     public void onMessageClick(Parcelable token) {
         final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
         stacksController.stash(recentStack);
         lymbosStashAdapter.notifyDataSetChanged();
         slv.invalidateViews();
-    }
-
-    @Override
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-                final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
-
-                srl.setRefreshing(false);
-
-                stacksController.scan();
-                stacksController.load();
-
-                lymbosStashAdapter.notifyDataSetChanged();
-                slv.invalidateViews();
-            }
-        }, REFRESH_DELAY);
     }
 
     // --------------------
@@ -195,9 +187,47 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
     private void updateListView() {
         final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
-
         lymbosStashAdapter.filter();
         slv.closeOpenedItems();
         slv.invalidateViews();
+    }
+
+    /**
+     * Indicates that lymbos have been loaded
+     */
+    public void snackLymbosLoaded() {
+        new SnackBar.Builder(this)
+                .withMessageId(R.string.lymbos_loaded)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    // --------------------
+    // Inner classes
+    // --------------------
+
+    public class LoadLymbosTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            stacksController.scan();
+            stacksController.load();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+
+            updateListView();
+            srl.setRefreshing(false);
+            snackLymbosLoaded();
+        }
     }
 }

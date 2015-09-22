@@ -31,6 +31,7 @@ import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.CardDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.ConfirmRefreshDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.CopyCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
@@ -41,7 +42,7 @@ import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, CardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, FilterCardsDialogFragment.OnCompleteListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, CopyCardDialogFragment.OnCompleteListener, MoveCardDialogFragment.OnCompleteListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener, CardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, FilterCardsDialogFragment.OnCompleteListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, CopyCardDialogFragment.OnCompleteListener, MoveCardDialogFragment.OnCompleteListener {
     // Controllers
     private CardsController cardsController;
 
@@ -74,22 +75,25 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             cardsController = CardsController.getInstance(this);
             cardsController.setTagsSelected(cardsController.getTagsAll());
 
+            VIBRATION_DURATION = getResources().getInteger(R.integer.vibration_duration);
+            REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_cards);
+
             // Restore instance state
             if (savedInstanceState != null) {
+                final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+                srl.setRefreshing(true);
+
                 String path = savedInstanceState.getString(getResources().getString(R.string.bundle_lymbo_path));
                 boolean asset = savedInstanceState.getBoolean(getResources().getString(R.string.bundle_asset));
 
                 cardsController.reloadStack(path, asset);
                 cardsController.init();
-                cardsController.reset();
+
+                srl.setRefreshing(false);
             }
 
             setActionBarIcon(R.drawable.ic_ab_drawer);
             setDisplayHomeAsUpEnabled(true);
-
-            // Properties
-            REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_cards);
-            VIBRATION_DURATION = getResources().getInteger(R.integer.vibration_duration);
         } catch (Exception e) {
             handleException(e);
         }
@@ -101,9 +105,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             cardsController = CardsController.getInstance(this);
             stack = cardsController.getStack();
             cardsAdapter = new CardsListAdapter(this, this, R.layout.card, cardsController.getCards());
-
-            System.out.println("FOO stack " + stack);
-            System.out.println("FOO cardsController.getCards() " + cardsController.getCards());
 
             // Load layout
             final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
@@ -317,12 +318,29 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public void onRefresh() {
+        ConfirmRefreshDialogFragment dialog = new ConfirmRefreshDialogFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.reset_cards));
+        bundle.putString(getResources().getString(R.string.bundle_message), getResources().getString(R.string.reset_cards_question));
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), "okay");
+    }
+
+    @Override
+    public void onConfirmRefresh() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 new LoadCardsTask().execute();
             }
         }, REFRESH_DELAY);
+    }
+
+    @Override
+    public void onCancelRefresh() {
+        final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        srl.setRefreshing(false);
     }
 
     @Override

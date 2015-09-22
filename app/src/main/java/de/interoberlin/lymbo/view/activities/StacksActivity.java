@@ -24,12 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.lymbo.view.adapters.StacksListAdapter;
+import de.interoberlin.lymbo.view.dialogfragments.ConfirmRefreshDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.FilterStacksDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.StackDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
@@ -37,12 +37,11 @@ import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 import de.interoberlin.swipelistview.view.SwipeListViewListener;
 
-public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, StackDialogFragment.OnCompleteListener, FilterStacksDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener,StackDialogFragment.OnCompleteListener, FilterStacksDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     //
 
     // Controllers
     private StacksController stacksController;
-    private CardsController cardsController;
 
     // Model
     private StacksListAdapter stacksAdapter;
@@ -65,13 +64,24 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
             super.onCreate(savedInstanceState);
             stacksController = StacksController.getInstance(this);
             stacksController.setTagsSelected(stacksController.getTagsAll());
-            cardsController = CardsController.getInstance(this);
-
-            setActionBarIcon(R.drawable.ic_ab_drawer);
-            setDisplayHomeAsUpEnabled(true);
 
             REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_lymbos);
             VIBRATION_DURATION = getResources().getInteger(R.integer.vibration_duration);
+
+            if (stacksController.getStacks().isEmpty()) {
+                final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+                srl.setRefreshing(true);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        new LoadLymbosTask().execute();
+                    }
+                }, REFRESH_DELAY);
+            }
+
+            setActionBarIcon(R.drawable.ic_ab_drawer);
+            setDisplayHomeAsUpEnabled(true);
         } catch (Exception e) {
             handleException(e);
         }
@@ -239,12 +249,29 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
     @Override
     public void onRefresh() {
+        ConfirmRefreshDialogFragment dialog = new ConfirmRefreshDialogFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.scan_for_lymbo_files));
+        bundle.putString(getResources().getString(R.string.bundle_message), getResources().getString(R.string.scan_for_lymbo_files_question));
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), "okay");
+    }
+
+    @Override
+    public void onConfirmRefresh() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 new LoadLymbosTask().execute();
             }
         }, REFRESH_DELAY);
+    }
+
+    @Override
+    public void onCancelRefresh() {
+        final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        srl.setRefreshing(false);
     }
 
     @Override
@@ -388,6 +415,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         protected Void doInBackground(Void... params) {
             stacksController.scan();
             stacksController.load();
+
             return null;
         }
 
@@ -400,6 +428,5 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
             srl.setRefreshing(false);
             snackLymbosLoaded();
         }
-
     }
 }

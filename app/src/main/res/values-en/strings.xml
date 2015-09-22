@@ -135,5 +135,11 @@
     <string name="edit_stack">Edit stack</string>
     <string name="show_stacktrace">Show</string>
     <string name="stacktrace">Stacktrace</string>
+    <string name="restore_cards">Restore cards</string>
+    <string name="restore_cards_question">Do you want to restore all cards?</string>
+    <string name="reset_cards">Reset cards</string>
+    <string name="reset_cards_question">Do you want to reset all cards?</string>
+    <string name="scan_for_lymbo_files">Scan for lymbo files</string>
+    <string name="scan_for_lymbo_files_question">Do you want to scan for lymbo files on your device?</string>
 
 </resources>

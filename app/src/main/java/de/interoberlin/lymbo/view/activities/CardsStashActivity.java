@@ -1,6 +1,7 @@
 package de.interoberlin.lymbo.view.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -18,11 +19,12 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.view.adapters.CardsStashListAdapter;
+import de.interoberlin.lymbo.view.dialogfragments.ConfirmRefreshDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsStashActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener {
+public class CardsStashActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
     CardsController cardsController;
 
@@ -47,14 +49,24 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
             super.onCreate(savedInstanceState);
             cardsController = CardsController.getInstance(this);
 
-            if (cardsController.getStack() == null) {
-                finish();
+            REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_cards);
+
+            // Restore instance state
+            if (savedInstanceState != null) {
+                final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+                srl.setRefreshing(true);
+
+                String path = savedInstanceState.getString(getResources().getString(R.string.bundle_lymbo_path));
+                boolean asset = savedInstanceState.getBoolean(getResources().getString(R.string.bundle_asset));
+
+                cardsController.reloadStack(path, asset);
+                cardsController.init();
+
+                srl.setRefreshing(false);
             }
 
             setActionBarIcon(R.drawable.ic_ab_drawer);
             setDisplayHomeAsUpEnabled(true);
-
-            REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_cards);
         } catch (Exception e) {
             handleException(e);
         }
@@ -137,24 +149,43 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
         return true;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString(getResources().getString(R.string.bundle_lymbo_path), cardsController.getStack().getPath());
+        savedInstanceState.putBoolean(getResources().getString(R.string.bundle_asset), cardsController.getStack().isAsset());
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
     // --------------------
     // Methods - Callbacks
     // --------------------
 
     @Override
     public void onRefresh() {
+        ConfirmRefreshDialogFragment dialog = new ConfirmRefreshDialogFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.restore_cards));
+        bundle.putString(getResources().getString(R.string.bundle_message), getResources().getString(R.string.restore_cards_question));
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), "okay");
+    }
+
+    @Override
+    public void onConfirmRefresh() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-                final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
-
-                srl.setRefreshing(false);
-                cardsController.reset();
-                cardsStashAdapter.notifyDataSetChanged();
-                slv.invalidateViews();
+                new RestoreCardsTask().execute();
             }
         }, REFRESH_DELAY);
+    }
+
+    @Override
+    public void onCancelRefresh() {
+        final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        srl.setRefreshing(false);
     }
 
     @Override
@@ -195,6 +226,17 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
                 .show();
     }
 
+    /**
+     * Indicates that cards have been unstashed
+     */
+    public void snackCardsUnstashed() {
+        new SnackBar.Builder(this)
+                .withMessageId(R.string.cards_unstashed)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
     // --------------------
     // Methods
     // --------------------
@@ -213,5 +255,33 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
         cardsStashAdapter.filter();
         slv.closeOpenedItems();
         slv.invalidateViews();
+    }
+
+    // --------------------
+    // Inner classes
+    // --------------------
+
+    public class RestoreCardsTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            cardsController.reset();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+
+            updateListView();
+            snackCardsUnstashed();
+
+            srl.setRefreshing(false);
+        }
     }
 }

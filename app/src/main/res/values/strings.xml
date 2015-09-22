@@ -17,6 +17,7 @@
     <string name="cards">Cards</string>
     <string name="cards_resetted">Cards resetted</string>
     <string name="cards_stash">Cards Stash</string>
+    <string name="cards_unstashed">Cards unstashed</string>
     <string name="click_to_continue">Touch on screen to continue</string>
     <string name="copied_card">Copied card</string>
     <string name="copy_card">Copy card</string>
@@ -113,6 +114,12 @@
     <string name="put_card_to_end">Put card to end</string>
     <string name="remove_card_from_favorites">Removed card from favorites</string>
     <string name="report_error_question">Do you want to send the error log to the developer? This helps a lot fixing this issue.</string>
+    <string name="reset_cards">Reset cards</string>
+    <string name="reset_cards_question">Do you want to reset all cards?</string>
+    <string name="restore_cards">Restore cards</string>
+    <string name="restore_cards_question">Do you want to restore all cards?</string>
+    <string name="scan_for_lymbo_files">Scan for lymbo files</string>
+    <string name="scan_for_lymbo_files_question">Do you want to scan for lymbo files on your device?</string>
     <string name="search_lymbo_files">Searching for lymbo files</string>
     <string name="select_answer">Select at least one answer</string>
     <string name="send">Send</string>
