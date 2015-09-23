@@ -269,7 +269,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
 
         @Override
         protected Void doInBackground(Void... params) {
-            cardsController.reset();
+            cardsController.restoreAll();
             return null;
         }
 

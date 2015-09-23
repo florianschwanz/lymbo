@@ -256,8 +256,6 @@ public class CardsController {
      * @param card card
      */
     public void restore(Card card) {
-        card.setRestoring(true);
-
         getCards().add(card);
         getCardsStashed().remove(card);
         changeCardStateNormal(card);
@@ -275,6 +273,15 @@ public class CardsController {
         getCards().add(pos < getCards().size() ? pos : 0, card);
         getCardsStashed().remove(card);
         changeCardStateNormal(card);
+    }
+
+    /**
+     * Restores all stashed cards
+     */
+    public void restoreAll() {
+        for (Card card : cardsStashed) {
+            restore(card);
+        }
     }
 
     /**
