@@ -42,13 +42,46 @@ public class LymboLoader {
     }
 
     /**
-     * Load a Lymbo object from a given InputStream
+     * Load a Lymbo object from a given file
      *
      * @param f File
      * @return Lymbo file
      */
     public static Stack getLymboFromFile(File f, boolean onlyTopLevel) {
         try {
+            Stack l = getLymboFromInputStream(new FileInputStream(f), onlyTopLevel);
+            if (l != null) {
+                l.setPath(f.getAbsolutePath());
+                l.setAsset(false);
+
+                // Make sure that newly generated ids will be persistent
+                if (!onlyTopLevel && l.isContainsGeneratedIds()) {
+                    l.setModificationDate(new Date().toString());
+                    LymboWriter.writeXml(l, new File(l.getPath()));
+                }
+
+                return l;
+            } else {
+                return null;
+            }
+        } catch (FileNotFoundException e) {
+            Log.error(e.toString());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Load a Lymbo object from a given file
+     *
+     * @param f File
+     * @return Lymbo file
+     */
+    public static Stack getLymboxFromFile(File f, boolean onlyTopLevel) {
+        try {
+
+
+
             Stack l = getLymboFromInputStream(new FileInputStream(f), onlyTopLevel);
             if (l != null) {
                 l.setPath(f.getAbsolutePath());

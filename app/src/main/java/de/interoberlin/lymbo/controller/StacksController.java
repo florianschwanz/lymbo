@@ -43,6 +43,7 @@ public class StacksController {
 
     // Properties
     private static String LYMBO_FILE_EXTENSION;
+    private static String LYMBOX_FILE_EXTENSION;
     private static String LYMBO_LOOKUP_PATH;
     private static String LYMBO_SAVE_PATH;
 
@@ -78,6 +79,7 @@ public class StacksController {
 
         // Properties
         LYMBO_FILE_EXTENSION = getResources().getString(R.string.lymbo_file_extension);
+        LYMBOX_FILE_EXTENSION = getResources().getString(R.string.lymbox_file_extension);
         LYMBO_LOOKUP_PATH = getResources().getString(R.string.lymbo_lookup_path);
         LYMBO_SAVE_PATH = getResources().getString(R.string.lymbo_save_path);
     }
@@ -251,6 +253,13 @@ public class StacksController {
         for (File f : findFiles(LYMBO_FILE_EXTENSION)) {
             Stack stack = LymboLoader.getLymboFromFile(f, true);
 
+            if (stack != null && !datasource.contains(TableStackDatasource.colPath.getName(), stack.getPath())) {
+                datasource.updateStackLocation(stack.getId(), stack.getPath());
+            }
+        }
+
+        for (File f : findFiles(LYMBOX_FILE_EXTENSION)) {
+            Stack stack = LymboLoader.getLymboxFromFile(f, true);
 
             if (stack != null && !datasource.contains(TableStackDatasource.colPath.getName(), stack.getPath())) {
                 datasource.updateStackLocation(stack.getId(), stack.getPath());
@@ -328,7 +337,6 @@ public class StacksController {
      * @return collection of files
      */
     public Collection<File> findFiles(String pattern, String dir) {
-        Log.trace("LymbosController.findFiles()");
         if (checkStorage()) {
             return FileUtils.listFiles(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + dir), new RegexFileFilter(".*" + pattern), TrueFileFilter.TRUE);
         } else {
