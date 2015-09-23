@@ -70,7 +70,12 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
             if (stacksController.getStacks().isEmpty()) {
                 final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-                srl.setRefreshing(true);
+                srl.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        srl.setRefreshing(true);
+                    }
+                });
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
