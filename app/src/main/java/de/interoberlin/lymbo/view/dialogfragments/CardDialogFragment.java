@@ -30,6 +30,7 @@ import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
+import de.interoberlin.lymbo.model.translate.AccessControlItem;
 import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.lymbo.model.translate.MicrosoftAccessControlItemTask;
 import de.interoberlin.lymbo.model.translate.MicrosoftTranslatorTask;
@@ -287,20 +288,29 @@ public class CardDialogFragment extends DialogFragment {
         }
     }
 
-    private void translate(Stack stack, EditText etFront, EditText etBack) {
-        Resources res = getActivity().getResources();
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String translatorApiSecret = prefs.getString(res.getString(R.string.translator_api_secret), null);
-        new MicrosoftAccessControlItemTask().execute(res.getString(R.string.translator_client_id), translatorApiSecret);
-
-        String accessToken = prefs.getString(res.getString(R.string.translator_access_item_access_token), null);
-        Language languageFrom = stack.getLanguageAspect().getFrom();
-        Language languageTo = stack.getLanguageAspect().getTo();
-
+    /**
+     * Translates text from @param{etFrom} and writes it into @param{etTo} according to languages set in @param{stack}
+     *
+     * @param stack stack
+     * @param etFrom source edit text
+     * @param etTo target edit text
+     */
+    private void translate(Stack stack, EditText etFrom, EditText etTo) {
         try {
-            String translatedText = new MicrosoftTranslatorTask().execute(accessToken, languageFrom.getLangCode(), languageTo.getLangCode(), etFront.getText().toString()).get();
-            etBack.setText(translatedText);
+            Resources res = getActivity().getResources();
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String translatorApiSecret = prefs.getString(res.getString(R.string.translator_api_secret), null);
+
+            AccessControlItem accessControlItem = new MicrosoftAccessControlItemTask().execute(res.getString(R.string.translator_client_id), translatorApiSecret).get();
+
+            Language languageFrom = stack.getLanguageAspect().getFrom();
+            Language languageTo = stack.getLanguageAspect().getTo();
+
+            if (accessControlItem != null && accessControlItem.getAccess_token() != null) {
+                String translatedText = new MicrosoftTranslatorTask().execute(accessControlItem.getAccess_token(), languageFrom.getLangCode(), languageTo.getLangCode(), etFrom.getText().toString()).get();
+                etTo.setText(translatedText);
+            }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
@@ -404,7 +414,6 @@ public class CardDialogFragment extends DialogFragment {
 
     public interface OnCompleteListener {
         void onAddSimpleCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
-
         void onEditSimpleCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
     }
 

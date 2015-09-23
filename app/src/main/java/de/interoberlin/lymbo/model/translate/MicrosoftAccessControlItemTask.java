@@ -19,8 +19,8 @@ import java.net.URLEncoder;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.App;
+import de.interoberlin.lymbo.R;
 import de.interoberlin.mate.lib.model.Log;
 
 public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, AccessControlItem> {
@@ -34,6 +34,19 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
     private static final String PARAM_SCOPE = "scope";
 
     private static final int RESPONSE_CODE_OKAY = 200;
+
+    private OnCompleteListener ocListener;
+
+    // --------------------
+    // Constructors
+    // --------------------
+
+    public MicrosoftAccessControlItemTask() {
+    }
+
+    public MicrosoftAccessControlItemTask(OnCompleteListener ocListener) {
+        this.ocListener = ocListener;
+    }
 
     // --------------------
     // Methods - Lifecycle
@@ -74,6 +87,9 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
             editor.putString(res.getString(R.string.translator_access_item_scope), result.getScope());
             editor.putLong(res.getString(R.string.translator_access_item_timestamp), System.currentTimeMillis());
             editor.apply();
+
+            if (ocListener != null)
+                ocListener.onAccessControlItemRetrieved(result.getAccess_token());
         }
     }
 
@@ -126,6 +142,8 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
                 editor.putString(res.getString(R.string.translator_access_item_scope), null);
                 editor.putLong(res.getString(R.string.translator_access_item_timestamp), 0L);
                 editor.apply();
+
+                Log.error("Error from Microsoft Translator API");
                 throw new Exception("Error from Microsoft Translator API");
             }
 
@@ -139,8 +157,13 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
             }
             in.close();
 
-            // Parse JSON
-            return new Gson().fromJson(response.toString(), AccessControlItem.class);
+            if (response.toString().startsWith("ArgumentException")) {
+                Log.error(response.toString());
+                return null;
+            } else {
+                // Parse JSON
+                return new Gson().fromJson(response.toString(), AccessControlItem.class);
+            }
         } finally {
             con.disconnect();
         }
@@ -164,5 +187,13 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
         }
 
         return outputBuilder.toString();
+    }
+
+    // --------------------
+    // Callback interfaces
+    // --------------------
+
+    public interface OnCompleteListener {
+        void onAccessControlItemRetrieved(String accessToken);
     }
 }

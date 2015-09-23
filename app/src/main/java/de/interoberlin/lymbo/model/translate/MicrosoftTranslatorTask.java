@@ -26,6 +26,13 @@ public class MicrosoftTranslatorTask extends AsyncTask<String, Void, String> {
     private static final int RESPONSE_CODE_OKAY = 200;
 
     // --------------------
+    // Constructors
+    // --------------------
+
+    public MicrosoftTranslatorTask() {
+    }
+
+    // --------------------
     // Methods - Lifecycle
     // --------------------
 
