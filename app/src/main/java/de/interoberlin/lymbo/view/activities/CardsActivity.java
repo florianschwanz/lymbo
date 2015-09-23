@@ -446,6 +446,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 .withStyle(SnackBar.Style.INFO)
                 .withDuration(SnackBar.MED_SNACK)
                 .show();
+
+        updateListView();
     }
 
     /**

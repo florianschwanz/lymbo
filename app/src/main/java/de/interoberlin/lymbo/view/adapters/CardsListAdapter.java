@@ -209,7 +209,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                 cvTag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                    selectTags();
+                        selectTags();
                     }
                 });
 
@@ -361,7 +361,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             @Override
             public void onAnimationEnd(Animation animation) {
                 cardsController.stash(card);
-                ((CardsActivity) activity).stash(position, card);
+
+                if (activity instanceof CardsActivity)
+                    ((CardsActivity) activity).stash(position, card);
                 filter();
             }
 
@@ -531,7 +533,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      */
     private void toggleFavorite(Card card, boolean favorite) {
         cardsController.toggleFavorite(context, card, favorite);
-        ((CardsActivity) activity).toggleFavorite(favorite);
+
+        if (activity instanceof CardsActivity)
+            ((CardsActivity) activity).toggleFavorite(favorite);
         filter();
     }
 
@@ -590,7 +594,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                 }
             }
 
-            ((CardsActivity) activity).alertSelectAnswer();
+            if (activity instanceof CardsActivity)
+                ((CardsActivity) activity).alertSelectAnswer();
 
             return false;
         } else {
