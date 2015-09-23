@@ -23,6 +23,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.mrengineer13.snackbar.SnackBar;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -595,8 +597,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             }
 
             if (activity instanceof CardsActivity)
-                ((CardsActivity) activity).alertSelectAnswer();
-
+                ((CardsActivity) activity).snack(((CardsActivity) activity), R.string.select_answer, SnackBar.Style.ALERT);
             return false;
         } else {
             return true;

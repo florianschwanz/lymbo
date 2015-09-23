@@ -127,6 +127,7 @@
     <string name="settings">Settings</string>
     <string name="share">Share</string>
     <string name="show_stacktrace">Show</string>
+    <string name="shuffled_cards">Shuffled cards</string>
     <string name="source_language">Source language</string>
     <string name="splash_found_1">Found</string>
     <string name="splash_found_2">Found</string>

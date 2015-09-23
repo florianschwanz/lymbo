@@ -159,17 +159,11 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
      * @param stack lymbo to be restored
      */
     public void restore(Stack stack) {
-        updateListView();
 
         recentStack = stack;
 
-        new SnackBar.Builder(this)
-                .withOnClickListener(this)
-                .withMessageId(R.string.stack_restored)
-                .withActionMessageId(R.string.undo)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
+        snack(this, R.string.stack_restored, R.string.undo);
+        updateListView();
     }
 
     // --------------------
@@ -225,9 +219,9 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
             super.onPostExecute(result);
             final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 
-            updateListView();
             srl.setRefreshing(false);
             snackLymbosLoaded();
+            updateListView();
         }
     }
 }

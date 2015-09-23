@@ -314,7 +314,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     public void onTagsSelected(List<Tag> tagsSelected) {
         stacksController.setTagsSelected(tagsSelected);
 
-        snackTagSelected();
+        snack(this, R.string.tag_selected);
         updateListView();
     }
 
@@ -333,13 +333,8 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         recentStackPos = pos;
         recentEvent = EVENT_STASH;
 
-        new SnackBar.Builder(this)
-                .withOnClickListener(this)
-                .withMessageId(R.string.stack_stashed)
-                .withActionMessageId(R.string.undo)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
+        snack(this, R.string.stack_stashed, R.string.undo);
+        updateListView();
     }
 
     /**
@@ -357,28 +352,6 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         dialog.setArguments(bundle);
         dialog.show(getFragmentManager(), "okay");
-    }
-
-    /**
-     * Indicates that lymbos have been loaded
-     */
-    public void snackLymbosLoaded() {
-        new SnackBar.Builder(this)
-                .withMessageId(R.string.lymbos_loaded)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
-    }
-
-    /**
-     * Indicates that tags have been slected
-     */
-    public void snackTagSelected() {
-        new SnackBar.Builder(this)
-                .withMessageId(R.string.tag_selected)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
     }
 
     // --------------------
@@ -424,9 +397,9 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
             super.onPostExecute(result);
             final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 
-            updateListView();
             srl.setRefreshing(false);
-            snackLymbosLoaded();
+            snack(StacksActivity.this, R.string.lymbos_loaded);
+            updateListView();
         }
     }
 }

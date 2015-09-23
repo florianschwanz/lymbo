@@ -211,30 +211,13 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
      * @param card card to be restored
      */
     public void restore(int pos, Card card) {
-        updateListView();
 
         recentCard = card;
         recentCardPos = pos;
         recentEvent = EVENT_RESTORE;
 
-        new SnackBar.Builder(this)
-                .withOnClickListener(this)
-                .withMessageId(R.string.card_restored)
-                .withActionMessageId(R.string.undo)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
-    }
-
-    /**
-     * Indicates that cards have been unstashed
-     */
-    public void snackCardsUnstashed() {
-        new SnackBar.Builder(this)
-                .withMessageId(R.string.cards_unstashed)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
+        snack(this, R.string.card_restored);
+        updateListView();
     }
 
     // --------------------
@@ -278,10 +261,9 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
             super.onPostExecute(result);
             final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 
-            updateListView();
-            snackCardsUnstashed();
-
             srl.setRefreshing(false);
+            snack(CardsStashActivity.this, R.string.cards_unstashed);
+            updateListView();
         }
     }
 }

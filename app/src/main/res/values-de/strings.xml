@@ -141,5 +141,7 @@
     <string name="reset_cards_question">Willst du alle Karten zurücksetzen?</string>
     <string name="scan_for_lymbo_files">Nach lymbo Dateien suchen</string>
     <string name="scan_for_lymbo_files_question">Willst du auf deinem Gerät nach lymbo Dateien suchen?</string>
+    <string name="shuffled_cards">Karten gemischt</string>
+    <string name="cards_unstashed">Karten wiederhergestellt</string>
 
 </resources>

@@ -25,8 +25,10 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import de.interoberlin.lymbo.R;
+import com.github.mrengineer13.snackbar.SnackBar;
+
 import de.interoberlin.lymbo.App;
+import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.accelerometer.Accelerator;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.LoggingUtil;
@@ -135,6 +137,49 @@ public abstract class BaseActivity extends AppCompatActivity implements Accelera
         bundle.putString(getResources().getString(R.string.bundle_stacktrace), LoggingUtil.getStackTrace(e));
         dialog.setArguments(bundle);
         dialog.show(getFragmentManager(), "okay");
+    }
+
+    /**
+     * Display a snack
+     *
+     * @param messageClickListener activity that implements SnackBar.OnMessageClickListener
+     * @param messageId            id of message to display
+     */
+    public void snack(SnackBar.OnMessageClickListener messageClickListener, int messageId) {
+        snack(messageClickListener, messageId, SnackBar.Style.INFO);
+    }
+
+    /**
+     * Display a snack
+     *
+     * @param messageClickListener activity that implements SnackBar.OnMessageClickListener
+     * @param messageId            id of message to display
+     * @param style                snack bar style
+     */
+    public void snack(SnackBar.OnMessageClickListener messageClickListener, int messageId, SnackBar.Style style) {
+        new SnackBar.Builder(this)
+                .withOnClickListener(messageClickListener)
+                .withMessageId(messageId)
+                .withStyle(style)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
+    }
+
+    /**
+     * Display a snack
+     *
+     * @param messageClickListener activity that implements SnackBar.OnMessageClickListener
+     * @param messageId            id of message to display
+     * @param actionMessageId      id of action message to display
+     */
+    public void snack(SnackBar.OnMessageClickListener messageClickListener, int messageId, int actionMessageId) {
+        new SnackBar.Builder(this)
+                .withOnClickListener(messageClickListener)
+                .withMessageId(messageId)
+                .withActionMessageId(actionMessageId)
+                .withStyle(SnackBar.Style.INFO)
+                .withDuration(SnackBar.MED_SNACK)
+                .show();
     }
 
     // --------------------

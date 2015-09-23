@@ -141,5 +141,7 @@
     <string name="reset_cards_question">Do you want to reset all cards?</string>
     <string name="scan_for_lymbo_files">Scan for lymbo files</string>
     <string name="scan_for_lymbo_files_question">Do you want to scan for lymbo files on your device?</string>
+    <string name="shuffled_cards">Shuffled cards</string>
+    <string name="cards_unstashed">Cards unstashed</string>
 
 </resources>

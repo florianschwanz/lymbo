@@ -134,10 +134,18 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
                     if (toRight) {
                         cardsController.discard(card);
-                        snackDiscard(position, card);
+                        recentCard = card;
+                        recentCardPos = position;
+                        recentEvent = EVENT_DISCARD;
+
+                        snack(CardsActivity.this, R.string.discard_card, R.string.undo);
                     } else {
                         cardsController.putToEnd(card);
-                        snackPutToEnd(position, card);
+                        recentCard = card;
+                        recentCardPos = position;
+                        recentEvent = EVENT_PUT_TO_END;
+
+                        snack(CardsActivity.this, R.string.put_card_to_end, R.string.undo);
                     }
 
                     updateListView();
@@ -382,7 +390,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onEditSimpleCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         cardsController.updateCard(uuid, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
         cardsController.addTagsSelected(tags);
-        snackEditCard();
+        snack(this, R.string.edited_card);
         updateListView();
     }
 
@@ -395,14 +403,14 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         cardsController.setTagsSelected(tagsSelected);
         cardsController.setDisplayOnlyFavorites(displayOnlyFavorites);
 
-        snackTagSelected();
+        snack(this, R.string.tag_selected);
         updateListView();
     }
 
     @Override
     public void onEditNote(String uuid, String note) {
         cardsController.setNote(this, uuid, note);
-        snackEditNote();
+        snack(this, R.string.note_edited);
         updateListView();
     }
 
@@ -410,7 +418,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onCopyCard(String sourceLymboId, String targetLymboId, String cardUuid, boolean deepCopy) {
         if (sourceLymboId != null && targetLymboId != null && cardUuid != null) {
             cardsController.copyCard(sourceLymboId, targetLymboId, cardUuid, deepCopy);
-            snackCopyCard();
+            snack(this, R.string.copied_card);
             updateListView();
         }
     }
@@ -419,7 +427,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onMoveCard(String sourceLymboId, String targetLymboId, String cardUuid) {
         if (sourceLymboId != null && targetLymboId != null && cardUuid != null) {
             cardsController.moveCard(sourceLymboId, targetLymboId, cardUuid);
-            snackMoveCard();
+            snack(this, R.string.moved_card);
             updateListView();
         }
     }
@@ -439,14 +447,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         recentCardPos = pos;
         recentEvent = EVENT_STASH;
 
-        new SnackBar.Builder(this)
-                .withOnClickListener(this)
-                .withMessageId(R.string.stashed_card)
-                .withActionMessageId(R.string.undo)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
-
+        snack(this, R.string.stashed_card, R.string.undo);
         updateListView();
     }
 
@@ -457,6 +458,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
 
         cardsController.shuffle();
+        snack(this, R.string.shuffled_cards);
         updateListView();
     }
 
@@ -485,125 +487,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
      * @param favorite whether or not a card has been added to favorites
      */
     public void toggleFavorite(boolean favorite) {
+        snack(this, favorite ? R.string.add_card_to_favorites : R.string.remove_card_from_favorites);
         updateListView();
-
-        new SnackBar.Builder(this)
-                .withMessageId(favorite ? R.string.add_card_to_favorites : R.string.remove_card_from_favorites)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.SHORT_SNACK)
-                .show();
-    }
-
-    /**
-     * Indicates that a card has been discarded
-     *
-     * @param pos  position of the card
-     * @param card card to be discarded
-     */
-    public void snackDiscard(int pos, Card card) {
-        recentCard = card;
-        recentCardPos = pos;
-        recentEvent = EVENT_DISCARD;
-
-        new SnackBar.Builder(this)
-                .withOnClickListener(this)
-                .withMessageId(R.string.discard_card)
-                .withActionMessageId(R.string.undo)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
-    }
-
-    /**
-     * Indicates that a card has been put tho the end
-     *
-     * @param pos  poistion of the card
-     * @param card card to be put to the end
-     */
-    public void snackPutToEnd(int pos, Card card) {
-        recentCard = card;
-        recentCardPos = pos;
-        recentEvent = EVENT_PUT_TO_END;
-
-        new SnackBar.Builder(this)
-                .withOnClickListener(this)
-                .withMessageId(R.string.put_card_to_end)
-                .withActionMessageId(R.string.undo)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
-    }
-
-    /**
-     * Indicates that a card has been edited
-     */
-    public void snackEditCard() {
-        new SnackBar.Builder(this)
-                .withMessageId(R.string.edited_card)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
-    }
-
-    /**
-     * Indicates that tags have been selected
-     */
-    public void snackTagSelected() {
-        new SnackBar.Builder(this)
-                .withMessageId(R.string.tag_selected)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
-    }
-
-    /**
-     * Indicates that a note has been edited
-     */
-    public void snackEditNote() {
-        updateListView();
-
-        new SnackBar.Builder(this)
-                .withMessageId(R.string.note_edited)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
-    }
-
-    /**
-     * Indicates that a card has been copies
-     */
-    public void snackCopyCard() {
-        updateListView();
-
-        new SnackBar.Builder(this)
-                .withMessageId(R.string.copied_card)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
-    }
-
-    /**
-     * Indicates that a card has been moved
-     */
-    public void snackMoveCard() {
-        updateListView();
-
-        new SnackBar.Builder(this)
-                .withMessageId(R.string.moved_card)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
-    }
-
-    /**
-     * Indicates that cards have been resetted
-     */
-    public void snackCardsResetted() {
-        new SnackBar.Builder(this)
-                .withMessageId(R.string.cards_resetted)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
     }
 
     // --------------------
@@ -661,18 +546,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         toolbarTextView.setText(String.valueOf(cardsController.getVisibleCardCount()));
     }
 
-    /**
-     * Displays an alert that at least one answer shall be selected
-     */
-    public void alertSelectAnswer() {
-        new SnackBar.Builder(this)
-                .withOnClickListener(this)
-                .withMessageId(R.string.select_answer)
-                .withStyle(SnackBar.Style.ALERT)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
-    }
-
     // --------------------
     // Inner classes
     // --------------------
@@ -694,10 +567,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             super.onPostExecute(result);
             final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 
-            updateListView();
-            snackCardsResetted();
-
             srl.setRefreshing(false);
+            snack(CardsActivity.this, R.string.cards_resetted);
+            updateListView();
         }
     }
 }
