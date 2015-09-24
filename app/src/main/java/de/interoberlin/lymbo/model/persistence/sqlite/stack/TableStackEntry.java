@@ -5,6 +5,7 @@ public class TableStackEntry {
     private String uuid;
     private String path;
     private int state;
+    private int format;
 
     // --------------------
     // Constructors
@@ -13,10 +14,11 @@ public class TableStackEntry {
     public TableStackEntry() {
     }
 
-    public TableStackEntry(String uuid, String path, int state) {
+    public TableStackEntry(String uuid, String path, int state, int format) {
         this.uuid = uuid;
         this.path = path;
         this.state = state;
+        this.format = format;
     }
 
     // --------------------
@@ -53,5 +55,17 @@ public class TableStackEntry {
 
     public boolean isStashed() {
         return getState() == TableStackDatasource.STATE_STASHED;
+    }
+
+    public int getFormat() {
+        return format;
+    }
+
+    public void setFormat(int format) {
+        this.format = format;
+    }
+
+    public boolean isCompressed() {
+        return getFormat() == TableStackDatasource.FORMAT_LYMBOX;
     }
 }

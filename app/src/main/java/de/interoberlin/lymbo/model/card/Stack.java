@@ -11,7 +11,9 @@ import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 
 public class Stack {
     private String path;
+    private String originalPath;
     private boolean asset;
+    private EFormat format;
 
     private String id;
     private String creationDate;
@@ -122,12 +124,36 @@ public class Stack {
         this.path = path;
     }
 
+    public String getOriginalPath() {
+        return originalPath;
+    }
+
+    public void setOriginalPath(String originalPath) {
+        this.originalPath = originalPath;
+    }
+
     public boolean isAsset() {
         return asset;
     }
 
     public void setAsset(boolean asset) {
         this.asset = asset;
+    }
+
+    public EFormat getFormat() {
+        return format;
+    }
+
+    public void setFormat(EFormat format) {
+        this.format = format;
+    }
+
+    public boolean isLymbo() {
+        return getFormat() == EFormat.LYMBO;
+    }
+
+    public boolean isLymbox() {
+        return getFormat() == EFormat.LYMBOX;
     }
 
     public String getTitle() {

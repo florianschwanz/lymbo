@@ -85,8 +85,12 @@ public class LymboParser {
 
             Stack stack = parseLymbo(parser, onlyTopLevel);
             stack.setContainsGeneratedIds(containsGeneratedIds);
+
+            Log.info("Parsed " + stack.getTitle());
+
             return stack;
         } catch (XmlPullParserException xmlppe) {
+            Log.error(xmlppe.getMessage());
             Stack stack = new Stack();
             stack.setError(xmlppe.toString());
             return stack;
@@ -105,7 +109,6 @@ public class LymboParser {
      * @throws java.io.IOException
      */
     private Stack parseLymbo(XmlPullParser parser, boolean onlyTopLevel) throws XmlPullParserException, IOException {
-        Log.trace("parseLymbo()");
         String name;
 
         parser.require(XmlPullParser.START_TAG, null, "lymbo");
@@ -141,7 +144,6 @@ public class LymboParser {
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
-                Log.trace("parseCard() continue");
                 continue;
             }
 
@@ -202,7 +204,6 @@ public class LymboParser {
      * @throws java.io.IOException
      */
     private Card parseCard(XmlPullParser parser) throws XmlPullParserException, IOException {
-        Log.trace("parseCard()");
         String name;
         parser.require(XmlPullParser.START_TAG, null, "card");
 
@@ -220,7 +221,6 @@ public class LymboParser {
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
-                Log.trace("parseCard() continue");
                 continue;
             }
 
@@ -284,7 +284,6 @@ public class LymboParser {
      * @throws java.io.IOException
      */
     private Side parseSide(XmlPullParser parser, String tag) throws XmlPullParserException, IOException {
-        Log.trace("parseSide()");
         String name;
         parser.require(XmlPullParser.START_TAG, null, tag);
 
@@ -304,7 +303,6 @@ public class LymboParser {
             }
 
             name = parser.getName();
-            Log.trace("name : " + name);
 
             switch (name) {
                 case "title":
@@ -354,7 +352,6 @@ public class LymboParser {
      * @throws java.io.IOException
      */
     private TitleComponent parseTitleComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
-        Log.trace("parseTitleComponent()");
         String name;
         parser.require(XmlPullParser.START_TAG, null, "title");
 
@@ -375,7 +372,6 @@ public class LymboParser {
             }
 
             name = parser.getName();
-            Log.trace("name : " + name);
 
             switch (name) {
                 case "translation":
@@ -413,7 +409,6 @@ public class LymboParser {
      * @throws java.io.IOException
      */
     private TextComponent parseTextComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
-        Log.trace("parseTextComponent()");
         String name;
         parser.require(XmlPullParser.START_TAG, null, "text");
 
@@ -435,7 +430,6 @@ public class LymboParser {
             }
 
             name = parser.getName();
-            Log.trace("name : " + name);
 
             switch (name) {
                 case "translation":
@@ -477,7 +471,6 @@ public class LymboParser {
      * @throws java.io.IOException
      */
     private ResultComponent parseResultComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
-        Log.trace("parseResultComponent()");
         parser.require(XmlPullParser.START_TAG, null, "result");
 
         // Create element
@@ -509,7 +502,6 @@ public class LymboParser {
      * @throws java.io.IOException
      */
     private ImageComponent parseImageComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
-        Log.trace("parseImageComponent()");
         parser.require(XmlPullParser.START_TAG, null, "image");
 
         // Create element
@@ -544,7 +536,6 @@ public class LymboParser {
      * @throws java.io.IOException
      */
     private ChoiceComponent parseChoiceComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
-        Log.trace("parseChoiceComponent()");
         String name;
         parser.require(XmlPullParser.START_TAG, null, "choice");
 
@@ -590,7 +581,6 @@ public class LymboParser {
      * @throws java.io.IOException
      */
     private Answer parseAnswer(XmlPullParser parser) throws XmlPullParserException, IOException {
-        Log.trace("parseAnswer()");
         String name;
         parser.require(XmlPullParser.START_TAG, null, "answer");
 
@@ -610,7 +600,6 @@ public class LymboParser {
             }
 
             name = parser.getName();
-            Log.trace("name : " + name);
 
             switch (name) {
                 case "translation":
@@ -687,7 +676,6 @@ public class LymboParser {
     }
 
     private Map.Entry<String, String> parseTranslation(XmlPullParser parser) throws IOException, XmlPullParserException {
-        Log.trace("parseTranslation");
         // String name;
         parser.require(XmlPullParser.START_TAG, null, "translation");
 
@@ -706,7 +694,6 @@ public class LymboParser {
             }
 
             name = parser.getName();
-            Log.trace("name : " + name);
 
             switch (name) {
                 default:
@@ -794,7 +781,6 @@ public class LymboParser {
      * @throws java.io.IOException
      */
     private LanguageAspect parseLanguageAspect(XmlPullParser parser) throws XmlPullParserException, IOException {
-        Log.trace("parseLanguageAspect()");
         String name;
         parser.require(XmlPullParser.START_TAG, null, "language");
 
@@ -809,7 +795,6 @@ public class LymboParser {
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
-                Log.trace("parseLanguageAspect() continue");
                 continue;
             }
 
@@ -840,7 +825,6 @@ public class LymboParser {
      * @throws java.io.IOException
      */
     private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
-        Log.trace("skip()");
         if (parser.getEventType() != XmlPullParser.START_TAG) {
             Log.trace("throw new IllegalStateException()");
             throw new IllegalStateException();

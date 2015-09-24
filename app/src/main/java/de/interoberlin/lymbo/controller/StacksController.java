@@ -37,7 +37,7 @@ public class StacksController {
 
     // Model
     private List<Stack> stacks;
-    private List<Stack> lymbosStashed;
+    private List<Stack> stacksStashed;
 
     private List<Tag> tagsSelected;
 
@@ -46,6 +46,7 @@ public class StacksController {
     private static String LYMBOX_FILE_EXTENSION;
     private static String LYMBO_LOOKUP_PATH;
     private static String LYMBO_SAVE_PATH;
+    private static String LYMBO_TMP_PATH;
 
     private boolean loaded = false;
 
@@ -74,7 +75,7 @@ public class StacksController {
 
     public void init() {
         stacks = new ArrayList<>();
-        lymbosStashed = new ArrayList<>();
+        stacksStashed = new ArrayList<>();
         tagsSelected = new ArrayList<>();
 
         // Properties
@@ -82,6 +83,7 @@ public class StacksController {
         LYMBOX_FILE_EXTENSION = getResources().getString(R.string.lymbox_file_extension);
         LYMBO_LOOKUP_PATH = getResources().getString(R.string.lymbo_lookup_path);
         LYMBO_SAVE_PATH = getResources().getString(R.string.lymbo_save_path);
+        LYMBO_TMP_PATH = getResources().getString(R.string.lymbo_tmp_path);
     }
 
     /**
@@ -185,7 +187,7 @@ public class StacksController {
      */
     public void stash(Stack stack) {
         getStacks().remove(stack);
-        getLymbosStashed().add(stack);
+        getStacksStashed().add(stack);
         changeState(stack.getId(), true);
     }
 
@@ -196,29 +198,37 @@ public class StacksController {
      */
     public void restore(Stack stack) {
         getStacks().add(stack);
-        getLymbosStashed().remove(stack);
+        getStacksStashed().remove(stack);
         changeState(stack.getId(), false);
     }
 
     /**
-     * Saves lymbo location in database
+     * Saves an existing stack
      *
-     * @param stack lymbo to be saved
+     * @param stack stack to be saved
      * @return whether save worked or not
      */
     public boolean save(Stack stack) {
-        if (stack.getPath() != null) {
-            stack.setModificationDate(new Date().toString());
+        switch (stack.getFormat()) {
+            case LYMBO: {
+                if (stack.getOriginalPath() != null) {
+                    stack.setModificationDate(new Date().toString());
 
-            LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
-            LymboWriter.writeXml(stack, new File(stack.getPath()));
+                    LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
+                    LymboWriter.writeXml(stack, new File(stack.getOriginalPath()));
 
-            datasource = new TableStackDatasource(activity);
-            datasource.open();
-            datasource.updateStackLocation(stack.getId(), stack.getPath());
-            datasource.close();
+                    datasource = new TableStackDatasource(activity);
+                    datasource.open();
+                    datasource.updateStackLocation(stack.getId(), stack.getOriginalPath(), TableStackDatasource.FORMAT_LYMBO);
+                    datasource.close();
 
-            return true;
+                    return true;
+                }
+            }
+            case LYMBOX : {
+                // TODO : implement save method for *.lymbox files
+                break;
+            }
         }
 
         return false;
@@ -231,38 +241,65 @@ public class StacksController {
      * @param path  new path
      */
     public void saveAs(Stack stack, String path) {
-        LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
-        LymboWriter.writeXml(stack, new File(stack.getPath()));
+        switch (stack.getFormat()) {
+            case LYMBO: {
+                LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
+                LymboWriter.writeXml(stack, new File(stack.getOriginalPath()));
 
-        new File(stack.getPath()).renameTo(new File(path));
-        stack.setPath(path);
+                new File(stack.getPath()).renameTo(new File(path));
+                stack.setPath(path);
 
-        datasource = new TableStackDatasource(activity);
-        datasource.open();
-        datasource.updateStackLocation(stack.getId(), stack.getPath());
-        datasource.close();
+                datasource = new TableStackDatasource(activity);
+                datasource.open();
+                datasource.updateStackLocation(stack.getId(), stack.getOriginalPath(), TableStackDatasource.FORMAT_LYMBO);
+                datasource.close();
+                break;
+            }
+            case LYMBOX: {
+                // TODO : implement save method for *.lymbox files
+                break;
+            }
+        }
     }
 
     /**
-     * Searches for lymbo files on storage
+     * Searches for lymbo and lymbox files on storage and saves location in database
      */
     public void scan() {
         datasource = new TableStackDatasource(activity);
         datasource.open();
 
-        for (File f : findFiles(LYMBO_FILE_EXTENSION)) {
-            Stack stack = LymboLoader.getLymboFromFile(f, true);
+        // TODO : prevent double scanning
 
-            if (stack != null && !datasource.contains(TableStackDatasource.colPath.getName(), stack.getPath())) {
-                datasource.updateStackLocation(stack.getId(), stack.getPath());
+        // Scan for *.lymbo files
+        for (File f : findFiles(LYMBO_FILE_EXTENSION)) {
+            if (!f.getAbsolutePath().contains(LYMBO_TMP_PATH)) {
+                Stack stack = LymboLoader.getLymboFromFile(f, true);
+
+                System.out.println("FOO stack " + stack);
+                System.out.println("FOO stack.getOriginalPath() " + stack.getOriginalPath());
+
+                if (stack != null && !datasource.contains(TableStackDatasource.colPath.getName(), stack.getOriginalPath())) {
+                    datasource.updateStackLocation(stack.getId(), stack.getOriginalPath(), TableStackDatasource.FORMAT_LYMBO);
+                }
             }
         }
 
+        // Scan for *.lymbox files
+        System.out.println("FOO LYMBOX_FILE_EXTENSION " + LYMBOX_FILE_EXTENSION);
         for (File f : findFiles(LYMBOX_FILE_EXTENSION)) {
-            Stack stack = LymboLoader.getLymboxFromFile(f, true);
+            System.out.println("FOO found file " + f.getName());
 
-            if (stack != null && !datasource.contains(TableStackDatasource.colPath.getName(), stack.getPath())) {
-                datasource.updateStackLocation(stack.getId(), stack.getPath());
+            if (!f.getAbsolutePath().contains(LYMBO_TMP_PATH)) {
+                Stack stack = LymboLoader.getLymboxFromFile(f, true);
+
+                System.out.println("FOO stack " + stack);
+                // System.out.println("FOO stack.getOriginalPath() " + stack.getOriginalPath());
+
+                if (stack != null && !datasource.contains(TableStackDatasource.colPath.getName(), stack.getOriginalPath())) {
+                    System.out.println("FOO save in table");
+                    datasource.updateStackLocation(stack.getId(), stack.getOriginalPath(), TableStackDatasource.FORMAT_LYMBOX);
+                }
             }
         }
 
@@ -270,13 +307,13 @@ public class StacksController {
     }
 
     /**
-     * Loads lymbo files and updates databasestatus
+     * Loads lymbo files and updates database status if necessary
      */
     public void load() {
         datasource = new TableStackDatasource(activity);
         datasource.open();
 
-        // Retrieve lymbo files from locations cache
+        // Retrieve lymbo files from database table
         Collection<File> lymboFiles = new ArrayList<>();
         Collection<File> lymboFilesStashed = new ArrayList<>();
 
@@ -299,8 +336,11 @@ public class StacksController {
         stacks.addAll(getStacksFromAssets());
         stacks.addAll(getStacksFromFiles(lymboFiles));
 
-        lymbosStashed.clear();
-        lymbosStashed.addAll(getStacksFromFiles(lymboFilesStashed));
+        stacksStashed.clear();
+        stacksStashed.addAll(getStacksFromFiles(lymboFilesStashed));
+
+        // TODO : remove debug
+        datasource.printTable();
 
         datasource.close();
         loaded = true;
@@ -352,10 +392,18 @@ public class StacksController {
 
         // Add lymbos from file system
         for (File f : files) {
-            Stack l = LymboLoader.getLymboFromFile(f, false);
-            if (l != null) {
-                stacks.add(l);
-                Log.debug("Found lymbo " + f.getName());
+            if (f.getPath().endsWith(LYMBO_FILE_EXTENSION)) {
+                Stack l = LymboLoader.getLymboFromFile(f, false);
+                if (l != null) {
+                    stacks.add(l);
+                    Log.debug("Found lymbo " + f.getName());
+                }
+            } else if (f.getPath().endsWith(LYMBOX_FILE_EXTENSION)) {
+                Stack l = LymboLoader.getLymboxFromFile(f, false);
+                if (l != null) {
+                    stacks.add(l);
+                    Log.debug("Found lymbox " + f.getName());
+                }
             }
         }
 
@@ -372,6 +420,11 @@ public class StacksController {
             for (String asset : Arrays.asList(activity.getAssets().list(""))) {
                 if (asset.endsWith(LYMBO_FILE_EXTENSION)) {
                     Stack l = LymboLoader.getLymboFromAsset(activity, asset, false);
+                    if (l != null) {
+                        stacks.add(l);
+                    }
+                } else if (asset.endsWith(LYMBOX_FILE_EXTENSION)) {
+                    Stack l = LymboLoader.getLymboxFromAsset(activity, asset, false);
                     if (l != null) {
                         stacks.add(l);
                     }
@@ -476,8 +529,8 @@ public class StacksController {
         return stacks;
     }
 
-    public List<Stack> getLymbosStashed() {
-        return lymbosStashed;
+    public List<Stack> getStacksStashed() {
+        return stacksStashed;
     }
 
     public List<Tag> getTagsSelected() {

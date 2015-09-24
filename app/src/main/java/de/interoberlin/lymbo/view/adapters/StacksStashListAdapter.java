@@ -154,7 +154,7 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
             FilterResults results = new FilterResults();
 
             // Copy items
-            originalItems = stacksController.getLymbosStashed();
+            originalItems = stacksController.getStacksStashed();
 
             ArrayList<Stack> values;
             synchronized (lock) {

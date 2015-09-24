@@ -60,7 +60,7 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
 
     public void onResume() {
         super.onResume();
-        lymbosStashAdapter = new StacksStashListAdapter(this, this, R.layout.stack_stash, stacksController.getLymbosStashed());
+        lymbosStashAdapter = new StacksStashListAdapter(this, this, R.layout.stack_stash, stacksController.getStacksStashed());
 
         // Load layout
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);

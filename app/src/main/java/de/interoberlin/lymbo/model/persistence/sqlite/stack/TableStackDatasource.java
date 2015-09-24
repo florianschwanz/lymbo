@@ -27,14 +27,19 @@ public class TableStackDatasource {
     public static final Column colUuid = new Column("uuid", Type.TEXT_PRIMARY_KEY);
     public static final Column colPath = new Column("path", Type.TEXT);
     public static final Column colState = new Column("state", Type.INTEGER);
+    public static final Column colFormat = new Column("format", Type.INTEGER);
 
     public static final int STATE_NORMAL = 0;
     public static final int STATE_STASHED = 3;
+
+    public static final int FORMAT_LYMBO = 0;
+    public static final int FORMAT_LYMBOX = 1;
 
     static {
         columnHolder.add(colUuid);
         columnHolder.add(colPath);
         columnHolder.add(colState);
+        columnHolder.add(colFormat);
     }
 
     // --------------------
@@ -71,7 +76,8 @@ public class TableStackDatasource {
 
         createStatement += colUuid.getName() + " " + colUuid.getType().getName() + ", ";
         createStatement += colPath.getName() + " " + colPath.getType().getName() + ", ";
-        createStatement += colState.getName() + " " + colState.getType().getName();
+        createStatement += colState.getName() + " " + colState.getType().getName() + ", ";
+        createStatement += colFormat.getName() + " " + colFormat.getType().getName();
 
         createStatement += ");";
 
@@ -91,7 +97,12 @@ public class TableStackDatasource {
         tableStackEntry.setUuid(cursor.getString(0));
         tableStackEntry.setPath(cursor.getString(1));
         tableStackEntry.setState(cursor.getInt(2));
+        tableStackEntry.setFormat(cursor.getInt(3));
         return tableStackEntry;
+    }
+
+    public void recreate() {
+        dbLymboSQLiteOpenHelper.recreateTableStack(database);
     }
 
     public void recreateOnSchemaChange() {
@@ -220,6 +231,10 @@ public class TableStackDatasource {
         return !getEntries(colUuid, uuid, colState, STATE_STASHED).isEmpty();
     }
 
+    public boolean isCompressed(String uuid) {
+        return !getEntries(colUuid, uuid, colFormat, FORMAT_LYMBOX).isEmpty();
+    }
+
     // --------------------
     // Methods - Delete
     // --------------------
@@ -279,16 +294,18 @@ public class TableStackDatasource {
      * @param uuid path of entry identified by this uuid will be set
      * @param path path to be set
      */
-    public void updateStackLocation(String uuid, String path) {
+    public void updateStackLocation(String uuid, String path, int format) {
         if (containsUuid(uuid)) {
             ContentValues values = new ContentValues();
             values.put(colPath.getName(), path);
+            values.put(colState.getName(), format);
             database.update(table, values, colUuid.getName() + "='" + uuid + "'", null);
         } else {
             ContentValues values = new ContentValues();
             values.put(colUuid.getName(), uuid);
             values.put(colPath.getName(), path);
             values.put(colState.getName(), 0);
+            values.put(colFormat.getName(), format);
             database.insert(table, null, values);
         }
     }
@@ -300,7 +317,7 @@ public class TableStackDatasource {
     public void printTable() {
         for (TableStackEntry entry : getEntries()) {
             if (entry != null) {
-                System.out.println(entry.getUuid() + "\t" + entry.getState() + "\t" + entry.getPath());
+                System.out.println(entry.getUuid() + "\t" + entry.getState() + "\t" + entry.getPath()+ "\t" + entry.getFormat());
             }
         }
     }

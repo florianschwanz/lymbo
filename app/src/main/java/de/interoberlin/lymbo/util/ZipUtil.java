@@ -4,7 +4,9 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -25,15 +27,34 @@ public class ZipUtil {
      * @param targetDir target directory
      */
     public static void unzip(File zipFile, File targetDir) {
-        // Create target dir if not existant
+        try {
+            FileInputStream fileInputStream = new FileInputStream(zipFile);
+            unzip(fileInputStream, targetDir);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Extracts a zip file into a give target directory
+     *
+     * @param inputStream  input stream of zip file to extract
+     * @param targetDir target directory
+     */
+    public static void unzip(InputStream inputStream, File targetDir) {
+        System.out.println("FOO unzip targetDir " + targetDir);
+
+        // Create target dir if not existent
         if (!targetDir.exists()) {
-            if (!targetDir.mkdirs())
+            System.out.println("FOO A");
+            if (!targetDir.mkdirs()) {
+                System.out.println("FOO B");
                 return;
+            }
         }
 
         try {
-            FileInputStream fileInputStream = new FileInputStream(zipFile);
-            ZipInputStream zipInputStream = new ZipInputStream(fileInputStream);
+            ZipInputStream zipInputStream = new ZipInputStream(inputStream);
             ZipEntry entry;
             while ((entry = zipInputStream.getNextEntry()) != null) {
                 String name = entry.getName();
@@ -53,7 +74,7 @@ public class ZipUtil {
                 }
 
                 // Write file
-                FileOutputStream fileOutputStream = new FileOutputStream(targetDir.getPath() + name);
+                FileOutputStream fileOutputStream = new FileOutputStream(targetDir.getPath() + "/" + name);
                 for (int c = zipInputStream.read(); c != -1; c = zipInputStream.read()) {
                     fileOutputStream.write(c);
                 }
@@ -87,7 +108,7 @@ public class ZipUtil {
                 FileInputStream fi = new FileInputStream(f);
                 origin = new BufferedInputStream(fi, BUFFER);
 
-                ZipEntry entry = new ZipEntry(fileName.substring(fileName.lastIndexOf("\\") + 1));
+                ZipEntry entry = new ZipEntry(fileName.substring(fileName.lastIndexOf("/") + 1));
                 out.putNextEntry(entry);
                 int count;
 
