@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
@@ -76,6 +77,7 @@ public class Tag implements Displayable {
                 names.add(t.getName());
         }
 
+        Collections.sort(names);
         return names;
     }
 
