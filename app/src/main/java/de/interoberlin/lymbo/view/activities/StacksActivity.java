@@ -293,9 +293,9 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
     @Override
     public void onAddStack(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
-        Stack stack = stacksController.getEmptyLymbo(title, subtitle, author, languageFrom, languageTo, tags);
+        Stack stack = stacksController.getEmptyStack(title, subtitle, author, languageFrom, languageTo, tags);
 
-        if (!new File(stack.getPath()).exists()) {
+        if (!new File(stack.getFile()).exists()) {
             stacksController.addStack(stack);
             stacksController.addTagsSelected(tags);
             stacksAdapter.notifyDataSetChanged();

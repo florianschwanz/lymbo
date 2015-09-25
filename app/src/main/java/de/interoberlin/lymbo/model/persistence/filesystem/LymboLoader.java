@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.UUID;
 
-import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.EFormat;
 import de.interoberlin.lymbo.model.card.Stack;
@@ -19,90 +18,123 @@ import de.interoberlin.lymbo.util.ZipUtil;
 import de.interoberlin.mate.lib.model.Log;
 
 public class LymboLoader {
+    // --------------------
+    // Methods - Fassade
+    // --------------------
+
     /**
      * Loads a stack object from a given file inside assets
      *
-     * @param c         Context
-     * @param lymboPath path to lymbo file
+     * @param context Context
+     * @param fileName    lymbo(x) file name to load
      * @return stack
      */
-    public static Stack getLymboFromAsset(Context c, String lymboPath, boolean onlyTopLevel) {
-        try {
-            InputStream inputStream = c.getAssets().open(lymboPath);
-            Stack l = getLymboFromInputStream(inputStream, onlyTopLevel);
-            if (l != null) {
-                l.setPath(lymboPath);
-                l.setAsset(true);
-                inputStream.close();
-                return l;
-            } else {
-                return null;
+    public static Stack getLymboFromAsset(Context context, String fileName, boolean onlyTopLevel) {
+        if (fileName != null) {
+            if (fileName.endsWith(context.getResources().getString(R.string.lymbo_file_extension))) {
+                try {
+                    InputStream inputStream = context.getAssets().open(fileName);
+                    Stack stack = getLymboFromInputStream(inputStream, null, onlyTopLevel);
+                    if (stack != null) {
+                        stack.setFile(fileName);
+                        stack.setPath(fileName);
+                        stack.setAsset(true);
+                        stack.setFormat(EFormat.LYMBO);
+                    }
+
+                    return stack;
+                } catch (IOException e) {
+                    Log.error(e.toString());
+                    e.printStackTrace();
+                }
+            } else if (fileName.endsWith(context.getResources().getString(R.string.lymbox_file_extension))) {
+                File path = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + context.getResources().getString(R.string.lymbo_tmp_path) + "/" + UUID.randomUUID());
+
+                try {
+                    InputStream inputStream = context.getAssets().open(fileName);
+                    ZipUtil.unzip(inputStream, path);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                File file = new File(path.getAbsolutePath() + "/main.lymbo");
+
+                return getLymbo(file, path, onlyTopLevel, true, EFormat.LYMBOX);
             }
-        } catch (IOException e) {
-            Log.error(e.toString());
-            e.printStackTrace();
         }
 
         return null;
     }
 
     /**
-     * Loads a stack object from a given file inside assets
+     * Load a stack from a *.lymbo(x) file
      *
-     * @param c Context
-     * @param f path to lymbo file
-     * @return stack
-     */
-    public static Stack getLymboxFromAsset(Context c, String f, boolean onlyTopLevel) {
-        String LYMBO_TMP_PATH = App.getContext().getResources().getString(R.string.lymbo_tmp_path);
-
-        File tmpDir = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_TMP_PATH + "/" + UUID.randomUUID());
-
-        try {
-            InputStream inputStream = c.getAssets().open(f);
-            ZipUtil.unzip(inputStream, tmpDir);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return getLymboFromFile(new File(tmpDir + "/main.lymbo"), new File(f), onlyTopLevel, true);
-    }
-
-    /**
-     * Load a stack from a *.lymbo file
-     *
-     * @param f            lymbo file to load
+     * @param context      Context
+     * @param file         lymbo(x) file to load
      * @param onlyTopLevel whether to load only the top level element or not
      * @return stack
      */
-    public static Stack getLymboFromFile(File f, boolean onlyTopLevel) {
-        Stack stack = getLymboFromFile(f, f, onlyTopLevel, false);
-        stack.setFormat(EFormat.LYMBO);
+    public static Stack getLymboFromFile(Context context, File file, boolean onlyTopLevel) {
+        if (file != null) {
+            if (file.getAbsolutePath().endsWith(context.getResources().getString(R.string.lymbo_file_extension))) {
+                File path = new File(file.getParent());
+                return getLymbo(file, path, onlyTopLevel, false, EFormat.LYMBO);
+            } else if (file.getAbsolutePath().endsWith(context.getResources().getString(R.string.lymbox_file_extension))) {
+                File path = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + context.getResources().getString(R.string.lymbo_tmp_path) + "/" + UUID.randomUUID());
 
-        return stack;
+                System.out.println("FOO unzip " + file.getAbsolutePath());
+                System.out.println("FOO unzip " + path.getAbsolutePath());
+
+                ZipUtil.unzip(file, path);
+
+                return getLymbo(file, path, onlyTopLevel, false, EFormat.LYMBOX);
+            }
+        }
+
+        return null;
     }
+
+    // --------------------
+    // Methods
+    // --------------------
+
 
     /**
      * Load a stack from a *.lymbox file
      *
-     * @param f            lymbo file to load
-     * @param originalPath original *.lymbox file
+     * @param file         *.lymbo(x) file
+     * @param path         path of *.lymbo(x) file
      * @param onlyTopLevel whether to load only the top level element or not
-     * @param isAsset      whether this file is an asset or not
+     * @param asset        whether this file is an asset or not
      * @return stack
      */
-    public static Stack getLymboFromFile(File f, File originalPath, boolean onlyTopLevel, boolean isAsset) {
+    private static Stack getLymbo(File file, File path, boolean onlyTopLevel, boolean asset, EFormat format) {
         try {
-            Stack stack = getLymboFromInputStream(new FileInputStream(f), onlyTopLevel);
+            System.out.println("FOO " + file.getAbsolutePath());
+            System.out.println("FOO " + path.getAbsolutePath());
+
+            Stack stack = null;
+            switch (format) {
+                case LYMBO: {
+                    stack = getLymboFromInputStream(new FileInputStream(file), path, onlyTopLevel);
+                    break;
+                }
+                case LYMBOX: {
+                    stack = getLymboFromInputStream(new FileInputStream(new File(path.getAbsolutePath() + "/main.lymbo")), path, onlyTopLevel);
+                    break;
+                }
+            }
+
             if (stack != null) {
-                stack.setPath(f.getAbsolutePath());
-                stack.setOriginalPath(originalPath.getAbsolutePath());
-                stack.setAsset(isAsset);
+                stack.setFile(file.getAbsolutePath());
+                stack.setPath(path.getAbsolutePath());
+                stack.setAsset(asset);
+                stack.setFormat(format);
 
                 // Make sure that newly generated ids will be persistent
-                if (!onlyTopLevel && stack.isContainsGeneratedIds()) {
+                if (!onlyTopLevel && !asset && stack.isContainsGeneratedIds()) {
                     stack.setModificationDate(new Date().toString());
-                    LymboWriter.writeXml(stack, new File(stack.getPath()));
+                    LymboWriter.writeXml(stack, new File(stack.getFile()));
                 }
 
                 return stack;
@@ -116,47 +148,9 @@ public class LymboLoader {
         }
     }
 
-    /**
-     * Load a Lymbo object from a given file
-     *
-     * @param f File
-     * @return Lymbo file
-     */
-    public static Stack getLymboxFromFile(File f, boolean onlyTopLevel) {
+    private static Stack getLymboFromInputStream(InputStream is, File path, boolean onlyTopLevel) {
         try {
-            String LYMBO_TMP_PATH = App.getContext().getResources().getString(R.string.lymbo_tmp_path);
-
-            File tmpDir = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_TMP_PATH + "/" + UUID.randomUUID());
-
-            ZipUtil.unzip(f, tmpDir);
-
-            Stack stack = getLymboFromInputStream(new FileInputStream(new File(tmpDir + "/main.lymbo")), onlyTopLevel);
-            if (stack != null) {
-                stack.setPath(new File(tmpDir + "/main.lymbo").getAbsolutePath());
-                stack.setOriginalPath(f.getAbsolutePath());
-                stack.setAsset(false);
-                stack.setFormat(EFormat.LYMBOX);
-
-                // Make sure that newly generated ids will be persistent
-                if (!onlyTopLevel && stack.isContainsGeneratedIds()) {
-                    stack.setModificationDate(new Date().toString());
-                    LymboWriter.writeXml(stack, new File(stack.getPath()));
-                }
-
-                return stack;
-            } else {
-                return null;
-            }
-        } catch (FileNotFoundException e) {
-            Log.error(e.toString());
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static Stack getLymboFromInputStream(InputStream is, boolean onlyTopLevel) {
-        try {
-            return LymboParser.getInstance().parse(is, onlyTopLevel);
+            return LymboParser.getInstance().parse(is, path, onlyTopLevel);
         } catch (IOException e) {
             Log.error(e.toString());
             e.printStackTrace();

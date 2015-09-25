@@ -131,9 +131,9 @@ public class CardsController {
      * Writes lymbo object into file
      */
     public void save() {
-        if (stack.getPath() != null) {
+        if (stack.getFile() != null) {
             stack.setModificationDate(new Date().toString());
-            LymboWriter.writeXml(stack, new File(stack.getPath()));
+            LymboWriter.writeXml(stack, new File(stack.getFile()));
         }
     }
 
@@ -504,7 +504,7 @@ public class CardsController {
         if (asset)
             stack = LymboLoader.getLymboFromAsset(activity, path, false);
         else
-            stack = LymboLoader.getLymboFromFile(new File(path), false);
+            stack = LymboLoader.getLymboFromFile(activity, new File(path), false);
     }
 
     // --------------------

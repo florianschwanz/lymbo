@@ -3,6 +3,9 @@ package de.interoberlin.lymbo;
 import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
+
+import java.io.File;
 
 import de.interoberlin.lymbo.model.persistence.sqlite.LymboSQLiteOpenHelper;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
@@ -43,6 +46,9 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
+
+        String tmpPath = getResources().getString(R.string.lymbo_tmp_path);
+        new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + tmpPath).delete();
 
         // Database
         sqliteOpenLymboSQLiteOpenHelper = new LymboSQLiteOpenHelper(this);

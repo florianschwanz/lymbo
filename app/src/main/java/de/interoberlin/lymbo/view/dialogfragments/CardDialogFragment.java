@@ -29,7 +29,6 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.translate.AccessControlItem;
 import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.lymbo.model.translate.MicrosoftAccessControlItemTask;
@@ -195,9 +194,14 @@ public class CardDialogFragment extends DialogFragment {
         llTextBack.getLayoutParams().height = 0;
         llTags.getLayoutParams().height = 0;
 
-        LanguageAspect languageAspect = stack.getLanguageAspect();
-        Language languageFrom = languageAspect.getFrom();
-        Language languageTo = languageAspect.getTo();
+        Language languageFrom = null;
+        Language languageTo = null;
+
+        if (stack.getLanguageAspect() != null) {
+            languageFrom = stack.getLanguageAspect().getFrom();
+            languageTo = stack.getLanguageAspect().getTo();
+        }
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String accessItemAccessToken = prefs.getString(res.getString(R.string.translator_access_item_access_token), null);
 
@@ -291,9 +295,9 @@ public class CardDialogFragment extends DialogFragment {
     /**
      * Translates text from @param{etFrom} and writes it into @param{etTo} according to languages set in @param{stack}
      *
-     * @param stack stack
+     * @param stack  stack
      * @param etFrom source edit text
-     * @param etTo target edit text
+     * @param etTo   target edit text
      */
     private void translate(Stack stack, EditText etFrom, EditText etTo) {
         try {
@@ -414,6 +418,7 @@ public class CardDialogFragment extends DialogFragment {
 
     public interface OnCompleteListener {
         void onAddSimpleCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
+
         void onEditSimpleCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
     }
 

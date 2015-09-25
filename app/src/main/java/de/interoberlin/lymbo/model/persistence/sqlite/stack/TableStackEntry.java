@@ -3,6 +3,7 @@ package de.interoberlin.lymbo.model.persistence.sqlite.stack;
 
 public class TableStackEntry {
     private String uuid;
+    private String file;
     private String path;
     private int state;
     private int format;
@@ -14,8 +15,9 @@ public class TableStackEntry {
     public TableStackEntry() {
     }
 
-    public TableStackEntry(String uuid, String path, int state, int format) {
+    public TableStackEntry(String uuid, String file, String path, int state, int format) {
         this.uuid = uuid;
+        this.file = file;
         this.path = path;
         this.state = state;
         this.format = format;
@@ -31,6 +33,14 @@ public class TableStackEntry {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
     }
 
     public String getPath() {

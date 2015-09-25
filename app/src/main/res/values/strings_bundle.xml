@@ -9,7 +9,7 @@
     <string name="bundle_front_title" translatable="false">bundleFrontTitle</string>
     <string name="bundle_language_from" translatable="false">bundleLanguageFrom</string>
     <string name="bundle_language_to" translatable="false">bundleLanguageTo</string>
-    <string name="bundle_lymbo_path" translatable="false">bundleLymboPath</string>
+    <string name="bundle_lymbo_file_name" translatable="false">bundleLymboFileName</string>
     <string name="bundle_lymbo_uuid" translatable="false">bundleLymboUuid</string>
     <string name="bundle_message" translatable="false">bundleMessage</string>
     <string name="bundle_note" translatable="false">bundleNote</string>

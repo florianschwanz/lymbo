@@ -10,8 +10,8 @@ import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 
 public class Stack {
+    private String file;
     private String path;
-    private String originalPath;
     private boolean asset;
     private EFormat format;
 
@@ -22,6 +22,7 @@ public class Stack {
     private String subtitle;
     private String hint;
     private String image;
+    private EImageFormat imageFormat;
     private String author;
     private List<Card> cards;
 
@@ -52,6 +53,7 @@ public class Stack {
         subtitle = "";
         hint = null;
         image = null;
+        imageFormat = EImageFormat.BASE64;
         author = "";
         cards = new ArrayList<>();
         error = "";
@@ -92,28 +94,12 @@ public class Stack {
     // Getters / Setters
     // -------------------------
 
-    public String getId() {
-        return id;
+    public String getFile() {
+        return file;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(String creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public String getModificationDate() {
-        return modificationDate;
-    }
-
-    public void setModificationDate(String modificationDate) {
-        this.modificationDate = modificationDate;
+    public void setFile(String file) {
+        this.file = file;
     }
 
     public String getPath() {
@@ -122,14 +108,6 @@ public class Stack {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public String getOriginalPath() {
-        return originalPath;
-    }
-
-    public void setOriginalPath(String originalPath) {
-        this.originalPath = originalPath;
     }
 
     public boolean isAsset() {
@@ -154,6 +132,30 @@ public class Stack {
 
     public boolean isLymbox() {
         return getFormat() == EFormat.LYMBOX;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getModificationDate() {
+        return modificationDate;
+    }
+
+    public void setModificationDate(String modificationDate) {
+        this.modificationDate = modificationDate;
     }
 
     public String getTitle() {
@@ -186,6 +188,14 @@ public class Stack {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public EImageFormat getImageFormat() {
+        return imageFormat;
+    }
+
+    public void setImageFormat(EImageFormat imageFormat) {
+        this.imageFormat = imageFormat;
     }
 
     public String getAuthor() {

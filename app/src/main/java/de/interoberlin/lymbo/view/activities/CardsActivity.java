@@ -83,10 +83,10 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
                 srl.setRefreshing(true);
 
-                String path = savedInstanceState.getString(getResources().getString(R.string.bundle_lymbo_path));
+                String fileName = savedInstanceState.getString(getResources().getString(R.string.bundle_lymbo_file_name));
                 boolean asset = savedInstanceState.getBoolean(getResources().getString(R.string.bundle_asset));
 
-                cardsController.reloadStack(path, asset);
+                cardsController.reloadStack(fileName, asset);
                 cardsController.init();
 
                 srl.setRefreshing(false);
@@ -314,7 +314,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString(getResources().getString(R.string.bundle_lymbo_path), cardsController.getStack().getPath());
+        savedInstanceState.putString(getResources().getString(R.string.bundle_lymbo_file_name), cardsController.getStack().getFile());
         savedInstanceState.putBoolean(getResources().getString(R.string.bundle_asset), cardsController.getStack().isAsset());
 
         super.onSaveInstanceState(savedInstanceState);

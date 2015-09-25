@@ -5,6 +5,7 @@ import android.util.Xml;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.AbstractMap;
@@ -15,10 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 import de.interoberlin.lymbo.App;
-import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Stack;
+import de.interoberlin.lymbo.model.card.Displayable;
+import de.interoberlin.lymbo.model.card.EImageFormat;
 import de.interoberlin.lymbo.model.card.Side;
+import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.card.components.Answer;
@@ -69,11 +71,12 @@ public class LymboParser {
      * Parses xml file an returns a map
      *
      * @param is           input stream representing lymbo file
+     * @param path         resource path
      * @param onlyTopLevel determines if only the top level element shall be parsed
      * @return xmlLymbo
      * @throws java.io.IOException
      */
-    public Stack parse(InputStream is, boolean onlyTopLevel) throws IOException {
+    public Stack parse(InputStream is, File path, boolean onlyTopLevel) throws IOException {
         this.onlyTopLevel = onlyTopLevel;
         containsGeneratedIds = false;
 
@@ -83,7 +86,7 @@ public class LymboParser {
             parser.setInput(is, null);
             parser.nextTag();
 
-            Stack stack = parseLymbo(parser, onlyTopLevel);
+            Stack stack = parseLymbo(parser, path, onlyTopLevel);
             stack.setContainsGeneratedIds(containsGeneratedIds);
 
             Log.info("Parsed " + stack.getTitle());
@@ -103,12 +106,13 @@ public class LymboParser {
      * Returns a lymbo
      *
      * @param parser       the XmlPullParser
+     * @param path         resource path
      * @param onlyTopLevel determines if only the top level element shall be parsed
      * @return xmlLymbo
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private Stack parseLymbo(XmlPullParser parser, boolean onlyTopLevel) throws XmlPullParserException, IOException {
+    private Stack parseLymbo(XmlPullParser parser, File path, boolean onlyTopLevel) throws XmlPullParserException, IOException {
         String name;
 
         parser.require(XmlPullParser.START_TAG, null, "lymbo");
@@ -124,6 +128,7 @@ public class LymboParser {
         String subtitle = parser.getAttributeValue(null, "subtitle");
         String hint = parser.getAttributeValue(null, "hint");
         String image = parser.getAttributeValue(null, "image");
+        String imageFormat = parser.getAttributeValue(null, "imageFormat");
         String author = parser.getAttributeValue(null, "author");
         String tags = parser.getAttributeValue(null, "tags");
 
@@ -150,7 +155,7 @@ public class LymboParser {
             name = parser.getName();
 
             if (!onlyTopLevel && name.equals("card")) {
-                cards.add(parseCard(parser));
+                cards.add(parseCard(parser, path));
             } else if (name.equals("language")) {
                 la = parseLanguageAspect(parser);
             } else {
@@ -178,6 +183,8 @@ public class LymboParser {
             stack.setHint(hint);
         if (image != null)
             stack.setImage(image);
+        if (imageFormat != null)
+            stack.setImageFormat(parseImageFormat(imageFormat));
         if (author != null)
             stack.setAuthor(author);
         if (tags != null)
@@ -195,15 +202,29 @@ public class LymboParser {
             defaults.put(attribute, value);
     }
 
+    private EImageFormat parseImageFormat(String imageFormat) {
+        switch (imageFormat) {
+            case "ref": {
+                return EImageFormat.REF;
+            }
+            case "base64": {
+                return EImageFormat.BASE64;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Returns a card which contains one or two sides
      *
      * @param parser the XmlPullParser
+     * @param path   resource path
      * @return card Card object
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private Card parseCard(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private Card parseCard(XmlPullParser parser, File path) throws XmlPullParserException, IOException {
         String name;
         parser.require(XmlPullParser.START_TAG, null, "card");
 
@@ -229,13 +250,13 @@ public class LymboParser {
             Side side = null;
             switch (name) {
                 case "front":
-                    side = parseSide(parser, "front");
+                    side = parseSide(parser, "front", path);
                     break;
                 case "back":
-                    side = parseSide(parser, "back");
+                    side = parseSide(parser, "back", path);
                     break;
                 case "side":
-                    side = parseSide(parser, "side");
+                    side = parseSide(parser, "side", path);
                     break;
                 default:
                     skip(parser);
@@ -279,11 +300,13 @@ public class LymboParser {
      * Returns a side of a card
      *
      * @param parser the XmlPullParser
+     * @param tag    tag
+     * @param path   resource path
      * @return xmlSide
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private Side parseSide(XmlPullParser parser, String tag) throws XmlPullParserException, IOException {
+    private Side parseSide(XmlPullParser parser, String tag, File path) throws XmlPullParserException, IOException {
         String name;
         parser.require(XmlPullParser.START_TAG, null, tag);
 
@@ -318,7 +341,7 @@ public class LymboParser {
                     components.add(parseSVGComponent(parser, color));
                     break;
                 case "image":
-                    components.add(parseImageComponent(parser));
+                    components.add(parseImageComponent(parser, path));
                     break;
                 case "result":
                     components.add(parseResultComponent(parser));
@@ -497,11 +520,12 @@ public class LymboParser {
      * Returns a result component
      *
      * @param parser the XmlPullParser
+     * @param path   resource path
      * @return xmlSide
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private ImageComponent parseImageComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private ImageComponent parseImageComponent(XmlPullParser parser, File path) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, "image");
 
         // Create element
@@ -509,6 +533,7 @@ public class LymboParser {
 
         // Read attributes
         String value = parser.getAttributeValue(null, "value");
+        String format = parser.getAttributeValue(null, "format");
 
         // Read sub elements
         parser.next();
@@ -523,6 +548,10 @@ public class LymboParser {
         // Fill element
         if (value != null)
             component.setValue(value);
+        if (format != null)
+            component.setFormat(parseImageFormat(format));
+        if (path != null)
+            component.setResourcePath(path);
 
         return component;
     }

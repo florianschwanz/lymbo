@@ -25,6 +25,7 @@ public class TableStackDatasource {
     public static final String table = "stack";
     public static final ColumnHolder columnHolder = new ColumnHolder();
     public static final Column colUuid = new Column("uuid", Type.TEXT_PRIMARY_KEY);
+    public static final Column colFile = new Column("file", Type.TEXT);
     public static final Column colPath = new Column("path", Type.TEXT);
     public static final Column colState = new Column("state", Type.INTEGER);
     public static final Column colFormat = new Column("format", Type.INTEGER);
@@ -37,6 +38,7 @@ public class TableStackDatasource {
 
     static {
         columnHolder.add(colUuid);
+        columnHolder.add(colFile);
         columnHolder.add(colPath);
         columnHolder.add(colState);
         columnHolder.add(colFormat);
@@ -75,6 +77,7 @@ public class TableStackDatasource {
         String createStatement = "create table if not exists " + table + "(";
 
         createStatement += colUuid.getName() + " " + colUuid.getType().getName() + ", ";
+        createStatement += colFile.getName() + " " + colFile.getType().getName() + ", ";
         createStatement += colPath.getName() + " " + colPath.getType().getName() + ", ";
         createStatement += colState.getName() + " " + colState.getType().getName() + ", ";
         createStatement += colFormat.getName() + " " + colFormat.getType().getName();
@@ -95,9 +98,10 @@ public class TableStackDatasource {
     private TableStackEntry cursorToStack(Cursor cursor) {
         TableStackEntry tableStackEntry = new TableStackEntry();
         tableStackEntry.setUuid(cursor.getString(0));
-        tableStackEntry.setPath(cursor.getString(1));
-        tableStackEntry.setState(cursor.getInt(2));
-        tableStackEntry.setFormat(cursor.getInt(3));
+        tableStackEntry.setFile(cursor.getString(1));
+        tableStackEntry.setPath(cursor.getString(2));
+        tableStackEntry.setState(cursor.getInt(3));
+        tableStackEntry.setFormat(cursor.getInt(4));
         return tableStackEntry;
     }
 
@@ -291,23 +295,29 @@ public class TableStackDatasource {
     /**
      * Updates the field path of a stack identified by {@param uuid} to {@param path}
      *
-     * @param uuid path of entry identified by this uuid will be set
-     * @param path path to be set
+     * @param uuid   path of entry identified by this uuid will be set
+     * @param file   file to be set
+     * @param path   path to be set
+     * @param format format to be set
      */
-    public void updateStackLocation(String uuid, String path, int format) {
+    public void updateStackLocation(String uuid, String file, String path, int format) {
         if (containsUuid(uuid)) {
             ContentValues values = new ContentValues();
+            values.put(colFile.getName(), file);
             values.put(colPath.getName(), path);
             values.put(colState.getName(), format);
             database.update(table, values, colUuid.getName() + "='" + uuid + "'", null);
         } else {
             ContentValues values = new ContentValues();
             values.put(colUuid.getName(), uuid);
+            values.put(colFile.getName(), file);
             values.put(colPath.getName(), path);
             values.put(colState.getName(), 0);
             values.put(colFormat.getName(), format);
             database.insert(table, null, values);
         }
+
+        printTable();
     }
 
     // --------------------
@@ -317,7 +327,13 @@ public class TableStackDatasource {
     public void printTable() {
         for (TableStackEntry entry : getEntries()) {
             if (entry != null) {
-                System.out.println(entry.getUuid() + "\t" + entry.getState() + "\t" + entry.getPath()+ "\t" + entry.getFormat());
+                System.out.println("Entry");
+                System.out.println(".. " + colUuid.getName() + " \t" + entry.getUuid());
+                System.out.println(".. " + colState.getName() + " \t" + entry.getState());
+                System.out.println(".. " + colFile.getName() + " \t" + entry.getFile());
+                System.out.println(".. " + colPath.getName() + " \t" + entry.getPath());
+                System.out.println(".. " + colFormat.getName() + " \t" + entry.getFormat());
+
             }
         }
     }

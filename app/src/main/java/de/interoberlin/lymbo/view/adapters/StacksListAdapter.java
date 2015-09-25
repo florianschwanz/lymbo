@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.widget.CardView;
@@ -112,9 +113,21 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             final LinearLayout llTags = (LinearLayout) llStack.findViewById(R.id.llTags);
 
             // Set values
-            if (stack.getImage() != null && !stack.getImage().trim().isEmpty()) {
-                Bitmap b = Base64BitmapConverter.decodeBase64(stack.getImage());
-                ivImage.setImageBitmap(b);
+            if (stack.getImageFormat() != null && stack.getImage() != null && !stack.getImage().trim().isEmpty()) {
+                switch (stack.getImageFormat()) {
+                    case BASE64: {
+                        Bitmap bmp = Base64BitmapConverter.decodeBase64(stack.getImage());
+                        ivImage.setImageBitmap(bmp);
+                        break;
+                    }
+                    case REF: {
+                        String imagePath = stack.getPath()+  "/" + stack.getImage();
+                        Bitmap bmp = BitmapFactory.decodeFile(imagePath);
+                        ivImage.setImageBitmap(bmp);
+                        ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        break;
+                    }
+                }
             } else {
                 ivImage.getLayoutParams().height = 0;
             }

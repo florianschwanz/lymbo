@@ -42,13 +42,10 @@ public class ZipUtil {
      * @param targetDir target directory
      */
     public static void unzip(InputStream inputStream, File targetDir) {
-        System.out.println("FOO unzip targetDir " + targetDir);
 
         // Create target dir if not existent
         if (!targetDir.exists()) {
-            System.out.println("FOO A");
             if (!targetDir.mkdirs()) {
-                System.out.println("FOO B");
                 return;
             }
         }
