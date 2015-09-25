@@ -127,8 +127,6 @@ public class LymboLoader {
             String LYMBO_TMP_PATH = App.getContext().getResources().getString(R.string.lymbo_tmp_path);
 
             File tmpDir = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_TMP_PATH + "/" + UUID.randomUUID());
-            System.out.println("FOO f " + f.getPath());
-            System.out.println("FOO tmpDir " + tmpDir);
 
             ZipUtil.unzip(f, tmpDir);
 

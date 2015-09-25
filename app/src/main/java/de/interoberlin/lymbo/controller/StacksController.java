@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.model.card.EFormat;
 import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
@@ -122,6 +123,7 @@ public class StacksController {
         }
 
         stack.setPath(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + title.trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION);
+        stack.setFormat(EFormat.LYMBO);
 
         return stack;
     }
@@ -225,7 +227,7 @@ public class StacksController {
                     return true;
                 }
             }
-            case LYMBOX : {
+            case LYMBOX: {
                 // TODO : implement save method for *.lymbox files
                 break;
             }
@@ -246,7 +248,9 @@ public class StacksController {
                 LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
                 LymboWriter.writeXml(stack, new File(stack.getOriginalPath()));
 
-                new File(stack.getPath()).renameTo(new File(path));
+                if (!new File(stack.getPath()).renameTo(new File(path)))
+                    return;
+
                 stack.setPath(path);
 
                 datasource = new TableStackDatasource(activity);
@@ -276,28 +280,18 @@ public class StacksController {
             if (!f.getAbsolutePath().contains(LYMBO_TMP_PATH)) {
                 Stack stack = LymboLoader.getLymboFromFile(f, true);
 
-                System.out.println("FOO stack " + stack);
-                System.out.println("FOO stack.getOriginalPath() " + stack.getOriginalPath());
-
-                if (stack != null && !datasource.contains(TableStackDatasource.colPath.getName(), stack.getOriginalPath())) {
+                if (!datasource.contains(TableStackDatasource.colPath.getName(), stack.getOriginalPath())) {
                     datasource.updateStackLocation(stack.getId(), stack.getOriginalPath(), TableStackDatasource.FORMAT_LYMBO);
                 }
             }
         }
 
         // Scan for *.lymbox files
-        System.out.println("FOO LYMBOX_FILE_EXTENSION " + LYMBOX_FILE_EXTENSION);
         for (File f : findFiles(LYMBOX_FILE_EXTENSION)) {
-            System.out.println("FOO found file " + f.getName());
-
             if (!f.getAbsolutePath().contains(LYMBO_TMP_PATH)) {
                 Stack stack = LymboLoader.getLymboxFromFile(f, true);
 
-                System.out.println("FOO stack " + stack);
-                // System.out.println("FOO stack.getOriginalPath() " + stack.getOriginalPath());
-
                 if (stack != null && !datasource.contains(TableStackDatasource.colPath.getName(), stack.getOriginalPath())) {
-                    System.out.println("FOO save in table");
                     datasource.updateStackLocation(stack.getId(), stack.getOriginalPath(), TableStackDatasource.FORMAT_LYMBOX);
                 }
             }
@@ -491,7 +485,7 @@ public class StacksController {
 
         for (Stack stack : getStacks()) {
             for (Tag tag : stack.getTags()) {
-                if (tag != null && !tag.containedIn(tagsAll) && tag.getName() != getResources().getString(R.string.no_tag))
+                if (tag != null && !tag.containedIn(tagsAll) && !tag.getName().equals(getResources().getString(R.string.no_tag)))
                     tagsAll.add(tag);
             }
         }
