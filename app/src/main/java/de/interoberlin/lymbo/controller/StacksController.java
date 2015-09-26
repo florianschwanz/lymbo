@@ -27,6 +27,7 @@ import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackEntry;
 import de.interoberlin.lymbo.model.translate.Language;
+import de.interoberlin.lymbo.util.ZipUtil;
 import de.interoberlin.mate.lib.model.Log;
 
 public class StacksController {
@@ -155,39 +156,24 @@ public class StacksController {
 
             Stack fullStack = LymboLoader.getLymboFromFile(activity, new File(stack.getFile()), false);
 
-            switch (stack.getFormat()) {
-                case LYMBO: {
-                    if (fullStack != null) {
-                        stack.setCards(fullStack.getCards());
-                        stack.setHint(fullStack.getHint());
-                        stack.setImage(fullStack.getImage());
+            if (fullStack != null) {
+                stack.setCards(fullStack.getCards());
+                stack.setHint(fullStack.getHint());
+                stack.setImage(fullStack.getImage());
 
-                        stack.setTitle(title);
-                        stack.setSubtitle(subtitle);
-                        stack.setAuthor(author);
-                        stack.setTags(tags);
+                stack.setTitle(title);
+                stack.setSubtitle(subtitle);
+                stack.setAuthor(author);
+                stack.setTags(tags);
 
-                        if (languageFrom != null && languageTo != null) {
-                            LanguageAspect languageAspect = new LanguageAspect();
-                            languageAspect.setFrom(languageFrom);
-                            languageAspect.setTo(languageTo);
-                            stack.setLanguageAspect(languageAspect);
-                        }
-
-                        String path = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + stack.getTitle().trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION;
-
-                        if (stack.getPath().equals(path)) {
-                            save(stack);
-                        } else {
-                            saveAs(stack, path);
-                        }
-                        break;
-                    }
+                if (languageFrom != null && languageTo != null) {
+                    LanguageAspect languageAspect = new LanguageAspect();
+                    languageAspect.setFrom(languageFrom);
+                    languageAspect.setTo(languageTo);
+                    stack.setLanguageAspect(languageAspect);
                 }
-                case LYMBOX: {
-                    // TODO : implement save method for *.lymbox files
-                    break;
-                }
+
+                save(stack);
             }
         }
     }
@@ -221,12 +207,9 @@ public class StacksController {
      * @return whether save worked or not
      */
     public boolean save(Stack stack) {
-        switch (stack.getFormat()) {
-            case LYMBO: {
-                if (stack.getFile() != null) {
-                    stack.setModificationDate(new Date().toString());
-
-                    LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
+        if (stack.getFile() != null) {
+            switch (stack.getFormat()) {
+                case LYMBO: {
                     LymboWriter.writeXml(stack, new File(stack.getFile()));
 
                     datasource = new TableStackDatasource(activity);
@@ -236,10 +219,17 @@ public class StacksController {
 
                     return true;
                 }
-            }
-            case LYMBOX: {
-                // TODO : implement save method for *.lymbox files
-                break;
+                case LYMBOX: {
+                    LymboWriter.writeXml(stack, new File(stack.getFile()));
+                    ZipUtil.zip(new File(stack.getPath()).listFiles(), new File(stack.getPath() + "/" + activity.getResources().getString(R.string.lymbo_main_file)));
+
+                    datasource = new TableStackDatasource(activity);
+                    datasource.open();
+                    datasource.updateStackLocation(stack.getId(), stack.getFile(), stack.getPath(), TableStackDatasource.FORMAT_LYMBOX);
+                    datasource.close();
+
+                    return true;
+                }
             }
         }
 
@@ -250,18 +240,17 @@ public class StacksController {
      * Saves lymbo under a new name
      *
      * @param stack lymbo to be saved
-     * @param path  new path
+     * @param file  new file
      */
-    public void saveAs(Stack stack, String path) {
+    public void saveAs(Stack stack, String file) {
         switch (stack.getFormat()) {
             case LYMBO: {
-                LymboWriter.createLymboSavePath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH));
                 LymboWriter.writeXml(stack, new File(stack.getFile()));
 
-                if (!new File(stack.getFile()).renameTo(new File(path)))
+                if (!new File(stack.getFile()).renameTo(new File(file)))
                     return;
 
-                stack.setPath(path);
+                stack.setPath(file);
 
                 datasource = new TableStackDatasource(activity);
                 datasource.open();
@@ -270,8 +259,20 @@ public class StacksController {
                 break;
             }
             case LYMBOX: {
-                // TODO : implement save method for *.lymbox files
-                break;
+                if (stack.getFile() != null) {
+                    stack.setModificationDate(new Date().toString());
+
+                    LymboWriter.writeXml(stack, new File(stack.getFile()));
+                    ZipUtil.zip(new File(stack.getPath()).listFiles(), new File(stack.getPath() + "/main.lymbo"));
+
+                    if (!new File(stack.getFile()).renameTo(new File(file)))
+                        return;
+
+                    datasource = new TableStackDatasource(activity);
+                    datasource.open();
+                    datasource.updateStackLocation(stack.getId(), stack.getFile(), stack.getPath(), TableStackDatasource.FORMAT_LYMBOX);
+                    datasource.close();
+                }
             }
         }
     }
@@ -305,6 +306,9 @@ public class StacksController {
                 }
             }
         }
+
+        // TODO
+        datasource.printTable();
 
         datasource.close();
     }

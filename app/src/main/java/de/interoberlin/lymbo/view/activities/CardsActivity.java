@@ -79,7 +79,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_cards);
 
             // Restore instance state
-            if (savedInstanceState != null) {
+            if (savedInstanceState != null && cardsController.getStack() != null) {
                 final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
                 srl.setRefreshing(true);
 

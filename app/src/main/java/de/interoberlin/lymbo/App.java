@@ -5,7 +5,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
+import java.io.IOException;
 
 import de.interoberlin.lymbo.model.persistence.sqlite.LymboSQLiteOpenHelper;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
@@ -48,7 +51,11 @@ public class App extends Application {
         context = this;
 
         String tmpPath = getResources().getString(R.string.lymbo_tmp_path);
-        new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + tmpPath).delete();
+        try {
+            FileUtils.deleteDirectory(new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + tmpPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Database
         sqliteOpenLymboSQLiteOpenHelper = new LymboSQLiteOpenHelper(this);

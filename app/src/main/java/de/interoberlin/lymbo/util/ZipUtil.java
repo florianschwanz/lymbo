@@ -4,12 +4,14 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -20,29 +22,29 @@ public class ZipUtil {
     // Methods
     // --------------------
 
-    /**
-     * Extracts a zip file into a give target directory
-     *
-     * @param zipFile   zip file to extract
-     * @param targetDir target directory
-     */
-    public static void unzip(File zipFile, File targetDir) {
-        try {
-            FileInputStream fileInputStream = new FileInputStream(zipFile);
-            unzip(fileInputStream, targetDir);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+    public static void unzip(File file, File targetDir) throws IOException {
+        ZipFile zf = new ZipFile(file.getAbsoluteFile());
+        Enumeration e = zf.entries();
+
+        while (e.hasMoreElements()) {
+            ZipEntry ze = (ZipEntry) e.nextElement();
+            FileOutputStream fout = new FileOutputStream(targetDir + "/" + ze.getName());
+            InputStream in = zf.getInputStream(ze);
+            for (int c = in.read(); c != -1; c = in.read()) {
+                fout.write(c);
+            }
+            in.close();
+            fout.close();
         }
     }
 
     /**
      * Extracts a zip file into a give target directory
      *
-     * @param inputStream  input stream of zip file to extract
-     * @param targetDir target directory
+     * @param inputStream input stream of zip file to extract
+     * @param targetDir   target directory
      */
     public static void unzip(InputStream inputStream, File targetDir) {
-
         // Create target dir if not existent
         if (!targetDir.exists()) {
             if (!targetDir.mkdirs()) {
@@ -50,39 +52,23 @@ public class ZipUtil {
             }
         }
 
+        ZipInputStream zipInputStream = new ZipInputStream(inputStream);
+        FileOutputStream fout;
         try {
-            ZipInputStream zipInputStream = new ZipInputStream(inputStream);
-            ZipEntry entry;
-            while ((entry = zipInputStream.getNextEntry()) != null) {
-                String name = entry.getName();
+            fout = new FileOutputStream(targetDir);
+            BufferedInputStream in = new BufferedInputStream(zipInputStream);
+            BufferedOutputStream out = new BufferedOutputStream(fout);
 
-                // Create dir of entry if necessary
-                if (name.contains("/")) {
-                    int lastSlash = name.lastIndexOf("/");
-                    if (lastSlash > -1) {
-                        String entryDirName = name.substring(0, lastSlash);
-                        File entryDir = new File(targetDir.getPath() + entryDirName);
-
-                        if (!entryDir.exists()) {
-                            if (!entryDir.mkdirs())
-                                continue;
-                        }
-                    }
-                }
-
-                // Write file
-                FileOutputStream fileOutputStream = new FileOutputStream(targetDir.getPath() + "/" + name);
-                for (int c = zipInputStream.read(); c != -1; c = zipInputStream.read()) {
-                    fileOutputStream.write(c);
-                }
-
-                zipInputStream.closeEntry();
-                fileOutputStream.close();
+            byte b[] = new byte[BUFFER];
+            int n;
+            while ((n = in.read(b, 0, BUFFER)) >= 0) {
+                out.write(b, 0, n);
             }
-            zipInputStream.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
+        System.out.println("FOO unzip end");
     }
 
     /**
@@ -91,7 +77,7 @@ public class ZipUtil {
      * @param files   list of files
      * @param zipFile zip file
      */
-    public static void zip(List<File> files, File zipFile) {
+    public static void zip(File[] files, File zipFile) {
         try {
             BufferedInputStream origin;
             FileOutputStream dest = new FileOutputStream(zipFile);
@@ -122,6 +108,7 @@ public class ZipUtil {
     }
 
     public static void zip(File directory, File zipFile) {
+
         try {
             BufferedInputStream origin;
             FileOutputStream dest = new FileOutputStream(zipFile);
@@ -133,6 +120,8 @@ public class ZipUtil {
 
             for (File f : files) {
                 String fileName = f.getPath();
+
+                System.out.println("FOO zip " + fileName);
 
                 FileInputStream fi = new FileInputStream(f);
                 origin = new BufferedInputStream(fi, BUFFER);

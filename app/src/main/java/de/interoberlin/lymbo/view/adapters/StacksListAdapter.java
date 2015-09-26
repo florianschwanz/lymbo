@@ -261,7 +261,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             });
 
             if (stack.getPath() != null)
-                tvPath.setText(stack.getPath());
+                tvPath.setText(stack.getFile());
 
             if (stack.getError() != null)
                 tvError.setText(stack.getError());

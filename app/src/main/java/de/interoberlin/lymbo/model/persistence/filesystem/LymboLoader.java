@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.UUID;
 
+import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.EFormat;
 import de.interoberlin.lymbo.model.card.Stack;
@@ -19,14 +20,14 @@ import de.interoberlin.mate.lib.model.Log;
 
 public class LymboLoader {
     // --------------------
-    // Methods - Fassade
+    // Methods - Facade
     // --------------------
 
     /**
      * Loads a stack object from a given file inside assets
      *
-     * @param context Context
-     * @param fileName    lymbo(x) file name to load
+     * @param context  Context
+     * @param fileName lymbo(x) file name to load
      * @return stack
      */
     public static Stack getLymboFromAsset(Context context, String fileName, boolean onlyTopLevel) {
@@ -57,7 +58,7 @@ public class LymboLoader {
                     e.printStackTrace();
                 }
 
-                File file = new File(path.getAbsolutePath() + "/main.lymbo");
+                File file = new File(path.getAbsolutePath() + "/" + App.getContext().getResources().getString(R.string.lymbo_main_file));
 
                 return getLymbo(file, path, onlyTopLevel, true, EFormat.LYMBOX);
             }
@@ -82,12 +83,17 @@ public class LymboLoader {
             } else if (file.getAbsolutePath().endsWith(context.getResources().getString(R.string.lymbox_file_extension))) {
                 File path = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + context.getResources().getString(R.string.lymbo_tmp_path) + "/" + UUID.randomUUID());
 
-                System.out.println("FOO unzip " + file.getAbsolutePath());
-                System.out.println("FOO unzip " + path.getAbsolutePath());
+                try {
+                    if (!path.mkdirs())
+                        return null;
 
-                ZipUtil.unzip(file, path);
+                    ZipUtil.unzip(file, path);
+                    return getLymbo(file, path, onlyTopLevel, false, EFormat.LYMBOX);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-                return getLymbo(file, path, onlyTopLevel, false, EFormat.LYMBOX);
+                return null;
             }
         }
 
@@ -110,17 +116,16 @@ public class LymboLoader {
      */
     private static Stack getLymbo(File file, File path, boolean onlyTopLevel, boolean asset, EFormat format) {
         try {
-            System.out.println("FOO " + file.getAbsolutePath());
-            System.out.println("FOO " + path.getAbsolutePath());
-
             Stack stack = null;
             switch (format) {
                 case LYMBO: {
-                    stack = getLymboFromInputStream(new FileInputStream(file), path, onlyTopLevel);
+                    if (file.exists())
+                        stack = getLymboFromInputStream(new FileInputStream(file), path, onlyTopLevel);
                     break;
                 }
                 case LYMBOX: {
-                    stack = getLymboFromInputStream(new FileInputStream(new File(path.getAbsolutePath() + "/main.lymbo")), path, onlyTopLevel);
+                    if (new File(path.getAbsolutePath() + "/" + App.getContext().getResources().getString(R.string.lymbo_main_file)).exists())
+                        stack = getLymboFromInputStream(new FileInputStream(new File(path.getAbsolutePath() + "/" + App.getContext().getResources().getString(R.string.lymbo_main_file))), path, onlyTopLevel);
                     break;
                 }
             }
@@ -132,7 +137,7 @@ public class LymboLoader {
                 stack.setFormat(format);
 
                 // Make sure that newly generated ids will be persistent
-                if (!onlyTopLevel && !asset && stack.isContainsGeneratedIds()) {
+                if (format == EFormat.LYMBO && !onlyTopLevel && !asset && stack.isContainsGeneratedIds()) {
                     stack.setModificationDate(new Date().toString());
                     LymboWriter.writeXml(stack, new File(stack.getFile()));
                 }

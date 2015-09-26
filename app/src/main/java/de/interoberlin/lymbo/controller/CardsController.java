@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -24,6 +23,7 @@ import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardEntry;
+import de.interoberlin.lymbo.util.ZipUtil;
 
 public class CardsController {
     // Activity
@@ -132,8 +132,18 @@ public class CardsController {
      */
     public void save() {
         if (stack.getFile() != null) {
-            stack.setModificationDate(new Date().toString());
-            LymboWriter.writeXml(stack, new File(stack.getFile()));
+
+            switch (stack.getFormat()) {
+                case LYMBO: {
+                    LymboWriter.writeXml(stack, new File(stack.getFile()));
+                    break;
+                }
+                case LYMBOX: {
+                    LymboWriter.writeXml(stack, new File(stack.getPath() + "/" + activity.getResources().getString(R.string.lymbo_main_file)));
+                    ZipUtil.zip(new File(stack.getPath()).listFiles(), new File(stack.getFile()));
+                    break;
+                }
+            }
         }
     }
 

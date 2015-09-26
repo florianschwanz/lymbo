@@ -210,9 +210,11 @@ public class LymboParser {
             case "base64": {
                 return EImageFormat.BASE64;
             }
+            default: {
+                return EImageFormat.BASE64;
+            }
         }
 
-        return null;
     }
 
     /**

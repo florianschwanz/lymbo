@@ -1,21 +1,27 @@
 package de.interoberlin.lymbo.model.persistence.filesystem;
 
+import android.os.Environment;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.interoberlin.lymbo.model.card.Displayable;
+import de.interoberlin.lymbo.App;
+import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Stack;
+import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.lymbo.model.card.Side;
+import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
+import de.interoberlin.lymbo.model.card.components.ImageComponent;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 
@@ -25,13 +31,14 @@ import de.interoberlin.lymbo.model.card.components.TitleComponent;
 public class LymboWriter {
     private static StringBuilder result;
 
-    public static void createLymboSavePath(File path) {
-        if (!path.exists()) {
-            path.mkdirs();
-        }
-    }
-
     public static void writeXml(Stack stack, File file) {
+        // Create save path
+        String LYMBO_SAVE_PATH = App.getContext().getResources().getString(R.string.lymbo_save_path);
+        if (new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH).mkdirs())
+            return;
+
+        stack.setModificationDate(new Date().toString());
+
         try {
             FileWriter fw = new FileWriter(file);
             fw.write(getXmlString(stack));
@@ -130,6 +137,8 @@ public class LymboWriter {
                 appendTitleComponent("title", (TitleComponent) component);
             } else if (component instanceof TextComponent) {
                 appendTextComponent("text", (TextComponent) component);
+            } else if (component instanceof ImageComponent) {
+                appendImageComponent("image", (ImageComponent) component);
             }
         }
 
@@ -167,6 +176,20 @@ public class LymboWriter {
     }
 
     /**
+     * Appends a image component
+     *
+     * @param tag       tag name to appended
+     * @param component component to appended
+     */
+    private static void appendImageComponent(String tag, ImageComponent component) {
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("format", escape(component.getFormat().getValue()));
+        attributes.put("value", escape(component.getValue()));
+
+        addTag(tag, attributes);
+    }
+
+    /**
      * Appends language component to lymbo
      *
      * @param tag            tag name to appended
@@ -187,48 +210,21 @@ public class LymboWriter {
     // --------------------
 
     /**
-     * Adds a value between two tags
-     *
-     * @param value value to append
-     */
-    private static void addValue(String value) {
-        result.append(value);
-    }
-
-    /**
-     * Adds a start tag
-     *
-     * @param tag tag to appended
-     */
-    private static void addStartTag(String tag) {
-        result.append("\n<" + tag + ">");
-    }
-
-    /**
      * Adds a start tag with attributes
      *
      * @param tag        tag name to appended
      * @param attributes attributes to appended
      */
     private static void addStartTag(String tag, Map<String, String> attributes) {
-        result.append("\n<" + tag);
+        result.append("\n<").append(tag);
 
         for (Map.Entry<String, String> e : attributes.entrySet()) {
             if (e.getValue() != null) {
-                result.append("\n " + e.getKey() + "=\"" + e.getValue() + "\"");
+                result.append("\n ").append(e.getKey()).append("=\"").append(e.getValue()).append("\"");
             }
         }
 
         result.append(">");
-    }
-
-    /**
-     * Adds a self-closing tag
-     *
-     * @param tag tag to appended
-     */
-    private static void addTag(String tag) {
-        result.append("\n<" + tag + " />");
     }
 
     /**
@@ -238,11 +234,11 @@ public class LymboWriter {
      * @param attributes attributes to appended
      */
     private static void addTag(String tag, Map<String, String> attributes) {
-        result.append("\n<" + tag);
+        result.append("\n<").append(tag);
 
         for (Map.Entry<String, String> e : attributes.entrySet()) {
             if (e.getValue() != null) {
-                result.append("\n " + e.getKey() + "=\"" + e.getValue() + "\"");
+                result.append("\n ").append(e.getKey()).append("=\"").append(e.getValue()).append("\"");
             }
         }
 
@@ -255,26 +251,14 @@ public class LymboWriter {
      * @param tag tag name to appended
      */
     private static void addEndTag(String tag) {
-        result.append("</" + tag + ">\n");
+        result.append("</").append(tag).append(">\n");
     }
 
-    /**
-     * Appends a simple tag to the xml
-     *
-     * @param tag  tag name to appended
-     * @param text text value of the tag
-     */
-    private static void appendTag(String tag, String text) {
-        addStartTag(tag);
-        addValue(text);
-        addEndTag(tag);
-    }
-
-    private static String getTagsList(List<Tag> tags) {
+    protected static String getTagsList(List<Tag> tags) {
         String tagsList = "";
 
         for (Tag t : tags) {
-            tagsList +=  t.getName() + " ";
+            tagsList += t.getName() + " ";
         }
 
         // Remove trailing blank
