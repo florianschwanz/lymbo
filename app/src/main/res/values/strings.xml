@@ -7,6 +7,7 @@
     <string name="add_languages">Add languages</string>
     <string name="add_stack">Add stack</string>
     <string name="add_tags">Add tags</string>
+    <string name="add_template">Add template</string>
     <string name="all">All</string>
     <string name="app_name">lymbo</string>
     <string name="author">Author</string>
@@ -97,6 +98,7 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_shuffle">Shuffle</string>
     <string name="menu_stash">Stash</string>
+    <string name="menu_templates">Templates</string>
     <string name="message">Message</string>
     <string name="move_card">Move card</string>
     <string name="moved_card">Moved card</string>
@@ -141,6 +143,7 @@
     <string name="tag_selected">Tag selected</string>
     <string name="tags">Tags</string>
     <string name="target_language">Target language</string>
+    <string name="templates">Templates</string>
     <string name="text">Text</string>
     <string name="title">Title</string>
     <string name="translator_access_item_access_token" translatable="false">translator_access_item_access_token</string>

@@ -143,5 +143,8 @@
     <string name="scan_for_lymbo_files_question">Willst du auf deinem Gerät nach lymbo Dateien suchen?</string>
     <string name="shuffled_cards">Karten gemischt</string>
     <string name="cards_unstashed">Karten wiederhergestellt</string>
+    <string name="templates">Vorlagen</string>
+    <string name="add_template">Vorlage hinzufügen</string>
+    <string name="menu_templates">Vorlagen</string>
 
 </resources>

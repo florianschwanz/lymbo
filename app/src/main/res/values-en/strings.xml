@@ -143,5 +143,8 @@
     <string name="scan_for_lymbo_files_question">Do you want to scan for lymbo files on your device?</string>
     <string name="shuffled_cards">Shuffled cards</string>
     <string name="cards_unstashed">Cards unstashed</string>
+    <string name="templates">Templates</string>
+    <string name="add_template">Add template</string>
+    <string name="menu_templates">Templates</string>
 
 </resources>

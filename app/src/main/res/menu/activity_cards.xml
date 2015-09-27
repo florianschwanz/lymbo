@@ -2,8 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_stash"
+        android:id="@+id/menu_templates"
         android:orderInCategory="100"
+        android:title="@string/menu_templates"/>
+    <item
+        android:id="@+id/menu_stash"
+        android:orderInCategory="200"
         android:title="@string/menu_stash"/>
     <item
         android:id="@+id/menu_shuffle"

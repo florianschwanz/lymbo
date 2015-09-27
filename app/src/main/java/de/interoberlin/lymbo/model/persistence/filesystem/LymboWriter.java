@@ -113,8 +113,8 @@ public class LymboWriter {
         else
             attributes.put("id", UUID.randomUUID().toString());
 
-        if (card.getName() != null)
-            attributes.put("name", String.valueOf(card.getName()));
+        if (card.getTitle() != null)
+            attributes.put("title", String.valueOf(card.getTitle()));
 
         attributes.put("edit", String.valueOf(card.isEdit()));
         attributes.put("hint", escape(card.getHint()));

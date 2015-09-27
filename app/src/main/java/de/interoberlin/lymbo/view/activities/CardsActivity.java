@@ -37,12 +37,13 @@ import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.FilterCardsDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.MoveCardDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.TemplatesDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener, CardDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, FilterCardsDialogFragment.OnCompleteListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, CopyCardDialogFragment.OnCompleteListener, MoveCardDialogFragment.OnCompleteListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener, CardDialogFragment.OnCompleteListener, TemplatesDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, FilterCardsDialogFragment.OnCompleteListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, CopyCardDialogFragment.OnCompleteListener, MoveCardDialogFragment.OnCompleteListener {
     // Controllers
     private CardsController cardsController;
 
@@ -256,6 +257,10 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_templates: {
+                showTemplates();
+                break;
+            }
             case R.id.menu_stash: {
                 Intent i = new Intent(CardsActivity.this, CardsStashActivity.class);
                 startActivity(i);
@@ -395,6 +400,11 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
+    public void onAddTemplate() {
+
+    }
+
+    @Override
     public void onHintDialogComplete() {
     }
 
@@ -460,6 +470,27 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         cardsController.shuffle();
         snack(this, R.string.shuffled_cards);
         updateListView();
+    }
+
+    /**
+     * Opens a dialog to show templates
+     */
+    private void showTemplates() {
+        ArrayList<String> templates = new ArrayList<>();
+
+        for (Card template : stack.getTemplates()) {
+            System.out.println("FOO template " + template.getTitle());
+
+            if (template != null && template.getTitle() != null) {
+                templates.add(template.getTitle());
+            }
+        }
+
+        TemplatesDialogFragment dialog = new TemplatesDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_templates), templates);
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), "okay");
     }
 
     /**
