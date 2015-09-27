@@ -146,5 +146,6 @@
     <string name="templates">Vorlagen</string>
     <string name="add_template">Vorlage hinzufügen</string>
     <string name="menu_templates">Vorlagen</string>
+    <string name="delete">Löschen</string>
 
 </resources>

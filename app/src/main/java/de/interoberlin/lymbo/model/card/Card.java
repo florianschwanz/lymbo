@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.App;
+import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
@@ -36,7 +36,13 @@ public class Card {
     }
 
     public Card(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+        this(null, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+    }
+
+    public Card(String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         init();
+
+        this.title = title;
 
         Side frontSide = new Side();
         Side backSide = new Side();

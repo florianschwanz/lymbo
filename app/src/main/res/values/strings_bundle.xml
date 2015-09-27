@@ -17,6 +17,7 @@
     <string name="bundle_subtitle" translatable="false">subtitle</string>
     <string name="bundle_tags_all" translatable="false">tags_all</string>
     <string name="bundle_tags_selected" translatable="false">tags_selected</string>
+    <string name="bundle_template_uuid" translatable="false">template_uuid</string>
     <string name="bundle_templates" translatable="false">templates</string>
     <string name="bundle_texts_back" translatable="false">texts_back</string>
     <string name="bundle_texts_front" translatable="false">texts_front</string>

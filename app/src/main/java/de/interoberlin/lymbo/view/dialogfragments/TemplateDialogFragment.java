@@ -5,41 +5,28 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.translate.AccessControlItem;
-import de.interoberlin.lymbo.model.translate.Language;
-import de.interoberlin.lymbo.model.translate.MicrosoftAccessControlItemTask;
-import de.interoberlin.lymbo.model.translate.MicrosoftTranslatorTask;
-import de.interoberlin.lymbo.util.ViewUtil;
 
-public class CardDialogFragment extends DialogFragment {
-    private boolean addTextFrontIsExpanded = false;
-    private boolean addTextBackIsExpanded = false;
-    private boolean addTagsIsExpanded = false;
-
+public class TemplateDialogFragment extends DialogFragment {
     private OnCompleteListener ocListener;
 
     // --------------------
@@ -54,23 +41,16 @@ public class CardDialogFragment extends DialogFragment {
         final Resources res = getActivity().getResources();
 
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_card, null);
+        final View v = View.inflate(getActivity(), R.layout.dialogfragment_template, null);
 
         final EditText etFront = (EditText) v.findViewById(R.id.etFront);
-        final ImageView ivExpandTextsFront = (ImageView) v.findViewById(R.id.ivExpandTextsFront);
-        final LinearLayout llTextFront = (LinearLayout) v.findViewById(R.id.llTextFront);
         final TableLayout tblTextFront = (TableLayout) v.findViewById(R.id.tblTextFront);
         final ImageView ivAddTextFront = (ImageView) v.findViewById(R.id.ivAddTextFront);
 
         final EditText etBack = (EditText) v.findViewById(R.id.etBack);
-        final ImageView ivTranslate = (ImageView) v.findViewById(R.id.ivTranslate);
-        final ImageView ivExpandTextsBack = (ImageView) v.findViewById(R.id.ivExpandTextsBack);
-        final LinearLayout llTextBack = (LinearLayout) v.findViewById(R.id.llTextBack);
         final TableLayout tblTextBack = (TableLayout) v.findViewById(R.id.tblTextBack);
         final ImageView ivAddTextBack = (ImageView) v.findViewById(R.id.ivAddTextBack);
 
-        final LinearLayout llAddTags = (LinearLayout) v.findViewById(R.id.llAddTags);
-        final LinearLayout llTags = (LinearLayout) v.findViewById(R.id.llTags);
         final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
         final ImageView ivAddTag = (ImageView) v.findViewById(R.id.ivAddTag);
 
@@ -141,34 +121,6 @@ public class CardDialogFragment extends DialogFragment {
         }
 
         // Add actions
-        ivExpandTextsFront.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                expandTextsFront(ivExpandTextsFront, llTextFront);
-            }
-        });
-
-        ivExpandTextsBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                expandTextsBack(ivExpandTextsBack, llTextBack);
-            }
-        });
-
-        ivTranslate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                translate(stack, etFront, etBack);
-            }
-        });
-
-        llAddTags.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                expandTags(llTags);
-            }
-        });
-
         ivAddTextFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -189,25 +141,6 @@ public class CardDialogFragment extends DialogFragment {
                 addTag(tblTags);
             }
         });
-
-        llTextFront.getLayoutParams().height = 0;
-        llTextBack.getLayoutParams().height = 0;
-        llTags.getLayoutParams().height = 0;
-
-        Language languageFrom = null;
-        Language languageTo = null;
-
-        if (stack.getLanguageAspect() != null) {
-            languageFrom = stack.getLanguageAspect().getFrom();
-            languageTo = stack.getLanguageAspect().getTo();
-        }
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String accessItemAccessToken = prefs.getString(res.getString(R.string.translator_access_item_access_token), null);
-
-        if (languageFrom == null || languageTo == null || accessItemAccessToken == null) {
-            ViewUtil.remove(ivTranslate);
-        }
 
         // Add positive button
         builder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
@@ -233,9 +166,10 @@ public class CardDialogFragment extends DialogFragment {
 
         // Get arguments
         Bundle bundle = this.getArguments();
-        final String cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_uuid));
+        final String templateUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_template_uuid));
 
         AlertDialog dialog = (AlertDialog) getDialog();
+        final EditText etTitle = (EditText) dialog.findViewById(R.id.etTitle);
         final EditText etFront = (EditText) dialog.findViewById(R.id.etFront);
         final TableLayout tblTextFront = (TableLayout) dialog.findViewById(R.id.tblTextFront);
         final EditText etBack = (EditText) dialog.findViewById(R.id.etBack);
@@ -246,17 +180,17 @@ public class CardDialogFragment extends DialogFragment {
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String front = etFront.getText().toString().trim();
+                String title = etTitle.getText().toString().trim();
 
                 Drawable dWarning = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_warning);
 
-                if (front.isEmpty()) {
-                    etFront.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);
+                if (title.isEmpty()) {
+                    etTitle.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);
                 } else {
-                    if (cardUuid == null) {
-                        ocListener.onAddSimpleCard(etFront.getText().toString(), getTexts(tblTextFront), etBack.getText().toString(), getTexts(tblTextBack), getSelectedTags(tblTags));
+                    if (templateUuid == null) {
+                        ocListener.onAddTemplate(etTitle.getText().toString(), etFront.getText().toString(), getTexts(tblTextFront), etBack.getText().toString(), getTexts(tblTextBack), getSelectedTags(tblTags));
                     } else {
-                        ocListener.onEditSimpleCard(cardUuid, etFront.getText().toString(), getTexts(tblTextFront), etBack.getText().toString(), getTexts(tblTextBack), getSelectedTags(tblTags));
+                        ocListener.onEditTemplate(templateUuid, etTitle.getText().toString(), etFront.getText().toString(), getTexts(tblTextFront), etBack.getText().toString(), getTexts(tblTextBack), getSelectedTags(tblTags));
                     }
                     dismiss();
                 }
@@ -267,68 +201,6 @@ public class CardDialogFragment extends DialogFragment {
     // --------------------
     // Methods - Actions
     // --------------------
-
-    private void expandTextsFront(ImageView ivExpandTextsFront, LinearLayout llTextFront) {
-        if (addTextFrontIsExpanded) {
-            addTextFrontIsExpanded = false;
-            ivExpandTextsFront.setImageResource(R.drawable.ic_action_expand);
-            llTextFront.startAnimation(ViewUtil.collapse(getActivity(), llTextFront));
-        } else {
-            addTextFrontIsExpanded = true;
-            ivExpandTextsFront.setImageResource(R.drawable.ic_action_collapse);
-            llTextFront.startAnimation(ViewUtil.expand(getActivity(), llTextFront));
-        }
-    }
-
-    private void expandTextsBack(ImageView ivExpandTextsBack, LinearLayout llTextBack) {
-        if (addTextBackIsExpanded) {
-            addTextBackIsExpanded = false;
-            ivExpandTextsBack.setImageResource(R.drawable.ic_action_expand);
-            llTextBack.startAnimation(ViewUtil.collapse(getActivity(), llTextBack));
-        } else {
-            addTextBackIsExpanded = true;
-            ivExpandTextsBack.setImageResource(R.drawable.ic_action_collapse);
-            llTextBack.startAnimation(ViewUtil.expand(getActivity(), llTextBack));
-        }
-    }
-
-    /**
-     * Translates text from @param{etFrom} and writes it into @param{etTo} according to languages set in @param{stack}
-     *
-     * @param stack  stack
-     * @param etFrom source edit text
-     * @param etTo   target edit text
-     */
-    private void translate(Stack stack, EditText etFrom, EditText etTo) {
-        try {
-            Resources res = getActivity().getResources();
-
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String translatorApiSecret = prefs.getString(res.getString(R.string.translator_api_secret), null);
-
-            AccessControlItem accessControlItem = new MicrosoftAccessControlItemTask().execute(res.getString(R.string.translator_client_id), translatorApiSecret).get();
-
-            Language languageFrom = stack.getLanguageAspect().getFrom();
-            Language languageTo = stack.getLanguageAspect().getTo();
-
-            if (accessControlItem != null && accessControlItem.getAccess_token() != null) {
-                String translatedText = new MicrosoftTranslatorTask().execute(accessControlItem.getAccess_token(), languageFrom.getLangCode(), languageTo.getLangCode(), etFrom.getText().toString()).get();
-                etTo.setText(translatedText);
-            }
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void expandTags(LinearLayout llTags) {
-        if (addTagsIsExpanded) {
-            addTagsIsExpanded = false;
-            llTags.startAnimation(ViewUtil.collapse(getActivity(), llTags));
-        } else {
-            addTagsIsExpanded = true;
-            llTags.startAnimation(ViewUtil.expand(getActivity(), llTags));
-        }
-    }
 
     private void addText(TableLayout tblText) {
         TableRow row = (TableRow) tblText.getChildAt(tblText.getChildCount() - 1);
@@ -417,9 +289,8 @@ public class CardDialogFragment extends DialogFragment {
     // --------------------
 
     public interface OnCompleteListener {
-        void onAddSimpleCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
-
-        void onEditSimpleCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
+        void onAddTemplate(String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
+        void onEditTemplate(String uuid, String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
     }
 
     public void onAttach(Activity activity) {

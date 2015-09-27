@@ -234,6 +234,16 @@ public class CardsController {
     }
 
     /**
+     * Adds a new template to the current stack
+     */
+    public void addTemplate(String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+        Card template = new Card(title, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+
+        stack.getTemplates().add(template);
+        save();
+    }
+
+    /**
      * Stashes a card
      *
      * @param card card
@@ -567,6 +577,16 @@ public class CardsController {
         for (Card c : stack.getCards()) {
             if (c.getId().equals(uuid)) {
                 return c;
+            }
+        }
+
+        return null;
+    }
+
+    public Card getTemplateById(String uuid) {
+        for (Card t : stack.getTemplates()) {
+            if (t.getId().equals(uuid)) {
+                return t;
             }
         }
 

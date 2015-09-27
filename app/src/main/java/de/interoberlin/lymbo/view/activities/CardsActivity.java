@@ -37,13 +37,14 @@ import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.FilterCardsDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.MoveCardDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.TemplateDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.TemplatesDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener, CardDialogFragment.OnCompleteListener, TemplatesDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, FilterCardsDialogFragment.OnCompleteListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, CopyCardDialogFragment.OnCompleteListener, MoveCardDialogFragment.OnCompleteListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener, CardDialogFragment.OnCompleteListener, TemplatesDialogFragment.OnCompleteListener, TemplateDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, FilterCardsDialogFragment.OnCompleteListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, CopyCardDialogFragment.OnCompleteListener, MoveCardDialogFragment.OnCompleteListener {
     // Controllers
     private CardsController cardsController;
 
@@ -400,8 +401,31 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onAddTemplate() {
+    public void onNewTemplate() {
+        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
 
+        TemplateDialogFragment dialog = new TemplateDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.add_template));
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), "okay");
+    }
+
+    @Override
+    public void onAddTemplate(String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+        try {
+            cardsController.addTemplate(title, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+        } catch (Exception e) {
+            handleException(e);
+        }
+
+        showTemplates();
+    }
+
+    @Override
+    public void onEditTemplate(String uuid, String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+        showTemplates();
     }
 
     @Override
@@ -479,10 +503,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         ArrayList<String> templates = new ArrayList<>();
 
         for (Card template : stack.getTemplates()) {
-            System.out.println("FOO template " + template.getTitle());
-
-            if (template != null && template.getTitle() != null) {
-                templates.add(template.getTitle());
+            if (template != null && template.getId() != null) {
+                templates.add(template.getId());
             }
         }
 

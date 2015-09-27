@@ -25,6 +25,7 @@
     <string name="correct">correct</string>
     <string name="could_not_find_any_cards">Could not find any cards</string>
     <string name="deep_copy">Deep copy</string>
+    <string name="delete">Delete</string>
     <string name="desc_image">Image component</string>
     <string name="describe_the_error">Describe the error</string>
     <string name="discard_card">Discarded card</string>

@@ -146,5 +146,6 @@
     <string name="templates">Templates</string>
     <string name="add_template">Add template</string>
     <string name="menu_templates">Templates</string>
+    <string name="delete">Delete</string>
 
 </resources>
