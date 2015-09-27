@@ -14,6 +14,7 @@ import de.interoberlin.lymbo.model.card.enums.EGravity;
 
 public class Card {
     private String id;
+    private String name;
     private List<Side> sides;
 
     private String hint;
@@ -151,6 +152,14 @@ public class Card {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<Side> getSides() {

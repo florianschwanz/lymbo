@@ -146,6 +146,7 @@ public class LymboParser {
 
         // Read sub elements
         List<Card> cards = new ArrayList<>();
+        List<Card> templates = new ArrayList<>();
         LanguageAspect la = new LanguageAspect();
 
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -157,6 +158,8 @@ public class LymboParser {
 
             if (!onlyTopLevel && name.equals("card")) {
                 cards.add(parseCard(parser, path));
+            } else if (!onlyTopLevel && name.equals("template")) {
+                templates.add(parseCard(parser, path));
             } else if (name.equals("language")) {
                 la = parseLanguageAspect(parser);
             } else {
@@ -192,6 +195,7 @@ public class LymboParser {
             stack.setTags(parseTags(tags));
 
         stack.setCards(cards);
+        stack.setTemplates(templates);
         stack.setLanguageAspect(la);
 
         return stack;
@@ -238,7 +242,6 @@ public class LymboParser {
      * @throws java.io.IOException
      */
     private Card parseCard(XmlPullParser parser, File path) throws XmlPullParserException, IOException {
-        String name;
         parser.require(XmlPullParser.START_TAG, null, "card");
 
         // Create element
@@ -246,6 +249,7 @@ public class LymboParser {
 
         // Read attributes
         String id = parser.getAttributeValue(null, "id");
+        String name = parser.getAttributeValue(null, "name");
         String edit = parser.getAttributeValue(null, "edit");
         String hint = parser.getAttributeValue(null, "hint");
         String tags = parser.getAttributeValue(null, "tags");
@@ -289,6 +293,8 @@ public class LymboParser {
 
         if (id != null)
             card.setId(id);
+        if (name != null)
+            card.setName(name);
         if (edit != null)
             card.setEdit(Boolean.parseBoolean(edit));
         else if (defaults.containsKey("cardEdit"))

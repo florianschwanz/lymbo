@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.App;
+import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 
 public class Stack {
@@ -25,6 +25,7 @@ public class Stack {
     private EImageFormat imageFormat;
     private String author;
     private List<Card> cards;
+    private List<Card> templates;
 
     private List<Tag> tags;
 
@@ -56,6 +57,7 @@ public class Stack {
         imageFormat = EImageFormat.BASE64;
         author = "";
         cards = new ArrayList<>();
+        templates = new ArrayList<>();
         error = "";
 
         tags = new ArrayList<>();
@@ -212,6 +214,14 @@ public class Stack {
 
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+    public List<Card> getTemplates() {
+        return templates;
+    }
+
+    public void setTemplates(List<Card> templates) {
+        this.templates = templates;
     }
 
     public List<Tag> getTags() {

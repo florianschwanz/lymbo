@@ -87,6 +87,11 @@ public class LymboWriter {
 
         appendLanguageAspects("language", stack.getLanguageAspect());
 
+        for (Card template : stack.getTemplates()) {
+            if (template != null)
+                appendCard("template", template);
+        }
+
         for (Card card : stack.getCards()) {
             if (card != null)
                 appendCard("card", card);
@@ -107,6 +112,9 @@ public class LymboWriter {
             attributes.put("id", String.valueOf(card.getId()));
         else
             attributes.put("id", UUID.randomUUID().toString());
+
+        if (card.getName() != null)
+            attributes.put("name", String.valueOf(card.getName()));
 
         attributes.put("edit", String.valueOf(card.isEdit()));
         attributes.put("hint", escape(card.getHint()));
