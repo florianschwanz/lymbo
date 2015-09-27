@@ -19,7 +19,7 @@ import de.interoberlin.lymbo.util.Base64BitmapConverter;
 
 public class ImageComponent implements Displayable {
     private String value;
-    private EImageFormat format;
+    private EImageFormat format = EImageFormat.BASE64;
 
     private File resourcePath;
 
@@ -50,9 +50,12 @@ public class ImageComponent implements Displayable {
                 }
                 case REF: {
                     String imagePath = resourcePath.getAbsolutePath() + "/" + value;
-                    Bitmap bmp = BitmapFactory.decodeFile(imagePath);
-                    ivImage.setImageBitmap(bmp);
-                    ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+                    if (new File(imagePath).exists()) {
+                        Bitmap bmp = BitmapFactory.decodeFile(imagePath);
+                        ivImage.setImageBitmap(bmp);
+                        ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    }
                     break;
                 }
             }

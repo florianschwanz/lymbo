@@ -22,6 +22,7 @@ import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.card.components.ImageComponent;
+import de.interoberlin.lymbo.model.card.components.SVGComponent;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 
@@ -139,7 +140,10 @@ public class LymboWriter {
                 appendTextComponent("text", (TextComponent) component);
             } else if (component instanceof ImageComponent) {
                 appendImageComponent("image", (ImageComponent) component);
+            }  else if (component instanceof SVGComponent) {
+                appendSVGComponent("svg", (SVGComponent) component);
             }
+
         }
 
         addEndTag(tag);
@@ -185,6 +189,21 @@ public class LymboWriter {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("format", escape(component.getFormat().getValue()));
         attributes.put("value", escape(component.getValue()));
+
+        addTag(tag, attributes);
+    }
+
+    /**
+     * Appends a image component
+     *
+     * @param tag       tag name to appended
+     * @param component component to appended
+     */
+    private static void appendSVGComponent(String tag, SVGComponent component) {
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("format", escape(component.getFormat().getValue()));
+        attributes.put("value", escape(component.getValue()));
+        attributes.put("color", escape(component.getColor()));
 
         addTag(tag, attributes);
     }

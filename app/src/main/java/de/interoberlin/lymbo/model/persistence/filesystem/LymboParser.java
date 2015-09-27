@@ -19,6 +19,7 @@ import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.lymbo.model.card.EImageFormat;
+import de.interoberlin.lymbo.model.card.ESVGFormat;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
@@ -210,11 +211,21 @@ public class LymboParser {
             case "base64": {
                 return EImageFormat.BASE64;
             }
-            default: {
-                return EImageFormat.BASE64;
+        }
+        return null;
+    }
+
+    private ESVGFormat parseSVGFormat(String svgFormat) {
+        switch (svgFormat) {
+            case "ref": {
+                return ESVGFormat.REF;
+            }
+            case "plain": {
+                return ESVGFormat.PLAIN;
             }
         }
 
+        return null;
     }
 
     /**
@@ -340,7 +351,7 @@ public class LymboParser {
                     components.add(parseChoiceComponent(parser));
                     break;
                 case "svg":
-                    components.add(parseSVGComponent(parser, color));
+                    components.add(parseSVGComponent(parser, color, path));
                     break;
                 case "image":
                     components.add(parseImageComponent(parser, path));
@@ -657,18 +668,21 @@ public class LymboParser {
      * Returns an svg component
      *
      * @param parser the XmlPullParser
+     * @param color color
+     * @param path resource path
      * @return xmlSide
      * @throws org.xmlpull.v1.XmlPullParserException
      * @throws java.io.IOException
      */
-    private SVGComponent parseSVGComponent(XmlPullParser parser, String color) throws XmlPullParserException, IOException {
+    private SVGComponent parseSVGComponent(XmlPullParser parser, String color, File path) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, "svg");
 
         // Create element
         SVGComponent component = new SVGComponent();
-        SVG svg = SvgParser.getInstance().parseSVG(parser);
 
         // Read attributes
+        String value = parser.getAttributeValue(null, "value");
+        String format = parser.getAttributeValue(null, "format");
 
         // Read sub elements
         /*
@@ -679,13 +693,21 @@ public class LymboParser {
         }
         */
 
+        SVG svg = SvgParser.getInstance().parseSVG(parser);
+
         // Fill element
+        if (value != null)
+            component.setValue(value);
+        if (format != null)
+            component.setFormat(parseSVGFormat(format));
         if (svg != null)
             component.setSVG(svg);
         if (color != null)
             component.setColor(color);
         else if (defaults.containsKey("svgColor"))
             component.setColor(defaults.get("svgColor"));
+        if (path != null)
+            component.setResourcePath(path);
 
         return component;
     }

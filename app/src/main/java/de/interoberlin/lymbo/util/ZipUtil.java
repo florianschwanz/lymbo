@@ -108,7 +108,6 @@ public class ZipUtil {
     }
 
     public static void zip(File directory, File zipFile) {
-
         try {
             BufferedInputStream origin;
             FileOutputStream dest = new FileOutputStream(zipFile);
