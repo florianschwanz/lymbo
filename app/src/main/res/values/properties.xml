@@ -5,7 +5,7 @@
     <string name="log_file_name" translatable="false">lymbo.log</string>
     <string name="lymbo_file_extension" translatable="false">.lymbo</string>
     <string name="lymbox_file_extension" translatable="false">.lymbox</string>
-    <string name="lymbo_lookup_path" translatable="false">Interoberlin/lymbo</string>
+    <string name="lymbo_lookup_path" translatable="false">.</string>
     <string name="lymbo_save_path" translatable="false">Interoberlin/lymbo</string>
     <string name="lymbo_tmp_path" translatable="false">Interoberlin/lymbo/tmp</string>
     <string name="lymbo_main_file" translatable="false">main.lymbo</string>

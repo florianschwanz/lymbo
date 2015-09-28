@@ -154,6 +154,7 @@
     <string name="translator_access_item_token_type" translatable="false">translator_access_item_token_type</string>
     <string name="translator_api_secret" translatable="false">translator_api_secret</string>
     <string name="translator_client_id" translatable="false">lymbo</string>
+    <string name="use_template">Use template</string>
     <string name="undo">Undo</string>
     <string name="wrong">wrong</string>
 

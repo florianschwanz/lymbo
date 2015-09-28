@@ -328,6 +328,14 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             }
         }
 
+        ArrayList<String> templates = new ArrayList<>();
+
+        for (Card template : cardsController.getStack().getTemplates()) {
+            if (template != null && template.getId() != null) {
+                templates.add(template.getId());
+            }
+        }
+
         vibrate(VIBRATION_DURATION);
 
         CardDialogFragment dialog = new CardDialogFragment();
@@ -340,6 +348,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         bundle.putStringArrayList(getResources().getString(R.string.bundle_texts_back), backTexts);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_templates), templates);
         dialog.setArguments(bundle);
         dialog.show(activity.getFragmentManager(), "okay");
     }

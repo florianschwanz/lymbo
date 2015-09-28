@@ -62,7 +62,6 @@ public class TemplateDialogFragment extends DialogFragment {
         final ArrayList<String> textsFront = bundle.getStringArrayList(res.getString(R.string.bundle_texts_front));
         final ArrayList<String> textsBack = bundle.getStringArrayList(res.getString(R.string.bundle_texts_back));
         final ArrayList<String> tagsAll = bundle.getStringArrayList(res.getString(R.string.bundle_tags_all));
-        final ArrayList<String> tagsSelected = bundle.getStringArrayList(res.getString(R.string.bundle_tags_selected));
 
         // Fill views with arguments
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -103,9 +102,6 @@ public class TemplateDialogFragment extends DialogFragment {
 
                     tr.addView(cb);
                     tr.addView(tvText);
-
-                    if (tagsSelected != null && tagsSelected.contains(tag))
-                        cb.setChecked(true);
 
                     tvText.setText(tag);
                     tvText.setOnClickListener(new View.OnClickListener() {

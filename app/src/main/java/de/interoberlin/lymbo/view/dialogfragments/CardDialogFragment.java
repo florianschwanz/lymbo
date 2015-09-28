@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -27,18 +28,28 @@ import java.util.concurrent.ExecutionException;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
+import de.interoberlin.lymbo.model.card.Card;
+import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.model.card.components.TextComponent;
+import de.interoberlin.lymbo.model.card.components.TitleComponent;
+import de.interoberlin.lymbo.model.card.enums.EComponent;
 import de.interoberlin.lymbo.model.translate.AccessControlItem;
 import de.interoberlin.lymbo.model.translate.Language;
 import de.interoberlin.lymbo.model.translate.MicrosoftAccessControlItemTask;
 import de.interoberlin.lymbo.model.translate.MicrosoftTranslatorTask;
 import de.interoberlin.lymbo.util.ViewUtil;
+import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class CardDialogFragment extends DialogFragment {
     private boolean addTextFrontIsExpanded = false;
     private boolean addTextBackIsExpanded = false;
     private boolean addTagsIsExpanded = false;
+    private boolean useTemplateIsExpanded = false;
+
+    // Properties
+    private static int VIBRATION_DURATION;
 
     private OnCompleteListener ocListener;
 
@@ -52,6 +63,8 @@ public class CardDialogFragment extends DialogFragment {
         CardsController cardsController = CardsController.getInstance(getActivity());
         final Stack stack = cardsController.getStack();
         final Resources res = getActivity().getResources();
+
+        VIBRATION_DURATION = getResources().getInteger(R.integer.vibration_duration);
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_card, null);
@@ -74,6 +87,10 @@ public class CardDialogFragment extends DialogFragment {
         final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
         final ImageView ivAddTag = (ImageView) v.findViewById(R.id.ivAddTag);
 
+        final LinearLayout llUseTemplate = (LinearLayout) v.findViewById(R.id.llUseTemplate);
+        final LinearLayout llTemplates = (LinearLayout) v.findViewById(R.id.llTemplates);
+        final TableLayout tblTemplates = (TableLayout) v.findViewById(R.id.tblTemplates);
+
         // Get arguments
         Bundle bundle = this.getArguments();
         final String dialogTitle = bundle.getString(res.getString(R.string.bundle_dialog_title));
@@ -83,6 +100,7 @@ public class CardDialogFragment extends DialogFragment {
         final ArrayList<String> textsBack = bundle.getStringArrayList(res.getString(R.string.bundle_texts_back));
         final ArrayList<String> tagsAll = bundle.getStringArrayList(res.getString(R.string.bundle_tags_all));
         final ArrayList<String> tagsSelected = bundle.getStringArrayList(res.getString(R.string.bundle_tags_selected));
+        final ArrayList<String> templates = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_templates));
 
         // Fill views with arguments
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -114,6 +132,7 @@ public class CardDialogFragment extends DialogFragment {
                 tblTextBack.addView(tr, tblTextBack.getChildCount());
             }
         }
+
         if (tagsAll != null) {
             for (final String tag : tagsAll) {
                 if (tag != null && !tag.equals(getActivity().getResources().getString(R.string.no_tag))) {
@@ -138,6 +157,26 @@ public class CardDialogFragment extends DialogFragment {
                     tblTags.addView(tr, tblTags.getChildCount());
                 }
             }
+        }
+
+        for (final String t : templates) {
+            final TableRow tr = new TableRow(getActivity());
+            final TextView tvText = new RobotoTextView(getActivity());
+
+            final Card template = cardsController.getTemplateById(t);
+
+            tvText.setText(template.getTitle());
+            tvText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
+            tvText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    useTemplate(template, etFront, etBack, tblTextFront, tblTextBack, tblTags);
+                }
+            });
+
+            tr.addView(tvText);
+
+            tblTemplates.addView(tr);
         }
 
         // Add actions
@@ -169,6 +208,17 @@ public class CardDialogFragment extends DialogFragment {
             }
         });
 
+        if (templates != null && !templates.isEmpty()) {
+            llUseTemplate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    expandTemplates(llTemplates);
+                }
+            });
+        } else {
+            ViewUtil.remove(llUseTemplate);
+        }
+
         ivAddTextFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -193,6 +243,7 @@ public class CardDialogFragment extends DialogFragment {
         llTextFront.getLayoutParams().height = 0;
         llTextBack.getLayoutParams().height = 0;
         llTags.getLayoutParams().height = 0;
+        llTemplates.getLayoutParams().height = 0;
 
         Language languageFrom = null;
         Language languageTo = null;
@@ -292,6 +343,26 @@ public class CardDialogFragment extends DialogFragment {
         }
     }
 
+    private void expandTags(LinearLayout llTags) {
+        if (addTagsIsExpanded) {
+            addTagsIsExpanded = false;
+            llTags.startAnimation(ViewUtil.collapse(getActivity(), llTags));
+        } else {
+            addTagsIsExpanded = true;
+            llTags.startAnimation(ViewUtil.expand(getActivity(), llTags));
+        }
+    }
+
+    private void expandTemplates(LinearLayout llTemplates) {
+        if (useTemplateIsExpanded) {
+            useTemplateIsExpanded = false;
+            llTemplates.startAnimation(ViewUtil.collapse(getActivity(), llTemplates));
+        } else {
+            useTemplateIsExpanded = true;
+            llTemplates.startAnimation(ViewUtil.expand(getActivity(), llTemplates));
+        }
+    }
+
     /**
      * Translates text from @param{etFrom} and writes it into @param{etTo} according to languages set in @param{stack}
      *
@@ -317,16 +388,6 @@ public class CardDialogFragment extends DialogFragment {
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-        }
-    }
-
-    private void expandTags(LinearLayout llTags) {
-        if (addTagsIsExpanded) {
-            addTagsIsExpanded = false;
-            llTags.startAnimation(ViewUtil.collapse(getActivity(), llTags));
-        } else {
-            addTagsIsExpanded = true;
-            llTags.startAnimation(ViewUtil.expand(getActivity(), llTags));
         }
     }
 
@@ -356,6 +417,92 @@ public class CardDialogFragment extends DialogFragment {
             etText.requestFocus();
             cb.setChecked(true);
             tblTags.addView(tr, tblTags.getChildCount());
+        }
+    }
+
+    private void useTemplate(Card template, EditText etFront, EditText etBack, TableLayout tblTextFront, TableLayout tblTextBack, TableLayout tblTags) {
+        ((Vibrator) getActivity().getSystemService(Activity.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+
+        CardsController cardsController = CardsController.getInstance(getActivity());
+
+        // Read values from template
+        String frontTitle = ((TitleComponent) template.getSides().get(0).getFirst(EComponent.TITLE)).getValue();
+        String backTitle = ((TitleComponent) template.getSides().get(1).getFirst(EComponent.TITLE)).getValue();
+        ArrayList<String> textsFront = new ArrayList<>();
+        ArrayList<String> textsBack = new ArrayList<>();
+        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
+        ArrayList<String> tagsSelected = Tag.getNames(template.getTags());
+
+        for (Displayable d : template.getSides().get(0).getComponents()) {
+            if (d instanceof TextComponent) {
+                textsFront.add(((TextComponent) d).getValue());
+            }
+        }
+
+        for (Displayable d : template.getSides().get(1).getComponents()) {
+            if (d instanceof TextComponent) {
+                if (textsBack != null) {
+                    textsBack.add(((TextComponent) d).getValue());
+                }
+            }
+        }
+
+        // Clear
+        tblTextFront.removeAllViews();
+        tblTextBack.removeAllViews();
+        tblTags.removeAllViews();
+
+        // Fill
+        if (frontTitle != null)
+            etFront.setText(frontTitle);
+
+        if (backTitle != null)
+            etBack.setText(backTitle);
+
+        if (textsFront != null) {
+            for (String s : textsFront) {
+                final TableRow tr = new TableRow(getActivity());
+                final EditText etText = new EditText(getActivity());
+                tr.addView(etText);
+                etText.setText(s);
+                tblTextFront.addView(tr, tblTextFront.getChildCount());
+            }
+        }
+
+        if (textsBack != null) {
+            for (String s : textsBack) {
+                final TableRow tr = new TableRow(getActivity());
+                final EditText etText = new EditText(getActivity());
+                tr.addView(etText);
+                etText.setText(s);
+                tblTextBack.addView(tr, tblTextBack.getChildCount());
+            }
+        }
+
+        if (tagsAll != null) {
+            for (final String tag : tagsAll) {
+                if (tag != null && !tag.equals(getActivity().getResources().getString(R.string.no_tag))) {
+                    final TableRow tr = new TableRow(getActivity());
+                    final CheckBox cb = new CheckBox(getActivity());
+                    final TextView tvText = new TextView(getActivity());
+
+                    tr.addView(cb);
+                    tr.addView(tvText);
+
+                    if (tagsSelected != null && tagsSelected.contains(tag))
+                        cb.setChecked(true);
+
+                    tvText.setText(tag);
+                    tvText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            cb.toggle();
+                        }
+                    });
+
+                    tblTags.addView(tr, tblTags.getChildCount());
+                }
+            }
         }
     }
 

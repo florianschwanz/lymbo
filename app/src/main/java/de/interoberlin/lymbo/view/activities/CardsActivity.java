@@ -213,11 +213,19 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 @Override
                 public void onClick(View view) {
                     ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
+                    ArrayList<String> templates = new ArrayList<>();
+
+                    for (Card template : stack.getTemplates()) {
+                        if (template != null && template.getId() != null) {
+                            templates.add(template.getId());
+                        }
+                    }
 
                     CardDialogFragment dialog = new CardDialogFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.add_card));
                     bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
+                    bundle.putStringArrayList(getResources().getString(R.string.bundle_templates), templates);
                     dialog.setArguments(bundle);
                     dialog.show(getFragmentManager(), "okay");
                 }

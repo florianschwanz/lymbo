@@ -112,7 +112,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Expand -->
+        <!-- Tags -->
 
         <LinearLayout
             android:id="@+id/llAddTags"
@@ -159,6 +159,48 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_action_new"
                 android:contentDescription="@string/desc_image" />
+        </LinearLayout>
+
+        <!-- Templates -->
+
+        <LinearLayout
+            android:id="@+id/llUseTemplate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dialog_fragment_padding"
+            android:paddingRight="@dimen/dialog_fragment_padding"
+            android:paddingTop="@dimen/dialog_fragment_padding">
+
+            <ImageView
+                android:id="@+id/ivTemplate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/desc_image"
+                android:paddingEnd="@dimen/stack_bar_padding"
+                android:paddingStart="@dimen/stack_bar_padding"
+                android:src="@drawable/ic_action_view_as_list" />
+
+            <TextView
+                android:id="@+id/tvExpandTemplates"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.9"
+                android:text="@string/use_template"
+                android:textAlignment="textStart"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llTemplates"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:id="@+id/tblTemplates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
