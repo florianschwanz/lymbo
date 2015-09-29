@@ -43,6 +43,8 @@ import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class CardDialogFragment extends DialogFragment {
+    public static final String TAG = "card";
+
     private boolean addTextFrontIsExpanded = false;
     private boolean addTextBackIsExpanded = false;
     private boolean addTagsIsExpanded = false;
@@ -305,9 +307,9 @@ public class CardDialogFragment extends DialogFragment {
                     etFront.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);
                 } else {
                     if (cardUuid == null) {
-                        ocListener.onAddSimpleCard(etFront.getText().toString(), getTexts(tblTextFront), etBack.getText().toString(), getTexts(tblTextBack), getSelectedTags(tblTags));
+                        ocListener.onAddCard(etFront.getText().toString(), getTexts(tblTextFront), etBack.getText().toString(), getTexts(tblTextBack), getSelectedTags(tblTags));
                     } else {
-                        ocListener.onEditSimpleCard(cardUuid, etFront.getText().toString(), getTexts(tblTextFront), etBack.getText().toString(), getTexts(tblTextBack), getSelectedTags(tblTags));
+                        ocListener.onEditCard(cardUuid, etFront.getText().toString(), getTexts(tblTextFront), etBack.getText().toString(), getTexts(tblTextBack), getSelectedTags(tblTags));
                     }
                     dismiss();
                 }
@@ -564,9 +566,9 @@ public class CardDialogFragment extends DialogFragment {
     // --------------------
 
     public interface OnCompleteListener {
-        void onAddSimpleCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
+        void onAddCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
 
-        void onEditSimpleCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
+        void onEditCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
     }
 
     public void onAttach(Activity activity) {

@@ -22,6 +22,8 @@ import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class FilterCardsDialogFragment extends DialogFragment {
+    public static final String TAG = "filter_cards";
+
     private boolean displayOnlyFavorites;
 
     private OnCompleteListener ocListener;

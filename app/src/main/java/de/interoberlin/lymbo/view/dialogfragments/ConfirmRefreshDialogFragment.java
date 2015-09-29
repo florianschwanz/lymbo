@@ -12,6 +12,7 @@ import android.widget.Button;
 import de.interoberlin.lymbo.R;
 
 public class ConfirmRefreshDialogFragment extends DialogFragment {
+    public static final String TAG = "confirm_refresh";
     private OnCompleteListener ocListener;
 
     // --------------------
@@ -84,6 +85,7 @@ public class ConfirmRefreshDialogFragment extends DialogFragment {
 
     public interface OnCompleteListener {
         void onConfirmRefresh();
+
         void onCancelRefresh();
     }
 

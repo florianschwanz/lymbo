@@ -34,6 +34,7 @@
     <string name="edit">Edit</string>
     <string name="edit_card">Edit card</string>
     <string name="edit_stack">Edit stack</string>
+    <string name="edit_template">Edit template</string>
     <string name="edited_card">Edited card</string>
     <string name="error_occurred">An error occurred :(</string>
     <string name="feedback">Feedback</string>

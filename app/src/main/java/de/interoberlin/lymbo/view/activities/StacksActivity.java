@@ -187,7 +187,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
                     bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.add_stack));
                     bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
                     dialog.setArguments(bundle);
-                    dialog.show(getFragmentManager(), "okay");
+                    dialog.show(getFragmentManager(), StackDialogFragment.TAG);
                 }
             });
 
@@ -255,12 +255,11 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     @Override
     public void onRefresh() {
         ConfirmRefreshDialogFragment dialog = new ConfirmRefreshDialogFragment();
-
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.scan_for_lymbo_files));
         bundle.putString(getResources().getString(R.string.bundle_message), getResources().getString(R.string.scan_for_lymbo_files_question));
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), "okay");
+        dialog.show(getFragmentManager(), ConfirmRefreshDialogFragment.TAG);
     }
 
     @Override
@@ -356,7 +355,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), "okay");
+        dialog.show(getFragmentManager(), FilterStacksDialogFragment.TAG);
     }
 
     // --------------------

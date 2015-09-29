@@ -148,5 +148,6 @@
     <string name="menu_templates">Vorlagen</string>
     <string name="delete">Löschen</string>
     <string name="use_template">Vorlage verwenden</string>
+    <string name="edit_template">Vorlage bearbeiten</string>
 
 </resources>

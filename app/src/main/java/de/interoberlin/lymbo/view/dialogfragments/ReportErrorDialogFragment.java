@@ -12,6 +12,7 @@ import android.widget.Button;
 import de.interoberlin.lymbo.R;
 
 public class ReportErrorDialogFragment extends DialogFragment {
+    public static final String TAG = "report_error";
     private OnCompleteListener ocListener;
 
     // --------------------

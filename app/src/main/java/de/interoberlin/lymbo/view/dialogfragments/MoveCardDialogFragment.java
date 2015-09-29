@@ -23,6 +23,8 @@ import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class MoveCardDialogFragment extends DialogFragment {
+    public static final String TAG = "move_card";
+
     private List<CheckBox> checkboxes = new ArrayList<>();
     private String targetLymboId = null;
 

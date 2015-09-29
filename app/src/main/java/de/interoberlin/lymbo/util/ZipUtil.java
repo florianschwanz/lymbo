@@ -67,8 +67,6 @@ public class ZipUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println("FOO unzip end");
     }
 
     /**
@@ -119,8 +117,6 @@ public class ZipUtil {
 
             for (File f : files) {
                 String fileName = f.getPath();
-
-                System.out.println("FOO zip " + fileName);
 
                 FileInputStream fi = new FileInputStream(f);
                 origin = new BufferedInputStream(fi, BUFFER);

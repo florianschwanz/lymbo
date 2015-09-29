@@ -13,6 +13,7 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.App;
 
 public class GiveFeedbackDialogFragment extends DialogFragment {
+    public static final String TAG = "give_feedback";
     private OnCompleteListener ocListener;
 
     // --------------------

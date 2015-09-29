@@ -90,7 +90,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Accelera
     public void onShake(int count) {
         if (!App.getInstance().isGiveFeedbackDialogActive()) {
             ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-            new GiveFeedbackDialogFragment().show(getFragmentManager(), "okay");
+            new GiveFeedbackDialogFragment().show(getFragmentManager(), GiveFeedbackDialogFragment.TAG);
         }
     }
 
@@ -128,7 +128,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Accelera
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_stacktrace), stacktrace);
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), "okay");
+        dialog.show(getFragmentManager(), ShowErrorDialogFragment.TAG);
     }
 
     protected void handleException(Exception e) {
@@ -136,7 +136,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Accelera
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_stacktrace), LoggingUtil.getStackTrace(e));
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), "okay");
+        dialog.show(getFragmentManager(), ReportErrorDialogFragment.TAG);
     }
 
     /**

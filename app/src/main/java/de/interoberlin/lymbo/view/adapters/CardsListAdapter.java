@@ -262,7 +262,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                     b.putCharSequence(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.hint));
                     b.putCharSequence(getResources().getString(R.string.bundle_message), card.getHint());
                     displayHintDialogFragment.setArguments(b);
-                    displayHintDialogFragment.show(activity.getFragmentManager(), "okay");
+                    displayHintDialogFragment.show(activity.getFragmentManager(), DisplayHintDialogFragment.TAG);
                 }
             });
         } else {
@@ -350,7 +350,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_templates), templates);
         dialog.setArguments(bundle);
-        dialog.show(activity.getFragmentManager(), "okay");
+        dialog.show(activity.getFragmentManager(), CardDialogFragment.TAG);
     }
 
     /**
@@ -397,7 +397,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         bundle.putString(getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getStack().getId());
         bundle.putString(getResources().getString(R.string.bundle_card_uuid), uuid);
         dialog.setArguments(bundle);
-        dialog.show(activity.getFragmentManager(), "okay");
+        dialog.show(activity.getFragmentManager(), CopyCardDialogFragment.TAG);
     }
 
     /**
@@ -413,7 +413,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         bundle.putString(getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getStack().getId());
         bundle.putString(getResources().getString(R.string.bundle_card_uuid), uuid);
         dialog.setArguments(bundle);
-        dialog.show(activity.getFragmentManager(), "okay");
+        dialog.show(activity.getFragmentManager(), MoveCardDialogFragment.TAG);
     }
 
     /**
@@ -432,7 +432,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         bundle.putBoolean(getResources().getString(R.string.bundle_display_only_favorites), displayOnlyFavorites);
         dialog.setArguments(bundle);
-        dialog.show(activity.getFragmentManager(), "okay");
+        dialog.show(activity.getFragmentManager(), FilterCardsDialogFragment.TAG);
     }
 
     /**
@@ -528,13 +528,12 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @param text note text
      */
     public void editNote(Card card, String text) {
-        EditNoteDialogFragment editNoteDialogFragment = new EditNoteDialogFragment();
+        EditNoteDialogFragment dialog = new EditNoteDialogFragment();
         Bundle b = new Bundle();
         b.putCharSequence("uuid", card.getId());
         b.putCharSequence("note", text);
-
-        editNoteDialogFragment.setArguments(b);
-        editNoteDialogFragment.show(activity.getFragmentManager(), "okay");
+        dialog.setArguments(b);
+        dialog.show(activity.getFragmentManager(), EditNoteDialogFragment.TAG);
     }
 
     /**

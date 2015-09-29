@@ -22,11 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
 
 public class TemplateDialogFragment extends DialogFragment {
+    public static final String TAG = "template";
     private OnCompleteListener ocListener;
 
     // --------------------
@@ -36,12 +35,12 @@ public class TemplateDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CardsController cardsController = CardsController.getInstance(getActivity());
-        final Stack stack = cardsController.getStack();
         final Resources res = getActivity().getResources();
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_template, null);
+
+        final EditText etTitle = (EditText) v.findViewById(R.id.etTitle);
 
         final EditText etFront = (EditText) v.findViewById(R.id.etFront);
         final TableLayout tblTextFront = (TableLayout) v.findViewById(R.id.tblTextFront);
@@ -57,16 +56,22 @@ public class TemplateDialogFragment extends DialogFragment {
         // Get arguments
         Bundle bundle = this.getArguments();
         final String dialogTitle = bundle.getString(res.getString(R.string.bundle_dialog_title));
+        final String uuid = bundle.getString(res.getString(R.string.bundle_template_uuid));
+        final String title = bundle.getString(res.getString(R.string.bundle_title));
         final String frontTitle = bundle.getString(res.getString(R.string.bundle_front_title));
         final String backTitle = bundle.getString(res.getString(R.string.bundle_back_title));
         final ArrayList<String> textsFront = bundle.getStringArrayList(res.getString(R.string.bundle_texts_front));
         final ArrayList<String> textsBack = bundle.getStringArrayList(res.getString(R.string.bundle_texts_back));
         final ArrayList<String> tagsAll = bundle.getStringArrayList(res.getString(R.string.bundle_tags_all));
+        final ArrayList<String> tagsSelected = bundle.getStringArrayList(res.getString(R.string.bundle_tags_selected));
 
         // Fill views with arguments
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v);
         builder.setTitle(dialogTitle);
+
+        if (title != null)
+            etTitle.setText(title);
 
         if (frontTitle != null)
             etFront.setText(frontTitle);
@@ -102,6 +107,9 @@ public class TemplateDialogFragment extends DialogFragment {
 
                     tr.addView(cb);
                     tr.addView(tvText);
+
+                    if (tagsSelected != null && tagsSelected.contains(tag))
+                        cb.setChecked(true);
 
                     tvText.setText(tag);
                     tvText.setOnClickListener(new View.OnClickListener() {

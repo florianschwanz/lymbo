@@ -164,12 +164,11 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
     @Override
     public void onRefresh() {
         ConfirmRefreshDialogFragment dialog = new ConfirmRefreshDialogFragment();
-
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.restore_cards));
         bundle.putString(getResources().getString(R.string.bundle_message), getResources().getString(R.string.restore_cards_question));
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), "okay");
+        dialog.show(getFragmentManager(), ConfirmRefreshDialogFragment.TAG);
     }
 
     @Override

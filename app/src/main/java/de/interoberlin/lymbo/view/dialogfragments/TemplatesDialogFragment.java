@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -19,9 +20,15 @@ import java.util.ArrayList;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Card;
+import de.interoberlin.lymbo.model.card.Displayable;
+import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.model.card.components.TextComponent;
+import de.interoberlin.lymbo.model.card.components.TitleComponent;
+import de.interoberlin.lymbo.model.card.enums.EComponent;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class TemplatesDialogFragment extends DialogFragment {
+    public static final String TAG = "templates";
     private OnCompleteListener ocListener;
 
     // --------------------
@@ -38,8 +45,15 @@ public class TemplatesDialogFragment extends DialogFragment {
         final TableLayout tblTemplates = (TableLayout) v.findViewById(R.id.tblTemplates);
 
         // Get arguments
-        Bundle bundle = this.getArguments();
-        final ArrayList<String> templates = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_templates));
+        // Bundle bundle = this.getArguments();
+        // final ArrayList<String> templates = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_templates));
+
+        final ArrayList<String> templates = new ArrayList<>();
+        for (Card template : cardsController.getStack().getTemplates()) {
+            if (template != null && template.getId() != null) {
+                templates.add(template.getId());
+            }
+        }
 
         // Fill views with arguments
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -92,6 +106,17 @@ public class TemplatesDialogFragment extends DialogFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
@@ -101,8 +126,7 @@ public class TemplatesDialogFragment extends DialogFragment {
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ocListener.onNewTemplate();
-                dismiss();
+                add();
             }
         });
     }
@@ -111,10 +135,58 @@ public class TemplatesDialogFragment extends DialogFragment {
     // Methods - Actions
     // --------------------
 
+    private void add() {
+        CardsController cardsController = CardsController.getInstance(getActivity());
+        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
+
+        TemplateDialogFragment dialog = new TemplateDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.add_template));
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), TAG);
+    }
+
     private void edit(Card template) {
+        CardsController cardsController = CardsController.getInstance(getActivity());
+        String uuid = template.getId();
+        String title = template.getTitle();
+        String frontTitle = ((TitleComponent) template.getSides().get(0).getFirst(EComponent.TITLE)).getValue();
+        String backTitle = ((TitleComponent) template.getSides().get(1).getFirst(EComponent.TITLE)).getValue();
+        ArrayList<String> frontTexts = new ArrayList<>();
+        ArrayList<String> backTexts = new ArrayList<>();
+        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
+        ArrayList<String> tagsSelected = Tag.getNames(template.getTags());
+
+        for (Displayable d : template.getSides().get(0).getComponents()) {
+            if (d instanceof TextComponent) {
+                frontTexts.add(((TextComponent) d).getValue());
+            }
+        }
+
+        for (Displayable d : template.getSides().get(1).getComponents()) {
+            if (d instanceof TextComponent) {
+                backTexts.add(((TextComponent) d).getValue());
+            }
+        }
+
+        TemplateDialogFragment dialog = new TemplateDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.edit_template));
+        bundle.putString(getResources().getString(R.string.bundle_template_uuid), uuid);
+        bundle.putString(getResources().getString(R.string.bundle_title), title);
+        bundle.putString(getResources().getString(R.string.bundle_front_title), frontTitle);
+        bundle.putString(getResources().getString(R.string.bundle_back_title), backTitle);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_texts_front), frontTexts);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_texts_back), backTexts);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), TemplateDialogFragment.TAG);
     }
 
     private void delete(Card template) {
+        ocListener.onDeleteTemplate(template);
     }
 
     // --------------------
@@ -122,7 +194,7 @@ public class TemplatesDialogFragment extends DialogFragment {
     // --------------------
 
     public interface OnCompleteListener {
-        void onNewTemplate();
+        void onDeleteTemplate(Card template);
     }
 
     public void onAttach(Activity activity) {

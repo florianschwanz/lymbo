@@ -227,7 +227,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                     bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
                     bundle.putStringArrayList(getResources().getString(R.string.bundle_templates), templates);
                     dialog.setArguments(bundle);
-                    dialog.show(getFragmentManager(), "okay");
+                    dialog.show(getFragmentManager(), CardDialogFragment.TAG);
                 }
             });
 
@@ -390,7 +390,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onAddSimpleCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+    public void onAddCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         try {
             cardsController.addCard(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
             cardsController.addTagsSelected(tags);
@@ -401,23 +401,11 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onEditSimpleCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+    public void onEditCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         cardsController.updateCard(uuid, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
         cardsController.addTagsSelected(tags);
         snack(this, R.string.edited_card);
         updateListView();
-    }
-
-    @Override
-    public void onNewTemplate() {
-        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
-
-        TemplateDialogFragment dialog = new TemplateDialogFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.add_template));
-        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
-        dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), "okay");
     }
 
     @Override
@@ -433,6 +421,13 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public void onEditTemplate(String uuid, String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+        cardsController.updateTemplate(uuid, title, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+        showTemplates();
+    }
+
+    @Override
+    public void onDeleteTemplate(Card template) {
+        cardsController.deleteTemplate(template);
         showTemplates();
     }
 
@@ -520,7 +515,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(getResources().getString(R.string.bundle_templates), templates);
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), "okay");
+        dialog.show(getFragmentManager(), TemplatesDialogFragment.TAG);
     }
 
     /**
@@ -539,7 +534,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         bundle.putBoolean(getResources().getString(R.string.bundle_display_only_favorites), displayOnlyFavorites);
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), "okay");
+        dialog.show(getFragmentManager(), FilterCardsDialogFragment.TAG);
     }
 
     /**

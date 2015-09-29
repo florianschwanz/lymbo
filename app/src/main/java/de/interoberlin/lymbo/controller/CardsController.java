@@ -180,7 +180,7 @@ public class CardsController {
     }
 
     /**
-     * Updates a simple card
+     * Updates a card
      *
      * @param uuid             id of the card to be updated
      * @param frontTitleValue  front title
@@ -240,6 +240,70 @@ public class CardsController {
         Card template = new Card(title, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
 
         stack.getTemplates().add(template);
+        save();
+    }
+
+    /**
+     * Updates a template
+     *
+     * @param uuid             id of the template to be updated
+     * @param title            title of the template
+     * @param frontTitleValue  front title
+     * @param frontTextsValues front texts
+     * @param backTitleValue   back title
+     * @param backTextsValues  back texts
+     * @param tags             tags
+     */
+    public void updateTemplate(String uuid, String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+        if (templatesContainsId(uuid)) {
+            Card template = getTemplateById(uuid);
+
+            template.setTitle(title);
+
+            if (template.getSides().size() > 0) {
+                Side frontSide = template.getSides().get(0);
+                frontSide.getComponents().clear();
+
+                TitleComponent frontTitle = new TitleComponent();
+                frontTitle.setValue(frontTitleValue);
+                frontTitle.setGravity(EGravity.CENTER);
+                frontSide.addComponent(frontTitle);
+
+                for (String frontTextValue : frontTextsValues) {
+                    TextComponent frontText = new TextComponent();
+                    frontText.setValue(frontTextValue);
+                    frontText.setGravity(EGravity.LEFT);
+                    frontSide.addComponent(frontText);
+                }
+            }
+
+            if (template.getSides().size() > 1) {
+                Side backSide = template.getSides().get(1);
+                backSide.getComponents().clear();
+
+                TitleComponent backTitle = new TitleComponent();
+                backTitle.setGravity(EGravity.CENTER);
+                backTitle.setValue(backTitleValue);
+                backSide.addComponent(backTitle);
+
+                for (String backTextValue : backTextsValues) {
+                    TextComponent backText = new TextComponent();
+                    backText.setValue(backTextValue);
+                    backText.setGravity(EGravity.LEFT);
+                    backSide.addComponent(backText);
+                }
+            }
+
+            template.setTags(tags);
+
+            save();
+        }
+    }
+
+    public void deleteTemplate(Card template) {
+        if (template != null) {
+            template = null;
+        }
         save();
     }
 
@@ -581,6 +645,16 @@ public class CardsController {
         }
 
         return null;
+    }
+
+    public boolean templatesContainsId(String uuid) {
+        for (Card t : stack.getTemplates()) {
+            if (t.getId().equals(uuid)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Card getTemplateById(String uuid) {

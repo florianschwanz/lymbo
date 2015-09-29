@@ -308,7 +308,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
         bundle.putStringArrayList(context.getResources().getString(R.string.bundle_tags_all), tagsAll);
         bundle.putStringArrayList(context.getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         dialog.setArguments(bundle);
-        dialog.show(activity.getFragmentManager(), "okay");
+        dialog.show(activity.getFragmentManager(), StackDialogFragment.TAG);
     }
 
     /**
@@ -354,7 +354,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         dialog.setArguments(bundle);
-        dialog.show(activity.getFragmentManager(), "okay");
+        dialog.show(activity.getFragmentManager(), FilterStacksDialogFragment.TAG);
     }
 
     // --------------------

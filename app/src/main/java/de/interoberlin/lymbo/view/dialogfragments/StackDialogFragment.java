@@ -29,6 +29,8 @@ import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class StackDialogFragment extends DialogFragment {
+    public static final String TAG = "stack";
+
     private List<CheckBox> checkboxesLanguageFrom = new ArrayList<>();
     private List<String> languagesFrom = new ArrayList<>();
 
