@@ -307,9 +307,6 @@ public class StacksController {
             }
         }
 
-        // TODO
-        datasource.printTable();
-
         datasource.close();
     }
 

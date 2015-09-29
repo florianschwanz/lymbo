@@ -167,6 +167,7 @@ public class CardDialogFragment extends DialogFragment {
 
             final Card template = cardsController.getTemplateById(t);
 
+            tr.setPadding(0, (int) res.getDimension(R.dimen.table_row_padding), 0, (int) res.getDimension(R.dimen.table_row_padding));
             tvText.setText(template.getTitle());
             tvText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
             tvText.setOnClickListener(new View.OnClickListener() {
@@ -443,9 +444,7 @@ public class CardDialogFragment extends DialogFragment {
 
         for (Displayable d : template.getSides().get(1).getComponents()) {
             if (d instanceof TextComponent) {
-                if (textsBack != null) {
-                    textsBack.add(((TextComponent) d).getValue());
-                }
+                textsBack.add(((TextComponent) d).getValue());
             }
         }
 
@@ -455,30 +454,26 @@ public class CardDialogFragment extends DialogFragment {
         tblTags.removeAllViews();
 
         // Fill
-        if (frontTitle != null)
+        if (frontTitle != null && etFront.getText().toString().isEmpty())
             etFront.setText(frontTitle);
 
-        if (backTitle != null)
+        if (backTitle != null && etBack.getText().toString().isEmpty())
             etBack.setText(backTitle);
 
-        if (textsFront != null) {
-            for (String s : textsFront) {
-                final TableRow tr = new TableRow(getActivity());
-                final EditText etText = new EditText(getActivity());
-                tr.addView(etText);
-                etText.setText(s);
-                tblTextFront.addView(tr, tblTextFront.getChildCount());
-            }
+        for (String s : textsFront) {
+            final TableRow tr = new TableRow(getActivity());
+            final EditText etText = new EditText(getActivity());
+            tr.addView(etText);
+            etText.setText(s);
+            tblTextFront.addView(tr, tblTextFront.getChildCount());
         }
 
-        if (textsBack != null) {
-            for (String s : textsBack) {
-                final TableRow tr = new TableRow(getActivity());
-                final EditText etText = new EditText(getActivity());
-                tr.addView(etText);
-                etText.setText(s);
-                tblTextBack.addView(tr, tblTextBack.getChildCount());
-            }
+        for (String s : textsBack) {
+            final TableRow tr = new TableRow(getActivity());
+            final EditText etText = new EditText(getActivity());
+            tr.addView(etText);
+            etText.setText(s);
+            tblTextBack.addView(tr, tblTextBack.getChildCount());
         }
 
         if (tagsAll != null) {

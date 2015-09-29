@@ -13,6 +13,8 @@
         <TableLayout
             android:id="@+id/tblTemplates"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="middle" />
     </LinearLayout>
 </ScrollView>

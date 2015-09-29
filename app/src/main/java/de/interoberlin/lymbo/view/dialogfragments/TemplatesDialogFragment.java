@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -39,6 +40,7 @@ public class TemplatesDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CardsController cardsController = CardsController.getInstance(getActivity());
+        Resources res = getActivity().getResources();
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_templates, null);
@@ -66,6 +68,7 @@ public class TemplatesDialogFragment extends DialogFragment {
 
             final Card template = cardsController.getTemplateById(t);
 
+            tr.setPadding(0, (int) res.getDimension(R.dimen.table_row_padding), 0, (int) res.getDimension(R.dimen.table_row_padding));
             tvText.setText(template.getTitle());
             tvText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
             tvText.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
@@ -76,6 +79,7 @@ public class TemplatesDialogFragment extends DialogFragment {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem menuItem) {
                                     edit(template);
+                                    dismiss();
                                     return false;
                                 }
                             });
@@ -84,6 +88,7 @@ public class TemplatesDialogFragment extends DialogFragment {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem menuItem) {
                                     delete(template);
+                                    dismiss();
                                     return false;
                                 }
                             });

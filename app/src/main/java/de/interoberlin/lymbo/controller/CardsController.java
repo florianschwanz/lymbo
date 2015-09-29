@@ -301,8 +301,11 @@ public class CardsController {
     }
 
     public void deleteTemplate(Card template) {
-        if (template != null) {
-            template = null;
+        if (template != null && template.getId() != null) {
+            Card t = getTemplateById(template.getId());
+
+            if (t != null)
+                stack.getTemplates().remove(t);
         }
         save();
     }
@@ -568,7 +571,7 @@ public class CardsController {
 
         for (Card card : getCards()) {
             for (Tag tag : card.getTags()) {
-                if (tag != null && !tag.containedIn(tagsAll) && tag.getName() != getResources().getString(R.string.no_tag))
+                if (tag != null && !tag.containedIn(tagsAll) && !tag.getName().equals(getResources().getString(R.string.no_tag)))
                     tagsAll.add(tag);
             }
         }
@@ -648,9 +651,11 @@ public class CardsController {
     }
 
     public boolean templatesContainsId(String uuid) {
-        for (Card t : stack.getTemplates()) {
-            if (t.getId().equals(uuid)) {
-                return true;
+        synchronized (stack.getTemplates()) {
+            for (Card t : stack.getTemplates()) {
+                if (t.getId().equals(uuid)) {
+                    return true;
+                }
             }
         }
 

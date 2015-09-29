@@ -60,4 +60,5 @@
     <!-- <dimen name="elevation_low">1dp</dimen> -->
     <!-- <dimen name="elevation_high">8dp</dimen> -->
 
+    <dimen name="table_row_padding">8dp</dimen>
 </resources>

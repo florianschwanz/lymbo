@@ -316,8 +316,6 @@ public class TableStackDatasource {
             values.put(colFormat.getName(), format);
             database.insert(table, null, values);
         }
-
-        printTable();
     }
 
     // --------------------
