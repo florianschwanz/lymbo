@@ -404,10 +404,10 @@ public class TableCardDatasource {
         for (TableCardEntry entry : getEntries()) {
             if (entry != null) {
                 Log.debug("Entry");
-                Log.debug((".." + colUuid.getName() + "\t" + entry.getUuid());
-                Log.debug((".." + colState.getName() + "\t" + entry.getState());
-                Log.debug((".." + colNote.getName() + "\t" + entry.getNote());
-                Log.debug((".." + colFavorite.getName() + "\t" + String.valueOf(entry.isFavorite()));
+                Log.debug(".." + colUuid.getName() + "\t" + entry.getUuid());
+                Log.debug(".." + colState.getName() + "\t" + entry.getState());
+                Log.debug(".." + colNote.getName() + "\t" + entry.getNote());
+                Log.debug(".." + colFavorite.getName() + "\t" + String.valueOf(entry.isFavorite()));
             }
         }
     }
