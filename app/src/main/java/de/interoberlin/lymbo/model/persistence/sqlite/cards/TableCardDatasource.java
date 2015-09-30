@@ -14,6 +14,7 @@ import de.interoberlin.lymbo.model.persistence.sqlite.Column;
 import de.interoberlin.lymbo.model.persistence.sqlite.ColumnHolder;
 import de.interoberlin.lymbo.model.persistence.sqlite.LymboSQLiteOpenHelper;
 import de.interoberlin.lymbo.model.persistence.sqlite.Type;
+import de.interoberlin.mate.lib.model.Log;
 
 /**
  * Data source for SQLite database table
@@ -402,7 +403,11 @@ public class TableCardDatasource {
     public void printTable() {
         for (TableCardEntry entry : getEntries()) {
             if (entry != null) {
-                System.out.println(entry.getUuid() + "\t" + entry.getState() + "\t" + entry.getNote() + "\t" + String.valueOf(entry.isFavorite()));
+                Log.debug("Entry");
+                Log.debug((".." + colUuid.getName() + "\t" + entry.getUuid());
+                Log.debug((".." + colState.getName() + "\t" + entry.getState());
+                Log.debug((".." + colNote.getName() + "\t" + entry.getNote());
+                Log.debug((".." + colFavorite.getName() + "\t" + String.valueOf(entry.isFavorite()));
             }
         }
     }

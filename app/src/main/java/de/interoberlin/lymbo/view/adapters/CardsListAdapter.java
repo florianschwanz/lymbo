@@ -530,8 +530,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     public void editNote(Card card, String text) {
         EditNoteDialogFragment dialog = new EditNoteDialogFragment();
         Bundle b = new Bundle();
-        b.putCharSequence("uuid", card.getId());
-        b.putCharSequence("note", text);
+        b.putCharSequence(activity.getResources().getString(R.string.bundle_card_uuid), card.getId());
+        b.putCharSequence(activity.getResources().getString(R.string.bundle_note), text);
         dialog.setArguments(b);
         dialog.show(activity.getFragmentManager(), EditNoteDialogFragment.TAG);
     }

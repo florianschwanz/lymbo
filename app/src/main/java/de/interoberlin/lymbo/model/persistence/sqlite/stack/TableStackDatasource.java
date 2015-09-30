@@ -14,6 +14,7 @@ import de.interoberlin.lymbo.model.persistence.sqlite.Column;
 import de.interoberlin.lymbo.model.persistence.sqlite.ColumnHolder;
 import de.interoberlin.lymbo.model.persistence.sqlite.LymboSQLiteOpenHelper;
 import de.interoberlin.lymbo.model.persistence.sqlite.Type;
+import de.interoberlin.mate.lib.model.Log;
 
 /**
  * Data source for SQLite database table
@@ -325,13 +326,12 @@ public class TableStackDatasource {
     public void printTable() {
         for (TableStackEntry entry : getEntries()) {
             if (entry != null) {
-                System.out.println("Entry");
-                System.out.println(".. " + colUuid.getName() + " \t" + entry.getUuid());
-                System.out.println(".. " + colState.getName() + " \t" + entry.getState());
-                System.out.println(".. " + colFile.getName() + " \t" + entry.getFile());
-                System.out.println(".. " + colPath.getName() + " \t" + entry.getPath());
-                System.out.println(".. " + colFormat.getName() + " \t" + entry.getFormat());
-
+                Log.debug("Entry");
+                Log.debug(".. " + colUuid.getName() + " \t" + entry.getUuid());
+                Log.debug(".. " + colState.getName() + " \t" + entry.getState());
+                Log.debug(".. " + colFile.getName() + " \t" + entry.getFile());
+                Log.debug(".. " + colPath.getName() + " \t" + entry.getPath());
+                Log.debug(".. " + colFormat.getName() + " \t" + entry.getFormat());
             }
         }
     }
