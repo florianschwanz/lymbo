@@ -243,9 +243,9 @@ public class TableSettingsDatasource {
     public void printTable() {
         for (TableSettingsEntry entry : getEntries()) {
             if (entry != null) {
-                Log.debug(("Entry");
-                Log.debug((".." + colKey.getName() + "\t" + entry.getKey());
-                Log.debug((".." + colValue.getName() + "\t" + entry.getValue());
+                Log.debug("Entry");
+                Log.debug(".." + colKey.getName() + "\t" + entry.getKey());
+                Log.debug(".." + colValue.getName() + "\t" + entry.getValue());
             }
         }
     }
