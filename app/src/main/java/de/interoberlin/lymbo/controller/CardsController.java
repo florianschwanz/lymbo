@@ -576,6 +576,13 @@ public class CardsController {
             }
         }
 
+        for (Card template : stack.getTemplates()) {
+            for (Tag tag : template.getTags()) {
+                if (tag != null && !tag.containedIn(tagsAll) && !tag.getName().equals(getResources().getString(R.string.no_tag)))
+                    tagsAll.add(tag);
+            }
+        }
+
         tagsAll.add(new Tag(getResources().getString(R.string.no_tag)));
 
         return tagsAll;

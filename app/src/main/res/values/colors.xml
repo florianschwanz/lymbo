@@ -19,6 +19,7 @@
     <color name="card_title_text">@color/md_grey_700</color>
     <color name="card_light_text">@color/md_grey_500</color>
 
+    <color name="dialogPrimaryDark">@color/md_grey_300</color>
     <color name="note_bar">@color/md_grey_400</color>
 
     <!-- Quiz component -->

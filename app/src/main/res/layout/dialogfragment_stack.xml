@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="false"
-    android:padding="@dimen/dialog_fragment_padding"
     android:theme="@style/Theme.AppCompat.Light.Dialog">
 
     <LinearLayout
@@ -13,40 +12,47 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/etTitle"
+        <!-- Main -->
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/title"
-            android:inputType="text">
+            android:orientation="vertical"
+            android:padding="@dimen/dialog_fragment_padding">
 
-            <requestFocus />
-        </EditText>
+            <EditText
+                android:id="@+id/etTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/title"
+                android:inputType="text">
 
-        <EditText
-            android:id="@+id/etSubtitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/subtitle"
-            android:inputType="text" />
+                <requestFocus />
+            </EditText>
 
-        <EditText
-            android:id="@+id/etAuthor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/author"
-            android:inputType="text" />
+            <EditText
+                android:id="@+id/etSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/subtitle"
+                android:inputType="text" />
 
-        <!-- Expand -->
+            <EditText
+                android:id="@+id/etAuthor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/author"
+                android:inputType="text" />
+        </LinearLayout>
+
+        <!-- Languages -->
 
         <LinearLayout
             android:id="@+id/llAddLanguages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="@dimen/dialog_fragment_padding"
-            android:paddingRight="@dimen/dialog_fragment_padding"
-            android:paddingTop="@dimen/dialog_fragment_padding">
+            android:padding="@dimen/dialog_fragment_padding">
 
             <ImageView
                 android:id="@+id/ivLanguages"
@@ -71,62 +77,74 @@
             android:id="@+id/llLanguages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/dialogPrimaryDark"
             android:orientation="vertical">
 
-            <de.interoberlin.lymbo.view.controls.RobotoTextView
-                android:id="@+id/tvLanguageFrom"
-                style="@style/CardText"
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="@drawable/bottom_shadow" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/divider_caption_margin_bottom"
-                android:layout_marginTop="@dimen/divider_caption_margin_top"
-                android:layout_weight="0.50"
-                android:ellipsize="end"
-                android:text="@string/source_language"
-                roboto:typeface="roboto_regular" />
+                android:orientation="vertical"
+                android:padding="@dimen/dialog_fragment_padding">
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:background="@color/stroke" />
+                <de.interoberlin.lymbo.view.controls.RobotoTextView
+                    android:id="@+id/tvLanguageFrom"
+                    style="@style/CardText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/divider_caption_margin_bottom"
+                    android:layout_marginTop="@dimen/divider_caption_margin_top"
+                    android:layout_weight="0.50"
+                    android:ellipsize="end"
+                    android:text="@string/source_language"
+                    roboto:typeface="roboto_regular" />
 
-            <TableLayout
-                android:id="@+id/tblLanguagesFrom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/stroke" />
 
-            <de.interoberlin.lymbo.view.controls.RobotoTextView
-                android:id="@+id/tvLanguageTo"
-                style="@style/CardText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/divider_caption_margin_bottom"
-                android:layout_marginTop="@dimen/divider_caption_margin_top"
-                android:layout_weight="0.50"
-                android:ellipsize="end"
-                android:text="@string/target_language"
-                roboto:typeface="roboto_regular" />
+                <TableLayout
+                    android:id="@+id/tblLanguagesFrom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:background="@color/stroke" />
+                <de.interoberlin.lymbo.view.controls.RobotoTextView
+                    android:id="@+id/tvLanguageTo"
+                    style="@style/CardText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/divider_caption_margin_bottom"
+                    android:layout_marginTop="@dimen/divider_caption_margin_top"
+                    android:layout_weight="0.50"
+                    android:ellipsize="end"
+                    android:text="@string/target_language"
+                    roboto:typeface="roboto_regular" />
 
-            <TableLayout
-                android:id="@+id/tblLanguagesTo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/stroke" />
 
+                <TableLayout
+                    android:id="@+id/tblLanguagesTo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
+
+        <!-- Tags -->
 
         <LinearLayout
             android:id="@+id/llAddTags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="@dimen/dialog_fragment_padding"
-            android:paddingRight="@dimen/dialog_fragment_padding"
-            android:paddingTop="@dimen/dialog_fragment_padding">
+            android:padding="@dimen/dialog_fragment_padding">
 
             <ImageView
                 android:id="@+id/ivLabel"
@@ -151,20 +169,32 @@
             android:id="@+id/llTags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/dialogPrimaryDark"
             android:orientation="vertical">
 
-            <TableLayout
-                android:id="@+id/tblTags"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent"
+                android:foreground="@drawable/bottom_shadow" />
 
-            <ImageView
-                android:id="@+id/ivAddTag"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_action_new"
-                android:contentDescription="@string/desc_image" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:padding="@dimen/dialog_fragment_padding">
 
+                <TableLayout
+                    android:id="@+id/tblTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:id="@+id/ivAddTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_action_new"
+                    android:contentDescription="@string/desc_image" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

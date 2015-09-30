@@ -9,7 +9,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.0'
+        classpath 'com.android.tools.build:gradle:1.3.0'
     }
 }
 
@@ -24,8 +24,8 @@ repositories {
 ext.versionPatch = project.hasProperty('patch') ? project.getProperty('patch') : versionPatch
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId groupId + '.' + artifactId
@@ -258,17 +258,17 @@ assembleRelease.dependsOn(copyPropertiesRelease)
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'de.interoberlin:sauvignon:0.2.29@aar'
+    compile 'de.interoberlin:sauvignon:0.2.30@aar'
     compile 'de.interoberlin:swipelistview:0.2.3@aar'
-    compile 'de.interoberlin:mate:0.4.22@aar'
+    compile 'de.interoberlin:mate:0.4.23@aar'
     // Used for file handling
     compile 'commons-io:commons-io:2.4'
     compile 'org.apache.commons:commons-lang3:3.0'
     // Used for Material Design
     compile 'com.squareup.picasso:picasso:2.3.4'
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.android.support:cardview-v7:22.0.0'
-    compile 'com.android.support:recyclerview-v7:22.0.0'
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:cardview-v7:23.0.1'
+    compile 'com.android.support:recyclerview-v7:23.0.1'
     // Used for animation
     compile 'com.github.mrengineer13:snackbar:1.1.0'
     compile 'com.nineoldandroids:library:2.4.0'
