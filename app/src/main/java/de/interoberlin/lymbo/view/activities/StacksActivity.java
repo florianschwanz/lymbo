@@ -267,7 +267,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                new LoadLymbosTask().execute();
+                new ScanLoadLymbosTask().execute();
             }
         }, REFRESH_DELAY);
     }
@@ -383,6 +383,30 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     // --------------------
 
     public class LoadLymbosTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            stacksController.load();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+
+            srl.setRefreshing(false);
+            snack(StacksActivity.this, R.string.lymbos_loaded);
+            updateListView();
+        }
+    }
+
+    public class ScanLoadLymbosTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();

@@ -69,6 +69,21 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     // Methods - Lifecycle
     // --------------------
 
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        srl.setRefreshing(true);
+
+        String fileName = savedInstanceState.getString(getResources().getString(R.string.bundle_lymbo_file_name));
+        boolean asset = savedInstanceState.getBoolean(getResources().getString(R.string.bundle_asset));
+
+        cardsController.reloadStack(fileName, asset);
+        cardsController.init();
+
+        srl.setRefreshing(false);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         try {
@@ -79,20 +94,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
             VIBRATION_DURATION = getResources().getInteger(R.integer.vibration_duration);
             REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_cards);
-
-            // Restore instance state
-            if (savedInstanceState != null && cardsController.getStack() != null) {
-                final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-                srl.setRefreshing(true);
-
-                String fileName = savedInstanceState.getString(getResources().getString(R.string.bundle_lymbo_file_name));
-                boolean asset = savedInstanceState.getBoolean(getResources().getString(R.string.bundle_asset));
-
-                cardsController.reloadStack(fileName, asset);
-                cardsController.init();
-
-                srl.setRefreshing(false);
-            }
 
             setActionBarIcon(R.drawable.ic_ab_drawer);
             setDisplayHomeAsUpEnabled(true);
@@ -329,6 +330,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putString(getResources().getString(R.string.bundle_lymbo_file_name), cardsController.getStack().getFile());
+        savedInstanceState.putBoolean(getResources().getString(R.string.bundle_asset), cardsController.getStack().isAsset());
         savedInstanceState.putBoolean(getResources().getString(R.string.bundle_asset), cardsController.getStack().isAsset());
 
         super.onSaveInstanceState(savedInstanceState);

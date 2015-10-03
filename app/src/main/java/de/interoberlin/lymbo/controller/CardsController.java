@@ -40,7 +40,7 @@ public class CardsController {
     private List<Card> cards;
     private List<Card> cardsDismissed;
     private List<Card> cardsStashed;
-
+    private List<Card> templates;
     private List<Tag> tagsSelected;
 
     private boolean displayOnlyFavorites;
@@ -74,6 +74,7 @@ public class CardsController {
         cards = new ArrayList<>();
         cardsDismissed = new CopyOnWriteArrayList<>();
         cardsStashed = new CopyOnWriteArrayList<>();
+        templates = new CopyOnWriteArrayList<>();
         tagsSelected = new ArrayList<>();
         displayOnlyFavorites = false;
 
@@ -89,6 +90,10 @@ public class CardsController {
                 } else if (datasource.isStashed(c.getId())) {
                     cardsStashed.add(c);
                 }
+            }
+
+            for (Card t : stack.getTemplates()) {
+                templates.add(t);
             }
 
             datasource.close();
@@ -576,7 +581,7 @@ public class CardsController {
             }
         }
 
-        for (Card template : stack.getTemplates()) {
+        for (Card template : getTemplates()) {
             for (Tag tag : template.getTags()) {
                 if (tag != null && !tag.containedIn(tagsAll) && !tag.getName().equals(getResources().getString(R.string.no_tag)))
                     tagsAll.add(tag);
@@ -619,6 +624,14 @@ public class CardsController {
 
     public List<Card> getCards() {
         return cards;
+    }
+
+    public void setTemplates(List<Card> templates) {
+        this.templates = templates;
+    }
+
+    public List<Card> getTemplates() {
+        return templates;
     }
 
     public List<Card> getCardsDiscarded() {
