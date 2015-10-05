@@ -16,24 +16,4 @@
             android:id="@+id/surface"
             layout="@layout/card_surface" />
     </FrameLayout>
-
-    <!-- Note -->
-    <LinearLayout
-        android:id="@+id/llNoteBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/note_margin"
-        android:layout_marginStart="@dimen/note_margin"
-        android:background="@color/note_bar"
-        android:padding="@dimen/card_padding">
-
-        <TextView
-            android:id="@+id/tvNote"
-            style="@style/CardNote"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.9"
-            android:drawableEnd="@drawable/ic_action_edit"
-            android:hint="@string/note" />
-    </LinearLayout>
 </LinearLayout>

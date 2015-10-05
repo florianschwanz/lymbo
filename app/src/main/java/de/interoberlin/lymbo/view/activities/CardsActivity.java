@@ -331,7 +331,6 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putString(getResources().getString(R.string.bundle_lymbo_file_name), cardsController.getStack().getFile());
         savedInstanceState.putBoolean(getResources().getString(R.string.bundle_asset), cardsController.getStack().isAsset());
-        savedInstanceState.putBoolean(getResources().getString(R.string.bundle_asset), cardsController.getStack().isAsset());
 
         super.onSaveInstanceState(savedInstanceState);
     }
