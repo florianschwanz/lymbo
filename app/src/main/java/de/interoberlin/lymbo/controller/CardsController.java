@@ -16,6 +16,9 @@ import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Side;
 import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.model.card.components.Answer;
+import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
+import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
@@ -176,8 +179,8 @@ public class CardsController {
     /**
      * Adds a new card to the current stack
      */
-    public void addCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
-        Card card = new Card(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+    public void addCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
+        Card card = new Card(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags, answers);
 
         stack.getCards().add(card);
         cards.add(card);
@@ -193,8 +196,9 @@ public class CardsController {
      * @param backTitleValue   back title
      * @param backTextsValues  back texts
      * @param tags             tags
+     * @param answers          answers
      */
-    public void updateCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+    public void updateCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
         if (cardsContainsId(uuid)) {
             Card card = getCardById(uuid);
 
@@ -213,6 +217,10 @@ public class CardsController {
                     frontText.setGravity(EGravity.LEFT);
                     frontSide.addComponent(frontText);
                 }
+
+                if (answers != null && !answers.isEmpty()) {
+                    frontSide.addComponent(new ChoiceComponent(answers));
+                }
             }
 
             if (card.getSides().size() > 1) {
@@ -230,6 +238,10 @@ public class CardsController {
                     backText.setGravity(EGravity.LEFT);
                     backSide.addComponent(backText);
                 }
+
+                if (answers != null && !answers.isEmpty()) {
+                    backSide.addComponent(new ResultComponent());
+                }
             }
 
             card.setTags(tags);
@@ -242,7 +254,7 @@ public class CardsController {
      * Adds a new template to the current stack
      */
     public void addTemplate(String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
-        Card template = new Card(title, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+        Card template = new Card(title, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags, null);
 
         stack.getTemplates().add(template);
         save();

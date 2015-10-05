@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.view.ContextMenu;
@@ -193,9 +194,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         if (!card.isNoteExpanded())
             llNoteBar.getLayoutParams().height = 0;
         if (card.isFavorite())
-            ivFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_important));
+            ivFavorite.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_action_important));
         else
-            ivFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_not_important));
+            ivFavorite.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_action_not_important));
 
         String note = cardsController.getNote(context, card.getId());
 
@@ -315,10 +316,18 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         ArrayList<String> backTexts = new ArrayList<>();
         ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
         ArrayList<String> tagsSelected = Tag.getNames(card.getTags());
+        ArrayList<String> answersValue = new ArrayList<>();
+        ArrayList<Integer> answersCorrect = new ArrayList<>();
+        ArrayList<String> templates = new ArrayList<>();
 
         for (Displayable d : card.getSides().get(0).getComponents()) {
             if (d instanceof TextComponent) {
                 frontTexts.add(((TextComponent) d).getValue());
+            } else if (d instanceof ChoiceComponent) {
+                for (Answer a : ((ChoiceComponent) d).getAnswers()) {
+                    answersValue.add(a.getValue());
+                    answersCorrect.add(a.isCorrect() ? 1 : 0);
+                }
             }
         }
 
@@ -327,8 +336,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                 backTexts.add(((TextComponent) d).getValue());
             }
         }
-
-        ArrayList<String> templates = new ArrayList<>();
 
         for (Card template : cardsController.getStack().getTemplates()) {
             if (template != null && template.getId() != null) {
@@ -349,6 +356,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_templates), templates);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_answers_value), answersValue);
+        bundle.putIntegerArrayList(getResources().getString(R.string.bundle_answers_correct), answersCorrect);
         dialog.setArguments(bundle);
         dialog.show(activity.getFragmentManager(), CardDialogFragment.TAG);
     }
@@ -484,7 +493,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
-
                 }
 
                 @Override
@@ -494,7 +502,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
                 @Override
                 public void onAnimationRepeat(Animation animation) {
-
                 }
             });
         } else {
@@ -505,7 +512,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
-
                 }
 
                 @Override
@@ -515,7 +521,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
                 @Override
                 public void onAnimationRepeat(Animation animation) {
-
                 }
             });
         }
@@ -628,13 +633,13 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         if (current != null && current.contains(EComponent.CHOICE) && next != null && next.contains(EComponent.RESULT)) {
             // Default result : CORRECT
             ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(getResources().getString(R.string.correct).toUpperCase(Locale.getDefault()));
-            ((ResultComponent) next.getFirst(EComponent.RESULT)).setColor(getResources().getColor(R.color.correct));
+            ((ResultComponent) next.getFirst(EComponent.RESULT)).setColor(ContextCompat.getColor(activity, R.color.correct));
 
             for (Answer a : ((ChoiceComponent) current.getFirst(EComponent.CHOICE)).getAnswers()) {
                 if (a.isCorrect() != a.isSelected()) {
                     // At least on answer is wrong : WRONG
                     ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(getResources().getString(R.string.wrong).toUpperCase(Locale.getDefault()));
-                    ((ResultComponent) next.getFirst(EComponent.RESULT)).setColor(getResources().getColor(R.color.wrong));
+                    ((ResultComponent) next.getFirst(EComponent.RESULT)).setColor(ContextCompat.getColor(activity, R.color.wrong));
                     break;
                 }
             }

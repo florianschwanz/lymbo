@@ -32,6 +32,10 @@ public class ChoiceComponent implements Displayable {
     public ChoiceComponent() {
     }
 
+    public ChoiceComponent(List<Answer> answers) {
+        this.answers = answers;
+    }
+
     // --------------------
     // Methods
     // --------------------

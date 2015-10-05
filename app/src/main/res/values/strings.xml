@@ -5,6 +5,7 @@
     <string name="add_card">Add card</string>
     <string name="add_card_to_favorites">Added card to favorites</string>
     <string name="add_languages">Add languages</string>
+    <string name="add_quiz">Add quiz</string>
     <string name="add_stack">Add stack</string>
     <string name="add_tags">Add tags</string>
     <string name="add_template">Add template</string>
@@ -105,6 +106,7 @@
     <string name="move_card">Move card</string>
     <string name="moved_card">Moved card</string>
     <string name="new_tag">new tag</string>
+    <string name="new_answer">new answer</string>
     <string name="new_text">new text</string>
     <string name="no_cards_in_stash">No cards in stash</string>
     <string name="no_tag">no tag</string>

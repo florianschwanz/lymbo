@@ -29,6 +29,7 @@ import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.model.card.Card;
 import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.CardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.ConfirmRefreshDialogFragment;
@@ -391,9 +392,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onAddCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+    public void onAddCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
         try {
-            cardsController.addCard(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+            cardsController.addCard(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags, answers);
             cardsController.addTagsSelected(tags);
             updateListView();
         } catch (Exception e) {
@@ -402,8 +403,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onEditCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
-        cardsController.updateCard(uuid, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+    public void onEditCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
+        cardsController.updateCard(uuid, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags, answers);
         cardsController.addTagsSelected(tags);
         snack(this, R.string.edited_card);
         updateListView();

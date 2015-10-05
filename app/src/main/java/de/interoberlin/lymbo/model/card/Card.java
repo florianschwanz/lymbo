@@ -8,6 +8,7 @@ import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
+import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
@@ -35,11 +36,11 @@ public class Card {
         init();
     }
 
-    public Card(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
-        this(null, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+    public Card(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
+        this(null, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags, answers);
     }
 
-    public Card(String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+    public Card(String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
         init();
 
         this.title = title;
@@ -57,6 +58,11 @@ public class Card {
             frontText.setValue(frontTextValue);
             frontText.setGravity(EGravity.LEFT);
             frontSide.addComponent(frontText);
+        }
+
+        if (answers != null && !answers.isEmpty()) {
+            frontSide.addComponent(new ChoiceComponent(answers));
+            backSide.addComponent(new ResultComponent());
         }
 
         TitleComponent backTitle = new TitleComponent();

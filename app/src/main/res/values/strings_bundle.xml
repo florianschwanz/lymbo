@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="bundle_answers_correct" translatable="false">answers_correct</string>
+    <string name="bundle_answers_value" translatable="false">answers_value</string>
     <string name="bundle_asset" translatable="false">asset</string>
     <string name="bundle_author" translatable="false">author</string>
     <string name="bundle_back_title" translatable="false">back_title</string>

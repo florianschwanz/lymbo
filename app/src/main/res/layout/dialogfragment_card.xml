@@ -71,6 +71,66 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Quiz -->
+
+        <LinearLayout
+            android:id="@+id/llAddQuiz"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/dialog_fragment_padding">
+
+            <ImageView
+                android:id="@+id/ivQuiz"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/desc_image"
+                android:paddingEnd="@dimen/stack_bar_padding"
+                android:paddingStart="@dimen/stack_bar_padding"
+                android:src="@drawable/ic_action_help" />
+
+            <TextView
+                android:id="@+id/tvExpandQuiz"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.9"
+                android:text="@string/add_quiz"
+                android:textAlignment="textStart"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llQuiz"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dialogPrimaryDark"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="@drawable/bottom_shadow" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/dialog_fragment_padding">
+
+                <TableLayout
+                    android:id="@+id/tblQuiz"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:id="@+id/ivAddAnswer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_action_new"
+                    android:contentDescription="@string/desc_image" />
+            </LinearLayout>
+        </LinearLayout>
+
         <!-- Back -->
 
         <LinearLayout

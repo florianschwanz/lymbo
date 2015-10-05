@@ -149,5 +149,7 @@
     <string name="delete">Delete</string>
     <string name="use_template">Use template</string>
     <string name="edit_template">Edit template</string>
+    <string name="add_quiz">Add quiz</string>
+    <string name="new_answer">new answer</string>
 
 </resources>

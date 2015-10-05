@@ -16,6 +16,11 @@ public class Answer {
     public Answer() {
     }
 
+    public Answer(String value, boolean correct) {
+        this.value = value;
+        this.correct = correct;
+    }
+
     // --------------------
     // Methods
     // --------------------

@@ -146,8 +146,6 @@
                     android:id="@+id/llNoteBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_paddingEnd="@dimen/note_margin"
-                    android:layout_paddingStart="@dimen/note_margin"
                     android:background="@color/note_bar"
                     android:padding="@dimen/card_padding">
 
@@ -158,7 +156,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.9"
                         android:drawableEnd="@drawable/ic_action_edit"
-                        android:hint="@string/note" />
+                        android:hint="@string/note"
+                        android:paddingEnd="@dimen/note_margin"
+                        android:paddingStart="@dimen/note_margin" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
