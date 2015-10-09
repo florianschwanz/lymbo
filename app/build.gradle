@@ -258,20 +258,21 @@ assembleRelease.dependsOn(copyPropertiesRelease)
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    // Used for file handling
+    // Used for Material Design
+    // Used for animation
+    // Used for translation
     compile 'de.interoberlin:sauvignon:0.2.30@aar'
     compile 'de.interoberlin:swipelistview:0.2.3@aar'
     compile 'de.interoberlin:mate:0.4.23@aar'
-    // Used for file handling
     compile 'commons-io:commons-io:2.4'
     compile 'org.apache.commons:commons-lang3:3.0'
-    // Used for Material Design
     compile 'com.squareup.picasso:picasso:2.3.4'
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:cardview-v7:23.0.1'
     compile 'com.android.support:recyclerview-v7:23.0.1'
-    // Used for animation
     compile 'com.github.mrengineer13:snackbar:1.1.0'
     compile 'com.nineoldandroids:library:2.4.0'
-    // Used for translation
     compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.android.support:support-v4:23.0.1'
 }

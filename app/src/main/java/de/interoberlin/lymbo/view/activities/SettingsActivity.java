@@ -93,12 +93,16 @@ public class SettingsActivity extends PreferenceActivity {
         // use the older PreferenceActivity APIs.
 
         // Add 'general' preferences.
-        addPreferencesFromResource(R.xml.pref_general);
+        addPreferencesFromResource(R.xml.pref_lymbo_web);
+        addPreferencesFromResource(R.xml.pref_translate_api);
 
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
-        bindPreferenceSummaryToValue(findPreference("translator_api_secret"));
+        bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.pref_translator_api_secret)));
+        bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.pref_lymbo_web_api_secret)));
+        bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.pref_lymbo_web_user_name)));
+        bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.pref_lymbo_web_password)));
     }
 
     /**
@@ -162,7 +166,7 @@ public class SettingsActivity extends PreferenceActivity {
                 Context context = App.getContext();
                 Resources res = context.getResources();
 
-                if (editTextPreference.getKey().equals(res.getString(R.string.translator_api_secret))) {
+                if (editTextPreference.getKey().equals(res.getString(R.string.pref_translator_api_secret))) {
                     // Retrieve access control item
                     try {
                         new MicrosoftAccessControlItemTask().execute(res.getString(R.string.translator_client_id), stringValue);
@@ -177,6 +181,8 @@ public class SettingsActivity extends PreferenceActivity {
                     Log.debug(String.valueOf(prefs.getInt(res.getString(R.string.translator_access_item_expires_in), 0)));
                     Log.debug(prefs.getString(res.getString(R.string.translator_access_item_scope), null));
                     Log.debug(String.valueOf(prefs.getLong(res.getString(R.string.translator_access_item_timestamp), 0L)));
+                } else if (editTextPreference.getKey().equals(res.getString(R.string.pref_lymbo_web_api_secret))) {
+
                 }
             } else {
                 // For all other preferences, set the summary to the value's
@@ -208,22 +214,35 @@ public class SettingsActivity extends PreferenceActivity {
                         .getString(preference.getKey(), ""));
     }
 
-    /**
-     * This fragment shows general preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
+    public static class TranslateAPIPreferenceFragment extends PreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_general);
+            addPreferencesFromResource(R.xml.pref_translate_api);
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("translator_api_secret"));
+            bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.pref_translator_api_secret)));
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class LymboWebPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_lymbo_web);
+
+            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
+            // to their values. When their values change, their summaries are
+            // updated to reflect the new value, per the Android Design
+            // guidelines.
+            bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.pref_lymbo_web_api_secret)));
+            bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.pref_lymbo_web_user_name)));
+            bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.pref_lymbo_web_password)));
         }
     }
 }

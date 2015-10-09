@@ -3,7 +3,14 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="de.interoberlin.lymbo.view.activities.SettingsActivity$GeneralPreferenceFragment"
-        android:title="@string/pref_header_general" />
+        android:fragment="de.interoberlin.lymbo.view.activities.SettingsActivity$TranslateAPIPreferenceFragment"
+        android:icon="@drawable/ic_action_import_export"
+        android:title="@string/pref_title_translator" />
+
+    <header
+        android:fragment="de.interoberlin.lymbo.view.activities.SettingsActivity$LymboWebPreferenceFragment"
+        android:icon="@drawable/ic_launcher"
+        android:title="@string/pref_title_lymbo_web" />
+
 
 </preference-headers>

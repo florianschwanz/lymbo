@@ -151,5 +151,12 @@
     <string name="edit_template">Vorlage bearbeiten</string>
     <string name="add_quiz">Quiz hinzufügen</string>
     <string name="new_answer">neue Antwort</string>
+    <string name="pref_title_lymbo_web_api_secret">Lymbo Web API secret</string>
+    <string name="pref_title_lymbo_web_password">Passwort</string>
+    <string name="pref_title_lymbo_web_user_name">Benutzername</string>
+    <string name="pref_title_translator_api_secret">Translator API secret</string>
+    <string name="pref_title_header_general">Allgemein</string>
+    <string name="pref_title_translator">Translator</string>
+    <string name="pref_title_lymbo_web">Lymbo Web</string>
 
 </resources>

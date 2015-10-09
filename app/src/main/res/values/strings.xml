@@ -115,8 +115,18 @@
     <string name="note_edited">Note edited</string>
     <string name="okay">Okay</string>
     <string name="path">Path</string>
-    <string name="pref_header_general" translatable="false">General</string>
-    <string name="pref_title_translator_api_secret" translatable="false">Translator API secret</string>
+    <string name="pref_header_general" translatable="false">pref_header_general</string>
+    <string name="pref_translator_api_secret" translatable="false">pref_translator_api_secret</string>
+    <string name="pref_lymbo_web_api_secret" translatable="false">pref_lymbo_web_api_secret</string>
+    <string name="pref_lymbo_web_user_name" translatable="false">pref_lymbo_web_user_name</string>
+    <string name="pref_lymbo_web_password" translatable="false">pref_lymbo_web_password</string>
+    <string name="pref_title_header_general">General</string>
+    <string name="pref_title_translator">Translator</string>
+    <string name="pref_title_translator_api_secret">Translator API secret</string>
+    <string name="pref_title_lymbo_web">Lymbo Web</string>
+    <string name="pref_title_lymbo_web_api_secret">Lymbo Web API secret</string>
+    <string name="pref_title_lymbo_web_user_name">User name</string>
+    <string name="pref_title_lymbo_web_password">Password</string>
     <string name="put_card_to_end">Put card to end</string>
     <string name="remove_card_from_favorites">Removed card from favorites</string>
     <string name="report_error_question">Do you want to send the error log to the developer? This helps a lot fixing this issue.</string>
@@ -155,7 +165,6 @@
     <string name="translator_access_item_scope" translatable="false">translator_access_item_scope</string>
     <string name="translator_access_item_timestamp" translatable="false">translator_access_item_timestamp</string>
     <string name="translator_access_item_token_type" translatable="false">translator_access_item_token_type</string>
-    <string name="translator_api_secret" translatable="false">translator_api_secret</string>
     <string name="translator_client_id" translatable="false">lymbo</string>
     <string name="use_template">Use template</string>
     <string name="undo">Undo</string>

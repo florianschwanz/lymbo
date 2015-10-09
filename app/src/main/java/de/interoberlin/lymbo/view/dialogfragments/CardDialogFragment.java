@@ -427,7 +427,7 @@ public class CardDialogFragment extends DialogFragment {
             Resources res = getActivity().getResources();
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String translatorApiSecret = prefs.getString(res.getString(R.string.translator_api_secret), null);
+            String translatorApiSecret = prefs.getString(res.getString(R.string.pref_translator_api_secret), null);
 
             AccessControlItem accessControlItem = new MicrosoftAccessControlItemTask().execute(res.getString(R.string.translator_client_id), translatorApiSecret).get();
 

@@ -151,5 +151,12 @@
     <string name="edit_template">Edit template</string>
     <string name="add_quiz">Add quiz</string>
     <string name="new_answer">new answer</string>
+    <string name="pref_title_header_general">General</string>
+    <string name="pref_title_lymbo_web_api_secret">Lymbo Web API secret</string>
+    <string name="pref_title_lymbo_web_password">Password</string>
+    <string name="pref_title_lymbo_web_user_name">User name</string>
+    <string name="pref_title_translator_api_secret">Translator API secret</string>
+    <string name="pref_title_translator">Translator</string>
+    <string name="pref_title_lymbo_web">Lymbo Web</string>
 
 </resources>

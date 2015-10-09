@@ -3,11 +3,11 @@
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
     <EditTextPreference
-        android:key="@string/translator_api_secret"
-        android:title="@string/pref_title_translator_api_secret"
-        android:selectAllOnFocus="true"
         android:inputType="text"
+        android:key="@string/pref_translator_api_secret"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:maxLines="1" />
+        android:title="@string/pref_title_translator_api_secret" />
 
 </PreferenceScreen>

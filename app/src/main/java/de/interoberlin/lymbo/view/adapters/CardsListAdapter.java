@@ -19,6 +19,7 @@ import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -114,20 +115,20 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         vi = LayoutInflater.from(getContext());
 
         // Load views
-        final LinearLayout llCard = (LinearLayout) vi.inflate(R.layout.card, parent, false);
-        final RelativeLayout rlMain = (RelativeLayout) llCard.findViewById(R.id.rlMain);
-        final LinearLayout llTags = (LinearLayout) llCard.findViewById(R.id.llTags);
-        final LinearLayout llFlip = (LinearLayout) llCard.findViewById(R.id.llFlip);
-        final TextView tvNumerator = (TextView) llCard.findViewById(R.id.tvNumerator);
-        final TextView tvDenominator = (TextView) llCard.findViewById(R.id.tvDenominator);
-        final ImageView ivNote = (ImageView) llCard.findViewById(R.id.ivNote);
-        final ImageView ivFavorite = (ImageView) llCard.findViewById(R.id.ivFavorite);
-        final ImageView ivHint = (ImageView) llCard.findViewById(R.id.ivHint);
-        final LinearLayout llNoteBar = (LinearLayout) llCard.findViewById(R.id.llNoteBar);
-        final TextView tvNote = (TextView) llCard.findViewById(R.id.tvNote);
+        final FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card, parent, false);
+        final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
+        final LinearLayout llTags = (LinearLayout) flCard.findViewById(R.id.llTags);
+        final LinearLayout llFlip = (LinearLayout) flCard.findViewById(R.id.llFlip);
+        final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
+        final TextView tvDenominator = (TextView) flCard.findViewById(R.id.tvDenominator);
+        final ImageView ivNote = (ImageView) flCard.findViewById(R.id.ivNote);
+        final ImageView ivFavorite = (ImageView) flCard.findViewById(R.id.ivFavorite);
+        final ImageView ivHint = (ImageView) flCard.findViewById(R.id.ivHint);
+        final LinearLayout llNoteBar = (LinearLayout) flCard.findViewById(R.id.llNoteBar);
+        final TextView tvNote = (TextView) flCard.findViewById(R.id.tvNote);
 
         // Context menu
-        llCard.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+        flCard.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
                 contextMenu.add(0, 0, 0, getResources().getString(R.string.edit))
@@ -142,7 +143,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
-                                stash(position, card, llCard);
+                                stash(position, card, flCard);
                                 return false;
                             }
                         });
@@ -272,10 +273,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         // Restoring animation
         if (card.isRestoring()) {
-            llCard.setTranslationX(displayWidth);
+            flCard.setTranslationX(displayWidth);
 
-            Animation anim = ViewUtil.expand(context, llCard);
-            llCard.startAnimation(anim);
+            Animation anim = ViewUtil.expand(context, flCard);
+            flCard.startAnimation(anim);
 
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -285,8 +286,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    Animation anim = ViewUtil.fromRight(context, llCard, displayWidth);
-                    llCard.startAnimation(anim);
+                    Animation anim = ViewUtil.fromRight(context, flCard, displayWidth);
+                    flCard.startAnimation(anim);
                 }
 
                 @Override
@@ -296,7 +297,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             });
         }
 
-        return llCard;
+        return flCard;
     }
 
     // --------------------
@@ -369,9 +370,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @param card     card to be stashed
      * @param llCard   corresponding view
      */
-    private void stash(final int position, final Card card, final LinearLayout llCard) {
-        Animation a = ViewUtil.collapse(context, llCard);
-        llCard.startAnimation(a);
+    private void stash(final int position, final Card card, final FrameLayout flCard) {
+        Animation a = ViewUtil.collapse(context, flCard);
+        flCard.startAnimation(a);
 
         a.setAnimationListener(new Animation.AnimationListener() {
             @Override
