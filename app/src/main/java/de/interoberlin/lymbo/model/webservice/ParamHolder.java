@@ -1,7 +1,9 @@
-package de.interoberlin.lymbo.model.translate;
+package de.interoberlin.lymbo.model.webservice;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.interoberlin.mate.lib.model.Log;
 
 public class ParamHolder {
     private List<Param> params = new ArrayList<>();
@@ -36,6 +38,8 @@ public class ParamHolder {
         if (paramString.length() > 0 && paramString.charAt(paramString.length() - 1) == '&') {
             paramString = paramString.substring(0, paramString.length() - 1);
         }
+
+        Log.trace("param string : " + paramString);
 
         return paramString;
     }

@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.model.translate;
+package de.interoberlin.lymbo.model.webservice.translate;
 
 
 import android.os.AsyncTask;
@@ -11,15 +11,28 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-public class MicrosoftDetectorTask extends AsyncTask<String, Void, Language> {
-    private static final String DETECT_URL = "http://api.microsofttranslator.com/V2/Ajax.svc/Detect?";
+import de.interoberlin.lymbo.model.webservice.Param;
+import de.interoberlin.lymbo.model.webservice.ParamHolder;
+import de.interoberlin.mate.lib.model.Log;
+
+public class MicrosoftTranslatorTask extends AsyncTask<String, Void, String> {
+    private static final String TRANSLATE_URL = "http://api.microsofttranslator.com/V2/Ajax.svc/Translate?";
 
     private static final String ENCODING = "UTF-8";
     private static final String contentType = "text/plain";
 
+    private static final String PARAM_FROM = "from";
+    private static final String PARAM_TO = "to";
     private static final String PARAM_TEXT = "text";
 
     private static final int RESPONSE_CODE_OKAY = 200;
+
+    // --------------------
+    // Constructors
+    // --------------------
+
+    public MicrosoftTranslatorTask() {
+    }
 
     // --------------------
     // Methods - Lifecycle
@@ -31,12 +44,14 @@ public class MicrosoftDetectorTask extends AsyncTask<String, Void, Language> {
     }
 
     @Override
-    protected Language doInBackground(String... params) {
+    protected String doInBackground(String... params) {
         String accessToken = params[0];
-        String text = params[1];
+        Language languageFrom = Language.fromString(params[1]);
+        Language languageTo = Language.fromString(params[2]);
+        String text = params[3];
 
         try {
-            return detectLanguage(accessToken, text);
+            return getTranslation(accessToken, languageFrom, languageTo, text);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -45,7 +60,7 @@ public class MicrosoftDetectorTask extends AsyncTask<String, Void, Language> {
     }
 
     @Override
-    protected void onPostExecute(Language result) {
+    protected void onPostExecute(String result) {
         super.onPostExecute(result);
     }
 
@@ -57,18 +72,22 @@ public class MicrosoftDetectorTask extends AsyncTask<String, Void, Language> {
     /**
      * Translate a given text from one language to another
      *
-     * @param accessToken temporary access token
-     * @param text        text to be translated
+     * @param accessToken  temporary accessToken
+     * @param from         source language
+     * @param to           target language
+     * @param text         text to be translated
      * @return translated text
      * @throws Exception
      */
-    public static Language detectLanguage(String accessToken, String text) throws Exception {
+    public static String getTranslation(String accessToken, Language from, Language to, String text) throws Exception {
         // Parameters
         ParamHolder ph = new ParamHolder();
+        ph.add(new Param(PARAM_FROM, URLEncoder.encode(from.getLangCode(), ENCODING)));
+        ph.add(new Param(PARAM_TO, URLEncoder.encode(to.getLangCode(), ENCODING)));
         ph.add(new Param(PARAM_TEXT, URLEncoder.encode(text, ENCODING)));
 
         // Connection
-        HttpURLConnection con = (HttpURLConnection) new URL(DETECT_URL + ph.getParamString()).openConnection();
+        HttpURLConnection con = (HttpURLConnection) new URL(TRANSLATE_URL + ph.getParamString()).openConnection();
 
         // Request header
         con.setRequestMethod("GET");
@@ -80,9 +99,10 @@ public class MicrosoftDetectorTask extends AsyncTask<String, Void, Language> {
         // Execute request
         try {
             if (con.getResponseCode() != RESPONSE_CODE_OKAY) {
+                Log.error("Error translating text RESPONSE CODE : " + con.getResponseCode());
                 throw new Exception("Error from Microsoft Translator API");
             }
-            return Language.fromString(inputStreamToString(con.getInputStream()));
+            return inputStreamToString(con.getInputStream()).replaceAll("\"", "");
         } finally {
             con.disconnect();
         }

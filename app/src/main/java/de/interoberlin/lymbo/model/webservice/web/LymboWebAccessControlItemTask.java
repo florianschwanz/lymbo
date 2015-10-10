@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.model.translate;
+package de.interoberlin.lymbo.model.webservice.web;
 
 
 import android.content.Context;
@@ -14,20 +14,22 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.model.webservice.AccessControlItem;
+import de.interoberlin.lymbo.model.webservice.Param;
+import de.interoberlin.lymbo.model.webservice.ParamHolder;
 import de.interoberlin.mate.lib.model.Log;
 
-public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, AccessControlItem> {
-    private static final String TOKEN_URL = "https://datamarket.accesscontrol.windows.net/v2/OAuth2-13";
-
+public class LymboWebAccessControlItemTask extends AsyncTask<String, Void, AccessControlItem> {
     private static final String ENCODING = "UTF-8";
 
+    private static final String PARAM_USERNAME = "username";
+    private static final String PARAM_PASSWORD = "password";
     private static final String PARAM_GRANT_TYPE = "grant_type";
     private static final String PARAM_CLIENT_ID = "client_id";
     private static final String PARAM_CLIENT_SECRET = "client_secret";
@@ -41,10 +43,10 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
     // Constructors
     // --------------------
 
-    public MicrosoftAccessControlItemTask() {
+    public LymboWebAccessControlItemTask() {
     }
 
-    public MicrosoftAccessControlItemTask(OnCompleteListener ocListener) {
+    public LymboWebAccessControlItemTask(OnCompleteListener ocListener) {
         this.ocListener = ocListener;
     }
 
@@ -59,11 +61,13 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
 
     @Override
     protected AccessControlItem doInBackground(String... params) {
-        String clientId = params[0];
-        String clientSecret = params[1];
+        String username = params[0];
+        String password = params[1];
+        String clientId = params[2];
+        String clientSecret = params[3];
 
         try {
-            return getAccessControlItem(clientId, clientSecret);
+            return getAccessControlItem(username, password, clientId, clientSecret);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,12 +85,20 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
         if (result != null) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(res.getString(R.string.translator_access_item_token_type), result.getToken_type());
-            editor.putString(res.getString(R.string.translator_access_item_access_token), result.getAccess_token());
-            editor.putInt(res.getString(R.string.translator_access_item_expires_in), Integer.valueOf(result.getExpires_in()));
-            editor.putString(res.getString(R.string.translator_access_item_scope), result.getScope());
-            editor.putLong(res.getString(R.string.translator_access_item_timestamp), System.currentTimeMillis());
+            editor.putString(res.getString(R.string.pref_lymbo_web_access_item_token_type), result.getToken_type());
+            editor.putString(res.getString(R.string.pref_lymbo_web_access_item_access_token), result.getAccess_token());
+            editor.putInt(res.getString(R.string.pref_lymbo_web_access_item_expires_in), Integer.valueOf(result.getExpires_in()));
+            editor.putString(res.getString(R.string.pref_lymbo_web_access_item_scope), result.getScope());
+            editor.putLong(res.getString(R.string.pref_lymbo_web_access_item_timestamp), System.currentTimeMillis());
             editor.apply();
+
+            Log.info("Retrieved access control item for lymbo web");
+
+            Log.debug(prefs.getString(res.getString(R.string.pref_lymbo_web_access_item_token_type), null));
+            Log.debug(prefs.getString(res.getString(R.string.pref_lymbo_web_access_item_access_token), null));
+            Log.debug(String.valueOf(prefs.getInt(res.getString(R.string.pref_lymbo_web_access_item_expires_in), 0)));
+            Log.debug(prefs.getString(res.getString(R.string.pref_lymbo_web_access_item_scope), null));
+            Log.debug(String.valueOf(prefs.getLong(res.getString(R.string.pref_lymbo_web_access_item_timestamp), 0L)));
 
             if (ocListener != null)
                 ocListener.onAccessControlItemRetrieved(result.getAccess_token());
@@ -105,16 +117,19 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
      * @return access control item
      * @throws Exception
      */
-    private static AccessControlItem getAccessControlItem(String clientId, String clientSecret) throws Exception {
+    private static AccessControlItem getAccessControlItem(String username, String password, String clientId, String clientSecret) throws Exception {
         // Parameters
         ParamHolder ph = new ParamHolder();
-        ph.add(new Param(PARAM_GRANT_TYPE, "client_credentials"));
-        ph.add(new Param(PARAM_CLIENT_ID, URLEncoder.encode(clientId, ENCODING)));
+        ph.add(new Param(PARAM_USERNAME, URLEncoder.encode(username, ENCODING)));
+        ph.add(new Param(PARAM_PASSWORD, URLEncoder.encode(password, ENCODING)));
+        ph.add(new Param(PARAM_GRANT_TYPE, URLEncoder.encode("password", ENCODING)));
+        ph.add(new Param(PARAM_SCOPE, URLEncoder.encode("read", ENCODING)));
         ph.add(new Param(PARAM_CLIENT_SECRET, URLEncoder.encode(clientSecret, ENCODING)));
-        ph.add(new Param(PARAM_SCOPE, "http://api.microsofttranslator.com"));
+        ph.add(new Param(PARAM_CLIENT_ID, URLEncoder.encode(clientId, ENCODING)));
 
         // Connection
-        HttpsURLConnection con = (HttpsURLConnection) new URL(TOKEN_URL).openConnection();
+        final String TOKEN_URL = App.getContext().getResources().getString(R.string.lymbo_web_token_url);
+        HttpURLConnection con = (HttpURLConnection) new URL(TOKEN_URL).openConnection();
 
         // Request header
         con.setRequestMethod("POST");
@@ -130,21 +145,21 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
 
         try {
             if (con.getResponseCode() != RESPONSE_CODE_OKAY) {
-                Log.error("Error getting access token RESPONSE CODE : " + con.getResponseCode());
+                Log.error("Error getting lymbo web access token RESPONSE CODE : " + con.getResponseCode());
 
                 Context context = App.getContext();
                 Resources res = context.getResources();
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
                 SharedPreferences.Editor editor = prefs.edit();
-                editor.putString(res.getString(R.string.translator_access_item_token_type), null);
-                editor.putString(res.getString(R.string.translator_access_item_access_token), null);
-                editor.putString(res.getString(R.string.translator_access_item_expires_in), null);
-                editor.putString(res.getString(R.string.translator_access_item_scope), null);
-                editor.putLong(res.getString(R.string.translator_access_item_timestamp), 0L);
+                editor.putString(res.getString(R.string.pref_lymbo_web_access_item_token_type), null);
+                editor.putString(res.getString(R.string.pref_lymbo_web_access_item_access_token), null);
+                editor.putString(res.getString(R.string.pref_lymbo_web_access_item_expires_in), null);
+                editor.putString(res.getString(R.string.pref_lymbo_web_access_item_scope), null);
+                editor.putLong(res.getString(R.string.pref_lymbo_web_access_item_timestamp), 0L);
                 editor.apply();
 
-                Log.error("Error from Microsoft Translator API");
-                throw new Exception("Error from Microsoft Translator API");
+                Log.error("Error from Lymbo Web API");
+                throw new Exception("Error from Lymbo Web API");
             }
 
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));

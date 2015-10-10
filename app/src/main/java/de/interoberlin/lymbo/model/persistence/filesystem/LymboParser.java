@@ -36,7 +36,7 @@ import de.interoberlin.lymbo.model.card.enums.EGravity;
 import de.interoberlin.lymbo.model.card.enums.EStyle;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardEntry;
-import de.interoberlin.lymbo.model.translate.Language;
+import de.interoberlin.lymbo.model.webservice.translate.Language;
 import de.interoberlin.mate.lib.model.Log;
 import de.interoberlin.sauvignon.lib.controller.parser.SvgParser;
 import de.interoberlin.sauvignon.lib.model.svg.SVG;

@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.model.translate;
+package de.interoberlin.lymbo.model.webservice;
 
 public class Param {
     private String key;

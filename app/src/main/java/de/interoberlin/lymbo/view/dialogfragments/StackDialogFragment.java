@@ -24,7 +24,7 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.translate.Language;
+import de.interoberlin.lymbo.model.webservice.translate.Language;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 

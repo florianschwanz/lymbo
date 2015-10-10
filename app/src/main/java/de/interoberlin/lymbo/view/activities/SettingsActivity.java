@@ -17,10 +17,10 @@ import android.preference.PreferenceManager;
 
 import java.util.List;
 
-import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.App;
-import de.interoberlin.lymbo.model.translate.MicrosoftAccessControlItemTask;
-import de.interoberlin.mate.lib.model.Log;
+import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.model.webservice.translate.MicrosoftAccessControlItemTask;
+import de.interoberlin.lymbo.model.webservice.web.LymboWebAccessControlItemTask;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -167,22 +167,28 @@ public class SettingsActivity extends PreferenceActivity {
                 Resources res = context.getResources();
 
                 if (editTextPreference.getKey().equals(res.getString(R.string.pref_translator_api_secret))) {
-                    // Retrieve access control item
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+
                     try {
-                        new MicrosoftAccessControlItemTask().execute(res.getString(R.string.translator_client_id), stringValue);
+                        String clientId = res.getString(R.string.pref_translator_client_id);
+                        String clientSecret = prefs.getString(res.getString(R.string.pref_translator_api_secret), null);
+
+                        new MicrosoftAccessControlItemTask().execute(clientId, clientSecret);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-                    Log.info("Retrieved access control item");
-                    Log.debug(prefs.getString(res.getString(R.string.translator_access_item_token_type), null));
-                    Log.debug(prefs.getString(res.getString(R.string.translator_access_item_access_token), null));
-                    Log.debug(String.valueOf(prefs.getInt(res.getString(R.string.translator_access_item_expires_in), 0)));
-                    Log.debug(prefs.getString(res.getString(R.string.translator_access_item_scope), null));
-                    Log.debug(String.valueOf(prefs.getLong(res.getString(R.string.translator_access_item_timestamp), 0L)));
                 } else if (editTextPreference.getKey().equals(res.getString(R.string.pref_lymbo_web_api_secret))) {
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+                    try {
+                        String username = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
+                        String password = prefs.getString(res.getString(R.string.pref_lymbo_web_password), null);
+                        String clientId = res.getString(R.string.pref_lymbo_web_client_id);
+                        String clientSecret = prefs.getString(res.getString(R.string.pref_lymbo_web_api_secret), null);
 
+                        new LymboWebAccessControlItemTask().execute(username, password, clientId, clientSecret);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             } else {
                 // For all other preferences, set the summary to the value's

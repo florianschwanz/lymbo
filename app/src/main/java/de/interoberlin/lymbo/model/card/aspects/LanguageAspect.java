@@ -1,6 +1,6 @@
 package de.interoberlin.lymbo.model.card.aspects;
 
-import de.interoberlin.lymbo.model.translate.Language;
+import de.interoberlin.lymbo.model.webservice.translate.Language;
 
 public class LanguageAspect {
     private Language from;

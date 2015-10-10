@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="about">About</string>
     <string name="add_card">Add card</string>
     <string name="add_card_to_favorites">Added card to favorites</string>
@@ -115,11 +114,6 @@
     <string name="note_edited">Note edited</string>
     <string name="okay">Okay</string>
     <string name="path">Path</string>
-    <string name="pref_header_general" translatable="false">pref_header_general</string>
-    <string name="pref_translator_api_secret" translatable="false">pref_translator_api_secret</string>
-    <string name="pref_lymbo_web_api_secret" translatable="false">pref_lymbo_web_api_secret</string>
-    <string name="pref_lymbo_web_user_name" translatable="false">pref_lymbo_web_user_name</string>
-    <string name="pref_lymbo_web_password" translatable="false">pref_lymbo_web_password</string>
     <string name="pref_title_header_general">General</string>
     <string name="pref_title_translator">Translator</string>
     <string name="pref_title_translator_api_secret">Translator API secret</string>
@@ -160,12 +154,6 @@
     <string name="templates">Templates</string>
     <string name="text">Text</string>
     <string name="title">Title</string>
-    <string name="translator_access_item_access_token" translatable="false">translator_access_item_access_token</string>
-    <string name="translator_access_item_expires_in" translatable="false">translator_access_item_expires_in</string>
-    <string name="translator_access_item_scope" translatable="false">translator_access_item_scope</string>
-    <string name="translator_access_item_timestamp" translatable="false">translator_access_item_timestamp</string>
-    <string name="translator_access_item_token_type" translatable="false">translator_access_item_token_type</string>
-    <string name="translator_client_id" translatable="false">lymbo</string>
     <string name="use_template">Use template</string>
     <string name="undo">Undo</string>
     <string name="wrong">wrong</string>

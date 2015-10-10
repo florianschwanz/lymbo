@@ -36,10 +36,10 @@ import de.interoberlin.lymbo.model.card.components.Answer;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EComponent;
-import de.interoberlin.lymbo.model.translate.AccessControlItem;
-import de.interoberlin.lymbo.model.translate.Language;
-import de.interoberlin.lymbo.model.translate.MicrosoftAccessControlItemTask;
-import de.interoberlin.lymbo.model.translate.MicrosoftTranslatorTask;
+import de.interoberlin.lymbo.model.webservice.AccessControlItem;
+import de.interoberlin.lymbo.model.webservice.translate.Language;
+import de.interoberlin.lymbo.model.webservice.translate.MicrosoftAccessControlItemTask;
+import de.interoberlin.lymbo.model.webservice.translate.MicrosoftTranslatorTask;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
@@ -295,7 +295,7 @@ public class CardDialogFragment extends DialogFragment {
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String accessItemAccessToken = prefs.getString(res.getString(R.string.translator_access_item_access_token), null);
+        String accessItemAccessToken = prefs.getString(res.getString(R.string.pref_translator_access_item_access_token), null);
 
         if (languageFrom == null || languageTo == null || accessItemAccessToken == null) {
             ViewUtil.remove(ivTranslate);
@@ -429,7 +429,7 @@ public class CardDialogFragment extends DialogFragment {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String translatorApiSecret = prefs.getString(res.getString(R.string.pref_translator_api_secret), null);
 
-            AccessControlItem accessControlItem = new MicrosoftAccessControlItemTask().execute(res.getString(R.string.translator_client_id), translatorApiSecret).get();
+            AccessControlItem accessControlItem = new MicrosoftAccessControlItemTask().execute(res.getString(R.string.pref_translator_client_id), translatorApiSecret).get();
 
             Language languageFrom = stack.getLanguageAspect().getFrom();
             Language languageTo = stack.getLanguageAspect().getTo();

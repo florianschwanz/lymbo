@@ -26,7 +26,7 @@ import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackEntry;
-import de.interoberlin.lymbo.model.translate.Language;
+import de.interoberlin.lymbo.model.webservice.translate.Language;
 import de.interoberlin.lymbo.util.ZipUtil;
 import de.interoberlin.mate.lib.model.Log;
 
