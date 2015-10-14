@@ -90,8 +90,6 @@ public class LymboParser {
             Stack stack = parseLymbo(parser, path, onlyTopLevel);
             stack.setContainsGeneratedIds(containsGeneratedIds);
 
-            Log.info("Parsed " + stack.getTitle());
-
             return stack;
         } catch (XmlPullParserException xmlppe) {
             Log.error(xmlppe.getMessage());

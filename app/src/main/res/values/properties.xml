@@ -25,7 +25,8 @@
     <integer name="vibration_duration_flip">0</integer>
 
     <!-- Webservices -->
-    <string name="microsoft_translator_token_url" translatable="false">https://datamarket.accesscontrol.windows.net/v2/OAuth2-13</string>
     <string name="lymbo_web_token_url" translatable="false">http://lymbo.interoberlin.de/oauth/token</string>
+    <string name="lymbo_upload_url" translatable="false">http://lymbo.interoberlin.de/lymbo/lymbo</string>
+    <string name="microsoft_translator_token_url" translatable="false">https://datamarket.accesscontrol.windows.net/v2/OAuth2-13</string>
 
 </resources>

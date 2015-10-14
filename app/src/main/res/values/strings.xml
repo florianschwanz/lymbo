@@ -107,6 +107,7 @@
     <string name="new_tag">new tag</string>
     <string name="new_answer">new answer</string>
     <string name="new_text">new text</string>
+    <string name="no_author_specified">no author specified</string>
     <string name="no_cards_in_stash">No cards in stash</string>
     <string name="no_tag">no tag</string>
     <string name="none">None</string>

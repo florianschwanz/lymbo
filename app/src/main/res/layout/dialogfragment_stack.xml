@@ -37,11 +37,10 @@
                 android:hint="@string/subtitle"
                 android:inputType="text" />
 
-            <EditText
-                android:id="@+id/etAuthor"
+            <TextView
+                android:id="@+id/tvAuthor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/author"
                 android:inputType="text" />
         </LinearLayout>
 

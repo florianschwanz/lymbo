@@ -17,7 +17,6 @@ import android.preference.PreferenceManager;
 
 import java.util.List;
 
-import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.webservice.translate.MicrosoftAccessControlItemTask;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebAccessControlItemTask;
@@ -162,34 +161,6 @@ public class SettingsActivity extends PreferenceActivity {
 
                 // Set the summary to reflect the new value.
                 preference.setSummary(stringValue);
-
-                Context context = App.getContext();
-                Resources res = context.getResources();
-
-                if (editTextPreference.getKey().equals(res.getString(R.string.pref_translator_api_secret))) {
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-
-                    try {
-                        String clientId = res.getString(R.string.pref_translator_client_id);
-                        String clientSecret = prefs.getString(res.getString(R.string.pref_translator_api_secret), null);
-
-                        new MicrosoftAccessControlItemTask().execute(clientId, clientSecret);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if (editTextPreference.getKey().equals(res.getString(R.string.pref_lymbo_web_api_secret))) {
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-                    try {
-                        String username = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
-                        String password = prefs.getString(res.getString(R.string.pref_lymbo_web_password), null);
-                        String clientId = res.getString(R.string.pref_lymbo_web_client_id);
-                        String clientSecret = prefs.getString(res.getString(R.string.pref_lymbo_web_api_secret), null);
-
-                        new LymboWebAccessControlItemTask().execute(username, password, clientId, clientSecret);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
             } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
@@ -218,6 +189,33 @@ public class SettingsActivity extends PreferenceActivity {
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
                         .getString(preference.getKey(), ""));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Resources res = getResources();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+
+        try {
+            String clientId = res.getString(R.string.pref_translator_client_id);
+            String clientSecret = prefs.getString(res.getString(R.string.pref_translator_api_secret), null);
+
+            new MicrosoftAccessControlItemTask().execute(clientId, clientSecret);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            String username = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
+            String password = prefs.getString(res.getString(R.string.pref_lymbo_web_password), null);
+            String clientId = res.getString(R.string.pref_lymbo_web_client_id);
+            String clientSecret = prefs.getString(res.getString(R.string.pref_lymbo_web_api_secret), null);
+
+            new LymboWebAccessControlItemTask().execute(username, password, clientId, clientSecret);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)

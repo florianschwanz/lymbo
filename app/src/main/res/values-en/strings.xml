@@ -158,5 +158,6 @@
     <string name="pref_title_translator_api_secret">Translator API secret</string>
     <string name="pref_title_translator">Translator</string>
     <string name="pref_title_lymbo_web">Lymbo Web</string>
+    <string name="no_author_specified">no author specified</string>
 
 </resources>

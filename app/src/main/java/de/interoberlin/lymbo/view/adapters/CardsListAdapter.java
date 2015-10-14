@@ -368,7 +368,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      *
      * @param position position of item
      * @param card     card to be stashed
-     * @param llCard   corresponding view
+     * @param flCard   corresponding view
      */
     private void stash(final int position, final Card card, final FrameLayout flCard) {
         Animation a = ViewUtil.collapse(context, flCard);

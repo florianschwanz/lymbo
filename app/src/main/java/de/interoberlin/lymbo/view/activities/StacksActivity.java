@@ -1,11 +1,14 @@
 package de.interoberlin.lymbo.view.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -185,6 +188,13 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
                     StackDialogFragment dialog = new StackDialogFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.add_stack));
+
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(StacksActivity.this);
+                    Resources res = getResources();
+                    String accessToken = prefs.getString(res.getString(R.string.pref_lymbo_web_access_item_access_token), null);
+                    if (accessToken != null)
+                        bundle.putString(getResources().getString(R.string.bundle_author), prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null));
+
                     bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
                     dialog.setArguments(bundle);
                     dialog.show(getFragmentManager(), StackDialogFragment.TAG);

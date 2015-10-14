@@ -54,7 +54,7 @@ public class StackDialogFragment extends DialogFragment {
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_stack, null);
         final EditText etTitle = (EditText) v.findViewById(R.id.etTitle);
         final EditText etSubtitle = (EditText) v.findViewById(R.id.etSubtitle);
-        final EditText etAuthor = (EditText) v.findViewById(R.id.etAuthor);
+        final TextView tvAuthor = (TextView) v.findViewById(R.id.tvAuthor);
         final LinearLayout llAddLanguages = (LinearLayout) v.findViewById(R.id.llAddLanguages);
         final LinearLayout llLanguages = (LinearLayout) v.findViewById(R.id.llLanguages);
         final TableLayout tblLanguagesFrom = (TableLayout) v.findViewById(R.id.tblLanguagesFrom);
@@ -87,7 +87,9 @@ public class StackDialogFragment extends DialogFragment {
             etSubtitle.setText(subtitle);
 
         if (author != null)
-            etAuthor.setText(author);
+            tvAuthor.setText(author);
+        else
+            tvAuthor.setText(R.string.no_author_specified);
 
         for (final Language l : Language.values()) {
             if (l.isActive()) {
@@ -275,7 +277,7 @@ public class StackDialogFragment extends DialogFragment {
         AlertDialog dialog = (AlertDialog) getDialog();
         final EditText etTitle = (EditText) dialog.findViewById(R.id.etTitle);
         final EditText etSubtitle = (EditText) dialog.findViewById(R.id.etSubtitle);
-        final EditText etAuthor = (EditText) dialog.findViewById(R.id.etAuthor);
+        final TextView tvAuthor = (TextView) dialog.findViewById(R.id.tvAuthor);
         final TableLayout tblTags = (TableLayout) dialog.findViewById(R.id.tblTags);
 
         Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
@@ -284,7 +286,7 @@ public class StackDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 String title = etTitle.getText().toString().trim();
                 String subtitle = etSubtitle.getText().toString().trim();
-                String author = etAuthor.getText().toString().trim();
+                String author = tvAuthor.getText().toString().trim();
                 Language languageFrom = null;
                 Language languageTo = null;
 

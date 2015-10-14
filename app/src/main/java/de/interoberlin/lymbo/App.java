@@ -2,8 +2,11 @@ package de.interoberlin.lymbo;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 
 import org.apache.commons.io.FileUtils;
 
@@ -13,6 +16,8 @@ import java.io.IOException;
 import de.interoberlin.lymbo.model.persistence.sqlite.LymboSQLiteOpenHelper;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackDatasource;
+import de.interoberlin.lymbo.model.webservice.translate.MicrosoftAccessControlItemTask;
+import de.interoberlin.lymbo.model.webservice.web.LymboWebAccessControlItemTask;
 
 public class App extends Application {
     // Context
@@ -61,6 +66,30 @@ public class App extends Application {
         sqliteOpenLymboSQLiteOpenHelper = new LymboSQLiteOpenHelper(this);
         sqliteDatabase = sqliteOpenLymboSQLiteOpenHelper.getWritableDatabase();
         recreateOnSchemaChange();
+
+        // Access tokens
+        Resources res = getResources();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        try {
+            String clientId = res.getString(R.string.pref_translator_client_id);
+            String clientSecret = prefs.getString(res.getString(R.string.pref_translator_api_secret), null);
+
+            new MicrosoftAccessControlItemTask().execute(clientId, clientSecret);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            String username = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
+            String password = prefs.getString(res.getString(R.string.pref_lymbo_web_password), null);
+            String clientId = res.getString(R.string.pref_lymbo_web_client_id);
+            String clientSecret = prefs.getString(res.getString(R.string.pref_lymbo_web_api_secret), null);
+
+            new LymboWebAccessControlItemTask().execute(username, password, clientId, clientSecret);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
