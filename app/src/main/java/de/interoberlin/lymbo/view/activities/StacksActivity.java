@@ -31,6 +31,7 @@ import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.webservice.translate.Language;
+import de.interoberlin.lymbo.model.webservice.web.LymboWebUploadTask;
 import de.interoberlin.lymbo.view.adapters.StacksListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.ConfirmRefreshDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.FilterStacksDialogFragment;
@@ -40,7 +41,7 @@ import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 import de.interoberlin.swipelistview.view.SwipeListViewListener;
 
-public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener,StackDialogFragment.OnCompleteListener, FilterStacksDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener,StackDialogFragment.OnCompleteListener, FilterStacksDialogFragment.OnCompleteListener, LymboWebUploadTask.OnCompleteListener, SnackBar.OnMessageClickListener {
     //
 
     // Controllers
@@ -330,6 +331,11 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
         snack(this, R.string.tag_selected);
         updateListView();
+    }
+
+    @Override
+    public void onLymboUploaded(String response) {
+        snack(this, R.string.uploaded_lymbo);
     }
 
     // --------------------

@@ -141,6 +141,21 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="start">
+
+                            <ImageView
+                                android:id="@+id/ivUpload"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/upload"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_action_upload" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"

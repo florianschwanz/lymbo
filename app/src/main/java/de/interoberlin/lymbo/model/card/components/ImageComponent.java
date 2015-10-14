@@ -11,13 +11,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.lymbo.model.card.EImageFormat;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
+import de.interoberlin.lymbo.util.XmlUtil;
 
 public class ImageComponent implements Displayable {
+    public static final String TAG = "image";
+
     private String value;
     private EImageFormat format = EImageFormat.BASE64;
 
@@ -67,6 +72,18 @@ public class ImageComponent implements Displayable {
     @Override
     public View getEditableView(Context c, final Activity a, ViewGroup parent) {
         return new View(c);
+    }
+
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+
+        // Attributes
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("format", XmlUtil.escape(format.getValue()));
+        attributes.put("value", XmlUtil.escape(value));
+        result.append(XmlUtil.addTag(TAG, attributes));
+
+        return result.toString();
     }
 
     // --------------------

@@ -41,7 +41,8 @@
                 android:id="@+id/tvAuthor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:paddingLeft="@dimen/dialog_fragment_padding"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <!-- Languages -->
@@ -55,8 +56,8 @@
 
             <ImageView
                 android:id="@+id/ivLanguages"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dialog_icon_size"
+                android:layout_height="@dimen/dialog_icon_size"
                 android:contentDescription="@string/desc_image"
                 android:paddingEnd="@dimen/stack_bar_padding"
                 android:paddingStart="@dimen/stack_bar_padding"
@@ -65,10 +66,10 @@
             <TextView
                 android:id="@+id/tvExpandLanguages"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="0.9"
                 android:text="@string/add_languages"
-                android:textAlignment="textStart"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
@@ -147,8 +148,8 @@
 
             <ImageView
                 android:id="@+id/ivLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dialog_icon_size"
+                android:layout_height="@dimen/dialog_icon_size"
                 android:contentDescription="@string/desc_image"
                 android:paddingEnd="@dimen/stack_bar_padding"
                 android:paddingStart="@dimen/stack_bar_padding"
@@ -157,10 +158,10 @@
             <TextView
                 android:id="@+id/tvExpandTags"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="0.9"
                 android:text="@string/add_tags"
-                android:textAlignment="textStart"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 

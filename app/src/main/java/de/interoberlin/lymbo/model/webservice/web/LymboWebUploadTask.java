@@ -51,12 +51,13 @@ public class LymboWebUploadTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        String id = params[0];
-        String author = params[1];
-        String content = params[2];
+        String accessToken = params[0];
+        String id = params[1];
+        String author = params[2];
+        String content = params[3];
 
         try {
-            return uploadLymbo(id, author, content);
+            return uploadLymbo(accessToken, id, author, content);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,12 +84,14 @@ public class LymboWebUploadTask extends AsyncTask<String, Void, String> {
     /**
      * Uploads a lymbo
      *
-     * @param id      id of lymbo
-     * @param content content of lymbo
+     * @param accessToken access token
+     * @param id          id of lymbo
+     * @param author      author of lymbo
+     * @param content     content of lymbo
      * @return
      * @throws Exception
      */
-    private static String uploadLymbo(String id, String author, String content) throws Exception {
+    private static String uploadLymbo(String accessToken, String id, String author, String content) throws Exception {
         // Parameters
         ParamHolder ph = new ParamHolder();
         ph.add(new Param(PARAM_ID, URLEncoder.encode(id, ENCODING)));
@@ -104,6 +107,7 @@ public class LymboWebUploadTask extends AsyncTask<String, Void, String> {
         con.setDoOutput(true);
         con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=" + ENCODING);
         con.setRequestProperty("Accept-Charset", ENCODING);
+        con.setRequestProperty("Authorization", "Bearer " + accessToken.replaceAll("\"", ""));
 
         // Execute request
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());

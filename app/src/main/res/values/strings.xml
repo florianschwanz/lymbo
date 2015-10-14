@@ -157,6 +157,8 @@
     <string name="title">Title</string>
     <string name="use_template">Use template</string>
     <string name="undo">Undo</string>
+    <string name="upload">Upload</string>
+    <string name="uploaded_lymbo">Uploaded lymbo</string>
     <string name="wrong">wrong</string>
 
 </resources>

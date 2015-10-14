@@ -8,15 +8,20 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.lymbo.model.card.ESVGFormat;
+import de.interoberlin.lymbo.util.XmlUtil;
 import de.interoberlin.sauvignon.lib.controller.loader.SvgLoader;
 import de.interoberlin.sauvignon.lib.model.svg.SVG;
 import de.interoberlin.sauvignon.lib.view.SVGImagePanel;
 
 public class SVGComponent implements Displayable {
+    public static final String TAG = "svg";
+
     private String value;
     private ESVGFormat format = ESVGFormat.PLAIN;
     private String color = null;
@@ -73,6 +78,19 @@ public class SVGComponent implements Displayable {
     @Override
     public View getEditableView(Context c, final Activity a, ViewGroup parent) {
         return new View(c);
+    }
+
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+
+        // Attributes
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("format", XmlUtil.escape(format.getValue()));
+        attributes.put("value", XmlUtil.escape(value));
+        attributes.put("color", XmlUtil.escape(color));
+        result.append(XmlUtil.addTag(TAG, attributes));
+
+        return result.toString();
     }
 
     // --------------------

@@ -32,8 +32,8 @@
 
             <ImageView
                 android:id="@+id/ivExpandTextsFront"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dialog_icon_size"
+                android:layout_height="@dimen/dialog_icon_size"
                 android:layout_weight="0.1"
                 android:contentDescription="@string/desc_image"
                 android:src="@drawable/ic_action_expand" />
@@ -64,8 +64,8 @@
 
                 <ImageView
                     android:id="@+id/ivAddTextFront"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dialog_icon_size"
+                    android:layout_height="@dimen/dialog_icon_size"
                     android:background="@drawable/ic_action_new"
                     android:contentDescription="@string/desc_image" />
             </LinearLayout>
@@ -82,8 +82,8 @@
 
             <ImageView
                 android:id="@+id/ivQuiz"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dialog_icon_size"
+                android:layout_height="@dimen/dialog_icon_size"
                 android:contentDescription="@string/desc_image"
                 android:paddingEnd="@dimen/stack_bar_padding"
                 android:paddingStart="@dimen/stack_bar_padding"
@@ -91,11 +91,11 @@
 
             <TextView
                 android:id="@+id/tvExpandQuiz"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="0.9"
                 android:text="@string/add_quiz"
-                android:textAlignment="textStart"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
@@ -124,8 +124,8 @@
 
                 <ImageView
                     android:id="@+id/ivAddAnswer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dialog_icon_size"
+                    android:layout_height="@dimen/dialog_icon_size"
                     android:background="@drawable/ic_action_new"
                     android:contentDescription="@string/desc_image" />
             </LinearLayout>
@@ -141,8 +141,8 @@
 
             <ImageView
                 android:id="@+id/ivTranslate"
-                android:layout_width="34dp"
-                android:layout_height="match_parent"
+                android:layout_width="@dimen/dialog_icon_size"
+                android:layout_height="@dimen/dialog_icon_size"
                 android:contentDescription="@string/desc_image"
                 android:src="@drawable/ic_action_import_export" />
 
@@ -155,8 +155,8 @@
 
             <ImageView
                 android:id="@+id/ivExpandTextsBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dialog_icon_size"
+                android:layout_height="@dimen/dialog_icon_size"
                 android:layout_weight="0.1"
                 android:contentDescription="@string/desc_image"
                 android:src="@drawable/ic_action_expand" />
@@ -205,8 +205,8 @@
 
             <ImageView
                 android:id="@+id/ivLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dialog_icon_size"
+                android:layout_height="@dimen/dialog_icon_size"
                 android:contentDescription="@string/desc_image"
                 android:paddingEnd="@dimen/stack_bar_padding"
                 android:paddingStart="@dimen/stack_bar_padding"
@@ -214,11 +214,11 @@
 
             <TextView
                 android:id="@+id/tvExpandTags"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="0.9"
                 android:text="@string/add_tags"
-                android:textAlignment="textStart"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
@@ -247,8 +247,8 @@
 
                 <ImageView
                     android:id="@+id/ivAddTag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dialog_icon_size"
+                    android:layout_height="@dimen/dialog_icon_size"
                     android:background="@drawable/ic_action_new"
                     android:contentDescription="@string/desc_image" />
             </LinearLayout>
@@ -265,8 +265,8 @@
 
             <ImageView
                 android:id="@+id/ivTemplate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dialog_icon_size"
+                android:layout_height="@dimen/dialog_icon_size"
                 android:contentDescription="@string/desc_image"
                 android:paddingEnd="@dimen/stack_bar_padding"
                 android:paddingStart="@dimen/stack_bar_padding"
@@ -274,11 +274,11 @@
 
             <TextView
                 android:id="@+id/tvExpandTemplates"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="0.9"
                 android:text="@string/use_template"
-                android:textAlignment="textStart"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 

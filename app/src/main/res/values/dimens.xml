@@ -61,4 +61,6 @@
     <!-- <dimen name="elevation_high">8dp</dimen> -->
 
     <dimen name="table_row_padding">8dp</dimen>
+
+    <dimen name="dialog_icon_size">40dp</dimen>
 </resources>

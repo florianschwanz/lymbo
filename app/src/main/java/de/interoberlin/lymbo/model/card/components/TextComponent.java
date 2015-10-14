@@ -19,8 +19,11 @@ import de.interoberlin.lymbo.model.card.Displayable;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
 import de.interoberlin.lymbo.model.card.enums.EStyle;
 import de.interoberlin.lymbo.util.Configuration;
+import de.interoberlin.lymbo.util.XmlUtil;
 
 public class TextComponent implements Displayable {
+    public static final String TAG = "text";
+
     private String value = "";
     private Map<String, String> translations = new HashMap();
     private int lines = 0;
@@ -79,6 +82,20 @@ public class TextComponent implements Displayable {
         etTitle.setText(value);
 
         return llTextComponent;
+    }
+
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+
+        // Attributes
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("value", XmlUtil.escape(value));
+        attributes.put("lines", Integer.toString(lines));
+        attributes.put("gravity", gravity.toString());
+
+        result.append(XmlUtil.addTag(TAG, attributes));
+
+        return result.toString();
     }
 
     // --------------------

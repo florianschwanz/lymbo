@@ -1,7 +1,9 @@
 package de.interoberlin.lymbo.model.card;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import de.interoberlin.lymbo.App;
@@ -12,6 +14,7 @@ import de.interoberlin.lymbo.model.card.components.ResultComponent;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EGravity;
+import de.interoberlin.lymbo.util.XmlUtil;
 
 public class Card {
     private String id;
@@ -142,16 +145,29 @@ public class Card {
         return false;
     }
 
-    public String toString() {
-        if (getSides().size() > 0 && getSides().get(0).getComponents().size() > 0) {
-            if (getSides().get(0).getComponents().get(0) instanceof TitleComponent) {
-                ((TitleComponent) getSides().get(0).getComponents().get(0)).getValue();
-            } else if (getSides().get(0).getComponents().get(0) instanceof TextComponent) {
-                ((TextComponent) getSides().get(0).getComponents().get(0)).getValue();
-            }
+    public String toString(String tag) {
+        StringBuilder result = new StringBuilder();
+
+        if (id == null)
+            setId(UUID.randomUUID().toString());
+
+        // Attributes
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("id", XmlUtil.escape(getId()));
+        attributes.put("title", String.valueOf(getTitle()));
+        attributes.put("edit", String.valueOf(isEdit()));
+        attributes.put("hint", XmlUtil.escape(getHint()));
+        attributes.put("tags", XmlUtil.getTagsList(getTags()));
+        result.append(XmlUtil.addStartTag(tag, attributes));
+
+        // Sub elements
+        for (Side side : getSides()) {
+            result.append(side.toString());
         }
 
-        return "";
+        result.append(XmlUtil.addEndTag(tag));
+
+        return result.toString();
     }
 
     // -------------------------

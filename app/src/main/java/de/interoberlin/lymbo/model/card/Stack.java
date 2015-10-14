@@ -2,14 +2,19 @@ package de.interoberlin.lymbo.model.card;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
+import de.interoberlin.lymbo.util.XmlUtil;
 
 public class Stack {
+    public static final String TAG = "lymbo";
+
     private String file;
     private String path;
     private boolean asset;
@@ -90,6 +95,66 @@ public class Stack {
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+
+        result.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+
+        // Attributes
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("id", XmlUtil.escape(getId()));
+        attributes.put("creationDate", getCreationDate());
+        attributes.put("modificationDate", getModificationDate());
+        attributes.put("title", XmlUtil.escape(title));
+        attributes.put("subtitle", getSubtitle());
+        attributes.put("hint", XmlUtil.escape(hint));
+        attributes.put("image", XmlUtil.escape(image));
+        attributes.put("author", XmlUtil.escape(author));
+        attributes.put("tags", XmlUtil.getTagsList(getTags()));
+
+        result.append(addStartTag(TAG, attributes));
+
+        // Sub elements
+        result.append(languageAspect.toString());
+
+        for (Card template : templates) {
+            if (template != null)
+                result.append(template.toString("template"));
+        }
+
+        for (Card card : cards) {
+            if (card != null)
+                result.append(card.toString("card"));
+        }
+
+        result.append(XmlUtil.addEndTag(TAG));
+
+        return result.toString();
+    }
+
+    /**
+     * Adds a start tag with attributes
+     *
+     * @param tag        tag name to appended
+     * @param attributes attributes to appended
+     */
+    private StringBuilder addStartTag(String tag, Map<String, String> attributes) {
+        StringBuilder result = new StringBuilder();
+
+        result.append("\n<").append(tag);
+
+        for (Map.Entry<String, String> e : attributes.entrySet()) {
+            if (e.getValue() != null) {
+                result.append("\n ").append(e.getKey()).append("=\"").append(e.getValue()).append("\"");
+            }
+        }
+
+        result.append(">");
+
+        return result;
     }
 
     // -------------------------

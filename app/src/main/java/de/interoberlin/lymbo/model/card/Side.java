@@ -1,7 +1,9 @@
 package de.interoberlin.lymbo.model.card;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
 import de.interoberlin.lymbo.model.card.components.ImageComponent;
@@ -10,8 +12,11 @@ import de.interoberlin.lymbo.model.card.components.SVGComponent;
 import de.interoberlin.lymbo.model.card.components.TextComponent;
 import de.interoberlin.lymbo.model.card.components.TitleComponent;
 import de.interoberlin.lymbo.model.card.enums.EComponent;
+import de.interoberlin.lymbo.util.XmlUtil;
 
 public class Side {
+    public static final String TAG = "side";
+
     private String color = "#FFFFFF";
     private List<Displayable> components = new ArrayList<>();
 
@@ -62,6 +67,32 @@ public class Side {
         }
 
         return null;
+    }
+
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+
+        // Attributes
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("color", color);
+        result.append(XmlUtil.addStartTag(TAG, attributes));
+
+        // Sub elements
+        for (Displayable component : components) {
+            if (component instanceof TitleComponent) {
+                result.append(component.toString());
+            } else if (component instanceof TextComponent) {
+                result.append(component.toString());
+            } else if (component instanceof ImageComponent) {
+                result.append(component.toString());
+            } else if (component instanceof SVGComponent) {
+                result.append(component.toString());
+            }
+        }
+
+        result.append(XmlUtil.addEndTag(TAG));
+
+        return result.toString();
     }
 
     // -------------------------

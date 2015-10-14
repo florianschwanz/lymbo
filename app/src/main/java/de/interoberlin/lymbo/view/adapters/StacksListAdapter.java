@@ -3,11 +3,13 @@ package de.interoberlin.lymbo.view.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -23,6 +25,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
@@ -31,6 +34,9 @@ import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
 import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
 import de.interoberlin.lymbo.model.share.MailSender;
+import de.interoberlin.lymbo.model.webservice.AccessControlItem;
+import de.interoberlin.lymbo.model.webservice.web.LymboWebAccessControlItemTask;
+import de.interoberlin.lymbo.model.webservice.web.LymboWebUploadTask;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
@@ -109,6 +115,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             final TextView tvTitle = (TextView) llStack.findViewById(R.id.tvTitle);
             final TextView tvSubtitle = (TextView) llStack.findViewById(R.id.tvSubtitle);
             final ImageView ivShare = (ImageView) llStack.findViewById(R.id.ivShare);
+            final ImageView ivUpload = (ImageView) llStack.findViewById(R.id.ivUpload);
             final TextView tvCardCount = (TextView) llStack.findViewById(R.id.tvCardCount);
             final LinearLayout llTags = (LinearLayout) llStack.findViewById(R.id.llTags);
 
@@ -121,7 +128,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                         break;
                     }
                     case REF: {
-                        String imagePath = stack.getPath()+  "/" + stack.getImage();
+                        String imagePath = stack.getPath() + "/" + stack.getImage();
                         Bitmap bmp = BitmapFactory.decodeFile(imagePath);
                         ivImage.setImageBitmap(bmp);
                         ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -213,7 +220,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                 }
             });
 
-            // Action : send
+            // Action : share
             if (!stack.isAsset()) {
                 ivShare.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -223,6 +230,44 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                 });
             } else {
                 ViewUtil.remove(ivShare);
+            }
+
+            // Action : upload
+            Resources res = getResources();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            String author = stack.getAuthor();
+            String noAuthorSpecified = res.getString(R.string.no_author_specified);
+            String username = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
+
+            if (author.isEmpty() || author.equals(noAuthorSpecified) || author.equals(username)) {
+                ivUpload.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Resources res = getResources();
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+                        String username = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
+                        String password = prefs.getString(res.getString(R.string.pref_lymbo_web_password), null);
+                        String clientId = res.getString(R.string.pref_lymbo_web_client_id);
+                        String clientSecret = prefs.getString(res.getString(R.string.pref_lymbo_web_api_secret), null);
+
+                        String id = stack.getId();
+                        String author = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
+                        String content = stack.toString();
+
+                        try {
+                            AccessControlItem accessControlItem = new LymboWebAccessControlItemTask().execute(username, password, clientId, clientSecret).get();
+
+                            if (accessControlItem != null && accessControlItem.getAccess_token() != null) {
+                                new LymboWebUploadTask((StacksActivity) activity).execute(accessControlItem.getAccess_token(), id, author, content).get();
+                            }
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            } else {
+                ViewUtil.remove(ivUpload);
             }
 
             // Card count

@@ -159,5 +159,7 @@
     <string name="pref_title_translator">Translator</string>
     <string name="pref_title_lymbo_web">Lymbo Web</string>
     <string name="no_author_specified">kein Autor spezifiziert</string>
+    <string name="upload">Hochladen</string>
+    <string name="uploaded_lymbo">Lymbo hochgeladen</string>
 
 </resources>
