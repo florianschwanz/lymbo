@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.Map;
 
 import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.R;
@@ -117,9 +119,13 @@ public class LymboWebUploadTask extends AsyncTask<String, Void, String> {
 
         try {
             if (con.getResponseCode() != RESPONSE_CODE_OKAY) {
-                Log.error("Error getting lymbo web access token RESPONSE CODE : " + con.getResponseCode());
+                Log.error("Error from Lymbo Web API Upload");
+                Log.error("ResponseCode : " + con.getResponseCode());
+                Log.error("ResponseMethod : " + con.getRequestMethod());
 
-                Log.error("Error from Lymbo Web API");
+                for (Map.Entry<String, List<String>> entry : con.getHeaderFields().entrySet()) {
+                    Log.error(entry.getKey() + " : " + entry.getValue());
+                }
                 throw new Exception("Error from Lymbo Web API");
             }
 

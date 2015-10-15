@@ -12,6 +12,10 @@
         android:orderInCategory="100"
         android:title="@string/menu_stash" />
     <item
+        android:id="@+id/menu_download"
+        android:orderInCategory="200"
+        android:title="@string/menu_download" />
+    <item
         android:id="@+id/menu_log"
         android:orderInCategory="300"
         android:title="@string/menu_log" />

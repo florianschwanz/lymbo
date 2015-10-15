@@ -55,14 +55,16 @@ public class CardsController {
     // --------------------
 
     private CardsController(Activity activity) {
-        this.activity = activity;
         init();
+        setActivity(activity);
     }
 
     public static CardsController getInstance(Activity activity) {
         if (instance == null) {
             instance = new CardsController(activity);
         }
+
+        instance.setActivity(activity);
 
         return instance;
     }
@@ -621,6 +623,10 @@ public class CardsController {
     // --------------------
     // Getters / Setters
     // --------------------
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 
     public Stack getStack() {
         return stack;

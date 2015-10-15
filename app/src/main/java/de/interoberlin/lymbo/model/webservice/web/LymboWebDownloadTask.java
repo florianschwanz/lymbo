@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.Map;
 
 import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.R;
@@ -20,6 +22,7 @@ import de.interoberlin.mate.lib.model.Log;
 
 public class LymboWebDownloadTask extends AsyncTask<String, Void, String> {
     private static final String ENCODING = "UTF-8";
+    private static final String contentType = "text/plain";
 
     private static final String PARAM_ID = "id";
     private static final String PARAM_AUTHOR = "author";
@@ -99,7 +102,7 @@ public class LymboWebDownloadTask extends AsyncTask<String, Void, String> {
         HttpURLConnection con = (HttpURLConnection) new URL(DOWNLOAD_URL).openConnection();
 
         // Request header
-        con.setRequestMethod("GET");
+        con.setRequestMethod("POST");
         con.setDoOutput(true);
         con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=" + ENCODING);
         con.setRequestProperty("Accept-Charset", ENCODING);
@@ -113,7 +116,13 @@ public class LymboWebDownloadTask extends AsyncTask<String, Void, String> {
 
         try {
             if (con.getResponseCode() != RESPONSE_CODE_OKAY) {
-                Log.error("Error from Lymbo Web API : " + con.getResponseCode());
+                Log.error("Error from Lymbo Web API Download");
+                Log.error("ResponseCode : " + con.getResponseCode());
+                Log.error("ResponseMethod : " + con.getRequestMethod());
+
+                for (Map.Entry<String, List<String>> entry : con.getHeaderFields().entrySet()) {
+                    Log.error(entry.getKey() + " : " + entry.getValue());
+                }
                 throw new Exception("Error from Lymbo Web API");
             }
 

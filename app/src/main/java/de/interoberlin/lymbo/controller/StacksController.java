@@ -1,8 +1,10 @@
 package de.interoberlin.lymbo.controller;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.RegexFileFilter;
@@ -16,6 +18,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.card.EFormat;
@@ -26,8 +29,12 @@ import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackEntry;
+import de.interoberlin.lymbo.model.webservice.AccessControlItem;
 import de.interoberlin.lymbo.model.webservice.translate.Language;
+import de.interoberlin.lymbo.model.webservice.web.LymboWebAccessControlItemTask;
+import de.interoberlin.lymbo.model.webservice.web.LymboWebDownloadTask;
 import de.interoberlin.lymbo.util.ZipUtil;
+import de.interoberlin.lymbo.view.activities.StacksActivity;
 import de.interoberlin.mate.lib.model.Log;
 
 public class StacksController {
@@ -59,7 +66,7 @@ public class StacksController {
     // --------------------
 
     private StacksController(Activity activity) {
-        this.activity = activity;
+        setActivity(activity);
         init();
     }
 
@@ -67,6 +74,8 @@ public class StacksController {
         if (instance == null) {
             instance = new StacksController(activity);
         }
+
+        instance.setActivity(activity);
 
         return instance;
     }
@@ -508,9 +517,33 @@ public class StacksController {
         return null;
     }
 
+    public void download(String id) {
+        Resources res = getResources();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+
+        String username = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
+        String password = prefs.getString(res.getString(R.string.pref_lymbo_web_password), null);
+        String clientId = res.getString(R.string.pref_lymbo_web_client_id);
+        String clientSecret = prefs.getString(res.getString(R.string.pref_lymbo_web_api_secret), null);
+
+        try {
+            AccessControlItem accessControlItem = new LymboWebAccessControlItemTask().execute(username, password, clientId, clientSecret).get();
+
+            if (accessControlItem != null && accessControlItem.getAccess_token() != null) {
+                new LymboWebDownloadTask((StacksActivity) activity).execute(accessControlItem.getAccess_token(), id, username).get();
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
     // --------------------
     // Getters / Setters
     // --------------------
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 
     public List<Stack> getStacks() {
         return stacks;

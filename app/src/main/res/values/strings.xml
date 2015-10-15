@@ -30,12 +30,15 @@
     <string name="describe_the_error">Describe the error</string>
     <string name="discard_card">Discarded card</string>
     <string name="display_favorites_only">Display favorites only</string>
+    <string name="download">Download</string>
     <string name="download_the_attachment">Download the attachment to use this lymbo</string>
+    <string name="downloaded_lymbo">Downloaded lymbo</string>
     <string name="edit">Edit</string>
     <string name="edit_card">Edit card</string>
     <string name="edit_stack">Edit stack</string>
     <string name="edit_template">Edit template</string>
     <string name="edited_card">Edited card</string>
+    <string name="error_downloading_lymbo">Error downloading lymbo</string>
     <string name="error_occurred">An error occurred :(</string>
     <string name="feedback">Feedback</string>
     <string name="field_must_not_be_empty">Field must not be empty</string>
@@ -44,6 +47,7 @@
     <string name="front">Front</string>
     <string name="give_feedback_question">Feedback is very important for us to improve the app. Feel free to send us comments, hints and wishes.</string>
     <string name="hint">Hint</string>
+    <string name="id">ID</string>
     <string name="lang_arabic">Arabic</string>
     <string name="lang_auto_detect">Auto detect</string>
     <string name="lang_bulgarian">Bulgarian</string>
@@ -95,6 +99,7 @@
     <string name="lymbos_loaded">Lymbos loaded</string>
     <string name="lymbos_stash">Lymbos Stash</string>
     <string name="menu_about">About</string>
+    <string name="menu_download">Download</string>
     <string name="menu_labels">Labels</string>
     <string name="menu_log">Log</string>
     <string name="menu_settings">Settings</string>

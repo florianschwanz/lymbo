@@ -30,10 +30,13 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.model.card.Stack;
 import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.webservice.translate.Language;
+import de.interoberlin.lymbo.model.webservice.web.LymboWebDownloadTask;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebUploadTask;
 import de.interoberlin.lymbo.view.adapters.StacksListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.ConfirmRefreshDialogFragment;
+import de.interoberlin.lymbo.view.dialogfragments.DownloadDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.FilterStacksDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.StackDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
@@ -41,9 +44,7 @@ import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 import de.interoberlin.swipelistview.view.SwipeListViewListener;
 
-public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener,StackDialogFragment.OnCompleteListener, FilterStacksDialogFragment.OnCompleteListener, LymboWebUploadTask.OnCompleteListener, SnackBar.OnMessageClickListener {
-    //
-
+public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener, StackDialogFragment.OnCompleteListener, FilterStacksDialogFragment.OnCompleteListener, LymboWebUploadTask.OnCompleteListener, LymboWebDownloadTask.OnCompleteListener, DownloadDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
     private StacksController stacksController;
 
@@ -220,7 +221,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_lymbos, menu);
+        getMenuInflater().inflate(R.menu.activity_stacks, menu);
         return true;
     }
 
@@ -234,6 +235,10 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
             case R.id.menu_stash: {
                 Intent i = new Intent(StacksActivity.this, StacksStashActivity.class);
                 startActivity(i);
+                break;
+            }
+            case R.id.menu_download: {
+                download();
                 break;
             }
             case R.id.menu_log: {
@@ -338,6 +343,38 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         snack(this, R.string.uploaded_lymbo);
     }
 
+    @Override
+    public void onLymboDownloaded(String response) {
+        if (!response.equals("Error")) {
+            Stack stack = LymboLoader.getLymboFromString(this, response, false);
+            stacksController.save(stack);
+
+            final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+            srl.post(new Runnable() {
+                @Override
+                public void run() {
+                    srl.setRefreshing(true);
+                }
+            });
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    new LoadLymbosTask().execute();
+                }
+            }, REFRESH_DELAY);
+
+            snack(this, R.string.downloaded_lymbo);
+        } else {
+            snack(this, R.string.error_downloading_lymbo, SnackBar.Style.ALERT);
+        }
+    }
+
+    @Override
+    public void onDownload(String id) {
+        StacksController.getInstance(this).download(id);
+    }
+
     // --------------------
     // Methods - Actions
     // --------------------
@@ -345,7 +382,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     /**
      * Stashes a lymbo
      *
-     * @param pos  position of the stack
+     * @param pos   position of the stack
      * @param stack lymbo to be stashed
      */
     public void stash(int pos, Stack stack) {
@@ -372,6 +409,16 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         dialog.setArguments(bundle);
         dialog.show(getFragmentManager(), FilterStacksDialogFragment.TAG);
+    }
+
+    private void download() {
+        ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+
+        DownloadDialogFragment dialog = new DownloadDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.download));
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), DownloadDialogFragment.TAG);
     }
 
     // --------------------

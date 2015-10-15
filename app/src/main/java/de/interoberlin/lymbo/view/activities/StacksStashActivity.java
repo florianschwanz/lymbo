@@ -99,7 +99,7 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_lymbos_stash, menu);
+        getMenuInflater().inflate(R.menu.activity_stacks_stash, menu);
         return true;
     }
 

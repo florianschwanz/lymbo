@@ -161,5 +161,10 @@
     <string name="no_author_specified">kein Autor spezifiziert</string>
     <string name="upload">Hochladen</string>
     <string name="uploaded_lymbo">Lymbo hochgeladen</string>
+    <string name="menu_download">Herunterladen</string>
+    <string name="id">ID</string>
+    <string name="download">Herunterladen</string>
+    <string name="downloaded_lymbo">Lymbo heruntergeladen</string>
+    <string name="error_downloading_lymbo">Fehler beim Herunterladen</string>
 
 </resources>

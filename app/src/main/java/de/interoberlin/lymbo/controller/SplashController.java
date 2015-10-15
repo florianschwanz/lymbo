@@ -20,13 +20,15 @@ public class SplashController {
     // --------------------
 
     private SplashController(Activity activity) {
-        this.activity = activity;
+        setActivity(activity);
     }
 
     public static SplashController getInstance(Activity activity) {
         if (instance == null) {
             instance = new SplashController(activity);
         }
+
+        instance.setActivity(activity);
 
         return instance;
     }
@@ -45,6 +47,10 @@ public class SplashController {
     // --------------------
     // Getters / Setter
     // --------------------
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 
     public List<String> getMessages() {
         return this.messages;

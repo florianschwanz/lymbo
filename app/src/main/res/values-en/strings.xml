@@ -161,5 +161,10 @@
     <string name="no_author_specified">no author specified</string>
     <string name="upload">Upload</string>
     <string name="uploaded_lymbo">Uploaded lymbo</string>
+    <string name="menu_download">Download</string>
+    <string name="id">ID</string>
+    <string name="download">Download</string>
+    <string name="downloaded_lymbo">Downloaded lymbo</string>
+    <string name="error_downloading_lymbo">Error downloading lymbo</string>
 
 </resources>

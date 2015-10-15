@@ -3,12 +3,14 @@ package de.interoberlin.lymbo.model.persistence.filesystem;
 import android.content.Context;
 import android.os.Environment;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 
 import de.interoberlin.lymbo.App;
@@ -22,6 +24,21 @@ public class LymboLoader {
     // --------------------
     // Methods - Facade
     // --------------------
+
+    public static Stack getLymboFromString(Context context, String string, boolean onlyTopLevel) {
+        Stack stack = getLymboFromInputStream(new ByteArrayInputStream(string.getBytes()), null, onlyTopLevel);
+
+        String LYMBO_SAVE_PATH = context.getResources().getString(R.string.lymbo_save_path);
+        String path = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH;
+        String fileExtension = context.getResources().getString(R.string.lymbo_file_extension);
+        String fileName = stack.getTitle().trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault());
+
+        stack.setFile(path + "/" + fileName + fileExtension);
+        stack.setPath(path);
+        stack.setAsset(false);
+        stack.setFormat(EFormat.LYMBO);
+        return stack;
+    }
 
     /**
      * Loads a stack object from a given file inside assets
