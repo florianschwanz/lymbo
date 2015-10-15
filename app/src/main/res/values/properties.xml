@@ -27,6 +27,7 @@
     <!-- Webservices -->
     <string name="lymbo_web_token_url" translatable="false">http://lymbo.interoberlin.de/oauth/token</string>
     <string name="lymbo_upload_url" translatable="false">http://lymbo.interoberlin.de/lymbo/upload</string>
+    <string name="lymbo_download_url" translatable="false">http://lymbo.interoberlin.de/lymbo/download</string>
     <string name="microsoft_translator_token_url" translatable="false">https://datamarket.accesscontrol.windows.net/v2/OAuth2-13</string>
 
 </resources>
