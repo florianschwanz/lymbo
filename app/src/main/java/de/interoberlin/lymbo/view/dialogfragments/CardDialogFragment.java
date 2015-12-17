@@ -28,20 +28,21 @@ import java.util.concurrent.ExecutionException;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Displayable;
-import de.interoberlin.lymbo.model.card.Stack;
-import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.card.components.Answer;
-import de.interoberlin.lymbo.model.card.components.TextComponent;
-import de.interoberlin.lymbo.model.card.components.TitleComponent;
-import de.interoberlin.lymbo.model.card.enums.EComponent;
+import de.interoberlin.lymbo.core.model.v1.impl.Answer;
+import de.interoberlin.lymbo.core.model.v1.impl.Card;
+import de.interoberlin.lymbo.core.model.v1.impl.Side;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.Title;
+import de.interoberlin.lymbo.core.model.v1.objects.ComponentObject;
+import de.interoberlin.lymbo.core.model.v1.objects.ComponentType;
 import de.interoberlin.lymbo.model.webservice.AccessControlItem;
-import de.interoberlin.lymbo.model.webservice.translate.Language;
+import de.interoberlin.lymbo.model.webservice.translate.ELanguage;
 import de.interoberlin.lymbo.model.webservice.translate.MicrosoftAccessControlItemTask;
 import de.interoberlin.lymbo.model.webservice.translate.MicrosoftTranslatorTask;
+import de.interoberlin.lymbo.util.TagUtil;
 import de.interoberlin.lymbo.util.ViewUtil;
-import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class CardDialogFragment extends DialogFragment {
     public static final String TAG = "card";
@@ -144,7 +145,7 @@ public class CardDialogFragment extends DialogFragment {
         }
 
         if (answersValues != null && answersCorrect != null && answersValues.size() == answersCorrect.size()) {
-            for (int i = 0; i<answersValues.size(); i++) {
+            for (int i = 0; i < answersValues.size(); i++) {
                 final TableRow tr = new TableRow(getActivity());
                 final CheckBox cb = new CheckBox(getActivity());
                 final EditText et = new EditText(getActivity());
@@ -186,10 +187,9 @@ public class CardDialogFragment extends DialogFragment {
 
         for (final String t : templates) {
             final TableRow tr = new TableRow(getActivity());
-            final TextView tvText = new RobotoTextView(getActivity());
+            final TextView tvText = new TextView(getActivity());
 
             final Card template = cardsController.getTemplateById(t);
-
             tr.setPadding(0, (int) res.getDimension(R.dimen.table_row_padding), 0, (int) res.getDimension(R.dimen.table_row_padding));
             tvText.setText(template.getTitle());
             tvText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
@@ -286,12 +286,12 @@ public class CardDialogFragment extends DialogFragment {
         llTags.getLayoutParams().height = 0;
         llTemplates.getLayoutParams().height = 0;
 
-        Language languageFrom = null;
-        Language languageTo = null;
+        ELanguage languageFrom = null;
+        ELanguage languageTo = null;
 
-        if (stack.getLanguageAspect() != null) {
-            languageFrom = stack.getLanguageAspect().getFrom();
-            languageTo = stack.getLanguageAspect().getTo();
+        if (stack.getLanguage() != null) {
+            languageFrom = ELanguage.fromString(stack.getLanguage().getFrom());
+            languageTo = ELanguage.fromString(stack.getLanguage().getTo());
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -325,7 +325,7 @@ public class CardDialogFragment extends DialogFragment {
 
         // Get arguments
         Bundle bundle = this.getArguments();
-        final String cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_uuid));
+        final String cardId = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_id));
 
         AlertDialog dialog = (AlertDialog) getDialog();
         final EditText etFront = (EditText) dialog.findViewById(R.id.etFront);
@@ -346,11 +346,27 @@ public class CardDialogFragment extends DialogFragment {
                 if (front.isEmpty()) {
                     etFront.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);
                 } else {
-                    if (cardUuid == null) {
-                        ocListener.onAddCard(etFront.getText().toString(), getTexts(tblTextFront), etBack.getText().toString(), getTexts(tblTextBack), getSelectedTags(tblTags), getAnswers(tblQuiz));
-                    } else {
-                        ocListener.onEditCard(cardUuid, etFront.getText().toString(), getTexts(tblTextFront), etBack.getText().toString(), getTexts(tblTextBack), getSelectedTags(tblTags), getAnswers(tblQuiz));
+                    Title titleFront = new Title(etFront.getText().toString());
+                    List<Text> textsFront = new ArrayList<>();
+                    for (String s : getTexts(tblTextFront)) {
+                        textsFront.add(new Text(s));
                     }
+
+                    Title titleBack = new Title(etBack.getText().toString());
+                    List<Text> textsBack = new ArrayList<>();
+                    for (String s : getTexts(tblTextBack)) {
+                        textsBack.add(new Text(s));
+                    }
+
+                    List<Tag> tags = getSelectedTags(tblTags);
+                    List<Answer> answers = getAnswers(tblQuiz);
+
+                    if (cardId == null) {
+                        ocListener.onAddCard(titleFront, textsFront, titleBack, textsBack, tags, answers);
+                    } else {
+                        ocListener.onEditCard(cardId, titleFront, textsFront, titleBack, textsBack, tags, answers);
+                    }
+
                     dismiss();
                 }
             }
@@ -431,10 +447,10 @@ public class CardDialogFragment extends DialogFragment {
 
             AccessControlItem accessControlItem = new MicrosoftAccessControlItemTask().execute(res.getString(R.string.pref_translator_client_id), translatorApiSecret).get();
 
-            Language languageFrom = stack.getLanguageAspect().getFrom();
-            Language languageTo = stack.getLanguageAspect().getTo();
+            ELanguage languageFrom = ELanguage.fromString(stack.getLanguage().getFrom());
+            ELanguage languageTo = ELanguage.fromString(stack.getLanguage().getTo());
 
-            if (accessControlItem != null && accessControlItem.getAccess_token() != null) {
+            if (accessControlItem != null && accessControlItem.getAccess_token() != null && languageFrom != null && languageTo != null) {
                 String translatedText = new MicrosoftTranslatorTask().execute(accessControlItem.getAccess_token(), languageFrom.getLangCode(), languageTo.getLangCode(), etFrom.getText().toString()).get();
                 etTo.setText(translatedText);
             }
@@ -494,22 +510,22 @@ public class CardDialogFragment extends DialogFragment {
         CardsController cardsController = CardsController.getInstance(getActivity());
 
         // Read values from template
-        String frontTitle = ((TitleComponent) template.getSides().get(0).getFirst(EComponent.TITLE)).getValue();
-        String backTitle = ((TitleComponent) template.getSides().get(1).getFirst(EComponent.TITLE)).getValue();
+        String frontTitle = ((Title) ((Side) template.getSide().get(0)).getFirst(ComponentType.TITLE)).getValue();
+        String backTitle = ((Title) ((Side) template.getSide().get(1)).getFirst(ComponentType.TITLE)).getValue();
         ArrayList<String> textsFront = new ArrayList<>();
         ArrayList<String> textsBack = new ArrayList<>();
-        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
-        ArrayList<String> tagsSelected = Tag.getNames(template.getTags());
+        ArrayList<String> tagsAll = TagUtil.getDistinctValues(cardsController.getTagsAll());
+        ArrayList<String> tagsSelected = TagUtil.getDistinctValues(TagUtil.getTagList(template.getTag()));
 
-        for (Displayable d : template.getSides().get(0).getComponents()) {
-            if (d instanceof TextComponent) {
-                textsFront.add(((TextComponent) d).getValue());
+        for (ComponentObject c : template.getSide().get(0).getComponent()) {
+            if (c instanceof Text) {
+                textsFront.add(((Text) c).getValue());
             }
         }
 
-        for (Displayable d : template.getSides().get(1).getComponents()) {
-            if (d instanceof TextComponent) {
-                textsBack.add(((TextComponent) d).getValue());
+        for (ComponentObject c : template.getSide().get(1).getComponent()) {
+            if (c instanceof Text) {
+                textsBack.add(((Text) c).getValue());
             }
         }
 
@@ -595,7 +611,7 @@ public class CardDialogFragment extends DialogFragment {
             if (tblQuiz.getChildAt(i) instanceof TableRow) {
                 TableRow row = (TableRow) tblQuiz.getChildAt(i);
                 String value = (row.getChildCount() > 1 && row.getChildAt(1) instanceof EditText) ? ((EditText) row.getChildAt(1)).getText().toString() : "";
-                boolean correct = (row.getChildCount() > 0 && row.getChildAt(0) instanceof CheckBox) ? ((CheckBox) row.getChildAt(0)).isChecked() : false;
+                boolean correct = (row.getChildCount() > 0 && row.getChildAt(0) instanceof CheckBox) && ((CheckBox) row.getChildAt(0)).isChecked();
 
                 if (!value.isEmpty()) {
                     selectedAnswers.add(new Answer(value, correct));
@@ -620,7 +636,7 @@ public class CardDialogFragment extends DialogFragment {
                         tag = new Tag(((TextView) row.getChildAt(1)).getText().toString());
                     }
 
-                    if (tag != null && !containsTag(selectedTags, tag)) {
+                    if (tag != null && !tag.containedInList(selectedTags)) {
                         selectedTags.add(tag);
                     }
                 }
@@ -630,23 +646,14 @@ public class CardDialogFragment extends DialogFragment {
         return selectedTags;
     }
 
-    private boolean containsTag(List<Tag> tags, Tag tag) {
-        for (Tag t : tags) {
-            if (t.getName().equalsIgnoreCase(tag.getName()))
-                return true;
-        }
-
-        return false;
-    }
-
     // --------------------
     // Callback interfaces
     // --------------------
 
     public interface OnCompleteListener {
-        void onAddCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers);
+        void onAddCard(Title frontTitle, List<Text> frontTexts, Title backTitle, List<Text> backTexts, List<Tag> tags, List<Answer> answers);
 
-        void onEditCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers);
+        void onEditCard(String id, Title frontTitle, List<Text> frontTexts, Title backTitle, List<Text> backTexts, List<Tag> tags, List<Answer> answers);
     }
 
     public void onAttach(Activity activity) {

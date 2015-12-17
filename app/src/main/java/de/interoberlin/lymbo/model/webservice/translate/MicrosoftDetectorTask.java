@@ -14,7 +14,7 @@ import java.net.URLEncoder;
 import de.interoberlin.lymbo.model.webservice.Param;
 import de.interoberlin.lymbo.model.webservice.ParamHolder;
 
-public class MicrosoftDetectorTask extends AsyncTask<String, Void, Language> {
+public class MicrosoftDetectorTask extends AsyncTask<String, Void, ELanguage> {
     private static final String DETECT_URL = "http://api.microsofttranslator.com/V2/Ajax.svc/Detect?";
 
     private static final String ENCODING = "UTF-8";
@@ -34,7 +34,7 @@ public class MicrosoftDetectorTask extends AsyncTask<String, Void, Language> {
     }
 
     @Override
-    protected Language doInBackground(String... params) {
+    protected ELanguage doInBackground(String... params) {
         String accessToken = params[0];
         String text = params[1];
 
@@ -48,7 +48,7 @@ public class MicrosoftDetectorTask extends AsyncTask<String, Void, Language> {
     }
 
     @Override
-    protected void onPostExecute(Language result) {
+    protected void onPostExecute(ELanguage result) {
         super.onPostExecute(result);
     }
 
@@ -65,7 +65,7 @@ public class MicrosoftDetectorTask extends AsyncTask<String, Void, Language> {
      * @return translated text
      * @throws Exception
      */
-    public static Language detectLanguage(String accessToken, String text) throws Exception {
+    public static ELanguage detectLanguage(String accessToken, String text) throws Exception {
         // Parameters
         ParamHolder ph = new ParamHolder();
         ph.add(new Param(PARAM_TEXT, URLEncoder.encode(text, ENCODING)));
@@ -85,7 +85,7 @@ public class MicrosoftDetectorTask extends AsyncTask<String, Void, Language> {
             if (con.getResponseCode() != RESPONSE_CODE_OKAY) {
                 throw new Exception("Error from Microsoft Translator API");
             }
-            return Language.fromString(inputStreamToString(con.getInputStream()));
+            return ELanguage.fromString(inputStreamToString(con.getInputStream()));
         } finally {
             con.disconnect();
         }

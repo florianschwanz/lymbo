@@ -9,7 +9,6 @@
     <string name="add_tags">Tags hinzufügen</string>
     <string name="all">Alle</string>
     <string name="app_name">lymbo</string>
-    <string name="author">Autor</string>
     <string name="back">Rückseite</string>
     <string name="broken_lymbo_file">Ungültige lymbo Datei</string>
     <string name="cancel">Abbrechen</string>
@@ -21,7 +20,6 @@
     <string name="copied_card">Karte kopiert</string>
     <string name="copy_card">Karte kopieren</string>
     <string name="correct">richtig</string>
-    <string name="could_not_find_any_cards">Noch keine Karten angelegt</string>
     <string name="deep_copy">Deep copy</string>
     <string name="desc_image">Image Komponente</string>
     <string name="describe_the_error">Beschreibe den Fehler</string>
@@ -97,7 +95,6 @@
     <string name="moved_card">Karte verschoben</string>
     <string name="new_tag">neuer Tag</string>
     <string name="new_text">neuer Text</string>
-    <string name="no_cards_in_stash">Keine Karten im Papierkorb</string>
     <string name="no_tag">kein Tag</string>
     <string name="none">Keine</string>
     <string name="note">Notiz</string>

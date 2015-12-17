@@ -1,21 +1,4 @@
-/*
- * Copyright (C) 2014 Antonio Leiva Gordillo.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package de.interoberlin.lymbo.view.activities;
-
 
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
@@ -28,21 +11,16 @@ import java.util.ArrayList;
 import de.interoberlin.lymbo.R;
 
 public abstract class SwipeRefreshBaseActivity extends BaseActivity {
-    // Toolbar
+    // View
     private ArrayList<View> hideableHeaderViews = new ArrayList<>();
     private ArrayList<View> hideableFooterViews = new ArrayList<>();
 
-    // private boolean actionBarAutoHideEnabled = false;
     private int actionBarAutoHideSensivity = 0;
     private int actionBarAutoHideMinY = 0;
     private int actionBarAutoHideSignal = 0;
     private boolean actionBarShown = true;
 
     private static final int HEADER_HIDE_ANIM_DURATION = 500;
-
-    // --------------------
-    // Methods
-    // --------------------
 
     // --------------------
     // Methods -  Toolbar
@@ -54,7 +32,7 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
     private void initActionBarAutoHide() {
         // actionBarAutoHideEnabled = true;
         actionBarAutoHideMinY = getResources().getDimensionPixelSize(R.dimen.toolbar_auto_hide_min_y);
-        actionBarAutoHideSensivity = getResources().getDimensionPixelSize(R.dimen.toolbar_auto_hide_sensivity);
+        actionBarAutoHideSensivity = getResources().getDimensionPixelSize(R.dimen.toolbar_auto_hide_sensitivity);
     }
 
     protected void enableActionBarAutoHide(final ListView listView) {
@@ -169,11 +147,13 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
         }
     }
 
+    /*
     protected void deregisterHideableHeaderView(View hideableHeaderView) {
         if (hideableHeaderViews.contains(hideableHeaderView)) {
             hideableHeaderViews.remove(hideableHeaderView);
         }
     }
+    */
 
     protected void registerHideableFooterView(View hideableFooterView) {
         if (!hideableFooterViews.contains(hideableFooterView)) {
@@ -181,9 +161,11 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
         }
     }
 
+    /*
     protected void deregisterHideableFooterView(View hideableFooterView) {
         if (hideableFooterViews.contains(hideableFooterView)) {
             hideableFooterViews.remove(hideableFooterView);
         }
     }
+    */
 }

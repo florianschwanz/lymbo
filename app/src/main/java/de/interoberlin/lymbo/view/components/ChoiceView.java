@@ -1,10 +1,8 @@
-package de.interoberlin.lymbo.model.card.components;
+package de.interoberlin.lymbo.view.components;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -15,39 +13,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.card.Displayable;
-import de.interoberlin.lymbo.model.card.enums.ChoiceType;
+import de.interoberlin.lymbo.core.model.v1.impl.Answer;
+import de.interoberlin.lymbo.core.model.v1.impl.Choice;
 import de.interoberlin.lymbo.util.Configuration;
+import de.interoberlin.lymbo.util.TranslationUtil;
 
-public class ChoiceComponent implements Displayable {
-    private ChoiceType type = ChoiceType.MULTIPLE;
-    private List<Answer> answers = new ArrayList<>();
-
-    private List<CheckBox> checkboxes = new ArrayList<>();
+public class ChoiceView extends TableLayout {
 
     // --------------------
-    // Constructor
+    // Constructors
     // --------------------
 
-    public ChoiceComponent() {
+    public ChoiceView(Context context) {
+        super(context);
     }
 
-    public ChoiceComponent(List<Answer> answers) {
-        this.answers = answers;
-    }
+    public ChoiceView(Context context, final Choice c) {
+        super(context);
 
-    // --------------------
-    // Methods
-    // --------------------
+        inflate(context, R.layout.component_choice, this);
 
-    @Override
-    public View getView(Context c, Activity a, ViewGroup parent) {
-        LayoutInflater li = LayoutInflater.from(c);
-        final TableLayout tlChoices = (TableLayout) li.inflate(R.layout.component_choice, parent, false);
+        final List<Answer> answers = new ArrayList<>();
+        final List<CheckBox> checkboxes = new ArrayList<>();
 
         for (final Answer answer : answers) {
-
-            LinearLayout llAnswer = (LinearLayout) li.inflate(R.layout.component_answer, parent, false);
+            LayoutInflater li = LayoutInflater.from(context);
+            LinearLayout llAnswer = (LinearLayout) li.inflate(R.layout.component_answer, this, false);
 
             final CheckBox cb = (CheckBox) llAnswer.findViewById(R.id.cb);
             final TextView tvText = (TextView) llAnswer.findViewById(R.id.tvText);
@@ -58,37 +49,34 @@ public class ChoiceComponent implements Displayable {
             cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    switch (getChoiceType()) {
+                    switch (c.getChoiceType()) {
                         case MULTIPLE: {
                             answer.setSelected(b);
                             break;
                         }
                         case SINGLE: {
                             answer.setSelected(b);
-                            if (b) {
-                                answer.setSelected(b);
-                                for (CheckBox c : checkboxes) {
-                                    c.setChecked(false);
-                                }
 
-                                cb.setChecked(true);
+                            for (CheckBox c : checkboxes) {
+                                c.setChecked(false);
                             }
 
+                            cb.setChecked(true);
                             break;
                         }
                     }
                 }
             });
 
-            if (answer.getTranslations().containsKey(Configuration.getLanguage(c)))
-                tvText.setText(answer.getTranslations().get(Configuration.getLanguage(c)));
+            if (TranslationUtil.contains(answer.getTranslation(), Configuration.getLanguage(context)))
+                tvText.setText(TranslationUtil.get(answer.getTranslation(), Configuration.getLanguage(context)));
             else
                 tvText.setText(answer.getValue());
 
             tvText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    switch (getChoiceType()) {
+                    switch (c.getChoiceType()) {
                         case MULTIPLE: {
                             cb.toggle();
                             break;
@@ -108,36 +96,7 @@ public class ChoiceComponent implements Displayable {
                 }
             });
 
-
-            tlChoices.addView(llAnswer);
-
+            addView(llAnswer);
         }
-
-        return tlChoices;
-    }
-
-    @Override
-    public View getEditableView(Context c, final Activity a, ViewGroup parent) {
-        return new View(c);
-    }
-
-    // --------------------
-    // Getters / Setters
-    // --------------------
-
-    public ChoiceType getChoiceType() {
-        return type;
-    }
-
-    public void setChoiceType(ChoiceType type) {
-        this.type = type;
-    }
-
-    public List<Answer> getAnswers() {
-        return answers;
-    }
-
-    public void setAnswers(List<Answer> answers) {
-        this.answers = answers;
     }
 }

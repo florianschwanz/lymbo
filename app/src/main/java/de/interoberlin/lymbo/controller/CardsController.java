@@ -12,16 +12,17 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Side;
-import de.interoberlin.lymbo.model.card.Stack;
-import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.card.components.Answer;
-import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
-import de.interoberlin.lymbo.model.card.components.ResultComponent;
-import de.interoberlin.lymbo.model.card.components.TextComponent;
-import de.interoberlin.lymbo.model.card.components.TitleComponent;
-import de.interoberlin.lymbo.model.card.enums.EGravity;
+import de.interoberlin.lymbo.core.model.v1.impl.Answer;
+import de.interoberlin.lymbo.core.model.v1.impl.Card;
+import de.interoberlin.lymbo.core.model.v1.impl.Choice;
+import de.interoberlin.lymbo.core.model.v1.impl.Result;
+import de.interoberlin.lymbo.core.model.v1.impl.Side;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.Title;
+import de.interoberlin.lymbo.core.model.v1.objects.CardObject;
+import de.interoberlin.lymbo.core.model.v1.objects.TagObject;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
@@ -87,18 +88,18 @@ public class CardsController {
             datasource = new TableCardDatasource(activity);
             datasource.open();
 
-            for (Card c : stack.getCards()) {
+            for (CardObject c : stack.getCard()) {
                 if (!datasource.containsUuid(c.getId()) || datasource.isNormal(c.getId())) {
-                    cards.add(c);
+                    cards.add((Card) c);
                 } else if (datasource.isDismissed(c.getId())) {
-                    cardsDismissed.add(c);
+                    cardsDismissed.add((Card) c);
                 } else if (datasource.isStashed(c.getId())) {
-                    cardsStashed.add(c);
+                    cardsStashed.add((Card) c);
                 }
             }
 
-            for (Card t : stack.getTemplates()) {
-                templates.add(t);
+            for (CardObject t : stack.getTemplate()) {
+                templates.add((Card) t);
             }
 
             datasource.close();
@@ -109,7 +110,7 @@ public class CardsController {
      * Determines whether a given card shall be displayed considering all filters
      *
      * @param card card to determine visibility of
-     * @return whether card is visbible or not
+     * @return whether card is visible or not
      */
     public boolean isVisible(Card card) {
         return (card != null &&
@@ -138,7 +139,7 @@ public class CardsController {
     // --------------------
 
     /**
-     * Writes lymbo object into file
+     * Writes lymbo object into a file
      */
     public void save() {
         if (stack.getFile() != null) {
@@ -180,11 +181,54 @@ public class CardsController {
 
     /**
      * Adds a new card to the current stack
+     *
+     * @param frontTitle front title
+     * @param frontTexts front texts
+     * @param backTitle  back title
+     * @param backTexts  back texts
+     * @param tags       tags
+     * @param answers    answers
      */
-    public void addCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
-        Card card = new Card(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags, answers);
+    public void addCard(Title frontTitle, List<Text> frontTexts, Title backTitle, List<Text> backTexts, List<Tag> tags, List<Answer> answers) {
+        Card card = new Card();
 
-        stack.getCards().add(card);
+        Side front = new Side();
+        if (frontTitle != null) {
+            front.getComponent().add(frontTitle);
+        }
+        if (frontTexts != null) {
+            for (Text t : frontTexts) {
+                front.getComponent().add(t);
+            }
+        }
+
+        Side back = new Side();
+        if (backTitle != null) {
+            back.getComponent().add(backTitle);
+        }
+        if (backTexts != null) {
+            for (Text t : backTexts) {
+                back.getComponent().add(t);
+            }
+        }
+
+        if (answers != null) {
+            Choice c = new Choice();
+            for (Answer a : answers) {
+                c.getAnswer().add(a);
+            }
+            front.getComponent().add(c);
+            back.getComponent().add(new Result());
+        }
+
+        card.getSide().add(front);
+        card.getSide().add(back);
+
+        for (Tag t : tags) {
+            card.getTag().add(t);
+        }
+
+        stack.getCard().add(card);
         cards.add(card);
         save();
     }
@@ -192,61 +236,55 @@ public class CardsController {
     /**
      * Updates a card
      *
-     * @param uuid             id of the card to be updated
-     * @param frontTitleValue  front title
-     * @param frontTextsValues front texts
-     * @param backTitleValue   back title
-     * @param backTextsValues  back texts
-     * @param tags             tags
-     * @param answers          answers
+     * @param id         id of the card to be updated
+     * @param frontTitle front title
+     * @param frontTexts front texts
+     * @param backTitle  back title
+     * @param backTexts  back texts
+     * @param tags       tags
+     * @param answers    answers
      */
-    public void updateCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
-        if (cardsContainsId(uuid)) {
-            Card card = getCardById(uuid);
+    public void updateCard(String id, Title frontTitle, List<Text> frontTexts, Title backTitle, List<Text> backTexts, List<Tag> tags, List<Answer> answers) {
+        if (cardsContainsId(id)) {
+            Card card = getCardById(id);
+            card.getSide().clear();
+            card.getTag().clear();
 
-            if (card.getSides().size() > 0) {
-                Side frontSide = card.getSides().get(0);
-                frontSide.getComponents().clear();
-
-                TitleComponent frontTitle = new TitleComponent();
-                frontTitle.setValue(frontTitleValue);
-                frontTitle.setGravity(EGravity.CENTER);
-                frontSide.addComponent(frontTitle);
-
-                for (String frontTextValue : frontTextsValues) {
-                    TextComponent frontText = new TextComponent();
-                    frontText.setValue(frontTextValue);
-                    frontText.setGravity(EGravity.LEFT);
-                    frontSide.addComponent(frontText);
-                }
-
-                if (answers != null && !answers.isEmpty()) {
-                    frontSide.addComponent(new ChoiceComponent(answers));
+            Side front = new Side();
+            if (frontTitle != null) {
+                front.getComponent().add(frontTitle);
+            }
+            if (frontTexts != null) {
+                for (Text t : frontTexts) {
+                    front.getComponent().add(t);
                 }
             }
 
-            if (card.getSides().size() > 1) {
-                Side backSide = card.getSides().get(1);
-                backSide.getComponents().clear();
-
-                TitleComponent backTitle = new TitleComponent();
-                backTitle.setGravity(EGravity.CENTER);
-                backTitle.setValue(backTitleValue);
-                backSide.addComponent(backTitle);
-
-                for (String backTextValue : backTextsValues) {
-                    TextComponent backText = new TextComponent();
-                    backText.setValue(backTextValue);
-                    backText.setGravity(EGravity.LEFT);
-                    backSide.addComponent(backText);
-                }
-
-                if (answers != null && !answers.isEmpty()) {
-                    backSide.addComponent(new ResultComponent());
+            Side back = new Side();
+            if (backTitle != null) {
+                back.getComponent().add(backTitle);
+            }
+            if (backTexts != null) {
+                for (Text t : backTexts) {
+                    back.getComponent().add(t);
                 }
             }
 
-            card.setTags(tags);
+            if (answers != null) {
+                Choice c = new Choice();
+                for (Answer a : answers) {
+                    c.getAnswer().add(a);
+                }
+                front.getComponent().add(c);
+                back.getComponent().add(new Result());
+            }
+
+            for (Tag t : tags) {
+                card.getTag().add(t);
+            }
+
+            card.getSide().add(front);
+            card.getSide().add(back);
 
             save();
         }
@@ -254,66 +292,99 @@ public class CardsController {
 
     /**
      * Adds a new template to the current stack
+     *
+     * @param title      title
+     * @param frontTitle front title
+     * @param frontTexts front texts
+     * @param backTitle  back title
+     * @param backTexts  back texts
+     * @param tags       tags
      */
-    public void addTemplate(String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
-        Card template = new Card(title, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags, null);
+    public void addTemplate(String title, Title frontTitle, List<Text> frontTexts, Title backTitle, List<Text> backTexts, List<Tag> tags) {
+        Card template = new Card();
 
-        stack.getTemplates().add(template);
+        template.setTitle(title);
+
+        Side front = new Side();
+        if (frontTitle != null) {
+            front.getComponent().add(frontTitle);
+        }
+        if (frontTexts != null) {
+            for (Text t : frontTexts) {
+                front.getComponent().add(t);
+            }
+        }
+
+        Side back = new Side();
+        if (backTitle != null) {
+            back.getComponent().add(backTitle);
+        }
+        if (backTexts != null) {
+            for (Text t : backTexts) {
+                back.getComponent().add(t);
+            }
+        }
+
+        template.getSide().add(front);
+        template.getSide().add(back);
+
+        for (Tag t : tags) {
+            template.getTag().add(t);
+        }
+
+        stack.getTemplate().add(template);
+
+        stack.getTemplate().add(template);
         save();
     }
 
     /**
      * Updates a template
      *
-     * @param uuid             id of the template to be updated
-     * @param title            title of the template
-     * @param frontTitleValue  front title
-     * @param frontTextsValues front texts
-     * @param backTitleValue   back title
-     * @param backTextsValues  back texts
-     * @param tags             tags
+     * @param id         id of the template to be updated
+     * @param title      title
+     * @param frontTitle front title
+     * @param frontTexts front texts
+     * @param backTitle  back title
+     * @param backTexts  back texts
+     * @param tags       tags
      */
-    public void updateTemplate(String uuid, String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
-        if (templatesContainsId(uuid)) {
-            Card template = getTemplateById(uuid);
+    public void updateTemplate(String id, String title, Title frontTitle, List<Text> frontTexts, Title backTitle, List<Text> backTexts, List<Tag> tags) {
+        if (templatesContainsId(id)) {
+            Card template = getTemplateById(id);
 
             template.setTitle(title);
 
-            if (template.getSides().size() > 0) {
-                Side frontSide = template.getSides().get(0);
-                frontSide.getComponents().clear();
+            Card card = getCardById(id);
+            card.getSide().clear();
+            card.getTag().clear();
 
-                TitleComponent frontTitle = new TitleComponent();
-                frontTitle.setValue(frontTitleValue);
-                frontTitle.setGravity(EGravity.CENTER);
-                frontSide.addComponent(frontTitle);
-
-                for (String frontTextValue : frontTextsValues) {
-                    TextComponent frontText = new TextComponent();
-                    frontText.setValue(frontTextValue);
-                    frontText.setGravity(EGravity.LEFT);
-                    frontSide.addComponent(frontText);
+            Side front = new Side();
+            if (frontTitle != null) {
+                front.getComponent().add(frontTitle);
+            }
+            if (frontTexts != null) {
+                for (Text t : frontTexts) {
+                    front.getComponent().add(t);
                 }
             }
 
-            if (template.getSides().size() > 1) {
-                Side backSide = template.getSides().get(1);
-                backSide.getComponents().clear();
-
-                TitleComponent backTitle = new TitleComponent();
-                backTitle.setGravity(EGravity.CENTER);
-                backTitle.setValue(backTitleValue);
-                backSide.addComponent(backTitle);
-
-                for (String backTextValue : backTextsValues) {
-                    TextComponent backText = new TextComponent();
-                    backText.setValue(backTextValue);
-                    backText.setGravity(EGravity.LEFT);
-                    backSide.addComponent(backText);
+            Side back = new Side();
+            if (backTitle != null) {
+                back.getComponent().add(backTitle);
+            }
+            if (backTexts != null) {
+                for (Text t : backTexts) {
+                    back.getComponent().add(t);
                 }
             }
 
-            template.setTags(tags);
+            for (Tag t : tags) {
+                card.getTag().add(t);
+            }
+
+            card.getSide().add(front);
+            card.getSide().add(back);
 
             save();
         }
@@ -324,7 +395,7 @@ public class CardsController {
             Card t = getTemplateById(template.getId());
 
             if (t != null)
-                stack.getTemplates().remove(t);
+                stack.getTemplate().remove(t);
         }
         save();
     }
@@ -530,20 +601,18 @@ public class CardsController {
     /**
      * Copies a card from one stack to another
      *
-     * @param sourceLymboId id of source stack
      * @param targetLymboId id of target stack
      * @param cardId        id of card to be copied
      * @param deepCopy      true if the copy shall be deep
      */
-    public void copyCard(String sourceLymboId, String targetLymboId, String cardId, boolean deepCopy) {
-        Stack sourceStack = stacksController.getLymboById(sourceLymboId);
-        Stack targetStack = stacksController.getLymboById(targetLymboId);
+    public void copyCard(String targetLymboId, String cardId, boolean deepCopy) {
+        Stack targetStack = stacksController.getStackById(targetLymboId);
         Card card = getCardById(cardId);
 
         if (deepCopy)
             card.setId(UUID.randomUUID().toString());
 
-        targetStack.getCards().add(card);
+        targetStack.getCard().add(card);
         stacksController.save(targetStack);
     }
 
@@ -555,14 +624,14 @@ public class CardsController {
      * @param cardId        id of card to be copied
      */
     public void moveCard(String sourceLymboId, String targetLymboId, String cardId) {
-        Stack sourceStack = stacksController.getLymboById(sourceLymboId);
-        Stack targetStack = stacksController.getLymboById(targetLymboId);
+        Stack sourceStack = stacksController.getStackById(sourceLymboId);
+        Stack targetStack = stacksController.getStackById(targetLymboId);
         Card card = getCardById(cardId);
 
-        targetStack.getCards().add(card);
+        targetStack.getCard().add(card);
         stacksController.save(targetStack);
 
-        sourceStack.getCards().remove(card);
+        sourceStack.getCard().remove(card);
         stacksController.save(sourceStack);
 
         getCards().remove(card);
@@ -578,9 +647,9 @@ public class CardsController {
     }
 
     public void addTagsSelected(List<Tag> tags) {
-        for (Tag tag : tags) {
-            if (!tag.containedIn(tagsSelected)) {
-                tagsSelected.add(tag);
+        for (Tag t : tags) {
+            if (!t.containedInList(tagsSelected)) {
+                tagsSelected.add(t);
             }
         }
     }
@@ -589,16 +658,16 @@ public class CardsController {
         List<Tag> tagsAll = new ArrayList<>();
 
         for (Card card : getCards()) {
-            for (Tag tag : card.getTags()) {
-                if (tag != null && !tag.containedIn(tagsAll) && !tag.getName().equals(getResources().getString(R.string.no_tag)))
-                    tagsAll.add(tag);
+            for (TagObject tag : card.getTag()) {
+                if (tag != null && !((Tag) tag).containedInList(tagsAll) && !tag.getValue().equals(getResources().getString(R.string.no_tag)))
+                    tagsAll.add((Tag) tag);
             }
         }
 
         for (Card template : getTemplates()) {
-            for (Tag tag : template.getTags()) {
-                if (tag != null && !tag.containedIn(tagsAll) && !tag.getName().equals(getResources().getString(R.string.no_tag)))
-                    tagsAll.add(tag);
+            for (TagObject tag : template.getTag()) {
+                if (tag != null && !((Tag) tag).containedInList(tagsAll) && !tag.getValue().equals(getResources().getString(R.string.no_tag)))
+                    tagsAll.add((Tag) tag);
             }
         }
 
@@ -668,9 +737,9 @@ public class CardsController {
         this.tagsSelected = tagsSelected;
     }
 
-    public boolean cardsContainsId(String uuid) {
-        for (Card c : stack.getCards()) {
-            if (c.getId().equals(uuid)) {
+    public boolean cardsContainsId(String id) {
+        for (CardObject card : stack.getCard()) {
+            if (card.getId().equals(id)) {
                 return true;
             }
         }
@@ -678,20 +747,20 @@ public class CardsController {
         return false;
     }
 
-    public Card getCardById(String uuid) {
-        for (Card c : stack.getCards()) {
-            if (c.getId().equals(uuid)) {
-                return c;
+    public Card getCardById(String id) {
+        for (CardObject card : stack.getCard()) {
+            if (card.getId().equals(id)) {
+                return (Card) card;
             }
         }
 
         return null;
     }
 
-    public boolean templatesContainsId(String uuid) {
-        synchronized (stack.getTemplates()) {
-            for (Card t : stack.getTemplates()) {
-                if (t.getId().equals(uuid)) {
+    public boolean templatesContainsId(String id) {
+        synchronized (stack.getTemplate()) {
+            for (CardObject template : stack.getTemplate()) {
+                if (template.getId().equals(id)) {
                     return true;
                 }
             }
@@ -700,10 +769,10 @@ public class CardsController {
         return false;
     }
 
-    public Card getTemplateById(String uuid) {
-        for (Card t : stack.getTemplates()) {
-            if (t.getId().equals(uuid)) {
-                return t;
+    public Card getTemplateById(String id) {
+        for (CardObject template : stack.getTemplate()) {
+            if (template.getId().equals(id)) {
+                return (Card) template;
             }
         }
 

@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.Title;
 
 public class TemplateDialogFragment extends DialogFragment {
     public static final String TAG = "template";
@@ -56,7 +58,6 @@ public class TemplateDialogFragment extends DialogFragment {
         // Get arguments
         Bundle bundle = this.getArguments();
         final String dialogTitle = bundle.getString(res.getString(R.string.bundle_dialog_title));
-        final String uuid = bundle.getString(res.getString(R.string.bundle_template_uuid));
         final String title = bundle.getString(res.getString(R.string.bundle_title));
         final String frontTitle = bundle.getString(res.getString(R.string.bundle_front_title));
         final String backTitle = bundle.getString(res.getString(R.string.bundle_back_title));
@@ -170,7 +171,7 @@ public class TemplateDialogFragment extends DialogFragment {
 
         // Get arguments
         Bundle bundle = this.getArguments();
-        final String templateUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_template_uuid));
+        final String templateId = bundle.getString(getActivity().getResources().getString(R.string.bundle_template_id));
 
         AlertDialog dialog = (AlertDialog) getDialog();
         final EditText etTitle = (EditText) dialog.findViewById(R.id.etTitle);
@@ -191,10 +192,24 @@ public class TemplateDialogFragment extends DialogFragment {
                 if (title.isEmpty()) {
                     etTitle.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);
                 } else {
-                    if (templateUuid == null) {
-                        ocListener.onAddTemplate(etTitle.getText().toString(), etFront.getText().toString(), getTexts(tblTextFront), etBack.getText().toString(), getTexts(tblTextBack), getSelectedTags(tblTags));
+                    Title titleFront = new Title(etFront.getText().toString());
+                    List<Text> textsFront = new ArrayList<>();
+                    for (String s : getTexts(tblTextFront)) {
+                        textsFront.add(new Text(s));
+                    }
+
+                    Title titleBack = new Title(etBack.getText().toString());
+                    List<Text> textsBack = new ArrayList<>();
+                    for (String s : getTexts(tblTextBack)) {
+                        textsBack.add(new Text(s));
+                    }
+
+                    List<Tag> tags = getSelectedTags(tblTags);
+
+                    if (templateId == null) {
+                        ocListener.onAddTemplate(title, titleFront, textsFront, titleBack, textsBack, tags);
                     } else {
-                        ocListener.onEditTemplate(templateUuid, etTitle.getText().toString(), etFront.getText().toString(), getTexts(tblTextFront), etBack.getText().toString(), getTexts(tblTextBack), getSelectedTags(tblTags));
+                        ocListener.onEditTemplate(templateId, title, titleFront, textsFront, titleBack, textsBack, tags);
                     }
                     dismiss();
                 }
@@ -269,7 +284,7 @@ public class TemplateDialogFragment extends DialogFragment {
                         tag = new Tag(((TextView) row.getChildAt(1)).getText().toString());
                     }
 
-                    if (tag != null && !containsTag(selectedTags, tag)) {
+                    if (tag != null && !tag.containedInList(selectedTags)) {
                         selectedTags.add(tag);
                     }
                 }
@@ -279,22 +294,14 @@ public class TemplateDialogFragment extends DialogFragment {
         return selectedTags;
     }
 
-    private boolean containsTag(List<Tag> tags, Tag tag) {
-        for (Tag t : tags) {
-            if (t.getName().equalsIgnoreCase(tag.getName()))
-                return true;
-        }
-
-        return false;
-    }
-
     // --------------------
     // Callback interfaces
     // --------------------
 
     public interface OnCompleteListener {
-        void onAddTemplate(String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
-        void onEditTemplate(String uuid, String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
+        void onAddTemplate(String title, Title frontTitle, List<Text> frontTexts, Title backTitle, List<Text> backTexts, List<Tag> tags);
+
+        void onEditTemplate(String id, String title, Title frontTitle, List<Text> frontTexts, Title backTitle, List<Text> backTexts, List<Tag> tags);
     }
 
     public void onAttach(Activity activity) {

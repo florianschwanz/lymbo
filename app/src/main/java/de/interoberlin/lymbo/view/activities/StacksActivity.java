@@ -28,12 +28,13 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.StacksController;
-import de.interoberlin.lymbo.model.card.Stack;
-import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
-import de.interoberlin.lymbo.model.webservice.translate.Language;
+import de.interoberlin.lymbo.model.webservice.translate.ELanguage;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebDownloadTask;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebUploadTask;
+import de.interoberlin.lymbo.util.TagUtil;
 import de.interoberlin.lymbo.view.adapters.StacksListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.ConfirmRefreshDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DownloadDialogFragment;
@@ -185,7 +186,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
             ibFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ArrayList<String> tagsAll = Tag.getNames(stacksController.getTagsAll());
+                    ArrayList<String> tagsAll = TagUtil.getDistinctValues(stacksController.getTagsAll());
 
                     StackDialogFragment dialog = new StackDialogFragment();
                     Bundle bundle = new Bundle();
@@ -307,7 +308,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     }
 
     @Override
-    public void onAddStack(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
+    public void onAddStack(String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags) {
         Stack stack = stacksController.getEmptyStack(title, subtitle, author, languageFrom, languageTo, tags);
 
         if (!new File(stack.getFile()).exists()) {
@@ -322,7 +323,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     }
 
     @Override
-    public void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
+    public void onEditStack(String uuid, String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags) {
         stacksController.updateStack(uuid, title, subtitle, author, languageFrom, languageTo, tags);
         stacksController.addTagsSelected(tags);
         stacksAdapter.notifyDataSetChanged();
@@ -346,7 +347,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     @Override
     public void onLymboDownloaded(String response) {
         if (!response.equals("Error")) {
-            Stack stack = LymboLoader.getLymboFromString(this, response, false);
+            Stack stack = LymboLoader.getLymboFromString(this, response);
             stacksController.save(stack);
 
             final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
@@ -400,8 +401,8 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     private void selectTags() {
         ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
 
-        ArrayList<String> tagsAll = Tag.getNames(stacksController.getTagsAll());
-        ArrayList<String> tagsSelected = Tag.getNames(stacksController.getTagsSelected());
+        ArrayList<String> tagsAll = TagUtil.getDistinctValues(stacksController.getTagsAll());
+        ArrayList<String> tagsSelected = TagUtil.getDistinctValues(stacksController.getTagsSelected());
 
         FilterStacksDialogFragment dialog = new FilterStacksDialogFragment();
         Bundle bundle = new Bundle();

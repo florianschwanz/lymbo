@@ -26,10 +26,6 @@ public class ReportErrorDialogFragment extends DialogFragment {
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_report_error, null);
 
-        // Get arguments
-        Bundle bundle = this.getArguments();
-        final String stacktrace = bundle.getString(getResources().getString(R.string.bundle_stacktrace));
-
         // Fill views with arguments
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v);

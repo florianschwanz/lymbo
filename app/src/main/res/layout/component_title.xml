@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:roboto="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp">
+    android:orientation="vertical"
+    android:paddingEnd="8dp"
+    android:paddingStart="8dp">
 
-    <de.interoberlin.lymbo.view.controls.RobotoTextView
-        roboto:typeface="roboto_regular"
-        android:id="@+id/tvTitle"
+    <TextView
+        android:id="@+id/tvValue"
         style="@style/CardTitle"
         android:layout_width="match_parent"
         android:layout_height="0dp"

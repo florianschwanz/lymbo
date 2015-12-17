@@ -28,7 +28,6 @@ public class DownloadDialogFragment extends DialogFragment {
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialogfragment_download, null);
-        final EditText etId = (EditText) v.findViewById(R.id.etId);
 
         // Get arguments
         Bundle bundle = this.getArguments();
@@ -60,9 +59,6 @@ public class DownloadDialogFragment extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        // Get arguments
-        Bundle bundle = this.getArguments();
 
         AlertDialog dialog = (AlertDialog) getDialog();
         final EditText etId = (EditText) dialog.findViewById(R.id.etId);

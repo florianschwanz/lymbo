@@ -19,8 +19,7 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.StacksController;
-import de.interoberlin.lymbo.model.card.Stack;
-import de.interoberlin.lymbo.view.controls.RobotoTextView;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 
 public class CopyCardDialogFragment extends DialogFragment {
     public static final String TAG = "copy_card";
@@ -46,7 +45,7 @@ public class CopyCardDialogFragment extends DialogFragment {
 
         // Get arguments
         Bundle bundle = this.getArguments();
-        String sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
+        String sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_id));
 
         // Fill views with arguments
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -58,7 +57,7 @@ public class CopyCardDialogFragment extends DialogFragment {
                 final TableRow tr = new TableRow(getActivity());
 
                 final CheckBox cb = new CheckBox(getActivity());
-                final RobotoTextView tvText = new RobotoTextView(getActivity());
+                final TextView tvText = new TextView(getActivity());
 
                 checkboxes.add(cb);
 
@@ -124,8 +123,8 @@ public class CopyCardDialogFragment extends DialogFragment {
 
         // Get arguments
         Bundle bundle = this.getArguments();
-        final String sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
-        final String cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_uuid));
+        final String sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_id));
+        final String cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_id));
 
         AlertDialog dialog = (AlertDialog) getDialog();
         final CheckBox cbDeepCopy = (CheckBox) dialog.findViewById(R.id.cbDeepCopy);

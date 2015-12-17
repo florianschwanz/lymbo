@@ -5,21 +5,21 @@
     <string name="bundle_asset" translatable="false">asset</string>
     <string name="bundle_author" translatable="false">author</string>
     <string name="bundle_back_title" translatable="false">back_title</string>
-    <string name="bundle_card_uuid" translatable="false">card_uuid</string>
+    <string name="bundle_card_id" translatable="false">card_id</string>
     <string name="bundle_dialog_title" translatable="false">dialog_title</string>
     <string name="bundle_display_only_favorites" translatable="false">display_only_favorites</string>
     <string name="bundle_front_title" translatable="false">front_title</string>
     <string name="bundle_language_from" translatable="false">language_from</string>
     <string name="bundle_language_to" translatable="false">language_to</string>
     <string name="bundle_lymbo_file_name" translatable="false">lymbo_file_name</string>
-    <string name="bundle_lymbo_uuid" translatable="false">lymbo_uuid</string>
+    <string name="bundle_lymbo_id" translatable="false">lymbo_id</string>
     <string name="bundle_message" translatable="false">message</string>
     <string name="bundle_note" translatable="false">note</string>
     <string name="bundle_stacktrace" translatable="false">stacktrace</string>
     <string name="bundle_subtitle" translatable="false">subtitle</string>
     <string name="bundle_tags_all" translatable="false">tags_all</string>
     <string name="bundle_tags_selected" translatable="false">tags_selected</string>
-    <string name="bundle_template_uuid" translatable="false">template_uuid</string>
+    <string name="bundle_template_id" translatable="false">template_id</string>
     <string name="bundle_templates" translatable="false">templates</string>
     <string name="bundle_texts_back" translatable="false">texts_back</string>
     <string name="bundle_texts_front" translatable="false">texts_front</string>

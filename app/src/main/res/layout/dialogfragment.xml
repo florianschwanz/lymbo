@@ -5,6 +5,5 @@
     android:orientation="vertical"
     android:padding="@dimen/dialog_fragment_padding"
     android:theme="@style/Theme.AppCompat.Light.Dialog">
-    
 
 </LinearLayout>

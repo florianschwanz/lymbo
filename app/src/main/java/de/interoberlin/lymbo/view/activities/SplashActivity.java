@@ -36,9 +36,7 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
     SplashController splashController;
     StacksController stacksController;
 
-    // Views
-    private static LinearLayout llSVG;
-    private static LinearLayout llLogo;
+    // View
     private static TextView tvMessage;
 
     // Accelerometer
@@ -47,7 +45,6 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
 
     private static SVG svg;
     private static SVGSurfacePanel panel;
-    private static ImageView ivLogo;
 
     // --------------------
     // Methods - Lifecycle
@@ -64,8 +61,8 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         setContentView(R.layout.activity_splash);
 
         // Load layout
-        llSVG = (LinearLayout) findViewById(R.id.llSVG);
-        llLogo = (LinearLayout) findViewById(R.id.llLogo);
+        LinearLayout llSVG = (LinearLayout) findViewById(R.id.llSVG);
+        LinearLayout llLogo = (LinearLayout) findViewById(R.id.llLogo);
         tvMessage = (TextView) findViewById(R.id.tvMessage);
 
         // Get instances of managers
@@ -87,7 +84,7 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
             }
         });
 
-        ivLogo = new ImageView(this);
+        ImageView ivLogo = new ImageView(this);
         ivLogo.setImageDrawable(loadFromAssets("lymbo.png"));
 
         // Add views

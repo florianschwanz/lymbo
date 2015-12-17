@@ -17,7 +17,7 @@ import com.github.mrengineer13.snackbar.SnackBar;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.card.Card;
+import de.interoberlin.lymbo.core.model.v1.impl.Card;
 import de.interoberlin.lymbo.view.adapters.CardsStashListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.ConfirmRefreshDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;

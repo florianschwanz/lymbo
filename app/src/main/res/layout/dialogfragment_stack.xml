@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:roboto="http://schemas.android.com/apk/res-auto"
     android:id="@+id/sv"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -42,6 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/dialog_fragment_padding"
+                android:paddingRight="@dimen/dialog_fragment_padding"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
@@ -91,7 +91,7 @@
                 android:orientation="vertical"
                 android:padding="@dimen/dialog_fragment_padding">
 
-                <de.interoberlin.lymbo.view.controls.RobotoTextView
+                <TextView
                     android:id="@+id/tvLanguageFrom"
                     style="@style/CardText"
                     android:layout_width="match_parent"
@@ -100,8 +100,7 @@
                     android:layout_marginTop="@dimen/divider_caption_margin_top"
                     android:layout_weight="0.50"
                     android:ellipsize="end"
-                    android:text="@string/source_language"
-                    roboto:typeface="roboto_regular" />
+                    android:text="@string/source_language" />
 
                 <View
                     android:layout_width="fill_parent"
@@ -113,7 +112,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <de.interoberlin.lymbo.view.controls.RobotoTextView
+                <TextView
                     android:id="@+id/tvLanguageTo"
                     style="@style/CardText"
                     android:layout_width="match_parent"
@@ -122,8 +121,7 @@
                     android:layout_marginTop="@dimen/divider_caption_margin_top"
                     android:layout_weight="0.50"
                     android:ellipsize="end"
-                    android:text="@string/target_language"
-                    roboto:typeface="roboto_regular" />
+                    android:text="@string/target_language" />
 
                 <View
                     android:layout_width="fill_parent"

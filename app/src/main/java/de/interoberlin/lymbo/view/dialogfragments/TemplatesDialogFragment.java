@@ -20,13 +20,14 @@ import java.util.ArrayList;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Displayable;
-import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.card.components.TextComponent;
-import de.interoberlin.lymbo.model.card.components.TitleComponent;
-import de.interoberlin.lymbo.model.card.enums.EComponent;
-import de.interoberlin.lymbo.view.controls.RobotoTextView;
+import de.interoberlin.lymbo.core.model.v1.impl.Card;
+import de.interoberlin.lymbo.core.model.v1.impl.Side;
+import de.interoberlin.lymbo.core.model.v1.impl.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.Title;
+import de.interoberlin.lymbo.core.model.v1.objects.CardObject;
+import de.interoberlin.lymbo.core.model.v1.objects.ComponentObject;
+import de.interoberlin.lymbo.core.model.v1.objects.ComponentType;
+import de.interoberlin.lymbo.util.TagUtil;
 
 public class TemplatesDialogFragment extends DialogFragment {
     public static final String TAG = "templates";
@@ -51,7 +52,7 @@ public class TemplatesDialogFragment extends DialogFragment {
         // final ArrayList<String> templates = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_templates));
 
         final ArrayList<String> templates = new ArrayList<>();
-        for (Card template : cardsController.getStack().getTemplates()) {
+        for (CardObject template : cardsController.getStack().getTemplate()) {
             if (template != null && template.getId() != null) {
                 templates.add(template.getId());
             }
@@ -64,7 +65,7 @@ public class TemplatesDialogFragment extends DialogFragment {
 
         for (final String t : templates) {
             final TableRow tr = new TableRow(getActivity());
-            final TextView tvText = new RobotoTextView(getActivity());
+            final TextView tvText = new TextView(getActivity());
 
             final Card template = cardsController.getTemplateById(t);
 
@@ -142,7 +143,7 @@ public class TemplatesDialogFragment extends DialogFragment {
 
     private void add() {
         CardsController cardsController = CardsController.getInstance(getActivity());
-        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
+        ArrayList<String> tagsAll = TagUtil.getDistinctValues(cardsController.getTagsAll());
 
         TemplateDialogFragment dialog = new TemplateDialogFragment();
         Bundle bundle = new Bundle();
@@ -156,29 +157,29 @@ public class TemplatesDialogFragment extends DialogFragment {
         CardsController cardsController = CardsController.getInstance(getActivity());
         String uuid = template.getId();
         String title = template.getTitle();
-        String frontTitle = ((TitleComponent) template.getSides().get(0).getFirst(EComponent.TITLE)).getValue();
-        String backTitle = ((TitleComponent) template.getSides().get(1).getFirst(EComponent.TITLE)).getValue();
+        String frontTitle = ((Title) ((Side) template.getSide().get(0)).getFirst(ComponentType.TITLE)).getValue();
+        String backTitle = ((Title) ((Side) template.getSide().get(1)).getFirst(ComponentType.TITLE)).getValue();
         ArrayList<String> frontTexts = new ArrayList<>();
         ArrayList<String> backTexts = new ArrayList<>();
-        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
-        ArrayList<String> tagsSelected = Tag.getNames(template.getTags());
+        ArrayList<String> tagsAll = TagUtil.getDistinctValues(cardsController.getTagsAll());
+        ArrayList<String> tagsSelected = TagUtil.getDistinctValues(TagUtil.getTagList(template.getTag()));
 
-        for (Displayable d : template.getSides().get(0).getComponents()) {
-            if (d instanceof TextComponent) {
-                frontTexts.add(((TextComponent) d).getValue());
+        for (ComponentObject c : template.getSide().get(0).getComponent()) {
+            if (c instanceof Text) {
+                frontTexts.add(((Text) c).getValue());
             }
         }
 
-        for (Displayable d : template.getSides().get(1).getComponents()) {
-            if (d instanceof TextComponent) {
-                backTexts.add(((TextComponent) d).getValue());
+        for (ComponentObject c : template.getSide().get(1).getComponent()) {
+            if (c instanceof Text) {
+                backTexts.add(((Text) c).getValue());
             }
         }
 
         TemplateDialogFragment dialog = new TemplateDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.edit_template));
-        bundle.putString(getResources().getString(R.string.bundle_template_uuid), uuid);
+        bundle.putString(getResources().getString(R.string.bundle_template_id), uuid);
         bundle.putString(getResources().getString(R.string.bundle_title), title);
         bundle.putString(getResources().getString(R.string.bundle_front_title), frontTitle);
         bundle.putString(getResources().getString(R.string.bundle_back_title), backTitle);

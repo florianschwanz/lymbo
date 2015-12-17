@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -20,31 +19,40 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.github.mrengineer13.snackbar.SnackBar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Displayable;
-import de.interoberlin.lymbo.model.card.Side;
-import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.card.components.Answer;
-import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
-import de.interoberlin.lymbo.model.card.components.ResultComponent;
-import de.interoberlin.lymbo.model.card.components.TextComponent;
-import de.interoberlin.lymbo.model.card.components.TitleComponent;
-import de.interoberlin.lymbo.model.card.enums.EComponent;
+import de.interoberlin.lymbo.core.model.v1.impl.Answer;
+import de.interoberlin.lymbo.core.model.v1.impl.Card;
+import de.interoberlin.lymbo.core.model.v1.impl.Choice;
+import de.interoberlin.lymbo.core.model.v1.impl.Image;
+import de.interoberlin.lymbo.core.model.v1.impl.Result;
+import de.interoberlin.lymbo.core.model.v1.impl.Side;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.Title;
+import de.interoberlin.lymbo.core.model.v1.objects.AnswerObject;
+import de.interoberlin.lymbo.core.model.v1.objects.CardObject;
+import de.interoberlin.lymbo.core.model.v1.objects.ComponentObject;
+import de.interoberlin.lymbo.core.model.v1.objects.ComponentType;
+import de.interoberlin.lymbo.core.model.v1.objects.SideObject;
+import de.interoberlin.lymbo.core.model.v1.objects.TagObject;
+import de.interoberlin.lymbo.util.TagUtil;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
+import de.interoberlin.lymbo.view.components.ChoiceView;
+import de.interoberlin.lymbo.view.components.ImageView;
+import de.interoberlin.lymbo.view.components.ResultView;
+import de.interoberlin.lymbo.view.components.TagView;
+import de.interoberlin.lymbo.view.components.TextView;
+import de.interoberlin.lymbo.view.components.TitleView;
 import de.interoberlin.lymbo.view.dialogfragments.CardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.CopyCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
@@ -119,13 +127,13 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
         final LinearLayout llTags = (LinearLayout) flCard.findViewById(R.id.llTags);
         final LinearLayout llFlip = (LinearLayout) flCard.findViewById(R.id.llFlip);
-        final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
-        final TextView tvDenominator = (TextView) flCard.findViewById(R.id.tvDenominator);
-        final ImageView ivNote = (ImageView) flCard.findViewById(R.id.ivNote);
-        final ImageView ivFavorite = (ImageView) flCard.findViewById(R.id.ivFavorite);
-        final ImageView ivHint = (ImageView) flCard.findViewById(R.id.ivHint);
+        final android.widget.TextView tvNumerator = (android.widget.TextView) flCard.findViewById(R.id.tvNumerator);
+        final android.widget.TextView tvDenominator = (android.widget.TextView) flCard.findViewById(R.id.tvDenominator);
+        final android.widget.ImageView ivNote = (android.widget.ImageView) flCard.findViewById(R.id.ivNote);
+        final android.widget.ImageView ivFavorite = (android.widget.ImageView) flCard.findViewById(R.id.ivFavorite);
+        final android.widget.ImageView ivHint = (android.widget.ImageView) flCard.findViewById(R.id.ivHint);
         final LinearLayout llNoteBar = (LinearLayout) flCard.findViewById(R.id.llNoteBar);
-        final TextView tvNote = (TextView) flCard.findViewById(R.id.tvNote);
+        final android.widget.TextView tvNote = (android.widget.TextView) flCard.findViewById(R.id.tvNote);
 
         // Context menu
         flCard.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
@@ -169,15 +177,23 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         });
 
         // Add sides
-        for (Side side : card.getSides()) {
+        for (SideObject side : card.getSide()) {
             LayoutInflater li = LayoutInflater.from(context);
             LinearLayout llSide = (LinearLayout) li.inflate(R.layout.side, parent, false);
             LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
 
             // Add components
-            for (Displayable d : side.getComponents()) {
-                View component = d.getView(context, activity, llComponents);
-                llComponents.addView(component);
+            for (ComponentObject c : side.getComponent()) {
+                if (c instanceof Title)
+                    llComponents.addView(new TitleView(context, (Title) c));
+                if (c instanceof Text)
+                    llComponents.addView(new TextView(context, (Text) c));
+                if (c instanceof Image)
+                    llComponents.addView(new ImageView(context, (Image) c));
+                if (c instanceof Choice)
+                    llComponents.addView(new ChoiceView(context, (Choice) c));
+                if (c instanceof Result)
+                    llComponents.addView(new ResultView(context, (Result) c));
             }
 
             llSide.setVisibility(View.INVISIBLE);
@@ -207,24 +223,24 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         }
 
         // Add tags
-        for (Tag tag : card.getTags()) {
-            if (!tag.getName().equals(getResources().getString(R.string.no_tag))) {
-                CardView cvTag = (CardView) tag.getView(context, activity, llTags);
-                cvTag.setOnClickListener(new View.OnClickListener() {
+        for (TagObject t : card.getTag()) {
+            if (!t.getValue().equals(getResources().getString(R.string.no_tag))) {
+                TagView tvTag = new TagView(context, (Tag) t);
+                tvTag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         selectTags();
                     }
                 });
 
-                llTags.addView(cvTag);
+                llTags.addView(tvTag);
             }
         }
 
         // Action : flip
-        if (card.getSides().size() > 1) {
+        if (card.getSide().size() > 1) {
             tvNumerator.setText(String.valueOf(card.getSideVisible() + 1));
-            tvDenominator.setText(String.valueOf(card.getSides().size()));
+            tvDenominator.setText(String.valueOf(card.getSide().size()));
         } else {
             ViewUtil.remove(llFlip);
         }
@@ -311,34 +327,34 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      */
     private void edit(final Card card) {
         String uuid = card.getId();
-        String frontTitle = ((TitleComponent) card.getSides().get(0).getFirst(EComponent.TITLE)).getValue();
-        String backTitle = ((TitleComponent) card.getSides().get(1).getFirst(EComponent.TITLE)).getValue();
+        String frontTitle = ((Title) ((Side) card.getSide().get(0)).getFirst(ComponentType.TITLE)).getValue();
+        String backTitle = ((Title) ((Side) card.getSide().get(1)).getFirst(ComponentType.TITLE)).getValue();
         ArrayList<String> frontTexts = new ArrayList<>();
         ArrayList<String> backTexts = new ArrayList<>();
-        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
-        ArrayList<String> tagsSelected = Tag.getNames(card.getTags());
+        ArrayList<String> tagsAll = TagUtil.getDistinctValues(cardsController.getTagsAll());
+        ArrayList<String> tagsSelected = TagUtil.getDistinctValues(TagUtil.getTagList(card.getTag()));
         ArrayList<String> answersValue = new ArrayList<>();
         ArrayList<Integer> answersCorrect = new ArrayList<>();
         ArrayList<String> templates = new ArrayList<>();
 
-        for (Displayable d : card.getSides().get(0).getComponents()) {
-            if (d instanceof TextComponent) {
-                frontTexts.add(((TextComponent) d).getValue());
-            } else if (d instanceof ChoiceComponent) {
-                for (Answer a : ((ChoiceComponent) d).getAnswers()) {
+        for (ComponentObject c : card.getSide().get(0).getComponent()) {
+            if (c instanceof Text) {
+                frontTexts.add(((Text) c).getValue());
+            } else if (c instanceof Choice) {
+                for (AnswerObject a : ((Choice) c).getAnswer()) {
                     answersValue.add(a.getValue());
                     answersCorrect.add(a.isCorrect() ? 1 : 0);
                 }
             }
         }
 
-        for (Displayable d : card.getSides().get(1).getComponents()) {
-            if (d instanceof TextComponent) {
-                backTexts.add(((TextComponent) d).getValue());
+        for (ComponentObject c : card.getSide().get(1).getComponent()) {
+            if (c instanceof Text) {
+                backTexts.add(((Text) c).getValue());
             }
         }
 
-        for (Card template : cardsController.getStack().getTemplates()) {
+        for (CardObject template : cardsController.getStack().getTemplate()) {
             if (template != null && template.getId() != null) {
                 templates.add(template.getId());
             }
@@ -349,7 +365,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         CardDialogFragment dialog = new CardDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.edit_card));
-        bundle.putString(getResources().getString(R.string.bundle_card_uuid), uuid);
+        bundle.putString(getResources().getString(R.string.bundle_card_id), uuid);
         bundle.putString(getResources().getString(R.string.bundle_front_title), frontTitle);
         bundle.putString(getResources().getString(R.string.bundle_back_title), backTitle);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_texts_front), frontTexts);
@@ -404,8 +420,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         CopyCardDialogFragment dialog = new CopyCardDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getStack().getId());
-        bundle.putString(getResources().getString(R.string.bundle_card_uuid), uuid);
+        bundle.putString(getResources().getString(R.string.bundle_lymbo_id), cardsController.getStack().getId());
+        bundle.putString(getResources().getString(R.string.bundle_card_id), uuid);
         dialog.setArguments(bundle);
         dialog.show(activity.getFragmentManager(), CopyCardDialogFragment.TAG);
     }
@@ -420,8 +436,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         MoveCardDialogFragment dialog = new MoveCardDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getStack().getId());
-        bundle.putString(getResources().getString(R.string.bundle_card_uuid), uuid);
+        bundle.putString(getResources().getString(R.string.bundle_lymbo_id), cardsController.getStack().getId());
+        bundle.putString(getResources().getString(R.string.bundle_card_id), uuid);
         dialog.setArguments(bundle);
         dialog.show(activity.getFragmentManager(), MoveCardDialogFragment.TAG);
     }
@@ -432,8 +448,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     private void selectTags() {
         ((Vibrator) activity.getSystemService(Activity.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
 
-        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
-        ArrayList<String> tagsSelected = Tag.getNames(cardsController.getTagsSelected());
+        ArrayList<String> tagsAll = TagUtil.getDistinctValues(cardsController.getTagsAll());
+        ArrayList<String> tagsSelected = TagUtil.getDistinctValues(cardsController.getTagsSelected());
         Boolean displayOnlyFavorites = cardsController.isDisplayOnlyFavorites();
 
         FilterCardsDialogFragment dialog = new FilterCardsDialogFragment();
@@ -485,7 +501,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @param llNoteBar note bar layout
      * @param ivNote    button
      */
-    private void toggleNote(final Card card, final LinearLayout llNoteBar, final ImageView ivNote) {
+    private void toggleNote(final Card card, final LinearLayout llNoteBar, final android.widget.ImageView ivNote) {
         if (card.isNoteExpanded()) {
             Animation anim = ViewUtil.collapse(context, llNoteBar);
             llNoteBar.startAnimation(anim);
@@ -536,7 +552,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     public void editNote(Card card, String text) {
         EditNoteDialogFragment dialog = new EditNoteDialogFragment();
         Bundle b = new Bundle();
-        b.putCharSequence(activity.getResources().getString(R.string.bundle_card_uuid), card.getId());
+        b.putCharSequence(activity.getResources().getString(R.string.bundle_card_id), card.getId());
         b.putCharSequence(activity.getResources().getString(R.string.bundle_note), text);
         dialog.setArguments(b);
         dialog.show(activity.getFragmentManager(), EditNoteDialogFragment.TAG);
@@ -563,10 +579,10 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      */
     private void changeSide(Card card, View view) {
         final RelativeLayout rlMain = (RelativeLayout) view.findViewById(R.id.rlMain);
-        final TextView tvNumerator = (TextView) view.findViewById(R.id.tvNumerator);
+        final android.widget.TextView tvNumerator = (android.widget.TextView) view.findViewById(R.id.tvNumerator);
 
         handleQuiz(card);
-        card.setSideVisible((card.getSideVisible() + 1) % card.getSides().size());
+        card.setSideVisible((card.getSideVisible() + 1) % card.getSide().size());
         tvNumerator.setText(String.valueOf(card.getSideVisible() + 1));
 
         for (View v : getAllChildren(rlMain)) {
@@ -603,9 +619,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @return whether at least one answer is selected
      */
     private boolean checkAnswerSelected(Card card) {
-        if (card.getSides().get(card.getSideVisible()).contains(EComponent.CHOICE)) {
-            for (Answer a : ((ChoiceComponent) card.getSides().get(0).getFirst(EComponent.CHOICE)).getAnswers()) {
-                if (a.isSelected()) {
+        if (((Side) card.getSide().get(card.getSideVisible())).contains(ComponentType.CHOICE)) {
+            for (AnswerObject a : ((Choice) ((Side) card.getSide().get(0)).getFirst(ComponentType.CHOICE)).getAnswer()) {
+                if (((Answer) a).isSelected()) {
                     return true;
                 }
             }
@@ -624,23 +640,21 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @param card card
      */
     private void handleQuiz(Card card) {
-        Side current = card.getSides().get(card.getSideVisible());
+        Side current = (Side) card.getSide().get(card.getSideVisible());
 
         Side next = null;
-        if (card.getSideVisible() + 1 < card.getSides().size())
-            next = card.getSides().get(card.getSideVisible() + 1);
+        if (card.getSideVisible() + 1 < card.getSide().size())
+            next = (Side) card.getSide().get(card.getSideVisible() + 1);
 
         // Handle quiz card
-        if (current != null && current.contains(EComponent.CHOICE) && next != null && next.contains(EComponent.RESULT)) {
-            // Default result : CORRECT
-            ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(getResources().getString(R.string.correct).toUpperCase(Locale.getDefault()));
-            ((ResultComponent) next.getFirst(EComponent.RESULT)).setColor(ContextCompat.getColor(activity, R.color.correct));
+        if (current != null && current.contains(ComponentType.CHOICE) && next != null && next.contains(ComponentType.RESULT)) {
+            // Default result
+            ((Result) next.getFirst(ComponentType.RESULT)).setCorrect(true);
 
-            for (Answer a : ((ChoiceComponent) current.getFirst(EComponent.CHOICE)).getAnswers()) {
-                if (a.isCorrect() != a.isSelected()) {
-                    // At least on answer is wrong : WRONG
-                    ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(getResources().getString(R.string.wrong).toUpperCase(Locale.getDefault()));
-                    ((ResultComponent) next.getFirst(EComponent.RESULT)).setColor(ContextCompat.getColor(activity, R.color.wrong));
+            for (AnswerObject a : ((Choice) current.getFirst(ComponentType.CHOICE)).getAnswer()) {
+                if (a.isCorrect() != ((Answer) a).isSelected()) {
+                    // At least on answer is wrong
+                    ((Result) next.getFirst(ComponentType.RESULT)).setCorrect(false);
                     break;
                 }
             }

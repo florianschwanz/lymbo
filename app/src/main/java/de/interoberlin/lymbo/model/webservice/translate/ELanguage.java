@@ -5,7 +5,7 @@ import android.content.Context;
 
 import de.interoberlin.lymbo.R;
 
-public enum Language {
+public enum ELanguage {
     AUTO_DETECT("", R.string.lang_auto_detect),
     ARABIC("ar", R.string.lang_arabic),
     BULGARIAN("bg", R.string.lang_bulgarian),
@@ -57,11 +57,11 @@ public enum Language {
     // Constructors
     // --------------------
 
-    Language(final String langCode, final int name) {
+    ELanguage(final String langCode, final int name) {
         this(langCode, name, false);
     }
 
-    Language(final String langCode, final int name, final boolean active) {
+    ELanguage(final String langCode, final int name, final boolean active) {
         this.langCode = langCode;
         this.name = name;
         this.active = active;
@@ -71,8 +71,8 @@ public enum Language {
     // Methods
     // --------------------
 
-    public static Language fromString(final String langCode) {
-        for (Language l : values()) {
+    public static ELanguage fromString(final String langCode) {
+        for (ELanguage l : values()) {
             if (l.getLangCode().equals(langCode)) {
                 return l;
             }

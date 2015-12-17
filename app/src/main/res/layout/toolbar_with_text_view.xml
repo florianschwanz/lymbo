@@ -5,15 +5,15 @@
     style="@style/Widget.Lymbo.ActionBar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/colorPrimaryDark"
+    android:background="@color/colorPrimaryDark"
     android:textColorPrimary="@color/white">
 
     <TextView
         android:id="@+id/toolbar_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/toolbar_text_padding"
         android:paddingEnd="@dimen/toolbar_text_padding"
+        android:paddingStart="@dimen/toolbar_text_padding"
         android:textAlignment="textEnd"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 </android.support.v7.widget.Toolbar>

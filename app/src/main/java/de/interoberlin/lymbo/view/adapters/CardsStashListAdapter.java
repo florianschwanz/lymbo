@@ -12,7 +12,6 @@ import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -21,12 +20,23 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.card.Displayable;
-import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Side;
-import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Card;
+import de.interoberlin.lymbo.core.model.v1.impl.Choice;
+import de.interoberlin.lymbo.core.model.v1.impl.Image;
+import de.interoberlin.lymbo.core.model.v1.impl.Result;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.Title;
+import de.interoberlin.lymbo.core.model.v1.objects.ComponentObject;
+import de.interoberlin.lymbo.core.model.v1.objects.SideObject;
+import de.interoberlin.lymbo.core.model.v1.objects.TagObject;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsStashActivity;
+import de.interoberlin.lymbo.view.components.ChoiceView;
+import de.interoberlin.lymbo.view.components.ResultView;
+import de.interoberlin.lymbo.view.components.TagView;
+import de.interoberlin.lymbo.view.components.TextView;
+import de.interoberlin.lymbo.view.components.TitleView;
 
 public class CardsStashListAdapter extends ArrayAdapter<Card> {
     // Context
@@ -90,18 +100,26 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         final FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card_stash, parent, false);
         final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
         final LinearLayout llTags = (LinearLayout) flCard.findViewById(R.id.llTags);
-        final ImageView ivUndo = (ImageView) flCard.findViewById(R.id.ivUndo);
+        final android.widget.ImageView ivUndo = (android.widget.ImageView) flCard.findViewById(R.id.ivUndo);
 
         // Add sides
-        for (Side side : card.getSides()) {
+        for (SideObject side : card.getSide()) {
             LayoutInflater li = LayoutInflater.from(context);
             LinearLayout llSide = (LinearLayout) li.inflate(R.layout.side, parent, false);
             LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
 
             // Add components
-            for (Displayable d : side.getComponents()) {
-                View component = d.getView(context, activity, llComponents);
-                llComponents.addView(component);
+            for (ComponentObject c : side.getComponent()) {
+                if (c instanceof Title)
+                    llComponents.addView(new TitleView(context, (Title) c));
+                if (c instanceof Text)
+                    llComponents.addView(new TextView(context, (Text) c));
+                if (c instanceof Image)
+                    llComponents.addView(new de.interoberlin.lymbo.view.components.ImageView(context, (Image) c));
+                if (c instanceof Choice)
+                    llComponents.addView(new ChoiceView(context, (Choice) c));
+                if (c instanceof Result)
+                    llComponents.addView(new ResultView(context, (Result) c));
             }
 
             llSide.setVisibility(View.INVISIBLE);
@@ -116,10 +134,11 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
         rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
 
-        // Tags
-        for (Tag tag : card.getTags()) {
-            if (!tag.getName().equals(context.getResources().getString(R.string.no_tag)))
-                llTags.addView(tag.getView(context, activity, llTags));
+        // Add tags
+        for (TagObject t : card.getTag()) {
+            if (!t.getValue().equals(getResources().getString(R.string.no_tag))) {
+                llTags.addView(new TagView(context, (Tag) t));
+            }
         }
 
         // Reveal : undo
@@ -197,8 +216,8 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     /**
      * Restores a card
      *
-     * @param pos    position of item
-     * @param card   card
+     * @param pos  position of item
+     * @param card card
      */
     private void restore(int pos, Card card) {
         cardsController.restore(card);
@@ -240,7 +259,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     // Methods - Util
     // --------------------
 
-    private void vibrate (int vibrationDuration) {
+    private void vibrate(int vibrationDuration) {
         ((Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(vibrationDuration);
     }
 
@@ -281,7 +300,6 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
             return results;
         }
 
-        @Override
         @SuppressWarnings("unchecked")
         protected void publishResults(CharSequence constraint, FilterResults results) {
             filteredItems = (List<Card>) results.values;

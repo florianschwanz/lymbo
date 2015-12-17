@@ -9,7 +9,6 @@
     <string name="add_tags">Add tags</string>
     <string name="all">All</string>
     <string name="app_name">lymbo</string>
-    <string name="author">Author</string>
     <string name="back">Back</string>
     <string name="broken_lymbo_file">Broken lymbo :(</string>
     <string name="cancel">Cancel</string>
@@ -21,7 +20,6 @@
     <string name="copied_card">Copied card</string>
     <string name="copy_card">Copy card</string>
     <string name="correct">correct</string>
-    <string name="could_not_find_any_cards">Could not find any cards</string>
     <string name="deep_copy">Deep copy</string>
     <string name="desc_image">Image component</string>
     <string name="describe_the_error">Describe the error</string>
@@ -97,7 +95,6 @@
     <string name="moved_card">Moved card</string>
     <string name="new_tag">new tag</string>
     <string name="new_text">new text</string>
-    <string name="no_cards_in_stash">No cards in stash</string>
     <string name="no_tag">no tag</string>
     <string name="none">None</string>
     <string name="note">Note</string>

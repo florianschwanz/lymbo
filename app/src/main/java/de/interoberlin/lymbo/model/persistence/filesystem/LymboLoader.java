@@ -3,20 +3,25 @@ package de.interoberlin.lymbo.model.persistence.filesystem;
 import android.content.Context;
 import android.os.Environment;
 
-import java.io.ByteArrayInputStream;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.UUID;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.card.EFormat;
-import de.interoberlin.lymbo.model.card.Stack;
+import de.interoberlin.lymbo.core.model.v1.converters.Deserializer;
+import de.interoberlin.lymbo.core.model.v1.impl.EFormat;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.util.ZipUtil;
 import de.interoberlin.mate.lib.model.Log;
 
@@ -25,8 +30,8 @@ public class LymboLoader {
     // Methods - Facade
     // --------------------
 
-    public static Stack getLymboFromString(Context context, String string, boolean onlyTopLevel) {
-        Stack stack = getLymboFromInputStream(new ByteArrayInputStream(string.getBytes()), null, onlyTopLevel);
+    public static Stack getLymboFromString(Context context, String string) {
+        Stack stack = Deserializer.fromJson(string);
 
         String LYMBO_SAVE_PATH = context.getResources().getString(R.string.lymbo_save_path);
         String path = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH;
@@ -52,7 +57,7 @@ public class LymboLoader {
             if (fileName.endsWith(context.getResources().getString(R.string.lymbo_file_extension))) {
                 try {
                     InputStream inputStream = context.getAssets().open(fileName);
-                    Stack stack = getLymboFromInputStream(inputStream, null, onlyTopLevel);
+                    Stack stack = Deserializer.fromJson(IOUtils.toString(inputStream, "UTF-8"));
                     if (stack != null) {
                         stack.setFile(fileName);
                         stack.setPath(fileName);
@@ -137,12 +142,12 @@ public class LymboLoader {
             switch (format) {
                 case LYMBO: {
                     if (file.exists())
-                        stack = getLymboFromInputStream(new FileInputStream(file), path, onlyTopLevel);
+                        stack = Deserializer.fromJson(FileUtils.readFileToString(file));
                     break;
                 }
                 case LYMBOX: {
                     if (new File(path.getAbsolutePath() + "/" + App.getContext().getResources().getString(R.string.lymbo_main_file)).exists())
-                        stack = getLymboFromInputStream(new FileInputStream(new File(path.getAbsolutePath() + "/" + App.getContext().getResources().getString(R.string.lymbo_main_file))), path, onlyTopLevel);
+                        stack = Deserializer.fromJson(FileUtils.readFileToString(new File(path.getAbsolutePath() + "/" + App.getContext().getResources().getString(R.string.lymbo_main_file))));
                     break;
                 }
             }
@@ -155,28 +160,23 @@ public class LymboLoader {
 
                 // Make sure that newly generated ids will be persistent
                 if (format == EFormat.LYMBO && !onlyTopLevel && !asset && stack.isContainsGeneratedIds()) {
-                    stack.setModificationDate(new Date().toString());
+                    GregorianCalendar gregorianCalendar = new GregorianCalendar();
+                    DatatypeFactory datatypeFactory;
+                    datatypeFactory = DatatypeFactory.newInstance();
+                    XMLGregorianCalendar now =
+                            datatypeFactory.newXMLGregorianCalendar(gregorianCalendar);
+                    stack.setModificationDate(now);
                     LymboWriter.writeXml(stack, new File(stack.getFile()));
                 }
 
                 return stack;
-            } else {
-                return null;
             }
-        } catch (FileNotFoundException e) {
+        } catch (IOException | DatatypeConfigurationException e) {
             Log.error(e.toString());
             e.printStackTrace();
             return null;
         }
-    }
 
-    private static Stack getLymboFromInputStream(InputStream is, File path, boolean onlyTopLevel) {
-        try {
-            return LymboParser.getInstance().parse(is, path, onlyTopLevel);
-        } catch (IOException e) {
-            Log.error(e.toString());
-            e.printStackTrace();
-            return null;
-        }
+        return null;
     }
 }

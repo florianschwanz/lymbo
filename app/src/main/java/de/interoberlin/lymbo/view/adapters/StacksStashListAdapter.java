@@ -17,7 +17,7 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.StacksController;
-import de.interoberlin.lymbo.model.card.Stack;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.StacksStashActivity;
 

@@ -16,8 +16,7 @@
         android:text=""
         android:id="@+id/cb" />
 
-    <de.interoberlin.lymbo.view.controls.RobotoTextView
-        roboto:typeface="roboto_regular"
+    <TextView
         android:id="@+id/tvText"
         style="@style/CardText"
         android:ellipsize="end"

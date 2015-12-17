@@ -21,7 +21,7 @@ public class Base64BitmapConverter {
     /**
      * Converts a Bitmap into a Base64 String
      *
-     * @param b
+     * @param b bitmap
      * @return a string representation of a bitmap
      */
     public static String encodeBase64(Bitmap b) {

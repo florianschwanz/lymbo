@@ -15,22 +15,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.card.EFormat;
-import de.interoberlin.lymbo.model.card.Stack;
-import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
+import de.interoberlin.lymbo.core.model.v1.impl.EFormat;
+import de.interoberlin.lymbo.core.model.v1.impl.Language;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
+import de.interoberlin.lymbo.core.model.v1.objects.TagObject;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackEntry;
 import de.interoberlin.lymbo.model.webservice.AccessControlItem;
-import de.interoberlin.lymbo.model.webservice.translate.Language;
+import de.interoberlin.lymbo.model.webservice.translate.ELanguage;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebAccessControlItemTask;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebDownloadTask;
 import de.interoberlin.lymbo.util.ZipUtil;
@@ -98,10 +103,10 @@ public class StacksController {
     }
 
     /**
-     * Determines whether a given lymbo shall be displayed considering all filters
+     * Determines whether a given stack shall be displayed considering all filters
      *
-     * @param stack lymbo to determine visibility of
-     * @return whether lymbo is visbible or not
+     * @param stack stack to determine visibility of
+     * @return whether lymbo is visible or not
      */
     public boolean isVisible(Stack stack) {
         return (stack != null &&
@@ -116,25 +121,28 @@ public class StacksController {
      * @param author       author of new stack
      * @param languageFrom source language
      * @param languageTo   target language
+     * @param tags         tags
      * @return an empty lymbo
      */
-    public Stack getEmptyStack(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
+    public Stack getEmptyStack(String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags) {
         Stack stack = new Stack();
         stack.setTitle(title);
         stack.setSubtitle(subtitle);
         stack.setAuthor(author);
-        stack.setTags(tags);
-
-        if (languageFrom != null && languageTo != null) {
-            LanguageAspect languageAspect = new LanguageAspect();
-            languageAspect.setFrom(languageFrom);
-            languageAspect.setTo(languageTo);
-            stack.setLanguageAspect(languageAspect);
-        }
-
         stack.setFile(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH + "/" + title.trim().replaceAll(" ", "_").toLowerCase(Locale.getDefault()) + LYMBO_FILE_EXTENSION);
         stack.setPath(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH);
         stack.setFormat(EFormat.LYMBO);
+
+        for (Tag t : tags) {
+            stack.getTag().add(t);
+        }
+
+        if (languageFrom != null && languageTo != null) {
+            Language language = new Language();
+            language.setFrom(languageFrom.toString());
+            language.setTo(languageTo.toString());
+            stack.setLanguage(language);
+        }
 
         return stack;
     }
@@ -142,7 +150,7 @@ public class StacksController {
     /**
      * Creates a new lymbo stack
      *
-     * @param stack lymbo to be created
+     * @param stack stack to be created
      */
     public void addStack(Stack stack) {
         stacks.add(stack);
@@ -152,45 +160,40 @@ public class StacksController {
     /**
      * Updates a stack
      *
-     * @param uuid         id of stack to be updated
+     * @param id           id of stack to be updated
      * @param title        title
      * @param subtitle     subtitle
      * @param author       author
      * @param languageFrom source language
      * @param languageTo   target language
      */
-    public void updateStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
-        if (lymbosContainsId(uuid)) {
-            Stack stack = getLymboById(uuid);
+    public void updateStack(String id, String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags) {
+        if (stackContainsId(id)) {
+            Stack stack = getStackById(id);
 
-            Stack fullStack = LymboLoader.getLymboFromFile(activity, new File(stack.getFile()), false);
+            stack.setTitle(title);
+            stack.setSubtitle(subtitle);
+            stack.setAuthor(author);
 
-            if (fullStack != null) {
-                stack.setCards(fullStack.getCards());
-                stack.setHint(fullStack.getHint());
-                stack.setImage(fullStack.getImage());
-
-                stack.setTitle(title);
-                stack.setSubtitle(subtitle);
-                stack.setAuthor(author);
-                stack.setTags(tags);
-
-                if (languageFrom != null && languageTo != null) {
-                    LanguageAspect languageAspect = new LanguageAspect();
-                    languageAspect.setFrom(languageFrom);
-                    languageAspect.setTo(languageTo);
-                    stack.setLanguageAspect(languageAspect);
-                }
-
-                save(stack);
+            stack.getTag().clear();
+            for (Tag t : tags) {
+                stack.getTag().add(t);
             }
+            if (languageFrom != null && languageTo != null) {
+                Language language = new Language();
+                language.setFrom(languageFrom.toString());
+                language.setTo(languageTo.toString());
+                stack.setLanguage(language);
+            }
+
+            save(stack);
         }
     }
 
     /**
-     * Stashes a lymbo
+     * Stashes a stack
      *
-     * @param stack lymbo to be stashed
+     * @param stack stack to be stashed
      */
     public void stash(Stack stack) {
         getStacks().remove(stack);
@@ -199,9 +202,9 @@ public class StacksController {
     }
 
     /**
-     * Restores a lymbo
+     * Restores a stack
      *
-     * @param stack lymbo to be stashed
+     * @param stack stack to be stashed
      */
     public void restore(Stack stack) {
         getStacks().add(stack);
@@ -246,9 +249,9 @@ public class StacksController {
     }
 
     /**
-     * Saves lymbo under a new name
+     * Saves stack under a new name
      *
-     * @param stack lymbo to be saved
+     * @param stack stack to be saved
      * @param file  new file
      */
     public void saveAs(Stack stack, String file) {
@@ -269,7 +272,14 @@ public class StacksController {
             }
             case LYMBOX: {
                 if (stack.getFile() != null) {
-                    stack.setModificationDate(new Date().toString());
+                    try {
+                        GregorianCalendar gregorianCalendar = new GregorianCalendar();
+                        DatatypeFactory datatypeFactory = DatatypeFactory.newInstance();
+                        XMLGregorianCalendar cal = datatypeFactory.newXMLGregorianCalendar(gregorianCalendar);
+                        stack.setModificationDate(cal);
+                    } catch (DatatypeConfigurationException e) {
+                        e.printStackTrace();
+                    }
 
                     LymboWriter.writeXml(stack, new File(stack.getFile()));
                     ZipUtil.zip(new File(stack.getPath()).listFiles(), new File(stack.getPath() + "/main.lymbo"));
@@ -476,7 +486,7 @@ public class StacksController {
 
     public void addTagsSelected(List<Tag> tags) {
         for (Tag tag : tags) {
-            if (!tag.containedIn(tagsSelected)) {
+            if (!tag.containedInList(tagsSelected)) {
                 tagsSelected.add(tag);
             }
         }
@@ -486,9 +496,9 @@ public class StacksController {
         ArrayList<Tag> tagsAll = new ArrayList<>();
 
         for (Stack stack : getStacks()) {
-            for (Tag tag : stack.getTags()) {
-                if (tag != null && !tag.containedIn(tagsAll) && !tag.getName().equals(getResources().getString(R.string.no_tag)))
-                    tagsAll.add(tag);
+            for (TagObject tag : stack.getTag()) {
+                if (tag != null && !((Tag) tag).containedInList(tagsAll) && !tag.getValue().equals(getResources().getString(R.string.no_tag)))
+                    tagsAll.add((Tag) tag);
             }
         }
 
@@ -497,9 +507,9 @@ public class StacksController {
         return tagsAll;
     }
 
-    public boolean lymbosContainsId(String uuid) {
+    public boolean stackContainsId(String id) {
         for (Stack l : stacks) {
-            if (l != null && l.getId() != null && l.getId().equals(uuid)) {
+            if (l != null && l.getId() != null && l.getId().equals(id)) {
                 return true;
             }
         }
@@ -507,9 +517,9 @@ public class StacksController {
         return false;
     }
 
-    public Stack getLymboById(String uuid) {
+    public Stack getStackById(String id) {
         for (Stack l : stacks) {
-            if (l != null && l.getId() != null && l.getId().equals(uuid)) {
+            if (l != null && l.getId() != null && l.getId().equals(id)) {
                 return l;
             }
         }

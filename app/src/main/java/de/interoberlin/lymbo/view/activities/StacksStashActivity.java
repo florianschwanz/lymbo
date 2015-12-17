@@ -17,7 +17,7 @@ import com.github.mrengineer13.snackbar.SnackBar;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.StacksController;
-import de.interoberlin.lymbo.model.card.Stack;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.view.adapters.StacksStashListAdapter;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
@@ -32,8 +32,6 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
 
     private Stack recentStack = null;
 
-    private static int REFRESH_DELAY;
-
     // --------------------
     // Methods - Lifecycle
     // --------------------
@@ -43,7 +41,7 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
         super.onCreate(savedInstanceState);
         stacksController = StacksController.getInstance(this);
 
-        REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_lymbos);
+        int REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_lymbos);
 
         if (stacksController.getStacks().isEmpty()) {
             new Handler().postDelayed(new Runnable() {

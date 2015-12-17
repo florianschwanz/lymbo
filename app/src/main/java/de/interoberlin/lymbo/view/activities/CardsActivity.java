@@ -26,10 +26,14 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Stack;
-import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.card.components.Answer;
+import de.interoberlin.lymbo.core.model.v1.impl.Answer;
+import de.interoberlin.lymbo.core.model.v1.impl.Card;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.Title;
+import de.interoberlin.lymbo.core.model.v1.objects.CardObject;
+import de.interoberlin.lymbo.util.TagUtil;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.CardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.ConfirmRefreshDialogFragment;
@@ -197,7 +201,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                     Card card = cardsAdapter.getItem(position);
                     View view = getViewByPosition(position, slv);
 
-                    if (card.getSides().size() > 1) {
+                    if (card.getSide().size() > 1) {
                         cardsAdapter.flip(card, view);
                     }
                 }
@@ -214,10 +218,10 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             ibFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
+                    ArrayList<String> tagsAll = TagUtil.getDistinctValues(cardsController.getTagsAll());
                     ArrayList<String> templates = new ArrayList<>();
 
-                    for (Card template : stack.getTemplates()) {
+                    for (CardObject template : stack.getTemplate()) {
                         if (template != null && template.getId() != null) {
                             templates.add(template.getId());
                         }
@@ -392,9 +396,9 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onAddCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
+    public void onAddCard(Title frontTitle, List<Text> frontTexts, Title backTitle, List<Text> backTexts, List<Tag> tags, List<Answer> answers) {
         try {
-            cardsController.addCard(frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags, answers);
+            cardsController.addCard(frontTitle, frontTexts, backTitle, backTexts, tags, answers);
             cardsController.addTagsSelected(tags);
             updateListView();
         } catch (Exception e) {
@@ -403,17 +407,17 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onEditCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
-        cardsController.updateCard(uuid, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags, answers);
+    public void onEditCard(String id, Title frontTitle, List<Text> frontTexts, Title backTitle, List<Text> backTexts, List<Tag> tags, List<Answer> answers) {
+        cardsController.updateCard(id, frontTitle, frontTexts, backTitle, backTexts, tags, answers);
         cardsController.addTagsSelected(tags);
         snack(this, R.string.edited_card);
         updateListView();
     }
 
     @Override
-    public void onAddTemplate(String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+    public void onAddTemplate(String title, Title frontTitle, List<Text> frontTexts, Title backTitle, List<Text> backTexts, List<Tag> tags) {
         try {
-            cardsController.addTemplate(title, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+            cardsController.addTemplate(title, frontTitle, frontTexts, backTitle, backTexts, tags);
         } catch (Exception e) {
             handleException(e);
         }
@@ -422,8 +426,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     }
 
     @Override
-    public void onEditTemplate(String uuid, String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
-        cardsController.updateTemplate(uuid, title, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags);
+    public void onEditTemplate(String id, String title, Title frontTitle, List<Text> frontTexts, Title backTitle, List<Text> backTexts, List<Tag> tags) {
+        cardsController.updateTemplate(id, title, frontTitle, frontTexts, backTitle, backTexts, tags);
         showTemplates();
     }
 
@@ -456,7 +460,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     @Override
     public void onCopyCard(String sourceLymboId, String targetLymboId, String cardUuid, boolean deepCopy) {
         if (sourceLymboId != null && targetLymboId != null && cardUuid != null) {
-            cardsController.copyCard(sourceLymboId, targetLymboId, cardUuid, deepCopy);
+            cardsController.copyCard(targetLymboId, cardUuid, deepCopy);
             snack(this, R.string.copied_card);
             updateListView();
         }
@@ -507,7 +511,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private void showTemplates() {
         ArrayList<String> templates = new ArrayList<>();
 
-        for (Card template : stack.getTemplates()) {
+        for (CardObject template : stack.getTemplate()) {
             if (template != null && template.getId() != null) {
                 templates.add(template.getId());
             }
@@ -526,8 +530,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private void selectTags() {
         ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
 
-        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
-        ArrayList<String> tagsSelected = Tag.getNames(cardsController.getTagsSelected());
+        ArrayList<String> tagsAll = TagUtil.getDistinctValues(cardsController.getTagsAll());
+        ArrayList<String> tagsSelected = TagUtil.getDistinctValues(cardsController.getTagsSelected());
         Boolean displayOnlyFavorites = cardsController.isDisplayOnlyFavorites();
 
         FilterCardsDialogFragment dialog = new FilterCardsDialogFragment();

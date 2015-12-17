@@ -62,7 +62,7 @@ public class EditNoteDialogFragment extends DialogFragment {
 
         // Get arguments
         Bundle bundle = this.getArguments();
-        final String cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_uuid));
+        final String cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_id));
 
         AlertDialog dialog = (AlertDialog) getDialog();
         final EditText etNote = (EditText) dialog.findViewById(R.id.etNote);

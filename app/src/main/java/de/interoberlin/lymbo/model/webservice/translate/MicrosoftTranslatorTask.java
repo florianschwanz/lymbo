@@ -46,8 +46,8 @@ public class MicrosoftTranslatorTask extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
         String accessToken = params[0];
-        Language languageFrom = Language.fromString(params[1]);
-        Language languageTo = Language.fromString(params[2]);
+        ELanguage languageFrom = ELanguage.fromString(params[1]);
+        ELanguage languageTo = ELanguage.fromString(params[2]);
         String text = params[3];
 
         try {
@@ -79,7 +79,7 @@ public class MicrosoftTranslatorTask extends AsyncTask<String, Void, String> {
      * @return translated text
      * @throws Exception
      */
-    public static String getTranslation(String accessToken, Language from, Language to, String text) throws Exception {
+    public static String getTranslation(String accessToken, ELanguage from, ELanguage to, String text) throws Exception {
         // Parameters
         ParamHolder ph = new ParamHolder();
         ph.add(new Param(PARAM_FROM, URLEncoder.encode(from.getLangCode(), ENCODING)));

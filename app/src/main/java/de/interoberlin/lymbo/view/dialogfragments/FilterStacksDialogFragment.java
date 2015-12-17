@@ -17,8 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.view.controls.RobotoTextView;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 
 public class FilterStacksDialogFragment extends DialogFragment {
     public static final String TAG = "filter_stacks";
@@ -48,28 +47,32 @@ public class FilterStacksDialogFragment extends DialogFragment {
         builder.setView(v);
         builder.setTitle(R.string.filter);
 
-        for (final String t : tagsAll) {
-            final TableRow tr = new TableRow(getActivity());
-            final CheckBox cb = new CheckBox(getActivity());
-            final RobotoTextView tvText = new RobotoTextView(getActivity());
+        if (tagsAll != null) {
+            for (final String t : tagsAll) {
+                final TableRow tr = new TableRow(getActivity());
+                final CheckBox cb = new CheckBox(getActivity());
+                final TextView tvText = new TextView(getActivity());
 
-            tr.addView(cb);
-            tr.addView(tvText);
+                tr.addView(cb);
+                tr.addView(tvText);
 
-            for (String cs : tagsSelected) {
-                if (cs.equals(t))
-                    cb.setChecked(true);
-            }
-
-            tvText.setText(t);
-            tvText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cb.toggle();
+                if (tagsSelected != null) {
+                    for (String cs : tagsSelected) {
+                        if (cs.equals(t))
+                            cb.setChecked(true);
+                    }
                 }
-            });
 
-            tblTags.addView(tr);
+                tvText.setText(t);
+                tvText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cb.toggle();
+                    }
+                });
+
+                tblTags.addView(tr);
+            }
         }
 
         // Add actions
@@ -121,7 +124,7 @@ public class FilterStacksDialogFragment extends DialogFragment {
                 for (int i = 0; i < tblTags.getChildCount(); i++) {
                     final TableRow tr = (TableRow) tblTags.getChildAt(i);
                     final CheckBox cb = (CheckBox) tr.getChildAt(0);
-                    final RobotoTextView tvText = (RobotoTextView) tr.getChildAt(1);
+                    final TextView tvText = (TextView) tr.getChildAt(1);
 
                     if (cb.isChecked())
                         tagsSelected.add(new Tag(tvText.getText().toString()));

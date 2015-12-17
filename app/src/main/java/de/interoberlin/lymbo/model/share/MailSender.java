@@ -9,7 +9,7 @@ import android.widget.Toast;
 import java.io.File;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.card.Stack;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 
 public class MailSender {
     // --------------------
@@ -17,11 +17,11 @@ public class MailSender {
     // --------------------
 
     /**
-     * Uses an intent
+     * Uses an intent to send a lymbo file
      *
-     * @param c
-     * @param a
-     * @param stack
+     * @param c context
+     * @param a activity
+     * @param stack stack to send
      */
     public static void sendLymbo(Context c, Activity a, Stack stack) {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
