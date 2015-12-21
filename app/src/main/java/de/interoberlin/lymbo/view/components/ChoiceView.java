@@ -68,8 +68,8 @@ public class ChoiceView extends TableLayout {
                 }
             });
 
-            if (TranslationUtil.contains(answer.getTranslation(), Configuration.getLanguage(context)))
-                tvText.setText(TranslationUtil.get(answer.getTranslation(), Configuration.getLanguage(context)));
+            if (TranslationUtil.contains(answer.getTranslations(), Configuration.getLanguage(context)))
+                tvText.setText(TranslationUtil.get(answer.getTranslations(), Configuration.getLanguage(context)));
             else
                 tvText.setText(answer.getValue());
 

@@ -1,6 +1,5 @@
 package de.interoberlin.lymbo.model.persistence.sqlite.cards;
 
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -208,7 +207,7 @@ public class TableCardDatasource {
      *
      * @param columnName column name
      * @param value      value
-     * @return
+     * @return whether there is a matching entry
      */
     public boolean contains(String columnName, String value) {
         Cursor cursor = database.query(table,
@@ -223,7 +222,7 @@ public class TableCardDatasource {
      * Determines whether an entry with a given uuid exists
      *
      * @param uuid uuid to test existence
-     * @return
+     * @return whether there is a matching entry
      */
     public boolean containsUuid(String uuid) {
         return contains(colUuid.getName(), uuid);
@@ -233,7 +232,7 @@ public class TableCardDatasource {
      * Determines whether the state of an entry with a given uuid is NORMAL
      *
      * @param uuid uuid
-     * @return
+     * @return whether the entry has state NORMAL
      */
     public boolean isNormal(String uuid) {
         for (TableCardEntry entry : getAllCards()) {
@@ -249,7 +248,7 @@ public class TableCardDatasource {
      * Determines whether the state of an entry with a given uuid is DISMISSED
      *
      * @param uuid uuid
-     * @return
+     * @return whether the entry has state DISMISSED
      */
     public boolean isDismissed(String uuid) {
         for (TableCardEntry entry : getAllCards()) {
@@ -265,7 +264,7 @@ public class TableCardDatasource {
      * Determines whether the state of an entry with a given uuid is STASHED
      *
      * @param uuid uuid
-     * @return
+     * @return whether the entry has state STASHED
      */
     public boolean isStashed(String uuid) {
         return !getEntries(colUuid, uuid, colState, STATE_STASHED).isEmpty();
@@ -275,7 +274,7 @@ public class TableCardDatasource {
      * Determines whether an entry is marked as favorite
      *
      * @param uuid uuid
-     * @return
+     * @return whether the entry is favorite
      */
     public boolean isFavorite(String uuid) {
         for (TableCardEntry entry : getAllCards()) {
@@ -292,7 +291,7 @@ public class TableCardDatasource {
     // --------------------
 
     /**
-     * Deletes an entry identified by {@parm uuid}
+     * Deletes an entry identified by uuid
      *
      * @param uuid uuid of the card to be deleted
      */

@@ -13,10 +13,6 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.UUID;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.core.model.v1.converters.Deserializer;
@@ -160,18 +156,14 @@ public class LymboLoader {
 
                 // Make sure that newly generated ids will be persistent
                 if (format == EFormat.LYMBO && !onlyTopLevel && !asset && stack.isContainsGeneratedIds()) {
-                    GregorianCalendar gregorianCalendar = new GregorianCalendar();
-                    DatatypeFactory datatypeFactory;
-                    datatypeFactory = DatatypeFactory.newInstance();
-                    XMLGregorianCalendar now =
-                            datatypeFactory.newXMLGregorianCalendar(gregorianCalendar);
-                    stack.setModificationDate(now);
+                    GregorianCalendar cal = new GregorianCalendar();
+                    stack.setModificationDate(cal);
                     LymboWriter.writeXml(stack, new File(stack.getFile()));
                 }
 
                 return stack;
             }
-        } catch (IOException | DatatypeConfigurationException e) {
+        } catch (IOException e) {
             Log.error(e.toString());
             e.printStackTrace();
             return null;

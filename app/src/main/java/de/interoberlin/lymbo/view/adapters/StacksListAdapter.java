@@ -32,7 +32,6 @@ import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.core.model.v1.impl.Language;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
-import de.interoberlin.lymbo.core.model.v1.objects.TagObject;
 import de.interoberlin.lymbo.model.share.MailSender;
 import de.interoberlin.lymbo.model.webservice.AccessControlItem;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebAccessControlItemTask;
@@ -106,7 +105,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     }
 
     private View getStackView(final int position, final Stack stack, ViewGroup parent) {
-        if (stack.getError().isEmpty()) {
+        if (stack.getError() == null || stack.getError().isEmpty()) {
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
@@ -171,7 +170,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             });
 
             // Add tags
-            for (TagObject t : stack.getTag()) {
+            for (Tag t : stack.getTags()) {
                 if (!t.getValue().equals(getResources().getString(R.string.no_tag))) {
                     TagView cvTag = new TagView(context, (Tag) t);
                     cvTag.setOnClickListener(new View.OnClickListener() {
@@ -271,7 +270,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             }
 
             // Card count
-            tvCardCount.setText(String.valueOf(stack.getCard().size() + " " + context.getResources().getString(R.string.cards)));
+            tvCardCount.setText(String.valueOf(stack.getCards().size() + " " + context.getResources().getString(R.string.cards)));
 
             return llStack;
         } else {
@@ -332,7 +331,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
         String languageFrom = null;
         String languageTo = null;
         ArrayList<String> tagsAll = TagUtil.getDistinctValues(stacksController.getTagsAll());
-        ArrayList<String> tagsSelected = TagUtil.getDistinctValues(TagUtil.getTagList(stack.getTag()));
+        ArrayList<String> tagsSelected = TagUtil.getDistinctValues(TagUtil.getTagList(stack.getTags()));
 
         if (stack.getLanguage() != null && stack.getLanguage().getFrom() != null && stack.getLanguage().getTo() != null) {
             languageFrom = stack.getLanguage().getFrom();

@@ -22,14 +22,13 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
 import de.interoberlin.lymbo.core.model.v1.impl.Choice;
+import de.interoberlin.lymbo.core.model.v1.impl.Component;
 import de.interoberlin.lymbo.core.model.v1.impl.Image;
 import de.interoberlin.lymbo.core.model.v1.impl.Result;
+import de.interoberlin.lymbo.core.model.v1.impl.Side;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.core.model.v1.impl.Text;
 import de.interoberlin.lymbo.core.model.v1.impl.Title;
-import de.interoberlin.lymbo.core.model.v1.objects.ComponentObject;
-import de.interoberlin.lymbo.core.model.v1.objects.SideObject;
-import de.interoberlin.lymbo.core.model.v1.objects.TagObject;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsStashActivity;
 import de.interoberlin.lymbo.view.components.ChoiceView;
@@ -103,13 +102,13 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         final android.widget.ImageView ivUndo = (android.widget.ImageView) flCard.findViewById(R.id.ivUndo);
 
         // Add sides
-        for (SideObject side : card.getSide()) {
+        for (Side side : card.getSides()) {
             LayoutInflater li = LayoutInflater.from(context);
             LinearLayout llSide = (LinearLayout) li.inflate(R.layout.side, parent, false);
             LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
 
             // Add components
-            for (ComponentObject c : side.getComponent()) {
+            for (Component c : side.getComponents()) {
                 if (c instanceof Title)
                     llComponents.addView(new TitleView(context, (Title) c));
                 if (c instanceof Text)
@@ -135,9 +134,9 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
 
         // Add tags
-        for (TagObject t : card.getTag()) {
+        for (Tag t : card.getTags()) {
             if (!t.getValue().equals(getResources().getString(R.string.no_tag))) {
-                llTags.addView(new TagView(context, (Tag) t));
+                llTags.addView(new TagView(context, t));
             }
         }
 

@@ -106,10 +106,6 @@ public class TableStackDatasource {
         return tableStackEntry;
     }
 
-    public void recreate() {
-        dbLymboSQLiteOpenHelper.recreateTableStack(database);
-    }
-
     public void recreateOnSchemaChange() {
         try {
             database.query(table,
@@ -195,7 +191,7 @@ public class TableStackDatasource {
      *
      * @param columnName column name
      * @param value      value
-     * @return
+     * @return whether there is a matching entry
      */
     public boolean contains(String columnName, String value) {
         Cursor cursor = database.query(table,
@@ -210,7 +206,7 @@ public class TableStackDatasource {
      * Determines whether an entry with a given uuid exists
      *
      * @param uuid uuid to test existence
-     * @return
+     * @return whether there is a matching entry
      */
     public boolean containsUuid(String uuid) {
         return contains(colUuid.getName(), uuid);
@@ -220,7 +216,7 @@ public class TableStackDatasource {
      * Determines whether the state of an entry with a given uuid is NORMAL
      *
      * @param uuid uuid
-     * @return
+     * @return whether the entry has state NORMAL
      */
     public boolean isNormal(String uuid) {
         return !getEntries(colUuid, uuid, colState, STATE_NORMAL).isEmpty();
@@ -230,7 +226,7 @@ public class TableStackDatasource {
      * Determines whether the the of an entry with a given uuid is STASHED
      *
      * @param uuid uuid
-     * @return
+     * @return whether the entry has state STASHED
      */
     public boolean isStashed(String uuid) {
         return !getEntries(colUuid, uuid, colState, STATE_STASHED).isEmpty();
@@ -245,7 +241,7 @@ public class TableStackDatasource {
     // --------------------
 
     /**
-     * Deletes an entry identified by {@parm uuid}
+     * Deletes an entry identified by uuid
      *
      * @param uuid uuid of the card to be deleted
      */

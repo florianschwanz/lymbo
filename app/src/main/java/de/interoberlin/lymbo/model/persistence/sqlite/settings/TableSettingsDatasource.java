@@ -205,7 +205,7 @@ public class TableSettingsDatasource {
     // --------------------
 
     /**
-     * Deletes an entry identified by {@parm key}
+     * Deletes an entry identified by key
      *
      * @param key key of the setting to be deleted
      */

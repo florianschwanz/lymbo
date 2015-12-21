@@ -2,7 +2,7 @@ package de.interoberlin.lymbo.util;
 
 import java.util.List;
 
-import de.interoberlin.lymbo.core.model.v1.objects.TranslationObject;
+import de.interoberlin.lymbo.core.model.v1.impl.Translation;
 
 public class TranslationUtil {
     // --------------------
@@ -16,8 +16,8 @@ public class TranslationUtil {
      * @param language     language to look for
      * @return whether or not @param language is covered by @param languages
      */
-    public static boolean contains(List<TranslationObject> translations, String language) {
-        for (TranslationObject t : translations) {
+    public static boolean contains(List<Translation> translations, String language) {
+        for (Translation t : translations) {
             if (t.getLang().equals(language))
                 return true;
         }
@@ -32,8 +32,8 @@ public class TranslationUtil {
      * @param language     target language
      * @return value in target language
      */
-    public static String get(List<TranslationObject> translations, String language) {
-        for (TranslationObject t : translations) {
+    public static String get(List<Translation> translations, String language) {
+        for (Translation t : translations) {
             if (t.getLang().equals(language))
                 return t.getValue();
         }

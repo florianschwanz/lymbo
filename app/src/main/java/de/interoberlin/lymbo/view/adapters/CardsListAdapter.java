@@ -32,18 +32,14 @@ import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.core.model.v1.impl.Answer;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
 import de.interoberlin.lymbo.core.model.v1.impl.Choice;
+import de.interoberlin.lymbo.core.model.v1.impl.Component;
+import de.interoberlin.lymbo.core.model.v1.impl.EComponentType;
 import de.interoberlin.lymbo.core.model.v1.impl.Image;
 import de.interoberlin.lymbo.core.model.v1.impl.Result;
 import de.interoberlin.lymbo.core.model.v1.impl.Side;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.core.model.v1.impl.Text;
 import de.interoberlin.lymbo.core.model.v1.impl.Title;
-import de.interoberlin.lymbo.core.model.v1.objects.AnswerObject;
-import de.interoberlin.lymbo.core.model.v1.objects.CardObject;
-import de.interoberlin.lymbo.core.model.v1.objects.ComponentObject;
-import de.interoberlin.lymbo.core.model.v1.objects.ComponentType;
-import de.interoberlin.lymbo.core.model.v1.objects.SideObject;
-import de.interoberlin.lymbo.core.model.v1.objects.TagObject;
 import de.interoberlin.lymbo.util.TagUtil;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
@@ -177,13 +173,13 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         });
 
         // Add sides
-        for (SideObject side : card.getSide()) {
+        for (Side side : card.getSides()) {
             LayoutInflater li = LayoutInflater.from(context);
             LinearLayout llSide = (LinearLayout) li.inflate(R.layout.side, parent, false);
             LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
 
             // Add components
-            for (ComponentObject c : side.getComponent()) {
+            for (Component c : side.getComponents()) {
                 if (c instanceof Title)
                     llComponents.addView(new TitleView(context, (Title) c));
                 if (c instanceof Text)
@@ -223,9 +219,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         }
 
         // Add tags
-        for (TagObject t : card.getTag()) {
+        for (Tag t : card.getTags()) {
             if (!t.getValue().equals(getResources().getString(R.string.no_tag))) {
-                TagView tvTag = new TagView(context, (Tag) t);
+                TagView tvTag = new TagView(context, t);
                 tvTag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -238,9 +234,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         }
 
         // Action : flip
-        if (card.getSide().size() > 1) {
+        if (card.getSides().size() > 1) {
             tvNumerator.setText(String.valueOf(card.getSideVisible() + 1));
-            tvDenominator.setText(String.valueOf(card.getSide().size()));
+            tvDenominator.setText(String.valueOf(card.getSides().size()));
         } else {
             ViewUtil.remove(llFlip);
         }
@@ -327,34 +323,34 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      */
     private void edit(final Card card) {
         String uuid = card.getId();
-        String frontTitle = ((Title) ((Side) card.getSide().get(0)).getFirst(ComponentType.TITLE)).getValue();
-        String backTitle = ((Title) ((Side) card.getSide().get(1)).getFirst(ComponentType.TITLE)).getValue();
+        String frontTitle = ((Title) (card.getSides().get(0)).getFirst(EComponentType.TITLE)).getValue();
+        String backTitle = ((Title) (card.getSides().get(1)).getFirst(EComponentType.TITLE)).getValue();
         ArrayList<String> frontTexts = new ArrayList<>();
         ArrayList<String> backTexts = new ArrayList<>();
         ArrayList<String> tagsAll = TagUtil.getDistinctValues(cardsController.getTagsAll());
-        ArrayList<String> tagsSelected = TagUtil.getDistinctValues(TagUtil.getTagList(card.getTag()));
+        ArrayList<String> tagsSelected = TagUtil.getDistinctValues(TagUtil.getTagList(card.getTags()));
         ArrayList<String> answersValue = new ArrayList<>();
         ArrayList<Integer> answersCorrect = new ArrayList<>();
         ArrayList<String> templates = new ArrayList<>();
 
-        for (ComponentObject c : card.getSide().get(0).getComponent()) {
+        for (Component c : card.getSides().get(0).getComponents()) {
             if (c instanceof Text) {
                 frontTexts.add(((Text) c).getValue());
             } else if (c instanceof Choice) {
-                for (AnswerObject a : ((Choice) c).getAnswer()) {
+                for (Answer a : ((Choice) c).getAnswers()) {
                     answersValue.add(a.getValue());
                     answersCorrect.add(a.isCorrect() ? 1 : 0);
                 }
             }
         }
 
-        for (ComponentObject c : card.getSide().get(1).getComponent()) {
+        for (Component c : card.getSides().get(1).getComponents()) {
             if (c instanceof Text) {
                 backTexts.add(((Text) c).getValue());
             }
         }
 
-        for (CardObject template : cardsController.getStack().getTemplate()) {
+        for (Card template : cardsController.getStack().getTemplates()) {
             if (template != null && template.getId() != null) {
                 templates.add(template.getId());
             }
@@ -582,7 +578,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         final android.widget.TextView tvNumerator = (android.widget.TextView) view.findViewById(R.id.tvNumerator);
 
         handleQuiz(card);
-        card.setSideVisible((card.getSideVisible() + 1) % card.getSide().size());
+        card.setSideVisible((card.getSideVisible() + 1) % card.getSides().size());
         tvNumerator.setText(String.valueOf(card.getSideVisible() + 1));
 
         for (View v : getAllChildren(rlMain)) {
@@ -619,9 +615,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @return whether at least one answer is selected
      */
     private boolean checkAnswerSelected(Card card) {
-        if (((Side) card.getSide().get(card.getSideVisible())).contains(ComponentType.CHOICE)) {
-            for (AnswerObject a : ((Choice) ((Side) card.getSide().get(0)).getFirst(ComponentType.CHOICE)).getAnswer()) {
-                if (((Answer) a).isSelected()) {
+        if ((card.getSides().get(card.getSideVisible())).contains(EComponentType.CHOICE)) {
+            for (Answer a : ((Choice) (card.getSides().get(0)).getFirst(EComponentType.CHOICE)).getAnswers()) {
+                if (a.isSelected()) {
                     return true;
                 }
             }
@@ -640,21 +636,21 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @param card card
      */
     private void handleQuiz(Card card) {
-        Side current = (Side) card.getSide().get(card.getSideVisible());
+        Side current = card.getSides().get(card.getSideVisible());
 
         Side next = null;
-        if (card.getSideVisible() + 1 < card.getSide().size())
-            next = (Side) card.getSide().get(card.getSideVisible() + 1);
+        if (card.getSideVisible() + 1 < card.getSides().size())
+            next = card.getSides().get(card.getSideVisible() + 1);
 
         // Handle quiz card
-        if (current != null && current.contains(ComponentType.CHOICE) && next != null && next.contains(ComponentType.RESULT)) {
+        if (current != null && current.contains(EComponentType.CHOICE) && next != null && next.contains(EComponentType.RESULT)) {
             // Default result
-            ((Result) next.getFirst(ComponentType.RESULT)).setCorrect(true);
+            ((Result) next.getFirst(EComponentType.RESULT)).setCorrect(true);
 
-            for (AnswerObject a : ((Choice) current.getFirst(ComponentType.CHOICE)).getAnswer()) {
-                if (a.isCorrect() != ((Answer) a).isSelected()) {
+            for (Answer a : ((Choice) current.getFirst(EComponentType.CHOICE)).getAnswers()) {
+                if (a.isCorrect() != a.isSelected()) {
                     // At least on answer is wrong
-                    ((Result) next.getFirst(ComponentType.RESULT)).setCorrect(false);
+                    ((Result) next.getFirst(EComponentType.RESULT)).setCorrect(false);
                     break;
                 }
             }

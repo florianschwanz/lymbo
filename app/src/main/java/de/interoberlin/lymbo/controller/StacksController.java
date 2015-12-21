@@ -20,16 +20,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.core.model.v1.impl.EFormat;
 import de.interoberlin.lymbo.core.model.v1.impl.Language;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
-import de.interoberlin.lymbo.core.model.v1.objects.TagObject;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackDatasource;
@@ -134,13 +129,11 @@ public class StacksController {
         stack.setFormat(EFormat.LYMBO);
 
         for (Tag t : tags) {
-            stack.getTag().add(t);
+            stack.getTags().add(t);
         }
 
         if (languageFrom != null && languageTo != null) {
-            Language language = new Language();
-            language.setFrom(languageFrom.toString());
-            language.setTo(languageTo.toString());
+            Language language = new Language(languageFrom.toString(), languageTo.toString());
             stack.setLanguage(language);
         }
 
@@ -175,14 +168,12 @@ public class StacksController {
             stack.setSubtitle(subtitle);
             stack.setAuthor(author);
 
-            stack.getTag().clear();
+            stack.getTags().clear();
             for (Tag t : tags) {
-                stack.getTag().add(t);
+                stack.getTags().add(t);
             }
             if (languageFrom != null && languageTo != null) {
-                Language language = new Language();
-                language.setFrom(languageFrom.toString());
-                language.setTo(languageTo.toString());
+                Language language = new Language(languageFrom.toString(), languageTo.toString());
                 stack.setLanguage(language);
             }
 
@@ -272,14 +263,8 @@ public class StacksController {
             }
             case LYMBOX: {
                 if (stack.getFile() != null) {
-                    try {
-                        GregorianCalendar gregorianCalendar = new GregorianCalendar();
-                        DatatypeFactory datatypeFactory = DatatypeFactory.newInstance();
-                        XMLGregorianCalendar cal = datatypeFactory.newXMLGregorianCalendar(gregorianCalendar);
-                        stack.setModificationDate(cal);
-                    } catch (DatatypeConfigurationException e) {
-                        e.printStackTrace();
-                    }
+                    GregorianCalendar cal = new GregorianCalendar();
+                    stack.setModificationDate(cal);
 
                     LymboWriter.writeXml(stack, new File(stack.getFile()));
                     ZipUtil.zip(new File(stack.getPath()).listFiles(), new File(stack.getPath() + "/main.lymbo"));
@@ -496,9 +481,9 @@ public class StacksController {
         ArrayList<Tag> tagsAll = new ArrayList<>();
 
         for (Stack stack : getStacks()) {
-            for (TagObject tag : stack.getTag()) {
-                if (tag != null && !((Tag) tag).containedInList(tagsAll) && !tag.getValue().equals(getResources().getString(R.string.no_tag)))
-                    tagsAll.add((Tag) tag);
+            for (Tag tag : stack.getTags()) {
+                if (tag != null && !(tag).containedInList(tagsAll) && !tag.getValue().equals(getResources().getString(R.string.no_tag)))
+                    tagsAll.add(tag);
             }
         }
 

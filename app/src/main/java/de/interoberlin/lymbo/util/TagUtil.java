@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
-import de.interoberlin.lymbo.core.model.v1.objects.TagObject;
 
 public class TagUtil {
     // --------------------
@@ -24,10 +23,10 @@ public class TagUtil {
         return names;
     }
 
-    static public List<Tag> getTagList(List<TagObject> tags) {
+    static public List<Tag> getTagList(List<Tag> tags) {
         List<Tag> tagList = new ArrayList<>();
 
-        for (TagObject t : tags) {
+        for (Tag t : tags) {
             if (t != null)
                 tagList.add((Tag) t);
         }

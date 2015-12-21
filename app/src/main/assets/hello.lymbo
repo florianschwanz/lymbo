@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1",
+  "title": "Hello Lymbo",
+  "subtitle": "Welcome",
+  "author": "Flo",
+  "cards": [
+    {
+      "sides": [
+        {
+          "components": [
+            {
+              "value": "This is a card",
+              "type": "TITLE"
+            },
+            {
+              "value": "(It can contain different things",
+              "type": "TEXT"
+            }
+          ],
+          "flip": false
+        }
+      ],
+      "tags": [],
+      "edit": false
+    }
+  ],
+  "templates": [],
+  "tags": []
+}

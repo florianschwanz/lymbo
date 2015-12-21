@@ -7,10 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.GregorianCalendar;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.core.model.v1.converters.Serializer;
@@ -27,20 +23,12 @@ public class LymboWriter {
             return;
 
         // Set modification date
-        try {
-            GregorianCalendar gregorianCalendar = new GregorianCalendar();
-            DatatypeFactory datatypeFactory;
-            datatypeFactory = DatatypeFactory.newInstance();
-            XMLGregorianCalendar now =
-                    datatypeFactory.newXMLGregorianCalendar(gregorianCalendar);
-            stack.setModificationDate(now);
-        } catch (DatatypeConfigurationException e) {
-            e.printStackTrace();
-        }
+        GregorianCalendar cal = new GregorianCalendar();
+        stack.setModificationDate(cal);
 
         try {
             FileWriter fw = new FileWriter(file);
-            fw.write(Serializer.toXml(stack));
+            fw.write(Serializer.toJson(stack));
             fw.flush();
             fw.close();
         } catch (IOException e) {

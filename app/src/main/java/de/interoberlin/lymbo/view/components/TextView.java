@@ -5,6 +5,7 @@ import android.view.Gravity;
 import android.widget.LinearLayout;
 
 import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.core.model.v1.impl.EGravity;
 import de.interoberlin.lymbo.core.model.v1.impl.Text;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.TranslationUtil;
@@ -25,8 +26,8 @@ public class TextView extends LinearLayout {
         android.widget.TextView tvTitle = (android.widget.TextView) findViewById(R.id.tvTitle);
 
         // Set value
-        if (TranslationUtil.contains(t.getTranslation(), Configuration.getLanguage(context)))
-            tvTitle.setText(TranslationUtil.get(t.getTranslation(), Configuration.getLanguage(context)));
+        if (TranslationUtil.contains(t.getTranslations(), Configuration.getLanguage(context)))
+            tvTitle.setText(TranslationUtil.get(t.getTranslations(), Configuration.getLanguage(context)));
         else
             tvTitle.setText(t.getValue());
 
@@ -35,11 +36,11 @@ public class TextView extends LinearLayout {
             tvTitle.setLines(t.getLines());
 
         // Attribute : gravity
-        if (t.getGravity() == de.interoberlin.lymbo.core.model.v1.objects.Gravity.START)
+        if (t.getGravity() == EGravity.START)
             setGravity(Gravity.START);
-        else if (t.getGravity() == de.interoberlin.lymbo.core.model.v1.objects.Gravity.CENTER)
+        else if (t.getGravity() == EGravity.CENTER)
             setGravity(Gravity.CENTER);
-        else if (t.getGravity() == de.interoberlin.lymbo.core.model.v1.objects.Gravity.END)
+        else if (t.getGravity() == EGravity.END)
             setGravity(Gravity.END);
     }
 }

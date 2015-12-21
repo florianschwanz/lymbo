@@ -21,12 +21,10 @@ import java.util.ArrayList;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
-import de.interoberlin.lymbo.core.model.v1.impl.Side;
+import de.interoberlin.lymbo.core.model.v1.impl.Component;
+import de.interoberlin.lymbo.core.model.v1.impl.EComponentType;
 import de.interoberlin.lymbo.core.model.v1.impl.Text;
 import de.interoberlin.lymbo.core.model.v1.impl.Title;
-import de.interoberlin.lymbo.core.model.v1.objects.CardObject;
-import de.interoberlin.lymbo.core.model.v1.objects.ComponentObject;
-import de.interoberlin.lymbo.core.model.v1.objects.ComponentType;
 import de.interoberlin.lymbo.util.TagUtil;
 
 public class TemplatesDialogFragment extends DialogFragment {
@@ -52,7 +50,7 @@ public class TemplatesDialogFragment extends DialogFragment {
         // final ArrayList<String> templates = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_templates));
 
         final ArrayList<String> templates = new ArrayList<>();
-        for (CardObject template : cardsController.getStack().getTemplate()) {
+        for (Card template : cardsController.getStack().getTemplates()) {
             if (template != null && template.getId() != null) {
                 templates.add(template.getId());
             }
@@ -157,20 +155,20 @@ public class TemplatesDialogFragment extends DialogFragment {
         CardsController cardsController = CardsController.getInstance(getActivity());
         String uuid = template.getId();
         String title = template.getTitle();
-        String frontTitle = ((Title) ((Side) template.getSide().get(0)).getFirst(ComponentType.TITLE)).getValue();
-        String backTitle = ((Title) ((Side) template.getSide().get(1)).getFirst(ComponentType.TITLE)).getValue();
+        String frontTitle = ((Title) (template.getSides().get(0)).getFirst(EComponentType.TITLE)).getValue();
+        String backTitle = ((Title) (template.getSides().get(1)).getFirst(EComponentType.TITLE)).getValue();
         ArrayList<String> frontTexts = new ArrayList<>();
         ArrayList<String> backTexts = new ArrayList<>();
         ArrayList<String> tagsAll = TagUtil.getDistinctValues(cardsController.getTagsAll());
-        ArrayList<String> tagsSelected = TagUtil.getDistinctValues(TagUtil.getTagList(template.getTag()));
+        ArrayList<String> tagsSelected = TagUtil.getDistinctValues(TagUtil.getTagList(template.getTags()));
 
-        for (ComponentObject c : template.getSide().get(0).getComponent()) {
+        for (Component c : template.getSides().get(0).getComponents()) {
             if (c instanceof Text) {
                 frontTexts.add(((Text) c).getValue());
             }
         }
 
-        for (ComponentObject c : template.getSide().get(1).getComponent()) {
+        for (Component c : template.getSides().get(1).getComponents()) {
             if (c instanceof Text) {
                 backTexts.add(((Text) c).getValue());
             }

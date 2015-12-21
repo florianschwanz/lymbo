@@ -32,7 +32,6 @@ import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.core.model.v1.impl.Text;
 import de.interoberlin.lymbo.core.model.v1.impl.Title;
-import de.interoberlin.lymbo.core.model.v1.objects.CardObject;
 import de.interoberlin.lymbo.util.TagUtil;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.CardDialogFragment;
@@ -201,7 +200,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                     Card card = cardsAdapter.getItem(position);
                     View view = getViewByPosition(position, slv);
 
-                    if (card.getSide().size() > 1) {
+                    if (card.getSides().size() > 1) {
                         cardsAdapter.flip(card, view);
                     }
                 }
@@ -221,7 +220,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                     ArrayList<String> tagsAll = TagUtil.getDistinctValues(cardsController.getTagsAll());
                     ArrayList<String> templates = new ArrayList<>();
 
-                    for (CardObject template : stack.getTemplate()) {
+                    for (Card template : stack.getTemplates()) {
                         if (template != null && template.getId() != null) {
                             templates.add(template.getId());
                         }
@@ -511,7 +510,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private void showTemplates() {
         ArrayList<String> templates = new ArrayList<>();
 
-        for (CardObject template : stack.getTemplate()) {
+        for (Card template : stack.getTemplates()) {
             if (template != null && template.getId() != null) {
                 templates.add(template.getId());
             }

@@ -43,7 +43,6 @@ import de.interoberlin.lymbo.view.dialogfragments.StackDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
-import de.interoberlin.swipelistview.view.SwipeListViewListener;
 
 public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener, StackDialogFragment.OnCompleteListener, FilterStacksDialogFragment.OnCompleteListener, LymboWebUploadTask.OnCompleteListener, LymboWebDownloadTask.OnCompleteListener, DownloadDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
@@ -120,68 +119,6 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
             slv.setAdapter(stacksAdapter);
             slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
-            slv.setSwipeListViewListener(new SwipeListViewListener() {
-                @Override
-                public void onOpened(int i, boolean b) {
-                }
-
-                @Override
-                public void onClosed(int i, boolean b) {
-                }
-
-                @Override
-                public void onListChanged() {
-                }
-
-                @Override
-                public void onMove(int i, float v) {
-                }
-
-                @Override
-                public void onStartOpen(int i, int i1, boolean b) {
-                }
-
-                @Override
-                public void onStartClose(int i, boolean b) {
-                }
-
-                @Override
-                public void onClickFrontView(int i) {
-                }
-
-                @Override
-                public void onClickBackView(int i) {
-                }
-
-                @Override
-                public void onDismiss(int[] ints) {
-                }
-
-                @Override
-                public int onChangeSwipeMode(int i) {
-                    return 0;
-                }
-
-                @Override
-                public void onChoiceChanged(int i, boolean b) {
-                }
-
-                @Override
-                public void onChoiceStarted() {
-                }
-
-                @Override
-                public void onChoiceEnded() {
-                }
-
-                @Override
-                public void onFirstListItem() {
-                }
-
-                @Override
-                public void onLastListItem() {
-                }
-            });
 
             ibFab.setOnClickListener(new View.OnClickListener() {
                 @Override

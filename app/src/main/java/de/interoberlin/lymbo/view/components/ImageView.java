@@ -8,8 +8,8 @@ import android.widget.LinearLayout;
 import java.io.File;
 
 import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.core.model.v1.impl.EImageFormat;
 import de.interoberlin.lymbo.core.model.v1.impl.Image;
-import de.interoberlin.lymbo.core.model.v1.objects.ImageFormat;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
 
 public class ImageView extends LinearLayout {
@@ -30,7 +30,7 @@ public class ImageView extends LinearLayout {
 
         // Get Model
         String value = i.getValue();
-        ImageFormat format = i.getFormat();
+        EImageFormat format = i.getFormat();
         File resourcePath = i.getResourcePath();
 
         if (format != null && value != null && !value.trim().isEmpty()) {
