@@ -20,16 +20,16 @@ import java.util.ArrayList;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Displayable;
-import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.card.components.TextComponent;
-import de.interoberlin.lymbo.model.card.components.TitleComponent;
-import de.interoberlin.lymbo.model.card.enums.EComponent;
-import de.interoberlin.lymbo.view.controls.RobotoTextView;
+import de.interoberlin.lymbo.core.model.v1.impl.Card;
+import de.interoberlin.lymbo.core.model.v1.impl.Component;
+import de.interoberlin.lymbo.core.model.v1.impl.EComponentType;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.Title;
 
 public class TemplatesDialogFragment extends DialogFragment {
-    public static final String TAG = "templates";
+    public static final String TAG = TemplatesDialogFragment.class.getCanonicalName();
+
     private OnCompleteListener ocListener;
 
     // --------------------
@@ -64,7 +64,7 @@ public class TemplatesDialogFragment extends DialogFragment {
 
         for (final String t : templates) {
             final TableRow tr = new TableRow(getActivity());
-            final TextView tvText = new RobotoTextView(getActivity());
+            final TextView tvText = new TextView(getActivity());
 
             final Card template = cardsController.getTemplateById(t);
 
@@ -142,7 +142,7 @@ public class TemplatesDialogFragment extends DialogFragment {
 
     private void add() {
         CardsController cardsController = CardsController.getInstance(getActivity());
-        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
+        ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
 
         TemplateDialogFragment dialog = new TemplateDialogFragment();
         Bundle bundle = new Bundle();
@@ -156,22 +156,28 @@ public class TemplatesDialogFragment extends DialogFragment {
         CardsController cardsController = CardsController.getInstance(getActivity());
         String uuid = template.getId();
         String title = template.getTitle();
-        String frontTitle = ((TitleComponent) template.getSides().get(0).getFirst(EComponent.TITLE)).getValue();
-        String backTitle = ((TitleComponent) template.getSides().get(1).getFirst(EComponent.TITLE)).getValue();
+        String frontTitle = ((Title) template.getSides().get(0).getFirst(EComponentType.TITLE)).getValue();
+        String backTitle = ((Title) template.getSides().get(1).getFirst(EComponentType.TITLE)).getValue();
         ArrayList<String> frontTexts = new ArrayList<>();
         ArrayList<String> backTexts = new ArrayList<>();
-        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
-        ArrayList<String> tagsSelected = Tag.getNames(template.getTags());
+        ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
+        ArrayList<String> tagsSelected = Tag.getValues(template.getTags());
 
-        for (Displayable d : template.getSides().get(0).getComponents()) {
-            if (d instanceof TextComponent) {
-                frontTexts.add(((TextComponent) d).getValue());
+        for (Component c : template.getSides().get(0).getComponents()) {
+            switch (c.getType()) {
+                case TEXT: {
+                    frontTexts.add(((Text) c).getValue());
+                    break;
+                }
             }
         }
 
-        for (Displayable d : template.getSides().get(1).getComponents()) {
-            if (d instanceof TextComponent) {
-                backTexts.add(((TextComponent) d).getValue());
+        for (Component c : template.getSides().get(1).getComponents()) {
+            switch (c.getType()) {
+                case TEXT: {
+                    backTexts.add(((Text) c).getValue());
+                    break;
+                }
             }
         }
 

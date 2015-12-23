@@ -17,7 +17,7 @@ import com.github.mrengineer13.snackbar.SnackBar;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.StacksController;
-import de.interoberlin.lymbo.model.card.Stack;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.view.adapters.StacksStashListAdapter;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;

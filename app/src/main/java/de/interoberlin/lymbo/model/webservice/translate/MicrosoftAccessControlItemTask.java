@@ -27,8 +27,9 @@ import de.interoberlin.lymbo.model.webservice.ParamHolder;
 import de.interoberlin.mate.lib.model.Log;
 
 public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, AccessControlItem> {
-    private static final String ENCODING = "UTF-8";
+    public static final String TAG = MicrosoftAccessControlItemTask.class.toString();
 
+    private static final String ENCODING = "UTF-8";
     private static final String PARAM_GRANT_TYPE = "grant_type";
     private static final String PARAM_CLIENT_ID = "client_id";
     private static final String PARAM_CLIENT_SECRET = "client_secret";
@@ -89,13 +90,13 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
             editor.putLong(res.getString(R.string.pref_translator_access_item_timestamp), System.currentTimeMillis());
             editor.apply();
 
-            Log.info("Retrieved access control item for Microsoft translator");
+            Log.i(TAG, "Retrieved access control item for Microsoft translator");
 
-            Log.debug(prefs.getString(res.getString(R.string.pref_translator_access_item_token_type), null));
-            Log.debug(prefs.getString(res.getString(R.string.pref_translator_access_item_access_token), null));
-            Log.debug(String.valueOf(prefs.getInt(res.getString(R.string.pref_translator_access_item_expires_in), 0)));
-            Log.debug(prefs.getString(res.getString(R.string.pref_translator_access_item_scope), null));
-            Log.debug(String.valueOf(prefs.getLong(res.getString(R.string.pref_translator_access_item_timestamp), 0L)));
+            Log.d(TAG, prefs.getString(res.getString(R.string.pref_translator_access_item_token_type), null));
+            Log.d(TAG, prefs.getString(res.getString(R.string.pref_translator_access_item_access_token), null));
+            Log.d(TAG, String.valueOf(prefs.getInt(res.getString(R.string.pref_translator_access_item_expires_in), 0)));
+            Log.d(TAG, prefs.getString(res.getString(R.string.pref_translator_access_item_scope), null));
+            Log.d(TAG, String.valueOf(prefs.getLong(res.getString(R.string.pref_translator_access_item_timestamp), 0L)));
 
             if (ocListener != null)
                 ocListener.onAccessControlItemRetrieved(result.getAccess_token());
@@ -140,7 +141,7 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
 
         try {
             if (con.getResponseCode() != RESPONSE_CODE_OKAY) {
-                Log.error("Error getting microsoft translator access token RESPONSE CODE : " + con.getResponseCode());
+                Log.e(TAG, "Error getting microsoft translator access token RESPONSE CODE : " + con.getResponseCode());
 
                 Context context = App.getContext();
                 Resources res = context.getResources();
@@ -153,7 +154,7 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
                 editor.putLong(res.getString(R.string.pref_translator_access_item_timestamp), 0L);
                 editor.apply();
 
-                Log.error("Error from Microsoft Translator API");
+                Log.e(TAG, "Error from Microsoft Translator API");
                 throw new Exception("Error from Microsoft Translator API");
             }
 
@@ -168,7 +169,7 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
             in.close();
 
             if (response.toString().startsWith("ArgumentException")) {
-                Log.error(response.toString());
+                Log.e(TAG, response.toString());
                 return null;
             } else {
                 // Parse JSON

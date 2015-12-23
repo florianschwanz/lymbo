@@ -20,6 +20,8 @@ import de.interoberlin.mate.lib.model.Log;
  * Data source for SQLite database table
  */
 public class TableCardDatasource {
+    public static final String TAG = TableCardDatasource.class.getCanonicalName();
+
     private SQLiteDatabase database;
     private LymboSQLiteOpenHelper dbLymboSQLiteOpenHelper;
 
@@ -292,7 +294,7 @@ public class TableCardDatasource {
     // --------------------
 
     /**
-     * Deletes an entry identified by {@parm uuid}
+     * Deletes an entry identified by uuid
      *
      * @param uuid uuid of the card to be deleted
      */
@@ -403,11 +405,11 @@ public class TableCardDatasource {
     public void printTable() {
         for (TableCardEntry entry : getEntries()) {
             if (entry != null) {
-                Log.debug("Entry");
-                Log.debug(".." + colUuid.getName() + "\t" + entry.getUuid());
-                Log.debug(".." + colState.getName() + "\t" + entry.getState());
-                Log.debug(".." + colNote.getName() + "\t" + entry.getNote());
-                Log.debug(".." + colFavorite.getName() + "\t" + String.valueOf(entry.isFavorite()));
+                Log.d(TAG, "Entry");
+                Log.d(TAG, ".." + colUuid.getName() + "\t" + entry.getUuid());
+                Log.d(TAG, ".." + colState.getName() + "\t" + entry.getState());
+                Log.d(TAG, ".." + colNote.getName() + "\t" + entry.getNote());
+                Log.d(TAG, ".." + colFavorite.getName() + "\t" + String.valueOf(entry.isFavorite()));
             }
         }
     }

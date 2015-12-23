@@ -20,6 +20,8 @@ import de.interoberlin.mate.lib.model.Log;
  * Data source for SQLite database table
  */
 public class TableStackDatasource {
+    public static final String TAG = TableStackDatasource.class.toString();
+
     private SQLiteDatabase database;
     private LymboSQLiteOpenHelper dbLymboSQLiteOpenHelper;
 
@@ -245,7 +247,7 @@ public class TableStackDatasource {
     // --------------------
 
     /**
-     * Deletes an entry identified by {@parm uuid}
+     * Deletes an entry identified by uuid
      *
      * @param uuid uuid of the card to be deleted
      */
@@ -326,12 +328,12 @@ public class TableStackDatasource {
     public void printTable() {
         for (TableStackEntry entry : getEntries()) {
             if (entry != null) {
-                Log.debug("Entry");
-                Log.debug(".. " + colUuid.getName() + " \t" + entry.getUuid());
-                Log.debug(".. " + colState.getName() + " \t" + entry.getState());
-                Log.debug(".. " + colFile.getName() + " \t" + entry.getFile());
-                Log.debug(".. " + colPath.getName() + " \t" + entry.getPath());
-                Log.debug(".. " + colFormat.getName() + " \t" + entry.getFormat());
+                Log.d(TAG, "Entry");
+                Log.d(TAG, ".. " + colUuid.getName() + " \t" + entry.getUuid());
+                Log.d(TAG, ".. " + colState.getName() + " \t" + entry.getState());
+                Log.d(TAG, ".. " + colFile.getName() + " \t" + entry.getFile());
+                Log.d(TAG, ".. " + colPath.getName() + " \t" + entry.getPath());
+                Log.d(TAG, ".. " + colFormat.getName() + " \t" + entry.getFormat());
             }
         }
     }

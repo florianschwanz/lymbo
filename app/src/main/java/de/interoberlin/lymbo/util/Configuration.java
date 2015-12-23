@@ -10,6 +10,8 @@ import java.util.Properties;
 import de.interoberlin.mate.lib.model.Log;
 
 public class Configuration {
+    public static final String TAG = Configuration.class.toString();
+
     private static final String GRADLE_PROPERTIES_FILE = "gradle.properties";
 
     public static String getGradleProperty(Context c, String property) {
@@ -19,7 +21,7 @@ public class Configuration {
             props.load(inputStream);
             return props.getProperty(property);
         } catch (IOException e) {
-            Log.error(e.toString());
+            Log.e(TAG, e.toString());
             e.printStackTrace();
         }
 

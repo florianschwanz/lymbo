@@ -24,13 +24,13 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <de.interoberlin.lymbo.view.controls.RobotoTextView
+        <TextView
             android:id="@+id/tvMessage"
-            app:typeface="roboto_bold"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:gravity="bottom|center_horizontal"
             android:textColor="@color/white"
+            android:textStyle="bold"
             android:textSize="18sp"
             android:text="@string/message" />
     </LinearLayout>

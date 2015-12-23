@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+// This does not break the build when Android Studio is missing the JRebel for Android plugin.
+apply plugin: 'com.zeroturnaround.jrebel.android'
 apply plugin: 'maven'
 
 import java.util.regex.Pattern
@@ -257,14 +259,10 @@ assembleRelease.dependsOn(copyPropertiesRelease)
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    // Used for file handling
-    // Used for Material Design
-    // Used for animation
-    // Used for translation
     compile 'de.interoberlin:sauvignon:0.2.30@aar'
     compile 'de.interoberlin:swipelistview:0.2.3@aar'
-    compile 'de.interoberlin:mate:0.4.23@aar'
+    compile 'de.interoberlin:mate:0.4.27@aar'
+    compile 'de.interoberlin:lymbo.core:0.2.31'
     compile 'commons-io:commons-io:2.4'
     compile 'org.apache.commons:commons-lang3:3.0'
     compile 'com.squareup.picasso:picasso:2.3.4'

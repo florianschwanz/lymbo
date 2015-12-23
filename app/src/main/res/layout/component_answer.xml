@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:roboto="http://schemas.android.com/apk/res-auto"
     android:id="@+id/llAnswer"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -16,8 +15,7 @@
         android:text=""
         android:id="@+id/cb" />
 
-    <de.interoberlin.lymbo.view.controls.RobotoTextView
-        roboto:typeface="roboto_regular"
+    <TextView
         android:id="@+id/tvText"
         style="@style/CardText"
         android:ellipsize="end"

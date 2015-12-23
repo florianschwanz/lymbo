@@ -23,13 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.webservice.translate.Language;
+import de.interoberlin.lymbo.core.model.v1.impl.ELanguage;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.util.ViewUtil;
-import de.interoberlin.lymbo.view.controls.RobotoTextView;
 
 public class StackDialogFragment extends DialogFragment {
-    public static final String TAG = "stack";
+    public static final String TAG = StackDialogFragment.class.getCanonicalName();
 
     private List<CheckBox> checkboxesLanguageFrom = new ArrayList<>();
     private List<String> languagesFrom = new ArrayList<>();
@@ -70,8 +69,8 @@ public class StackDialogFragment extends DialogFragment {
         final String title = bundle.getString(getActivity().getResources().getString(R.string.bundle_title));
         final String subtitle = bundle.getString(getActivity().getResources().getString(R.string.bundle_subtitle));
         final String author = bundle.getString(getActivity().getResources().getString(R.string.bundle_author));
-        final Language languageFrom = Language.fromString(bundle.getString(getActivity().getResources().getString(R.string.bundle_language_from)));
-        final Language languageTo = Language.fromString(bundle.getString(getActivity().getResources().getString(R.string.bundle_language_to)));
+        final ELanguage languageFrom = ELanguage.fromString(bundle.getString(getActivity().getResources().getString(R.string.bundle_language_from)));
+        final ELanguage languageTo = ELanguage.fromString(bundle.getString(getActivity().getResources().getString(R.string.bundle_language_to)));
         final ArrayList<String> tagsAll = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_all));
         final ArrayList<String> tagsSelected = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_selected));
 
@@ -91,13 +90,13 @@ public class StackDialogFragment extends DialogFragment {
         else
             tvAuthor.setText(R.string.no_author_specified);
 
-        for (final Language l : Language.values()) {
+        for (final ELanguage l : ELanguage.values()) {
             if (l.isActive()) {
                 languagesFrom.add(l.getLangCode());
 
                 final TableRow tr = new TableRow(getActivity());
                 final CheckBox cb = new CheckBox(getActivity());
-                final RobotoTextView tvText = new RobotoTextView(getActivity());
+                final TextView tvText = new TextView(getActivity());
 
                 tr.addView(cb);
                 tr.addView(tvText);
@@ -120,7 +119,7 @@ public class StackDialogFragment extends DialogFragment {
                     cb.setChecked(true);
                 }
 
-                tvText.setText(l.getName(getActivity()));
+                tvText.setText(l.getName());
                 tvText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -132,13 +131,13 @@ public class StackDialogFragment extends DialogFragment {
             }
         }
 
-        for (final Language l : Language.values()) {
+        for (final ELanguage l : ELanguage.values()) {
             if (l.isActive()) {
                 languagesTo.add(l.getLangCode());
 
                 final TableRow tr = new TableRow(getActivity());
                 final CheckBox cb = new CheckBox(getActivity());
-                final RobotoTextView tvText = new RobotoTextView(getActivity());
+                final TextView tvText = new TextView(getActivity());
 
                 tr.addView(cb);
                 tr.addView(tvText);
@@ -161,7 +160,7 @@ public class StackDialogFragment extends DialogFragment {
                     cb.setChecked(true);
                 }
 
-                tvText.setText(l.getName(getActivity()));
+                tvText.setText(l.getName());
                 tvText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -287,17 +286,17 @@ public class StackDialogFragment extends DialogFragment {
                 String title = etTitle.getText().toString().trim();
                 String subtitle = etSubtitle.getText().toString().trim();
                 String author = tvAuthor.getText().toString().trim();
-                Language languageFrom = null;
-                Language languageTo = null;
+                ELanguage languageFrom = null;
+                ELanguage languageTo = null;
 
                 for (int i = 0; i < checkboxesLanguageFrom.size(); i++) {
                     if (checkboxesLanguageFrom.get(i).isChecked())
-                        languageFrom = Language.fromString(languagesFrom.get(i));
+                        languageFrom = ELanguage.fromString(languagesFrom.get(i));
                 }
 
                 for (int i = 0; i < checkboxesLanguageTo.size(); i++) {
                     if (checkboxesLanguageTo.get(i).isChecked())
-                        languageTo = Language.fromString(languagesTo.get(i));
+                        languageTo = ELanguage.fromString(languagesTo.get(i));
                 }
 
                 Drawable dWarning = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_warning);
@@ -356,7 +355,7 @@ public class StackDialogFragment extends DialogFragment {
 
     private boolean containsTag(List<Tag> tags, Tag tag) {
         for (Tag t : tags) {
-            if (t.getName().equalsIgnoreCase(tag.getName()))
+            if (t.getValue().equalsIgnoreCase(tag.getValue()))
                 return true;
         }
 
@@ -368,9 +367,9 @@ public class StackDialogFragment extends DialogFragment {
     // --------------------
 
     public interface OnCompleteListener {
-        void onAddStack(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags);
+        void onAddStack(String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags);
 
-        void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags);
+        void onEditStack(String uuid, String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags);
     }
 
     public void onAttach(Activity activity) {

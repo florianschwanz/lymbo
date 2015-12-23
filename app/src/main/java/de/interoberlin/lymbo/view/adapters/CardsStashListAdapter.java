@@ -12,7 +12,6 @@ import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -21,12 +20,23 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.card.Displayable;
-import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Side;
-import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Card;
+import de.interoberlin.lymbo.core.model.v1.impl.Choice;
+import de.interoberlin.lymbo.core.model.v1.impl.Component;
+import de.interoberlin.lymbo.core.model.v1.impl.Image;
+import de.interoberlin.lymbo.core.model.v1.impl.Result;
+import de.interoberlin.lymbo.core.model.v1.impl.Side;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.Title;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsStashActivity;
+import de.interoberlin.lymbo.view.components.ChoiceView;
+import de.interoberlin.lymbo.view.components.ImageView;
+import de.interoberlin.lymbo.view.components.ResultView;
+import de.interoberlin.lymbo.view.components.TagView;
+import de.interoberlin.lymbo.view.components.TextView;
+import de.interoberlin.lymbo.view.components.TitleView;
 
 public class CardsStashListAdapter extends ArrayAdapter<Card> {
     // Context
@@ -99,9 +109,24 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
             LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
 
             // Add components
-            for (Displayable d : side.getComponents()) {
-                View component = d.getView(context, activity, llComponents);
-                llComponents.addView(component);
+            for (Component c : side.getComponents()) {
+                switch (c.getType()) {
+                    case TITLE : {
+                        llComponents.addView(new TitleView(context, (Title) c)); break;
+                    }
+                    case TEXT : {
+                        llComponents.addView(new TextView(context, (Text) c)); break;
+                    }
+                    case IMAGE: {
+                        llComponents.addView(new ImageView(context, (Image) c)); break;
+                    }
+                    case CHOICE: {
+                        llComponents.addView(new ChoiceView(context, (Choice) c)); break;
+                    }
+                    case RESULT: {
+                        llComponents.addView(new ResultView(context, (Result) c)); break;
+                    }
+                }
             }
 
             llSide.setVisibility(View.INVISIBLE);
@@ -118,8 +143,8 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
         // Tags
         for (Tag tag : card.getTags()) {
-            if (!tag.getName().equals(context.getResources().getString(R.string.no_tag)))
-                llTags.addView(tag.getView(context, activity, llTags));
+            if (!tag.getValue().equals(context.getResources().getString(R.string.no_tag)))
+                llTags.addView(new TagView(context, tag));
         }
 
         // Reveal : undo

@@ -26,6 +26,8 @@ import de.interoberlin.lymbo.model.webservice.ParamHolder;
 import de.interoberlin.mate.lib.model.Log;
 
 public class LymboWebAccessControlItemTask extends AsyncTask<String, Void, AccessControlItem> {
+    public static final String TAG = LymboWebAccessControlItemTask.class.toString();
+
     private static final String ENCODING = "UTF-8";
 
     private static final String PARAM_USERNAME = "username";
@@ -92,13 +94,13 @@ public class LymboWebAccessControlItemTask extends AsyncTask<String, Void, Acces
             editor.putLong(res.getString(R.string.pref_lymbo_web_access_item_timestamp), System.currentTimeMillis());
             editor.apply();
 
-            Log.info("Retrieved access control item for lymbo web");
+            Log.i(TAG, "Retrieved access control item for lymbo web");
 
-            Log.debug(prefs.getString(res.getString(R.string.pref_lymbo_web_access_item_token_type), null));
-            Log.debug(prefs.getString(res.getString(R.string.pref_lymbo_web_access_item_access_token), null));
-            Log.debug(String.valueOf(prefs.getInt(res.getString(R.string.pref_lymbo_web_access_item_expires_in), 0)));
-            Log.debug(prefs.getString(res.getString(R.string.pref_lymbo_web_access_item_scope), null));
-            Log.debug(String.valueOf(prefs.getLong(res.getString(R.string.pref_lymbo_web_access_item_timestamp), 0L)));
+            Log.d(TAG, prefs.getString(res.getString(R.string.pref_lymbo_web_access_item_token_type), null));
+            Log.d(TAG, prefs.getString(res.getString(R.string.pref_lymbo_web_access_item_access_token), null));
+            Log.d(TAG, String.valueOf(prefs.getInt(res.getString(R.string.pref_lymbo_web_access_item_expires_in), 0)));
+            Log.d(TAG, prefs.getString(res.getString(R.string.pref_lymbo_web_access_item_scope), null));
+            Log.d(TAG, String.valueOf(prefs.getLong(res.getString(R.string.pref_lymbo_web_access_item_timestamp), 0L)));
 
             if (ocListener != null)
                 ocListener.onAccessControlItemRetrieved(result.getAccess_token());
@@ -145,7 +147,7 @@ public class LymboWebAccessControlItemTask extends AsyncTask<String, Void, Acces
 
         try {
             if (con.getResponseCode() != RESPONSE_CODE_OKAY) {
-                Log.error("Error getting lymbo web access token RESPONSE CODE : " + con.getResponseCode());
+                Log.e(TAG, "Error getting lymbo web access token RESPONSE CODE : " + con.getResponseCode());
 
                 Context context = App.getContext();
                 Resources res = context.getResources();
@@ -158,7 +160,7 @@ public class LymboWebAccessControlItemTask extends AsyncTask<String, Void, Acces
                 editor.putLong(res.getString(R.string.pref_lymbo_web_access_item_timestamp), 0L);
                 editor.apply();
 
-                Log.error("Error from Lymbo Web API");
+                Log.e(TAG, "Error from Lymbo Web API");
                 throw new Exception("Error from Lymbo Web API");
             }
 
@@ -173,7 +175,7 @@ public class LymboWebAccessControlItemTask extends AsyncTask<String, Void, Acces
             in.close();
 
             if (response.toString().startsWith("ArgumentException")) {
-                Log.error(response.toString());
+                Log.e(TAG, response.toString());
                 return null;
             } else {
                 // Parse JSON

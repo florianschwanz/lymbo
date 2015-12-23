@@ -22,10 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 
 public class TemplateDialogFragment extends DialogFragment {
-    public static final String TAG = "template";
+    public static final String TAG = TemplateDialogFragment.class.getCanonicalName();
+
     private OnCompleteListener ocListener;
 
     // --------------------
@@ -56,7 +57,6 @@ public class TemplateDialogFragment extends DialogFragment {
         // Get arguments
         Bundle bundle = this.getArguments();
         final String dialogTitle = bundle.getString(res.getString(R.string.bundle_dialog_title));
-        final String uuid = bundle.getString(res.getString(R.string.bundle_template_uuid));
         final String title = bundle.getString(res.getString(R.string.bundle_title));
         final String frontTitle = bundle.getString(res.getString(R.string.bundle_front_title));
         final String backTitle = bundle.getString(res.getString(R.string.bundle_back_title));
@@ -281,7 +281,7 @@ public class TemplateDialogFragment extends DialogFragment {
 
     private boolean containsTag(List<Tag> tags, Tag tag) {
         for (Tag t : tags) {
-            if (t.getName().equalsIgnoreCase(tag.getName()))
+            if (t.getValue().equalsIgnoreCase(tag.getValue()))
                 return true;
         }
 

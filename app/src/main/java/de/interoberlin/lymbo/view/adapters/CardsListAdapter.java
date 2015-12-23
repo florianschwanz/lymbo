@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -33,18 +32,23 @@ import java.util.Locale;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Displayable;
-import de.interoberlin.lymbo.model.card.Side;
-import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.card.components.Answer;
-import de.interoberlin.lymbo.model.card.components.ChoiceComponent;
-import de.interoberlin.lymbo.model.card.components.ResultComponent;
-import de.interoberlin.lymbo.model.card.components.TextComponent;
-import de.interoberlin.lymbo.model.card.components.TitleComponent;
-import de.interoberlin.lymbo.model.card.enums.EComponent;
+import de.interoberlin.lymbo.core.model.v1.impl.Answer;
+import de.interoberlin.lymbo.core.model.v1.impl.Card;
+import de.interoberlin.lymbo.core.model.v1.impl.Choice;
+import de.interoberlin.lymbo.core.model.v1.impl.Component;
+import de.interoberlin.lymbo.core.model.v1.impl.EComponentType;
+import de.interoberlin.lymbo.core.model.v1.impl.Image;
+import de.interoberlin.lymbo.core.model.v1.impl.Result;
+import de.interoberlin.lymbo.core.model.v1.impl.Side;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.Title;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
+import de.interoberlin.lymbo.view.components.ChoiceView;
+import de.interoberlin.lymbo.view.components.ResultView;
+import de.interoberlin.lymbo.view.components.TagView;
+import de.interoberlin.lymbo.view.components.TitleView;
 import de.interoberlin.lymbo.view.dialogfragments.CardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.CopyCardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
@@ -175,9 +179,24 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
 
             // Add components
-            for (Displayable d : side.getComponents()) {
-                View component = d.getView(context, activity, llComponents);
-                llComponents.addView(component);
+            for (Component c : side.getComponents()) {
+                switch (c.getType()) {
+                    case TITLE : {
+                        llComponents.addView(new TitleView(context, (Title) c)); break;
+                    }
+                    case TEXT : {
+                        llComponents.addView(new de.interoberlin.lymbo.view.components.TextView(context, (Text) c)); break;
+                    }
+                    case IMAGE: {
+                        llComponents.addView(new de.interoberlin.lymbo.view.components.ImageView(context, (Image) c)); break;
+                    }
+                    case CHOICE: {
+                        llComponents.addView(new ChoiceView(context, (Choice) c)); break;
+                    }
+                    case RESULT: {
+                        llComponents.addView(new ResultView(context, (Result) c)); break;
+                    }
+                }
             }
 
             llSide.setVisibility(View.INVISIBLE);
@@ -208,8 +227,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         // Add tags
         for (Tag tag : card.getTags()) {
-            if (!tag.getName().equals(getResources().getString(R.string.no_tag))) {
-                CardView cvTag = (CardView) tag.getView(context, activity, llTags);
+            if (!tag.getValue().equals(getResources().getString(R.string.no_tag))) {
+                TagView cvTag = new TagView(context, tag);
                 cvTag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -311,30 +330,30 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      */
     private void edit(final Card card) {
         String uuid = card.getId();
-        String frontTitle = ((TitleComponent) card.getSides().get(0).getFirst(EComponent.TITLE)).getValue();
-        String backTitle = ((TitleComponent) card.getSides().get(1).getFirst(EComponent.TITLE)).getValue();
+        String frontTitle = ((Title) card.getSides().get(0).getFirst(EComponentType.TITLE)).getValue();
+        String backTitle = ((Title) card.getSides().get(1).getFirst(EComponentType.TITLE)).getValue();
         ArrayList<String> frontTexts = new ArrayList<>();
         ArrayList<String> backTexts = new ArrayList<>();
-        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
-        ArrayList<String> tagsSelected = Tag.getNames(card.getTags());
+        ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
+        ArrayList<String> tagsSelected = Tag.getValues(card.getTags());
         ArrayList<String> answersValue = new ArrayList<>();
         ArrayList<Integer> answersCorrect = new ArrayList<>();
         ArrayList<String> templates = new ArrayList<>();
 
-        for (Displayable d : card.getSides().get(0).getComponents()) {
-            if (d instanceof TextComponent) {
-                frontTexts.add(((TextComponent) d).getValue());
-            } else if (d instanceof ChoiceComponent) {
-                for (Answer a : ((ChoiceComponent) d).getAnswers()) {
+        for (Component c : card.getSides().get(0).getComponents()) {
+            if (c instanceof Text) {
+                frontTexts.add(((Text) c).getValue());
+            } else if (c instanceof Choice) {
+                for (Answer a : ((Choice) c).getAnswers()) {
                     answersValue.add(a.getValue());
                     answersCorrect.add(a.isCorrect() ? 1 : 0);
                 }
             }
         }
 
-        for (Displayable d : card.getSides().get(1).getComponents()) {
-            if (d instanceof TextComponent) {
-                backTexts.add(((TextComponent) d).getValue());
+        for (Component c : card.getSides().get(1).getComponents()) {
+            if (c instanceof Text) {
+                backTexts.add(((Text) c).getValue());
             }
         }
 
@@ -432,8 +451,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     private void selectTags() {
         ((Vibrator) activity.getSystemService(Activity.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
 
-        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
-        ArrayList<String> tagsSelected = Tag.getNames(cardsController.getTagsSelected());
+        ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
+        ArrayList<String> tagsSelected = Tag.getValues(cardsController.getTagsSelected());
         Boolean displayOnlyFavorites = cardsController.isDisplayOnlyFavorites();
 
         FilterCardsDialogFragment dialog = new FilterCardsDialogFragment();
@@ -603,8 +622,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @return whether at least one answer is selected
      */
     private boolean checkAnswerSelected(Card card) {
-        if (card.getSides().get(card.getSideVisible()).contains(EComponent.CHOICE)) {
-            for (Answer a : ((ChoiceComponent) card.getSides().get(0).getFirst(EComponent.CHOICE)).getAnswers()) {
+        if (card.getSides().get(card.getSideVisible()).contains(EComponentType.CHOICE)) {
+            for (Answer a : ((Choice) card.getSides().get(0).getFirst(EComponentType.CHOICE)).getAnswers()) {
                 if (a.isSelected()) {
                     return true;
                 }
@@ -631,16 +650,14 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             next = card.getSides().get(card.getSideVisible() + 1);
 
         // Handle quiz card
-        if (current != null && current.contains(EComponent.CHOICE) && next != null && next.contains(EComponent.RESULT)) {
+        if (current != null && current.contains(EComponentType.CHOICE) && next != null && next.contains(EComponentType.RESULT)) {
             // Default result : CORRECT
-            ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(getResources().getString(R.string.correct).toUpperCase(Locale.getDefault()));
-            ((ResultComponent) next.getFirst(EComponent.RESULT)).setColor(ContextCompat.getColor(activity, R.color.correct));
+            ((Result) next.getFirst(EComponentType.RESULT)).setValue(getResources().getString(R.string.correct).toUpperCase(Locale.getDefault()));
 
-            for (Answer a : ((ChoiceComponent) current.getFirst(EComponent.CHOICE)).getAnswers()) {
+            for (Answer a : ((Choice) current.getFirst(EComponentType.CHOICE)).getAnswers()) {
                 if (a.isCorrect() != a.isSelected()) {
                     // At least on answer is wrong : WRONG
-                    ((ResultComponent) next.getFirst(EComponent.RESULT)).setValue(getResources().getString(R.string.wrong).toUpperCase(Locale.getDefault()));
-                    ((ResultComponent) next.getFirst(EComponent.RESULT)).setColor(ContextCompat.getColor(activity, R.color.wrong));
+                    ((Result) next.getFirst(EComponentType.RESULT)).setValue(getResources().getString(R.string.wrong).toUpperCase(Locale.getDefault()));
                     break;
                 }
             }

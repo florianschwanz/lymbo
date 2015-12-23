@@ -28,10 +28,10 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.StacksController;
-import de.interoberlin.lymbo.model.card.Stack;
-import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.ELanguage;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
-import de.interoberlin.lymbo.model.webservice.translate.Language;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebDownloadTask;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebUploadTask;
 import de.interoberlin.lymbo.view.adapters.StacksListAdapter;
@@ -42,7 +42,6 @@ import de.interoberlin.lymbo.view.dialogfragments.StackDialogFragment;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
-import de.interoberlin.swipelistview.view.SwipeListViewListener;
 
 public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener, StackDialogFragment.OnCompleteListener, FilterStacksDialogFragment.OnCompleteListener, LymboWebUploadTask.OnCompleteListener, LymboWebDownloadTask.OnCompleteListener, DownloadDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
@@ -119,73 +118,11 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
             slv.setAdapter(stacksAdapter);
             slv.setSwipeMode(SwipeListView.SWIPE_MODE_NONE);
-            slv.setSwipeListViewListener(new SwipeListViewListener() {
-                @Override
-                public void onOpened(int i, boolean b) {
-                }
-
-                @Override
-                public void onClosed(int i, boolean b) {
-                }
-
-                @Override
-                public void onListChanged() {
-                }
-
-                @Override
-                public void onMove(int i, float v) {
-                }
-
-                @Override
-                public void onStartOpen(int i, int i1, boolean b) {
-                }
-
-                @Override
-                public void onStartClose(int i, boolean b) {
-                }
-
-                @Override
-                public void onClickFrontView(int i) {
-                }
-
-                @Override
-                public void onClickBackView(int i) {
-                }
-
-                @Override
-                public void onDismiss(int[] ints) {
-                }
-
-                @Override
-                public int onChangeSwipeMode(int i) {
-                    return 0;
-                }
-
-                @Override
-                public void onChoiceChanged(int i, boolean b) {
-                }
-
-                @Override
-                public void onChoiceStarted() {
-                }
-
-                @Override
-                public void onChoiceEnded() {
-                }
-
-                @Override
-                public void onFirstListItem() {
-                }
-
-                @Override
-                public void onLastListItem() {
-                }
-            });
 
             ibFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ArrayList<String> tagsAll = Tag.getNames(stacksController.getTagsAll());
+                    ArrayList<String> tagsAll = Tag.getValues(stacksController.getTagsAll());
 
                     StackDialogFragment dialog = new StackDialogFragment();
                     Bundle bundle = new Bundle();
@@ -307,8 +244,8 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     }
 
     @Override
-    public void onAddStack(String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
-        Stack stack = stacksController.getEmptyStack(title, subtitle, author, languageFrom, languageTo, tags);
+    public void onAddStack(String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags) {
+        Stack stack = stacksController.getEmptyStack(title, subtitle, author, languageFrom.getLangCode(), languageTo.getLangCode(), tags);
 
         if (!new File(stack.getFile()).exists()) {
             stacksController.addStack(stack);
@@ -322,8 +259,8 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     }
 
     @Override
-    public void onEditStack(String uuid, String title, String subtitle, String author, Language languageFrom, Language languageTo, List<Tag> tags) {
-        stacksController.updateStack(uuid, title, subtitle, author, languageFrom, languageTo, tags);
+    public void onEditStack(String uuid, String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags) {
+        stacksController.updateStack(uuid, title, subtitle, author, languageFrom.getLangCode(), languageTo.getLangCode(), tags);
         stacksController.addTagsSelected(tags);
         stacksAdapter.notifyDataSetChanged();
 
@@ -400,8 +337,8 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     private void selectTags() {
         ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
 
-        ArrayList<String> tagsAll = Tag.getNames(stacksController.getTagsAll());
-        ArrayList<String> tagsSelected = Tag.getNames(stacksController.getTagsSelected());
+        ArrayList<String> tagsAll = Tag.getValues(stacksController.getTagsAll());
+        ArrayList<String> tagsSelected = Tag.getValues(stacksController.getTagsSelected());
 
         FilterStacksDialogFragment dialog = new FilterStacksDialogFragment();
         Bundle bundle = new Bundle();

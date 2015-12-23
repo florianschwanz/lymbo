@@ -12,7 +12,8 @@ import android.widget.Button;
 import de.interoberlin.lymbo.R;
 
 public class DisplayHintDialogFragment extends DialogFragment {
-    public static final String TAG = "display_hint";
+    public static final String TAG = DisplayHintDialogFragment.class.getCanonicalName();
+
     private OnCompleteListener ocListener;
 
     // --------------------

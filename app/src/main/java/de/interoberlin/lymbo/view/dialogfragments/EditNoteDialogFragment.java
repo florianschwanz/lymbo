@@ -15,7 +15,8 @@ import android.widget.EditText;
 import de.interoberlin.lymbo.R;
 
 public class EditNoteDialogFragment extends DialogFragment {
-    public static final String TAG = "edit_note";
+    public static final String TAG = EditNoteDialogFragment.class.getCanonicalName();
+
     private OnCompleteListener ocListener;
 
     // --------------------

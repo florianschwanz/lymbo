@@ -21,6 +21,8 @@ import de.interoberlin.lymbo.model.webservice.ParamHolder;
 import de.interoberlin.mate.lib.model.Log;
 
 public class LymboWebDownloadTask extends AsyncTask<String, Void, String> {
+    public static final String TAG = LymboWebDownloadTask.class.toString();
+
     private static final String ENCODING = "UTF-8";
     private static final String contentType = "text/plain";
 
@@ -71,7 +73,7 @@ public class LymboWebDownloadTask extends AsyncTask<String, Void, String> {
         super.onPostExecute(result);
 
         if (result != null) {
-            Log.debug(result);
+            Log.d(TAG, result);
 
             if (ocListener != null)
                 ocListener.onLymboDownloaded(result);
@@ -116,12 +118,12 @@ public class LymboWebDownloadTask extends AsyncTask<String, Void, String> {
 
         try {
             if (con.getResponseCode() != RESPONSE_CODE_OKAY) {
-                Log.error("Error from Lymbo Web API Download");
-                Log.error("ResponseCode : " + con.getResponseCode());
-                Log.error("ResponseMethod : " + con.getRequestMethod());
+                Log.e(TAG, "Error from Lymbo Web API Download");
+                Log.e(TAG, "ResponseCode : " + con.getResponseCode());
+                Log.e(TAG, "ResponseMethod : " + con.getRequestMethod());
 
                 for (Map.Entry<String, List<String>> entry : con.getHeaderFields().entrySet()) {
-                    Log.error(entry.getKey() + " : " + entry.getValue());
+                    Log.e(TAG, entry.getKey() + " : " + entry.getValue());
                 }
                 throw new Exception("Error from Lymbo Web API");
             }
@@ -137,7 +139,7 @@ public class LymboWebDownloadTask extends AsyncTask<String, Void, String> {
             in.close();
 
             if (response.toString().startsWith("ArgumentException")) {
-                Log.error(response.toString());
+                Log.e(TAG,response.toString());
                 return null;
             } else {
                 return response.toString();

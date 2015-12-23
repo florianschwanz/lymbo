@@ -13,7 +13,8 @@ import android.widget.TextView;
 import de.interoberlin.lymbo.R;
 
 public class ShowErrorDialogFragment extends DialogFragment {
-    public static final String TAG = "show_error";
+    public static final String TAG = ShowErrorDialogFragment.class.getCanonicalName();
+
     private OnCompleteListener ocListener;
 
     // --------------------

@@ -20,6 +20,8 @@ import de.interoberlin.mate.lib.model.Log;
  * Data source for SQLite database table
  */
 public class TableSettingsDatasource {
+    public static final String TAG = TableSettingsDatasource.class.toString();
+
     private SQLiteDatabase database;
     private LymboSQLiteOpenHelper dbLymboSQLiteOpenHelper;
 
@@ -205,7 +207,7 @@ public class TableSettingsDatasource {
     // --------------------
 
     /**
-     * Deletes an entry identified by {@parm key}
+     * Deletes an entry identified by key
      *
      * @param key key of the setting to be deleted
      */
@@ -243,9 +245,9 @@ public class TableSettingsDatasource {
     public void printTable() {
         for (TableSettingsEntry entry : getEntries()) {
             if (entry != null) {
-                Log.debug("Entry");
-                Log.debug(".." + colKey.getName() + "\t" + entry.getKey());
-                Log.debug(".." + colValue.getName() + "\t" + entry.getValue());
+                Log.d(TAG, "Entry");
+                Log.d(TAG, ".." + colKey.getName() + "\t" + entry.getKey());
+                Log.d(TAG, ".." + colValue.getName() + "\t" + entry.getValue());
             }
         }
     }

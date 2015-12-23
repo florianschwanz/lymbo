@@ -26,10 +26,10 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.model.card.Card;
-import de.interoberlin.lymbo.model.card.Stack;
-import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.card.components.Answer;
+import de.interoberlin.lymbo.core.model.v1.impl.Answer;
+import de.interoberlin.lymbo.core.model.v1.impl.Card;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
 import de.interoberlin.lymbo.view.dialogfragments.CardDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.ConfirmRefreshDialogFragment;
@@ -214,7 +214,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             ibFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
+                    ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
                     ArrayList<String> templates = new ArrayList<>();
 
                     for (Card template : stack.getTemplates()) {
@@ -526,8 +526,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
     private void selectTags() {
         ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
 
-        ArrayList<String> tagsAll = Tag.getNames(cardsController.getTagsAll());
-        ArrayList<String> tagsSelected = Tag.getNames(cardsController.getTagsSelected());
+        ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
+        ArrayList<String> tagsSelected = Tag.getValues(cardsController.getTagsSelected());
         Boolean displayOnlyFavorites = cardsController.isDisplayOnlyFavorites();
 
         FilterCardsDialogFragment dialog = new FilterCardsDialogFragment();

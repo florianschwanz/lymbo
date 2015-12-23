@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import java.util.List;
 import java.util.Map;
 
-import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 
 public class XmlUtil {
     // --------------------
@@ -74,7 +74,7 @@ public class XmlUtil {
         String tagsList = "";
 
         for (Tag t : tags) {
-            tagsList += t.getName() + " ";
+            tagsList += t.getValue() + " ";
         }
 
         // Remove trailing blank

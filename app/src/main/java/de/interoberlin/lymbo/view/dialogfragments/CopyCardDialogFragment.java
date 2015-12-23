@@ -19,11 +19,11 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.StacksController;
-import de.interoberlin.lymbo.model.card.Stack;
-import de.interoberlin.lymbo.view.controls.RobotoTextView;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 
 public class CopyCardDialogFragment extends DialogFragment {
-    public static final String TAG = "copy_card";
+    public static final String TAG = CopyCardDialogFragment.class.getCanonicalName();
+
     private List<CheckBox> checkboxes = new ArrayList<>();
     private String targetLymboId = null;
 
@@ -58,7 +58,7 @@ public class CopyCardDialogFragment extends DialogFragment {
                 final TableRow tr = new TableRow(getActivity());
 
                 final CheckBox cb = new CheckBox(getActivity());
-                final RobotoTextView tvText = new RobotoTextView(getActivity());
+                final TextView tvText = new TextView(getActivity());
 
                 checkboxes.add(cb);
 

@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.CardView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -30,9 +29,9 @@ import java.util.concurrent.ExecutionException;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.StacksController;
-import de.interoberlin.lymbo.model.card.Stack;
-import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.model.card.aspects.LanguageAspect;
+import de.interoberlin.lymbo.core.model.v1.impl.Language;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.model.share.MailSender;
 import de.interoberlin.lymbo.model.webservice.AccessControlItem;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebAccessControlItemTask;
@@ -41,6 +40,7 @@ import de.interoberlin.lymbo.util.Base64BitmapConverter;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.activities.StacksActivity;
+import de.interoberlin.lymbo.view.components.TagView;
 import de.interoberlin.lymbo.view.dialogfragments.FilterStacksDialogFragment;
 import de.interoberlin.lymbo.view.dialogfragments.StackDialogFragment;
 
@@ -104,7 +104,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     }
 
     private View getLymboView(final int position, final Stack stack, ViewGroup parent) {
-        if (stack.getError().isEmpty()) {
+        if (stack.getError() == null) {
             // Layout inflater
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
@@ -122,7 +122,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             // Set values
             if (stack.getImageFormat() != null && stack.getImage() != null && !stack.getImage().trim().isEmpty()) {
                 switch (stack.getImageFormat()) {
-                    case BASE64: {
+                    case BASE_64: {
                         Bitmap bmp = Base64BitmapConverter.decodeBase64(stack.getImage());
                         ivImage.setImageBitmap(bmp);
                         break;
@@ -170,8 +170,8 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
 
             // Add tags
             for (Tag tag : stack.getTags()) {
-                if (!tag.getName().equals(getResources().getString(R.string.no_tag))) {
-                    CardView cvTag = (CardView) tag.getView(context, activity, llTags);
+                if (!tag.getValue().equals(getResources().getString(R.string.no_tag))) {
+                    TagView cvTag = new TagView(context, tag);
                     cvTag.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -184,10 +184,10 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             }
 
             // Add languages
-            LanguageAspect languageAspect = stack.getLanguageAspect();
-            if (languageAspect != null && languageAspect.getFrom() != null && languageAspect.getTo() != null) {
-                Tag languageFromTag = new Tag(languageAspect.getFrom().getName(context));
-                CardView cvTagLanguageFrom = (CardView) languageFromTag.getView(context, activity, llTags);
+            Language language = stack.getLanguage();
+            if (language != null && language.getFrom() != null && language.getTo() != null) {
+                Tag languageFromTag = new Tag(language.getFrom());
+                TagView cvTagLanguageFrom = new TagView(context, languageFromTag);
                 cvTagLanguageFrom.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -197,8 +197,8 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
 
                 llTags.addView(cvTagLanguageFrom);
 
-                Tag languageToTag = new Tag(languageAspect.getTo().getName(context));
-                CardView cvTagLanguageTo = (CardView) languageToTag.getView(context, activity, llTags);
+                Tag languageToTag = new Tag(language.getTo());
+                TagView cvTagLanguageTo = new TagView(context, languageToTag);
                 cvTagLanguageTo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -331,12 +331,12 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
         String author = stack.getAuthor();
         String languageFrom = null;
         String languageTo = null;
-        ArrayList<String> tagsAll = Tag.getNames(stacksController.getTagsAll());
-        ArrayList<String> tagsSelected = Tag.getNames(stack.getTags());
+        ArrayList<String> tagsAll = Tag.getValues(stacksController.getTagsAll());
+        ArrayList<String> tagsSelected = Tag.getValues(stack.getTags());
 
-        if (stack.getLanguageAspect() != null && stack.getLanguageAspect().getFrom() != null && stack.getLanguageAspect().getTo() != null) {
-            languageFrom = stack.getLanguageAspect().getFrom().getLangCode();
-            languageTo = stack.getLanguageAspect().getTo().getLangCode();
+        if (stack.getLanguage() != null && stack.getLanguage().getFrom() != null && stack.getLanguage().getTo() != null) {
+            languageFrom = stack.getLanguage().getFrom();
+            languageTo = stack.getLanguage().getTo();
         }
 
         vibrate(VIBRATION_DURATION);
@@ -391,8 +391,8 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     private void selectTags() {
         ((Vibrator) activity.getSystemService(Activity.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
 
-        ArrayList<String> tagsAll = Tag.getNames(stacksController.getTagsAll());
-        ArrayList<String> tagsSelected = Tag.getNames(stacksController.getTagsSelected());
+        ArrayList<String> tagsAll = Tag.getValues(stacksController.getTagsAll());
+        ArrayList<String> tagsSelected = Tag.getValues(stacksController.getTagsSelected());
 
         FilterStacksDialogFragment dialog = new FilterStacksDialogFragment();
         Bundle bundle = new Bundle();

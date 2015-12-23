@@ -18,11 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.card.Tag;
-import de.interoberlin.lymbo.view.controls.RobotoTextView;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 
 public class FilterCardsDialogFragment extends DialogFragment {
-    public static final String TAG = "filter_cards";
+    public static final String TAG = FilterCardsDialogFragment.class.getCanonicalName();
 
     private boolean displayOnlyFavorites;
 
@@ -62,7 +61,7 @@ public class FilterCardsDialogFragment extends DialogFragment {
         for (final String t : tagsAll) {
             final TableRow tr = new TableRow(getActivity());
             final CheckBox cb = new CheckBox(getActivity());
-            final RobotoTextView tvText = new RobotoTextView(getActivity());
+            final TextView tvText = new TextView(getActivity());
 
             tr.addView(cb);
             tr.addView(tvText);
@@ -140,7 +139,7 @@ public class FilterCardsDialogFragment extends DialogFragment {
                 for (int i = 0; i < tblTags.getChildCount(); i++) {
                     final TableRow tr = (TableRow) tblTags.getChildAt(i);
                     final CheckBox cb = (CheckBox) tr.getChildAt(0);
-                    final RobotoTextView tvText = (RobotoTextView) tr.getChildAt(1);
+                    final TextView tvText = (TextView) tr.getChildAt(1);
 
                     if (cb.isChecked())
                         tagsSelected.add(new Tag(tvText.getText().toString()));

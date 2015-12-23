@@ -11,11 +11,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import de.interoberlin.lymbo.core.model.v1.impl.ELanguage;
 import de.interoberlin.lymbo.model.webservice.Param;
 import de.interoberlin.lymbo.model.webservice.ParamHolder;
 import de.interoberlin.mate.lib.model.Log;
 
 public class MicrosoftTranslatorTask extends AsyncTask<String, Void, String> {
+    public static final String TAG = MicrosoftTranslatorTask.class.toString();
+
     private static final String TRANSLATE_URL = "http://api.microsofttranslator.com/V2/Ajax.svc/Translate?";
 
     private static final String ENCODING = "UTF-8";
@@ -46,8 +49,8 @@ public class MicrosoftTranslatorTask extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
         String accessToken = params[0];
-        Language languageFrom = Language.fromString(params[1]);
-        Language languageTo = Language.fromString(params[2]);
+        ELanguage languageFrom = ELanguage.fromString(params[1]);
+        ELanguage languageTo = ELanguage.fromString(params[2]);
         String text = params[3];
 
         try {
@@ -79,7 +82,7 @@ public class MicrosoftTranslatorTask extends AsyncTask<String, Void, String> {
      * @return translated text
      * @throws Exception
      */
-    public static String getTranslation(String accessToken, Language from, Language to, String text) throws Exception {
+    public static String getTranslation(String accessToken, ELanguage from, ELanguage to, String text) throws Exception {
         // Parameters
         ParamHolder ph = new ParamHolder();
         ph.add(new Param(PARAM_FROM, URLEncoder.encode(from.getLangCode(), ENCODING)));
@@ -99,7 +102,7 @@ public class MicrosoftTranslatorTask extends AsyncTask<String, Void, String> {
         // Execute request
         try {
             if (con.getResponseCode() != RESPONSE_CODE_OKAY) {
-                Log.error("Error translating text RESPONSE CODE : " + con.getResponseCode());
+                Log.e(TAG, "Error translating text RESPONSE CODE : " + con.getResponseCode());
                 throw new Exception("Error from Microsoft Translator API");
             }
             return inputStreamToString(con.getInputStream()).replaceAll("\"", "");

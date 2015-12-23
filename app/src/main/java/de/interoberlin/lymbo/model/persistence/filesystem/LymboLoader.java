@@ -9,24 +9,28 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.UUID;
 
 import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.card.EFormat;
-import de.interoberlin.lymbo.model.card.Stack;
+import de.interoberlin.lymbo.core.model.v1.impl.EFormat;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.util.ZipUtil;
 import de.interoberlin.mate.lib.model.Log;
 
 public class LymboLoader {
+    public static final String TAG = LymboLoader.class.toString();
     // --------------------
     // Methods - Facade
     // --------------------
 
     public static Stack getLymboFromString(Context context, String string, boolean onlyTopLevel) {
         Stack stack = getLymboFromInputStream(new ByteArrayInputStream(string.getBytes()), null, onlyTopLevel);
+
+        if (stack == null || stack.getTitle() == null)
+            return null;
 
         String LYMBO_SAVE_PATH = context.getResources().getString(R.string.lymbo_save_path);
         String path = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH;
@@ -37,6 +41,7 @@ public class LymboLoader {
         stack.setPath(path);
         stack.setAsset(false);
         stack.setFormat(EFormat.LYMBO);
+
         return stack;
     }
 
@@ -62,7 +67,7 @@ public class LymboLoader {
 
                     return stack;
                 } catch (IOException e) {
-                    Log.error(e.toString());
+                    Log.e(TAG, e.toString());
                     e.printStackTrace();
                 }
             } else if (fileName.endsWith(context.getResources().getString(R.string.lymbox_file_extension))) {
@@ -155,7 +160,7 @@ public class LymboLoader {
 
                 // Make sure that newly generated ids will be persistent
                 if (format == EFormat.LYMBO && !onlyTopLevel && !asset && stack.isContainsGeneratedIds()) {
-                    stack.setModificationDate(new Date().toString());
+                    stack.setModificationDate(new GregorianCalendar());
                     LymboWriter.writeXml(stack, new File(stack.getFile()));
                 }
 
@@ -164,7 +169,7 @@ public class LymboLoader {
                 return null;
             }
         } catch (FileNotFoundException e) {
-            Log.error(e.toString());
+            Log.e(TAG, e.toString());
             e.printStackTrace();
             return null;
         }
@@ -174,7 +179,7 @@ public class LymboLoader {
         try {
             return LymboParser.getInstance().parse(is, path, onlyTopLevel);
         } catch (IOException e) {
-            Log.error(e.toString());
+            Log.e(TAG, e.toString());
             e.printStackTrace();
             return null;
         }

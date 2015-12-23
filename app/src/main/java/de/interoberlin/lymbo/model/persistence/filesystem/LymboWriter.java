@@ -5,11 +5,11 @@ import android.os.Environment;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Date;
+import java.util.GregorianCalendar;
 
 import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.model.card.Stack;
+import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 
 /**
  * This class can be used to write a lymbo object into an xml file
@@ -21,7 +21,7 @@ public class LymboWriter {
         if (new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + LYMBO_SAVE_PATH).mkdirs())
             return;
 
-        stack.setModificationDate(new Date().toString());
+        stack.setModificationDate(new GregorianCalendar());
 
         try {
             FileWriter fw = new FileWriter(file);

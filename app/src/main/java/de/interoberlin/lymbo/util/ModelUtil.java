@@ -4,7 +4,7 @@ package de.interoberlin.lymbo.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.interoberlin.lymbo.model.card.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 
 public class ModelUtil {
 
