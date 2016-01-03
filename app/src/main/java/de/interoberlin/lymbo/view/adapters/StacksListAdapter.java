@@ -239,7 +239,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             String noAuthorSpecified = res.getString(R.string.no_author_specified);
             String username = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
 
-            if (author.isEmpty() || author.equals(noAuthorSpecified) || author.equals(username)) {
+            if (author == null || author.isEmpty() || author.equals(noAuthorSpecified) || author.equals(username)) {
                 ivUpload.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

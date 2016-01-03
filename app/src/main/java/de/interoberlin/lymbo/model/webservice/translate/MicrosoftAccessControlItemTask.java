@@ -64,10 +64,12 @@ public class MicrosoftAccessControlItemTask extends AsyncTask<String, Void, Acce
         String clientId = params[0];
         String clientSecret = params[1];
 
-        try {
-            return getAccessControlItem(clientId, clientSecret);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (clientId != null && clientSecret != null) {
+            try {
+                return getAccessControlItem(clientId, clientSecret);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return null;

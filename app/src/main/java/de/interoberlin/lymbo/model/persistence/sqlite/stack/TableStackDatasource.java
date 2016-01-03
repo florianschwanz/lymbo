@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.model.persistence.sqlite.Column;
 import de.interoberlin.lymbo.model.persistence.sqlite.ColumnHolder;
 import de.interoberlin.lymbo.model.persistence.sqlite.LymboSQLiteOpenHelper;
@@ -52,7 +53,7 @@ public class TableStackDatasource {
     // --------------------
 
     public TableStackDatasource(Context context) {
-        dbLymboSQLiteOpenHelper = new LymboSQLiteOpenHelper(context);
+        dbLymboSQLiteOpenHelper = new LymboSQLiteOpenHelper(App.getContext());
     }
 
     // --------------------

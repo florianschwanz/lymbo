@@ -28,14 +28,14 @@ import java.util.concurrent.ExecutionException;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.core.model.v1.impl.Answer;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
-import de.interoberlin.lymbo.core.model.v1.impl.Component;
-import de.interoberlin.lymbo.core.model.v1.impl.EComponentType;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
-import de.interoberlin.lymbo.core.model.v1.impl.Text;
-import de.interoberlin.lymbo.core.model.v1.impl.Title;
+import de.interoberlin.lymbo.core.model.v1.impl.components.AComponent;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Answer;
+import de.interoberlin.lymbo.core.model.v1.impl.components.EComponentType;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Title;
 import de.interoberlin.lymbo.model.webservice.AccessControlItem;
 import de.interoberlin.lymbo.model.webservice.translate.MicrosoftAccessControlItemTask;
 import de.interoberlin.lymbo.model.webservice.translate.MicrosoftTranslatorTask;
@@ -142,7 +142,7 @@ public class CardDialogFragment extends DialogFragment {
         }
 
         if (answersValues != null && answersCorrect != null && answersValues.size() == answersCorrect.size()) {
-            for (int i = 0; i<answersValues.size(); i++) {
+            for (int i = 0; i < answersValues.size(); i++) {
                 final TableRow tr = new TableRow(getActivity());
                 final CheckBox cb = new CheckBox(getActivity());
                 final EditText et = new EditText(getActivity());
@@ -499,13 +499,13 @@ public class CardDialogFragment extends DialogFragment {
         ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
         ArrayList<String> tagsSelected = Tag.getValues(template.getTags());
 
-        for (Component c : template.getSides().get(0).getComponents()) {
+        for (AComponent c : template.getSides().get(0).getComponents()) {
             if (c instanceof Text) {
                 textsFront.add(((Text) c).getValue());
             }
         }
 
-        for (Component c : template.getSides().get(1).getComponents()) {
+        for (AComponent c : template.getSides().get(1).getComponents()) {
             if (c instanceof Text) {
                 textsBack.add(((Text) c).getValue());
             }

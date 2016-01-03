@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import java.util.Locale;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.core.model.v1.impl.Result;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Result;
 
 public class ResultView extends LinearLayout {
 

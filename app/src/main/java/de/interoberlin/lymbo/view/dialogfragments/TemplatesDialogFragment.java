@@ -21,11 +21,11 @@ import java.util.ArrayList;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
-import de.interoberlin.lymbo.core.model.v1.impl.Component;
-import de.interoberlin.lymbo.core.model.v1.impl.EComponentType;
+import de.interoberlin.lymbo.core.model.v1.impl.components.AComponent;
+import de.interoberlin.lymbo.core.model.v1.impl.components.EComponentType;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
-import de.interoberlin.lymbo.core.model.v1.impl.Text;
-import de.interoberlin.lymbo.core.model.v1.impl.Title;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Title;
 
 public class TemplatesDialogFragment extends DialogFragment {
     public static final String TAG = TemplatesDialogFragment.class.getCanonicalName();
@@ -163,7 +163,7 @@ public class TemplatesDialogFragment extends DialogFragment {
         ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
         ArrayList<String> tagsSelected = Tag.getValues(template.getTags());
 
-        for (Component c : template.getSides().get(0).getComponents()) {
+        for (AComponent c : template.getSides().get(0).getComponents()) {
             switch (c.getType()) {
                 case TEXT: {
                     frontTexts.add(((Text) c).getValue());
@@ -172,7 +172,7 @@ public class TemplatesDialogFragment extends DialogFragment {
             }
         }
 
-        for (Component c : template.getSides().get(1).getComponents()) {
+        for (AComponent c : template.getSides().get(1).getComponents()) {
             switch (c.getType()) {
                 case TEXT: {
                     backTexts.add(((Text) c).getValue());

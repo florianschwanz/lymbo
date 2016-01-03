@@ -8,8 +8,8 @@ import android.widget.LinearLayout;
 import java.io.File;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.core.model.v1.impl.EImageFormat;
-import de.interoberlin.lymbo.core.model.v1.impl.Image;
+import de.interoberlin.lymbo.core.model.v1.impl.components.EImageFormat;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Image;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
 
 public class ImageView extends LinearLayout {

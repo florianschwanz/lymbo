@@ -18,11 +18,13 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.core.model.v1.impl.EFormat;
+import de.interoberlin.lymbo.core.model.v1.impl.ELanguage;
 import de.interoberlin.lymbo.core.model.v1.impl.Language;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
@@ -127,8 +129,9 @@ public class StacksController {
      * @param languageTo   target language
      * @return an empty lymbo
      */
-    public Stack getEmptyStack(String title, String subtitle, String author, String languageFrom, String languageTo, List<Tag> tags) {
+    public Stack getEmptyStack(String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags) {
         Stack stack = new Stack();
+        stack.setId(UUID.randomUUID().toString());
         stack.setTitle(title);
         stack.setSubtitle(subtitle);
         stack.setAuthor(author);
@@ -136,8 +139,8 @@ public class StacksController {
 
         if (languageFrom != null && languageTo != null) {
             Language language = new Language();
-            language.setFrom(languageFrom);
-            language.setTo(languageTo);
+            language.setFrom(languageFrom.getLangCode());
+            language.setTo(languageTo.getLangCode());
             stack.setLanguage(language);
         }
 
@@ -168,11 +171,11 @@ public class StacksController {
      * @param languageFrom source language
      * @param languageTo   target language
      */
-    public void updateStack(String uuid, String title, String subtitle, String author, String languageFrom, String languageTo, List<Tag> tags) {
+    public void updateStack(String uuid, String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags) {
         if (lymbosContainsId(uuid)) {
             Stack stack = getLymboById(uuid);
 
-            Stack fullStack = LymboLoader.getLymboFromFile(activity, new File(stack.getFile()), false);
+            Stack fullStack = LymboLoader.getLymboFromFile(App.getContext(), new File(stack.getFile()), false);
 
             if (fullStack != null) {
                 stack.setCards(fullStack.getCards());
@@ -185,8 +188,8 @@ public class StacksController {
 
                 if (languageFrom != null && languageTo != null) {
                     Language language = new Language();
-                    language.setFrom(languageFrom);
-                    language.setTo(languageTo);
+                    language.setFrom(languageFrom.getLangCode());
+                    language.setTo(languageTo.getLangCode());
                     stack.setLanguage(language);
                 }
 
@@ -304,7 +307,7 @@ public class StacksController {
         // Scan for *.lymbo and *.lymbox files
         for (File f : findFiles(LYMBO_LOOKUP_PATH, LYMBO_FILE_EXTENSION, LYMBOX_FILE_EXTENSION)) {
             if (!f.getAbsolutePath().contains(LYMBO_TMP_PATH)) {
-                Stack stack = LymboLoader.getLymboFromFile(activity, f, true);
+                Stack stack = LymboLoader.getLymboFromFile(App.getContext(), f, true);
 
                 if (stack != null && !datasource.contains(TableStackDatasource.colFile.getName(), stack.getFile())) {
                     int format = TableStackDatasource.FORMAT_LYMBO;
@@ -412,7 +415,7 @@ public class StacksController {
 
         // Add lymbos from file system
         for (File f : files) {
-            Stack s = LymboLoader.getLymboFromFile(activity, f, false);
+            Stack s = LymboLoader.getLymboFromFile(App.getContext(), f, false);
 
             if (s != null) {
                 Log.i(TAG, "Loaded file " + f.getName());

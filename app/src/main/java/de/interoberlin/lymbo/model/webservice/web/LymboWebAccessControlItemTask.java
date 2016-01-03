@@ -68,10 +68,12 @@ public class LymboWebAccessControlItemTask extends AsyncTask<String, Void, Acces
         String clientId = params[2];
         String clientSecret = params[3];
 
-        try {
-            return getAccessControlItem(username, password, clientId, clientSecret);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (username != null & password != null && clientId != null && clientSecret != null) {
+            try {
+                return getAccessControlItem(username, password, clientId, clientSecret);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return null;

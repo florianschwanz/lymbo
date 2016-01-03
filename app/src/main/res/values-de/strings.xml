@@ -166,5 +166,6 @@
     <string name="download">Herunterladen</string>
     <string name="downloaded_lymbo">Lymbo heruntergeladen</string>
     <string name="error_downloading_lymbo">Fehler beim Herunterladen</string>
+    <string name="this_file_does_not_match_lymbo_format">Diese Datei entspricht nicht dem lymbo Format</string>
 
 </resources>

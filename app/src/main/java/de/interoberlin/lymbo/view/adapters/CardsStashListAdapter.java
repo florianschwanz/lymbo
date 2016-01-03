@@ -21,14 +21,14 @@ import java.util.List;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
-import de.interoberlin.lymbo.core.model.v1.impl.Choice;
-import de.interoberlin.lymbo.core.model.v1.impl.Component;
-import de.interoberlin.lymbo.core.model.v1.impl.Image;
-import de.interoberlin.lymbo.core.model.v1.impl.Result;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Choice;
+import de.interoberlin.lymbo.core.model.v1.impl.components.AComponent;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Image;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Result;
 import de.interoberlin.lymbo.core.model.v1.impl.Side;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
-import de.interoberlin.lymbo.core.model.v1.impl.Text;
-import de.interoberlin.lymbo.core.model.v1.impl.Title;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Title;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsStashActivity;
 import de.interoberlin.lymbo.view.components.ChoiceView;
@@ -109,7 +109,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
             LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
 
             // Add components
-            for (Component c : side.getComponents()) {
+            for (AComponent c : side.getComponents()) {
                 switch (c.getType()) {
                     case TITLE : {
                         llComponents.addView(new TitleView(context, (Title) c)); break;

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<stack
+  schemaVersion="1"
+  title="Hello Lymbo [xml]"
+  subtitle="Welcome"
+  author="Flo" >
+  <card
+    flip="false"
+    tags=""
+    edit="false" >
+    <side>
+      <title type="TITLE" value="This is a card" />
+      <text type="TEXT" value="(It can contain different things)" />
+    </side>
+  </card>
+</stack>

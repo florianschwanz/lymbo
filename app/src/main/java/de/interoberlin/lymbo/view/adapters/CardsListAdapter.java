@@ -28,21 +28,20 @@ import com.github.mrengineer13.snackbar.SnackBar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.core.model.v1.impl.Answer;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
-import de.interoberlin.lymbo.core.model.v1.impl.Choice;
-import de.interoberlin.lymbo.core.model.v1.impl.Component;
-import de.interoberlin.lymbo.core.model.v1.impl.EComponentType;
-import de.interoberlin.lymbo.core.model.v1.impl.Image;
-import de.interoberlin.lymbo.core.model.v1.impl.Result;
 import de.interoberlin.lymbo.core.model.v1.impl.Side;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
-import de.interoberlin.lymbo.core.model.v1.impl.Text;
-import de.interoberlin.lymbo.core.model.v1.impl.Title;
+import de.interoberlin.lymbo.core.model.v1.impl.components.AComponent;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Answer;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Choice;
+import de.interoberlin.lymbo.core.model.v1.impl.components.EComponentType;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Image;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Result;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Title;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.components.ChoiceView;
@@ -179,7 +178,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
 
             // Add components
-            for (Component c : side.getComponents()) {
+            for (AComponent c : side.getComponents()) {
                 switch (c.getType()) {
                     case TITLE : {
                         llComponents.addView(new TitleView(context, (Title) c)); break;
@@ -340,7 +339,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         ArrayList<Integer> answersCorrect = new ArrayList<>();
         ArrayList<String> templates = new ArrayList<>();
 
-        for (Component c : card.getSides().get(0).getComponents()) {
+        for (AComponent c : card.getSides().get(0).getComponents()) {
             if (c instanceof Text) {
                 frontTexts.add(((Text) c).getValue());
             } else if (c instanceof Choice) {
@@ -351,7 +350,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             }
         }
 
-        for (Component c : card.getSides().get(1).getComponents()) {
+        for (AComponent c : card.getSides().get(1).getComponents()) {
             if (c instanceof Text) {
                 backTexts.add(((Text) c).getValue());
             }
@@ -584,7 +583,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         final RelativeLayout rlMain = (RelativeLayout) view.findViewById(R.id.rlMain);
         final TextView tvNumerator = (TextView) view.findViewById(R.id.tvNumerator);
 
-        handleQuiz(card);
+        card.updateResult();
+        notifyDataSetChanged();
+
         card.setSideVisible((card.getSideVisible() + 1) % card.getSides().size());
         tvNumerator.setText(String.valueOf(card.getSideVisible() + 1));
 
@@ -634,35 +635,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             return false;
         } else {
             return true;
-        }
-    }
-
-    /**
-     * Determines if all the right answers are selected
-     *
-     * @param card card
-     */
-    private void handleQuiz(Card card) {
-        Side current = card.getSides().get(card.getSideVisible());
-
-        Side next = null;
-        if (card.getSideVisible() + 1 < card.getSides().size())
-            next = card.getSides().get(card.getSideVisible() + 1);
-
-        // Handle quiz card
-        if (current != null && current.contains(EComponentType.CHOICE) && next != null && next.contains(EComponentType.RESULT)) {
-            // Default result : CORRECT
-            ((Result) next.getFirst(EComponentType.RESULT)).setValue(getResources().getString(R.string.correct).toUpperCase(Locale.getDefault()));
-
-            for (Answer a : ((Choice) current.getFirst(EComponentType.CHOICE)).getAnswers()) {
-                if (a.isCorrect() != a.isSelected()) {
-                    // At least on answer is wrong : WRONG
-                    ((Result) next.getFirst(EComponentType.RESULT)).setValue(getResources().getString(R.string.wrong).toUpperCase(Locale.getDefault()));
-                    break;
-                }
-            }
-
-            notifyDataSetChanged();
         }
     }
 

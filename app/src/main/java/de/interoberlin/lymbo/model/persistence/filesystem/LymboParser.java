@@ -22,47 +22,30 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.interoberlin.lymbo.App;
-import de.interoberlin.lymbo.core.model.v1.impl.Answer;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
-import de.interoberlin.lymbo.core.model.v1.impl.Choice;
-import de.interoberlin.lymbo.core.model.v1.impl.Component;
-import de.interoberlin.lymbo.core.model.v1.impl.EChoiceType;
-import de.interoberlin.lymbo.core.model.v1.impl.EGravity;
-import de.interoberlin.lymbo.core.model.v1.impl.EImageFormat;
-import de.interoberlin.lymbo.core.model.v1.impl.ESVGFormat;
-import de.interoberlin.lymbo.core.model.v1.impl.Image;
 import de.interoberlin.lymbo.core.model.v1.impl.Language;
-import de.interoberlin.lymbo.core.model.v1.impl.Result;
 import de.interoberlin.lymbo.core.model.v1.impl.Side;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
-import de.interoberlin.lymbo.core.model.v1.impl.Text;
-import de.interoberlin.lymbo.core.model.v1.impl.Title;
+import de.interoberlin.lymbo.core.model.v1.impl.components.AComponent;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Answer;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Choice;
+import de.interoberlin.lymbo.core.model.v1.impl.components.EChoiceType;
+import de.interoberlin.lymbo.core.model.v1.impl.components.EGravity;
+import de.interoberlin.lymbo.core.model.v1.impl.components.EImageFormat;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Image;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Result;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Title;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardEntry;
 import de.interoberlin.mate.lib.model.Log;
 
 public class LymboParser {
     public static final String TAG = LymboParser.class.getCanonicalName();
-    private static LymboParser instance;
 
-    private boolean onlyTopLevel;
-    private boolean containsGeneratedIds;
-
-    // --------------------
-    // Constructors
-    // --------------------
-
-    private LymboParser() {
-    }
-
-    public static LymboParser getInstance() {
-        if (instance == null) {
-            instance = new LymboParser();
-        }
-
-        return instance;
-    }
+    private static boolean onlyTopLevel;
+    private static boolean containsGeneratedIds;
 
     // --------------------
     // Methods
@@ -77,9 +60,9 @@ public class LymboParser {
      * @return xmlLymbo
      * @throws IOException
      */
-    public Stack parse(InputStream is, File path, boolean onlyTopLevel) throws IOException {
-        this.onlyTopLevel = onlyTopLevel;
-        containsGeneratedIds = false;
+    public static Stack fromXml(InputStream is, File path, boolean onlyTopLevel) throws IOException {
+        LymboParser.onlyTopLevel = onlyTopLevel;
+        LymboParser.containsGeneratedIds = false;
 
         try {
             XmlPullParser parser = Xml.newPullParser();
@@ -87,7 +70,7 @@ public class LymboParser {
             parser.setInput(is, null);
             parser.nextTag();
 
-            Stack stack = parseLymbo(parser, path, onlyTopLevel);
+            Stack stack = parseStack(parser, path, onlyTopLevel);
             stack.setContainsGeneratedIds(containsGeneratedIds);
 
             return stack;
@@ -111,10 +94,12 @@ public class LymboParser {
      * @throws XmlPullParserException
      * @throws IOException
      */
-    private Stack parseLymbo(XmlPullParser parser, File path, boolean onlyTopLevel) throws XmlPullParserException, IOException {
+    private static Stack parseStack(XmlPullParser parser, File path, boolean onlyTopLevel) throws XmlPullParserException, IOException {
+        Log.d(TAG, "parseStack");
+
         String name;
 
-        parser.require(XmlPullParser.START_TAG, null, "lymbo");
+        parser.require(XmlPullParser.START_TAG, null, "stack");
 
         // Create element
         Stack stack = new Stack();
@@ -185,7 +170,9 @@ public class LymboParser {
         return stack;
     }
 
-    private EImageFormat parseImageFormat(String imageFormat) {
+    private static EImageFormat parseImageFormat(String imageFormat) {
+        Log.d(TAG, "parseImageFormat");
+
         switch (imageFormat) {
             case "ref": {
                 return EImageFormat.REF;
@@ -197,7 +184,10 @@ public class LymboParser {
         return null;
     }
 
-    private ESVGFormat parseSVGFormat(String svgFormat) {
+    /*
+    private static ESVGFormat parseSVGFormat(String svgFormat) {
+        Log.d(TAG, "parseSVGFormat");
+
         switch (svgFormat) {
             case "ref": {
                 return ESVGFormat.REF;
@@ -209,6 +199,7 @@ public class LymboParser {
 
         return null;
     }
+    */
 
     /**
      * Returns a card which contains one or two sides
@@ -219,7 +210,9 @@ public class LymboParser {
      * @throws XmlPullParserException
      * @throws IOException
      */
-    private Card parseCard(XmlPullParser parser, String tag, File path) throws XmlPullParserException, IOException {
+    private static Card parseCard(XmlPullParser parser, String tag, File path) throws XmlPullParserException, IOException {
+        Log.d(TAG, "parseCard");
+
         String name;
 
         parser.require(XmlPullParser.START_TAG, null, tag);
@@ -303,7 +296,9 @@ public class LymboParser {
      * @throws XmlPullParserException
      * @throws IOException
      */
-    private Side parseSide(XmlPullParser parser, String tag, File path) throws XmlPullParserException, IOException {
+    private static Side parseSide(XmlPullParser parser, String tag, File path) throws XmlPullParserException, IOException {
+        Log.d(TAG, "parseSide");
+
         String name;
         parser.require(XmlPullParser.START_TAG, null, tag);
 
@@ -315,7 +310,7 @@ public class LymboParser {
         String flip = parser.getAttributeValue(null, "flip");
 
         // Read sub elements
-        List<Component> components = new ArrayList<>();
+        List<AComponent> components = new ArrayList<>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -332,7 +327,7 @@ public class LymboParser {
                     components.add(parseTextComponent(parser));
                     break;
                 case "choice":
-                    components.add(parseChoiceComponent(parser));
+                    components.add(parseChoice(parser));
                     break;
                 /*
                 case "svg":
@@ -369,7 +364,9 @@ public class LymboParser {
      * @throws XmlPullParserException
      * @throws IOException
      */
-    private Title parseTitleComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static Title parseTitleComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.d(TAG, "parseTitle");
+
         String name;
         parser.require(XmlPullParser.START_TAG, null, "title");
 
@@ -422,7 +419,9 @@ public class LymboParser {
      * @throws XmlPullParserException
      * @throws IOException
      */
-    private Text parseTextComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static Text parseTextComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.d(TAG, "parseText");
+
         String name;
         parser.require(XmlPullParser.START_TAG, null, "text");
 
@@ -478,7 +477,9 @@ public class LymboParser {
      * @throws XmlPullParserException
      * @throws IOException
      */
-    private Result parseResultComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static Result parseResultComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.d(TAG, "parseResult");
+
         parser.require(XmlPullParser.START_TAG, null, "result");
 
         // Create element
@@ -510,7 +511,9 @@ public class LymboParser {
      * @throws XmlPullParserException
      * @throws IOException
      */
-    private Image parseImageComponent(XmlPullParser parser, File path) throws XmlPullParserException, IOException {
+    private static Image parseImageComponent(XmlPullParser parser, File path) throws XmlPullParserException, IOException {
+        Log.d(TAG, "parseImage");
+
         parser.require(XmlPullParser.START_TAG, null, "image");
 
         // Create element
@@ -549,7 +552,9 @@ public class LymboParser {
      * @throws XmlPullParserException
      * @throws IOException
      */
-    private Choice parseChoiceComponent(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static Choice parseChoice(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.d(TAG, "parseChoice");
+
         String name;
         parser.require(XmlPullParser.START_TAG, null, "choice");
 
@@ -592,7 +597,9 @@ public class LymboParser {
      * @throws XmlPullParserException
      * @throws IOException
      */
-    private Answer parseAnswer(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static Answer parseAnswer(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.d(TAG, "parseAnswer");
+
         String name;
         parser.require(XmlPullParser.START_TAG, null, "answer");
 
@@ -686,7 +693,9 @@ public class LymboParser {
      * @param type string value representing choice type
      * @return choice type
      */
-    private EChoiceType parseChoiceType(String type) {
+    private static EChoiceType parseChoiceType(String type) {
+        Log.d(TAG, "parseChoiceType");
+
         if (type.equalsIgnoreCase("multiple")) {
             return EChoiceType.MULTIPLE;
         } else if (type.equalsIgnoreCase("single")) {
@@ -696,7 +705,9 @@ public class LymboParser {
         }
     }
 
-    private Map.Entry<String, String> parseTranslation(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private static Map.Entry<String, String> parseTranslation(XmlPullParser parser) throws IOException, XmlPullParserException {
+        Log.d(TAG, "parseTranslation");
+
         // String name;
         parser.require(XmlPullParser.START_TAG, null, "translation");
 
@@ -731,7 +742,9 @@ public class LymboParser {
      * @param lines string value representing line count
      * @return line count
      */
-    private int parseLines(String lines) {
+    private static int parseLines(String lines) {
+        Log.d(TAG, "parseLines");
+
         try {
             return Integer.parseInt(lines) > 0 ? Integer.parseInt(lines) : 0;
         } catch (NumberFormatException nfe) {
@@ -746,7 +759,9 @@ public class LymboParser {
      * @param gravity string value representing gravity
      * @return gravity
      */
-    private EGravity parseGravity(String gravity) {
+    private static EGravity parseGravity(String gravity) {
+        Log.d(TAG, "parseGravity");
+
         if (gravity.equalsIgnoreCase("left")) {
             return EGravity.START;
         } else if (gravity.equalsIgnoreCase("center")) {
@@ -764,7 +779,9 @@ public class LymboParser {
      * @param tagString space separated string value containing tags
      * @return list of tags
      */
-    private List<Tag> parseTags(String tagString) {
+    private static List<Tag> parseTags(String tagString) {
+        Log.d(TAG, "parseTags");
+
         String[] tags = tagString.split(" ");
         List<String> tagNames = Arrays.asList(tags);
         List<Tag> tagList = new ArrayList<>();
@@ -786,7 +803,9 @@ public class LymboParser {
      * @throws XmlPullParserException
      * @throws IOException
      */
-    private Language parseLanguage(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static Language parseLanguage(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.d(TAG, "parseLanguage");
+
         String name;
         parser.require(XmlPullParser.START_TAG, null, "language");
 
@@ -828,7 +847,9 @@ public class LymboParser {
      * @param s date string
      * @return Gregorian calendar
      */
-    private GregorianCalendar parseDate(String s) {
+    private static GregorianCalendar parseDate(String s) {
+        Log.d(TAG, "parseDate");
+
         GregorianCalendar cal = new GregorianCalendar();
 
         DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy", Locale.US);
@@ -849,7 +870,7 @@ public class LymboParser {
      * @throws XmlPullParserException
      * @throws IOException
      */
-    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
         if (parser.getEventType() != XmlPullParser.START_TAG) {
             Log.d(TAG, "throw new IllegalStateException()");
             throw new IllegalStateException();

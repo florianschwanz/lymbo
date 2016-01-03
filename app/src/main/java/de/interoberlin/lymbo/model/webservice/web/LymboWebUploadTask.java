@@ -60,10 +60,12 @@ public class LymboWebUploadTask extends AsyncTask<String, Void, String> {
         String author = params[2];
         String content = params[3];
 
-        try {
-            return uploadLymbo(accessToken, id, author, content);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (accessToken != null && id != null && author != null && content != null) {
+            try {
+                return uploadLymbo(accessToken, id, author, content);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return null;

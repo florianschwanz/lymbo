@@ -26,7 +26,7 @@ import java.util.List;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
-import de.interoberlin.lymbo.core.model.v1.impl.Answer;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Answer;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;

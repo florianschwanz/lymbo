@@ -59,10 +59,12 @@ public class LymboWebDownloadTask extends AsyncTask<String, Void, String> {
         String id = params[1];
         String author = params[2];
 
-        try {
-            return downloadLymbo(accessToken, id, author);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (accessToken != null && id != null && author != null) {
+            try {
+                return downloadLymbo(accessToken, id, author);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return null;
@@ -139,7 +141,7 @@ public class LymboWebDownloadTask extends AsyncTask<String, Void, String> {
             in.close();
 
             if (response.toString().startsWith("ArgumentException")) {
-                Log.e(TAG,response.toString());
+                Log.e(TAG, response.toString());
                 return null;
             } else {
                 return response.toString();

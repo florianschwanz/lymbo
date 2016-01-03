@@ -5,8 +5,8 @@ import android.view.Gravity;
 import android.widget.LinearLayout;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.core.model.v1.impl.EGravity;
-import de.interoberlin.lymbo.core.model.v1.impl.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.components.EGravity;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Text;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.TranslationUtil;
 

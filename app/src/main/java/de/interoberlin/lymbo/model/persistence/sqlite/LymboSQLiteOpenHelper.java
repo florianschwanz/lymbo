@@ -10,7 +10,7 @@ import de.interoberlin.lymbo.model.persistence.sqlite.stack.TableStackDatasource
 
 public class LymboSQLiteOpenHelper extends SQLiteOpenHelper {
     // Database
-    private static final String DATABASE_NAME = "lymbo";
+    private static final String DATABASE_NAME = "lymbo.db";
     private static final int DATABASE_VERSION = 3;
 
     public LymboSQLiteOpenHelper(Context context) {
@@ -38,6 +38,7 @@ public class LymboSQLiteOpenHelper extends SQLiteOpenHelper {
     public void createTables(SQLiteDatabase db) {
         db.execSQL(TableCardDatasource.getCreateStatement());
         db.execSQL(TableStackDatasource.getCreateStatement());
+        db.execSQL(TableSettingsDatasource.getCreateStatement());
     }
 
     public void recreateTableCard(SQLiteDatabase db) {

@@ -11,17 +11,19 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import de.interoberlin.lymbo.App;
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.core.model.v1.impl.Answer;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
-import de.interoberlin.lymbo.core.model.v1.impl.Choice;
-import de.interoberlin.lymbo.core.model.v1.impl.EGravity;
-import de.interoberlin.lymbo.core.model.v1.impl.Result;
 import de.interoberlin.lymbo.core.model.v1.impl.Side;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
-import de.interoberlin.lymbo.core.model.v1.impl.Text;
-import de.interoberlin.lymbo.core.model.v1.impl.Title;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Answer;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Choice;
+import de.interoberlin.lymbo.core.model.v1.impl.components.EChoiceType;
+import de.interoberlin.lymbo.core.model.v1.impl.components.EGravity;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Result;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Text;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Title;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
@@ -112,9 +114,15 @@ public class CardsController {
      * @return whether card is visbible or not
      */
     public boolean isVisible(Card card) {
-        return (card != null &&
-                (!isDisplayOnlyFavorites() || (card.isFavorite())) &&
-                card.matchesTag(getTagsSelected()));
+        if (card != null) {
+            Tag noTag = new Tag(getResources().getString(R.string.no_tag));
+            boolean includeStacksWithoutTag = noTag.containedInList(getTagsSelected());
+            boolean matchesTags = card.matchesTag(getTagsSelected(), includeStacksWithoutTag);
+
+            return matchesTags;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -183,18 +191,28 @@ public class CardsController {
      */
     public void addCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
         Card card = new Card();
+        card.setId(UUID.randomUUID().toString());
 
-        Side sideFront = new Side();
-        sideFront.getComponents().add(new Title(frontTitleValue));
-        for (String s : frontTextsValues) {
-            sideFront.getComponents().add(new Text(s));
+        if (frontTitleValue != null) {
+            Side sideFront = new Side();
+            sideFront.getComponents().add(new Title(frontTitleValue));
+            for (String s : frontTextsValues) {
+                sideFront.getComponents().add(new Text(s));
+            }
+
+            if (!answers.isEmpty())
+                sideFront.getComponents().add(new Choice(EChoiceType.MULTIPLE, answers));
+
+            card.getSides().add(sideFront);
         }
-        sideFront.getComponents().add(new Choice(answers));
 
-        Side sideBack = new Side();
-        sideBack.getComponents().add(new Title(backTitleValue));
-        for (String s : backTextsValues) {
-            sideBack.getComponents().add(new Text(s));
+        if (backTitleValue != null) {
+            Side sideBack = new Side();
+            sideBack.getComponents().add(new Title(backTitleValue));
+            for (String s : backTextsValues) {
+                sideBack.getComponents().add(new Text(s));
+            }
+            card.getSides().add(sideBack);
         }
 
         card.setTags(tags);
@@ -236,7 +254,7 @@ public class CardsController {
                 }
 
                 if (answers != null && !answers.isEmpty()) {
-                    frontSide.getComponents().add(new Choice(answers));
+                    frontSide.getComponents().add(new Choice(EChoiceType.MULTIPLE, answers));
                 }
             }
 
@@ -644,9 +662,9 @@ public class CardsController {
      */
     public void reloadStack(String path, boolean asset) {
         if (asset)
-            stack = LymboLoader.getLymboFromAsset(activity, path, false);
+            stack = LymboLoader.getLymboFromAsset(App.getContext(), path, false);
         else
-            stack = LymboLoader.getLymboFromFile(activity, new File(path), false);
+            stack = LymboLoader.getLymboFromFile(App.getContext(), new File(path), false);
     }
 
     // --------------------

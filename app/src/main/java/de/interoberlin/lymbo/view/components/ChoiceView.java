@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.core.model.v1.impl.Answer;
-import de.interoberlin.lymbo.core.model.v1.impl.Choice;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Answer;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Choice;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.TranslationUtil;
 
@@ -33,10 +33,10 @@ public class ChoiceView extends TableLayout {
 
         inflate(context, R.layout.component_choice, this);
 
-        final List<Answer> answers = new ArrayList<>();
+        // final List<Answer> answers = new ArrayList<>();
         final List<CheckBox> checkboxes = new ArrayList<>();
 
-        for (final Answer answer : answers) {
+        for (final Answer answer : c.getAnswers()) {
             LayoutInflater li = LayoutInflater.from(context);
             LinearLayout llAnswer = (LinearLayout) li.inflate(R.layout.component_answer, this, false);
 
@@ -49,20 +49,22 @@ public class ChoiceView extends TableLayout {
             cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    switch (c.getChoiceType()) {
-                        case MULTIPLE: {
-                            answer.setSelected(b);
-                            break;
-                        }
-                        case SINGLE: {
-                            answer.setSelected(b);
-
-                            for (CheckBox c : checkboxes) {
-                                c.setChecked(false);
+                    if (c.getChoiceType() != null) {
+                        switch (c.getChoiceType()) {
+                            case MULTIPLE: {
+                                answer.setSelected(b);
+                                break;
                             }
+                            case SINGLE: {
+                                answer.setSelected(b);
 
-                            cb.setChecked(true);
-                            break;
+                                for (CheckBox c : checkboxes) {
+                                    c.setChecked(false);
+                                }
+
+                                cb.setChecked(true);
+                                break;
+                            }
                         }
                     }
                 }
