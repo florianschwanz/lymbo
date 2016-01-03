@@ -172,33 +172,56 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         });
 
         // Add sides
-        for (Side side : card.getSides()) {
+        if (!card.getSides().isEmpty()) {
+            for (Side side : card.getSides()) {
+                LayoutInflater li = LayoutInflater.from(context);
+                LinearLayout llSide = (LinearLayout) li.inflate(R.layout.side, parent, false);
+                LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
+
+                // Add components
+                for (AComponent c : side.getComponents()) {
+                    switch (c.getType()) {
+                        case TITLE: {
+                            llComponents.addView(new TitleView(context, (Title) c));
+                            break;
+                        }
+                        case TEXT: {
+                            llComponents.addView(new de.interoberlin.lymbo.view.components.TextView(context, (Text) c));
+                            break;
+                        }
+                        case IMAGE: {
+                            llComponents.addView(new de.interoberlin.lymbo.view.components.ImageView(context, (Image) c));
+                            break;
+                        }
+                        case CHOICE: {
+                            llComponents.addView(new ChoiceView(context, (Choice) c));
+                            break;
+                        }
+                        case RESULT: {
+                            llComponents.addView(new ResultView(context, (Result) c));
+                            break;
+                        }
+                    }
+                }
+
+                llSide.setVisibility(View.INVISIBLE);
+                rlMain.addView(llSide);
+            }
+
+            // Set one side visible
+            rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
+        } else {
+            Title title = new Title(getResources().getString(R.string.card_does_not_contain_any_sides));
+            Text text = new Text(getResources().getString(R.string.how_useful));
+
             LayoutInflater li = LayoutInflater.from(context);
             LinearLayout llSide = (LinearLayout) li.inflate(R.layout.side, parent, false);
             LinearLayout llComponents = (LinearLayout) llSide.findViewById(R.id.llComponents);
 
-            // Add components
-            for (AComponent c : side.getComponents()) {
-                switch (c.getType()) {
-                    case TITLE : {
-                        llComponents.addView(new TitleView(context, (Title) c)); break;
-                    }
-                    case TEXT : {
-                        llComponents.addView(new de.interoberlin.lymbo.view.components.TextView(context, (Text) c)); break;
-                    }
-                    case IMAGE: {
-                        llComponents.addView(new de.interoberlin.lymbo.view.components.ImageView(context, (Image) c)); break;
-                    }
-                    case CHOICE: {
-                        llComponents.addView(new ChoiceView(context, (Choice) c)); break;
-                    }
-                    case RESULT: {
-                        llComponents.addView(new ResultView(context, (Result) c)); break;
-                    }
-                }
-            }
+            llComponents.addView(new TitleView(context, title));
+            llComponents.addView(new de.interoberlin.lymbo.view.components.TextView(context, text));
 
-            llSide.setVisibility(View.INVISIBLE);
+            llSide.setVisibility(View.VISIBLE);
             rlMain.addView(llSide);
         }
 
@@ -206,9 +229,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         final int displayWidth = displaymetrics.widthPixels;
-
-        // Set one side visible
-        rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
 
         if (!card.isNoteExpanded())
             llNoteBar.getLayoutParams().height = 0;

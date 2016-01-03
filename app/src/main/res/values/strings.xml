@@ -166,5 +166,7 @@
     <string name="uploaded_lymbo">Uploaded lymbo</string>
     <string name="wrong">wrong</string>
     <string name="this_file_does_not_match_lymbo_format">This file does not match lymbo format</string>
+    <string name="card_does_not_contain_any_sides">Card does not contain any sides</string>
+    <string name="how_useful">(how useful)</string>
 
 </resources>
