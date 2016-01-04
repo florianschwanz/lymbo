@@ -28,6 +28,7 @@ import com.github.mrengineer13.snackbar.SnackBar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
@@ -348,6 +349,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @param card card to be edited
      */
     private void edit(final Card card) {
+        // Create id if card has none (for some reason)
+        if (card.getId() == null) { card.setId(UUID.randomUUID().toString()); }
+
         String uuid = card.getId();
         String frontTitle = ((Title) card.getSides().get(0).getFirst(EComponentType.TITLE)).getValue();
         String backTitle = ((Title) card.getSides().get(1).getFirst(EComponentType.TITLE)).getValue();
