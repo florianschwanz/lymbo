@@ -19,12 +19,12 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
 import de.interoberlin.lymbo.view.adapters.CardsStashListAdapter;
-import de.interoberlin.lymbo.view.dialogfragments.ConfirmRefreshDialogFragment;
+import de.interoberlin.lymbo.view.dialogs.ConfirmRefreshDialog;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsStashActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class CardsStashActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialog.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
     CardsController cardsController;
 
@@ -163,12 +163,12 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
 
     @Override
     public void onRefresh() {
-        ConfirmRefreshDialogFragment dialog = new ConfirmRefreshDialogFragment();
+        ConfirmRefreshDialog dialog = new ConfirmRefreshDialog();
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.restore_cards));
         bundle.putString(getResources().getString(R.string.bundle_message), getResources().getString(R.string.restore_cards_question));
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), ConfirmRefreshDialogFragment.TAG);
+        dialog.show(getFragmentManager(), ConfirmRefreshDialog.TAG);
     }
 
     @Override

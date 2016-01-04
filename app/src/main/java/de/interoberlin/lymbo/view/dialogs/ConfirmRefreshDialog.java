@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.view.dialogfragments;
+package de.interoberlin.lymbo.view.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,10 +10,9 @@ import android.view.View;
 import android.widget.Button;
 
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.App;
 
-public class GiveFeedbackDialogFragment extends DialogFragment {
-    public static final String TAG = GiveFeedbackDialogFragment.class.getCanonicalName();
+public class ConfirmRefreshDialog extends DialogFragment {
+    public static final String TAG = ConfirmRefreshDialog.class.getCanonicalName();
 
     private OnCompleteListener ocListener;
 
@@ -25,15 +24,19 @@ public class GiveFeedbackDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        App.getInstance().setGiveFeedbackDialogActive(true);
-
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_give_feedback, null);
+        final View v = View.inflate(getActivity(), R.layout.dialog, null);
+
+        // Get arguments
+        Bundle bundle = this.getArguments();
+        final String dialogTitle = bundle.getString(getResources().getString(R.string.bundle_dialog_title));
+        final String message = bundle.getString(getResources().getString(R.string.bundle_message));
 
         // Fill views with arguments
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v);
-        builder.setTitle(R.string.feedback);
+        builder.setTitle(dialogTitle);
+        builder.setMessage(message);
 
         // Add positive button
         builder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
@@ -46,7 +49,6 @@ public class GiveFeedbackDialogFragment extends DialogFragment {
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dismiss();
             }
         });
 
@@ -63,8 +65,7 @@ public class GiveFeedbackDialogFragment extends DialogFragment {
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ocListener.onGiveFeedbackDialogDialogComplete();
-                App.getInstance().setGiveFeedbackDialogActive(false);
+                ocListener.onConfirmRefresh();
                 dismiss();
             }
         });
@@ -73,7 +74,7 @@ public class GiveFeedbackDialogFragment extends DialogFragment {
         negativeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                App.getInstance().setGiveFeedbackDialogActive(false);
+                ocListener.onCancelRefresh();
                 dismiss();
             }
         });
@@ -84,7 +85,9 @@ public class GiveFeedbackDialogFragment extends DialogFragment {
     // --------------------
 
     public interface OnCompleteListener {
-        void onGiveFeedbackDialogDialogComplete();
+        void onConfirmRefresh();
+
+        void onCancelRefresh();
     }
 
     public void onAttach(Activity activity) {

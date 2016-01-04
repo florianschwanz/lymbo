@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.view.dialogfragments;
+package de.interoberlin.lymbo.view.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,8 +24,8 @@ import java.util.List;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 
-public class TemplateDialogFragment extends DialogFragment {
-    public static final String TAG = TemplateDialogFragment.class.getCanonicalName();
+public class TemplateDialog extends DialogFragment {
+    public static final String TAG = TemplateDialog.class.getCanonicalName();
 
     private OnCompleteListener ocListener;
 
@@ -39,7 +39,7 @@ public class TemplateDialogFragment extends DialogFragment {
         final Resources res = getActivity().getResources();
 
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_template, null);
+        final View v = View.inflate(getActivity(), R.layout.dialog_template, null);
 
         final EditText etTitle = (EditText) v.findViewById(R.id.etTitle);
 

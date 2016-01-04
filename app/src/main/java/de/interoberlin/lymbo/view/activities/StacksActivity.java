@@ -35,15 +35,15 @@ import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebDownloadTask;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebUploadTask;
 import de.interoberlin.lymbo.view.adapters.StacksListAdapter;
-import de.interoberlin.lymbo.view.dialogfragments.ConfirmRefreshDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.DownloadDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.FilterStacksDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.StackDialogFragment;
+import de.interoberlin.lymbo.view.dialogs.ConfirmRefreshDialog;
+import de.interoberlin.lymbo.view.dialogs.DownloadDialog;
+import de.interoberlin.lymbo.view.dialogs.FilterStacksDialog;
+import de.interoberlin.lymbo.view.dialogs.StackDialog;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener, StackDialogFragment.OnCompleteListener, FilterStacksDialogFragment.OnCompleteListener, LymboWebUploadTask.OnCompleteListener, LymboWebDownloadTask.OnCompleteListener, DownloadDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialog.OnCompleteListener, StackDialog.OnCompleteListener, FilterStacksDialog.OnCompleteListener, LymboWebUploadTask.OnCompleteListener, LymboWebDownloadTask.OnCompleteListener, DownloadDialog.OnCompleteListener, SnackBar.OnMessageClickListener {
     // Controllers
     private StacksController stacksController;
 
@@ -124,7 +124,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
                 public void onClick(View view) {
                     ArrayList<String> tagsAll = Tag.getValues(stacksController.getTagsAll());
 
-                    StackDialogFragment dialog = new StackDialogFragment();
+                    StackDialog dialog = new StackDialog();
                     Bundle bundle = new Bundle();
                     bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.add_stack));
 
@@ -136,7 +136,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
                     bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
                     dialog.setArguments(bundle);
-                    dialog.show(getFragmentManager(), StackDialogFragment.TAG);
+                    dialog.show(getFragmentManager(), StackDialog.TAG);
                 }
             });
 
@@ -207,12 +207,12 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
     @Override
     public void onRefresh() {
-        ConfirmRefreshDialogFragment dialog = new ConfirmRefreshDialogFragment();
+        ConfirmRefreshDialog dialog = new ConfirmRefreshDialog();
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.scan_for_lymbo_files));
         bundle.putString(getResources().getString(R.string.bundle_message), getResources().getString(R.string.scan_for_lymbo_files_question));
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), ConfirmRefreshDialogFragment.TAG);
+        dialog.show(getFragmentManager(), ConfirmRefreshDialog.TAG);
     }
 
     @Override
@@ -340,22 +340,22 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         ArrayList<String> tagsAll = Tag.getValues(stacksController.getTagsAll());
         ArrayList<String> tagsSelected = Tag.getValues(stacksController.getTagsSelected());
 
-        FilterStacksDialogFragment dialog = new FilterStacksDialogFragment();
+        FilterStacksDialog dialog = new FilterStacksDialog();
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), FilterStacksDialogFragment.TAG);
+        dialog.show(getFragmentManager(), FilterStacksDialog.TAG);
     }
 
     private void download() {
         ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
 
-        DownloadDialogFragment dialog = new DownloadDialogFragment();
+        DownloadDialog dialog = new DownloadDialog();
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.download));
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), DownloadDialogFragment.TAG);
+        dialog.show(getFragmentManager(), DownloadDialog.TAG);
     }
 
     // --------------------

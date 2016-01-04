@@ -49,12 +49,12 @@ import de.interoberlin.lymbo.view.components.ChoiceView;
 import de.interoberlin.lymbo.view.components.ResultView;
 import de.interoberlin.lymbo.view.components.TagView;
 import de.interoberlin.lymbo.view.components.TitleView;
-import de.interoberlin.lymbo.view.dialogfragments.CardDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.CopyCardDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.FilterCardsDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.MoveCardDialogFragment;
+import de.interoberlin.lymbo.view.dialogs.CardDialog;
+import de.interoberlin.lymbo.view.dialogs.CopyCardDialog;
+import de.interoberlin.lymbo.view.dialogs.DisplayHintDialog;
+import de.interoberlin.lymbo.view.dialogs.EditNoteDialog;
+import de.interoberlin.lymbo.view.dialogs.FilterCardsDialog;
+import de.interoberlin.lymbo.view.dialogs.MoveCardDialog;
 
 public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     // Context
@@ -298,12 +298,12 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             ivHint.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DisplayHintDialogFragment displayHintDialogFragment = new DisplayHintDialogFragment();
+                    DisplayHintDialog displayHintDialog = new DisplayHintDialog();
                     Bundle b = new Bundle();
                     b.putCharSequence(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.hint));
                     b.putCharSequence(getResources().getString(R.string.bundle_message), card.getHint());
-                    displayHintDialogFragment.setArguments(b);
-                    displayHintDialogFragment.show(activity.getFragmentManager(), DisplayHintDialogFragment.TAG);
+                    displayHintDialog.setArguments(b);
+                    displayHintDialog.show(activity.getFragmentManager(), DisplayHintDialog.TAG);
                 }
             });
         } else {
@@ -388,7 +388,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         vibrate(VIBRATION_DURATION);
 
-        CardDialogFragment dialog = new CardDialogFragment();
+        CardDialog dialog = new CardDialog();
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.edit_card));
         bundle.putString(getResources().getString(R.string.bundle_card_uuid), uuid);
@@ -402,7 +402,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         bundle.putStringArrayList(getResources().getString(R.string.bundle_answers_value), answersValue);
         bundle.putIntegerArrayList(getResources().getString(R.string.bundle_answers_correct), answersCorrect);
         dialog.setArguments(bundle);
-        dialog.show(activity.getFragmentManager(), CardDialogFragment.TAG);
+        dialog.show(activity.getFragmentManager(), CardDialog.TAG);
     }
 
     /**
@@ -444,12 +444,12 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     private void copy(final Card card) {
         String uuid = card.getId();
 
-        CopyCardDialogFragment dialog = new CopyCardDialogFragment();
+        CopyCardDialog dialog = new CopyCardDialog();
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getStack().getId());
         bundle.putString(getResources().getString(R.string.bundle_card_uuid), uuid);
         dialog.setArguments(bundle);
-        dialog.show(activity.getFragmentManager(), CopyCardDialogFragment.TAG);
+        dialog.show(activity.getFragmentManager(), CopyCardDialog.TAG);
     }
 
     /**
@@ -460,12 +460,12 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     private void move(final Card card) {
         String uuid = card.getId();
 
-        MoveCardDialogFragment dialog = new MoveCardDialogFragment();
+        MoveCardDialog dialog = new MoveCardDialog();
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_lymbo_uuid), cardsController.getStack().getId());
         bundle.putString(getResources().getString(R.string.bundle_card_uuid), uuid);
         dialog.setArguments(bundle);
-        dialog.show(activity.getFragmentManager(), MoveCardDialogFragment.TAG);
+        dialog.show(activity.getFragmentManager(), MoveCardDialog.TAG);
     }
 
     /**
@@ -478,13 +478,13 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         ArrayList<String> tagsSelected = Tag.getValues(cardsController.getTagsSelected());
         Boolean displayOnlyFavorites = cardsController.isDisplayOnlyFavorites();
 
-        FilterCardsDialogFragment dialog = new FilterCardsDialogFragment();
+        FilterCardsDialog dialog = new FilterCardsDialog();
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         bundle.putBoolean(getResources().getString(R.string.bundle_display_only_favorites), displayOnlyFavorites);
         dialog.setArguments(bundle);
-        dialog.show(activity.getFragmentManager(), FilterCardsDialogFragment.TAG);
+        dialog.show(activity.getFragmentManager(), FilterCardsDialog.TAG);
     }
 
     /**
@@ -576,12 +576,12 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @param text note text
      */
     public void editNote(Card card, String text) {
-        EditNoteDialogFragment dialog = new EditNoteDialogFragment();
+        EditNoteDialog dialog = new EditNoteDialog();
         Bundle b = new Bundle();
         b.putCharSequence(activity.getResources().getString(R.string.bundle_card_uuid), card.getId());
         b.putCharSequence(activity.getResources().getString(R.string.bundle_note), text);
         dialog.setArguments(b);
-        dialog.show(activity.getFragmentManager(), EditNoteDialogFragment.TAG);
+        dialog.show(activity.getFragmentManager(), EditNoteDialog.TAG);
     }
 
     /**

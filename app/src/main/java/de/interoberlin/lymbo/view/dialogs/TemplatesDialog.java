@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.view.dialogfragments;
+package de.interoberlin.lymbo.view.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,8 +27,8 @@ import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.core.model.v1.impl.components.Text;
 import de.interoberlin.lymbo.core.model.v1.impl.components.Title;
 
-public class TemplatesDialogFragment extends DialogFragment {
-    public static final String TAG = TemplatesDialogFragment.class.getCanonicalName();
+public class TemplatesDialog extends DialogFragment {
+    public static final String TAG = TemplatesDialog.class.getCanonicalName();
 
     private OnCompleteListener ocListener;
 
@@ -43,12 +43,8 @@ public class TemplatesDialogFragment extends DialogFragment {
         Resources res = getActivity().getResources();
 
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_templates, null);
+        final View v = View.inflate(getActivity(), R.layout.dialog_templates, null);
         final TableLayout tblTemplates = (TableLayout) v.findViewById(R.id.tblTemplates);
-
-        // Get arguments
-        // Bundle bundle = this.getArguments();
-        // final ArrayList<String> templates = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_templates));
 
         final ArrayList<String> templates = new ArrayList<>();
         for (Card template : cardsController.getStack().getTemplates()) {
@@ -144,7 +140,7 @@ public class TemplatesDialogFragment extends DialogFragment {
         CardsController cardsController = CardsController.getInstance(getActivity());
         ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
 
-        TemplateDialogFragment dialog = new TemplateDialogFragment();
+        TemplateDialog dialog = new TemplateDialog();
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.add_template));
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
@@ -181,7 +177,7 @@ public class TemplatesDialogFragment extends DialogFragment {
             }
         }
 
-        TemplateDialogFragment dialog = new TemplateDialogFragment();
+        TemplateDialog dialog = new TemplateDialog();
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.edit_template));
         bundle.putString(getResources().getString(R.string.bundle_template_uuid), uuid);
@@ -193,7 +189,7 @@ public class TemplatesDialogFragment extends DialogFragment {
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), TemplateDialogFragment.TAG);
+        dialog.show(getFragmentManager(), TemplateDialog.TAG);
     }
 
     private void delete(Card template) {

@@ -41,8 +41,8 @@ import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.activities.StacksActivity;
 import de.interoberlin.lymbo.view.components.TagView;
-import de.interoberlin.lymbo.view.dialogfragments.FilterStacksDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.StackDialogFragment;
+import de.interoberlin.lymbo.view.dialogs.FilterStacksDialog;
+import de.interoberlin.lymbo.view.dialogs.StackDialog;
 
 public class StacksListAdapter extends ArrayAdapter<Stack> {
     // Context
@@ -341,7 +341,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
 
         vibrate(VIBRATION_DURATION);
 
-        StackDialogFragment dialog = new StackDialogFragment();
+        StackDialog dialog = new StackDialog();
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.edit_stack));
         bundle.putString(context.getResources().getString(R.string.bundle_lymbo_uuid), uuid);
@@ -353,7 +353,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
         bundle.putStringArrayList(context.getResources().getString(R.string.bundle_tags_all), tagsAll);
         bundle.putStringArrayList(context.getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         dialog.setArguments(bundle);
-        dialog.show(activity.getFragmentManager(), StackDialogFragment.TAG);
+        dialog.show(activity.getFragmentManager(), StackDialog.TAG);
     }
 
     /**
@@ -394,12 +394,12 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
         ArrayList<String> tagsAll = Tag.getValues(stacksController.getTagsAll());
         ArrayList<String> tagsSelected = Tag.getValues(stacksController.getTagsSelected());
 
-        FilterStacksDialogFragment dialog = new FilterStacksDialogFragment();
+        FilterStacksDialog dialog = new FilterStacksDialog();
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         dialog.setArguments(bundle);
-        dialog.show(activity.getFragmentManager(), FilterStacksDialogFragment.TAG);
+        dialog.show(activity.getFragmentManager(), FilterStacksDialog.TAG);
     }
 
     // --------------------

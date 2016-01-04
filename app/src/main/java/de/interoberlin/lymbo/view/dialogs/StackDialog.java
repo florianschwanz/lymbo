@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.view.dialogfragments;
+package de.interoberlin.lymbo.view.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,8 +27,8 @@ import de.interoberlin.lymbo.core.model.v1.impl.ELanguage;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.util.ViewUtil;
 
-public class StackDialogFragment extends DialogFragment {
-    public static final String TAG = StackDialogFragment.class.getCanonicalName();
+public class StackDialog extends DialogFragment {
+    public static final String TAG = StackDialog.class.getCanonicalName();
 
     private List<CheckBox> checkboxesLanguageFrom = new ArrayList<>();
     private List<String> languagesFrom = new ArrayList<>();
@@ -50,7 +50,7 @@ public class StackDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_stack, null);
+        final View v = View.inflate(getActivity(), R.layout.dialog_stack, null);
         final EditText etTitle = (EditText) v.findViewById(R.id.etTitle);
         final EditText etSubtitle = (EditText) v.findViewById(R.id.etSubtitle);
         final TextView tvAuthor = (TextView) v.findViewById(R.id.tvAuthor);

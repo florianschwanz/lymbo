@@ -1,21 +1,19 @@
-package de.interoberlin.lymbo.view.dialogfragments;
+package de.interoberlin.lymbo.view.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 import de.interoberlin.lymbo.R;
+import de.interoberlin.lymbo.App;
 
-public class DownloadDialogFragment extends DialogFragment {
-    public static final String TAG = DownloadDialogFragment.class.getCanonicalName();
+public class GiveFeedbackDialog extends DialogFragment {
+    public static final String TAG = GiveFeedbackDialog.class.getCanonicalName();
 
     private OnCompleteListener ocListener;
 
@@ -27,18 +25,15 @@ public class DownloadDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_download, null);
-        final EditText etId = (EditText) v.findViewById(R.id.etId);
+        App.getInstance().setGiveFeedbackDialogActive(true);
 
-        // Get arguments
-        Bundle bundle = this.getArguments();
-        final String dialogTitle = bundle.getString(getResources().getString(R.string.bundle_dialog_title));
+        // Load layout
+        final View v = View.inflate(getActivity(), R.layout.dialog_give_feedback, null);
 
         // Fill views with arguments
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v);
-        builder.setTitle(dialogTitle);
+        builder.setTitle(R.string.feedback);
 
         // Add positive button
         builder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
@@ -62,30 +57,24 @@ public class DownloadDialogFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
 
-        // Get arguments
-        Bundle bundle = this.getArguments();
-
         AlertDialog dialog = (AlertDialog) getDialog();
-        final EditText etId = (EditText) dialog.findViewById(R.id.etId);
 
         Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String id = etId.getText().toString().trim();
+                ocListener.onGiveFeedbackDialogDialogComplete();
+                App.getInstance().setGiveFeedbackDialogActive(false);
+                dismiss();
+            }
+        });
 
-                Drawable dWarning = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_warning);
-                boolean valid = true;
-
-                if (id.isEmpty()) {
-                    etId.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);
-                    valid = false;
-                }
-
-                if (valid) {
-                    ocListener.onDownload(id);
-                    dismiss();
-                }
+        Button negativeButton = dialog.getButton(Dialog.BUTTON_NEGATIVE);
+        negativeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                App.getInstance().setGiveFeedbackDialogActive(false);
+                dismiss();
             }
         });
     }
@@ -95,7 +84,7 @@ public class DownloadDialogFragment extends DialogFragment {
     // --------------------
 
     public interface OnCompleteListener {
-        void onDownload(String id);
+        void onGiveFeedbackDialogDialogComplete();
     }
 
     public void onAttach(Activity activity) {

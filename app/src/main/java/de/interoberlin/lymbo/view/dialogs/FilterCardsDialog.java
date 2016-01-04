@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.view.dialogfragments;
+package de.interoberlin.lymbo.view.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,8 +20,8 @@ import java.util.List;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 
-public class FilterCardsDialogFragment extends DialogFragment {
-    public static final String TAG = FilterCardsDialogFragment.class.getCanonicalName();
+public class FilterCardsDialog extends DialogFragment {
+    public static final String TAG = FilterCardsDialog.class.getCanonicalName();
 
     private boolean displayOnlyFavorites;
 
@@ -36,7 +36,7 @@ public class FilterCardsDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_filter_cards, null);
+        final View v = View.inflate(getActivity(), R.layout.dialog_filter_cards, null);
         final TextView tvFavorite = (TextView) v.findViewById(R.id.tvFavorite);
         final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
         final TextView tvAll = (TextView) v.findViewById(R.id.tvAll);
@@ -58,29 +58,33 @@ public class FilterCardsDialogFragment extends DialogFragment {
         else
             tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_not_important), null);
 
-        for (final String t : tagsAll) {
-            final TableRow tr = new TableRow(getActivity());
-            final CheckBox cb = new CheckBox(getActivity());
-            final TextView tvText = new TextView(getActivity());
+        if (tagsAll != null) {
+            for (final String t : tagsAll) {
+                final TableRow tr = new TableRow(getActivity());
+                final CheckBox cb = new CheckBox(getActivity());
+                final TextView tvText = new TextView(getActivity());
 
-            tr.addView(cb);
-            tr.addView(tvText);
+                tr.addView(cb);
+                tr.addView(tvText);
 
-            for (String ts : tagsSelected) {
-                if (ts.equals(t)) {
-                    cb.setChecked(true);
+                if (tagsSelected != null) {
+                    for (String ts : tagsSelected) {
+                        if (ts.equals(t)) {
+                            cb.setChecked(true);
+                        }
+                    }
                 }
+
+                tvText.setText(t);
+                tvText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cb.toggle();
+                    }
+                });
+
+                tblTags.addView(tr);
             }
-
-            tvText.setText(t);
-            tvText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cb.toggle();
-                }
-            });
-
-            tblTags.addView(tr);
         }
 
         // Add actions

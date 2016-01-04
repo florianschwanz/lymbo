@@ -32,11 +32,11 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.model.accelerometer.Accelerator;
 import de.interoberlin.lymbo.util.Configuration;
 import de.interoberlin.lymbo.util.LoggingUtil;
-import de.interoberlin.lymbo.view.dialogfragments.GiveFeedbackDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.ReportErrorDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.ShowErrorDialogFragment;
+import de.interoberlin.lymbo.view.dialogs.GiveFeedbackDialog;
+import de.interoberlin.lymbo.view.dialogs.ReportErrorDialog;
+import de.interoberlin.lymbo.view.dialogs.ShowErrorDialog;
 
-public abstract class BaseActivity extends AppCompatActivity implements Accelerator.OnShakeListener, GiveFeedbackDialogFragment.OnCompleteListener, ReportErrorDialogFragment.OnCompleteListener, ShowErrorDialogFragment.OnCompleteListener {
+public abstract class BaseActivity extends AppCompatActivity implements Accelerator.OnShakeListener, GiveFeedbackDialog.OnCompleteListener, ReportErrorDialog.OnCompleteListener, ShowErrorDialog.OnCompleteListener {
     private SensorManager sensorManager;
 
     // Properties
@@ -90,7 +90,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Accelera
     public void onShake(int count) {
         if (!App.getInstance().isGiveFeedbackDialogActive()) {
             ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-            new GiveFeedbackDialogFragment().show(getFragmentManager(), GiveFeedbackDialogFragment.TAG);
+            new GiveFeedbackDialog().show(getFragmentManager(), GiveFeedbackDialog.TAG);
         }
     }
 
@@ -124,19 +124,19 @@ public abstract class BaseActivity extends AppCompatActivity implements Accelera
 
     @Override
     public void onShowStacktrace(String stacktrace) {
-        ShowErrorDialogFragment dialog = new ShowErrorDialogFragment();
+        ShowErrorDialog dialog = new ShowErrorDialog();
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_stacktrace), stacktrace);
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), ShowErrorDialogFragment.TAG);
+        dialog.show(getFragmentManager(), ShowErrorDialog.TAG);
     }
 
     protected void handleException(Exception e) {
-        ReportErrorDialogFragment dialog = new ReportErrorDialogFragment();
+        ReportErrorDialog dialog = new ReportErrorDialog();
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_stacktrace), LoggingUtil.getStackTrace(e));
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), ReportErrorDialogFragment.TAG);
+        dialog.show(getFragmentManager(), ReportErrorDialog.TAG);
     }
 
     /**

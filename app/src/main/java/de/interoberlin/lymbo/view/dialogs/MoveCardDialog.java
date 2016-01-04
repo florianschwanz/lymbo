@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.view.dialogfragments;
+package de.interoberlin.lymbo.view.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,13 +21,13 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 
-public class CopyCardDialogFragment extends DialogFragment {
-    public static final String TAG = CopyCardDialogFragment.class.getCanonicalName();
+public class MoveCardDialog extends DialogFragment {
+    public static final String TAG = MoveCardDialog.class.getCanonicalName();
 
     private List<CheckBox> checkboxes = new ArrayList<>();
     private String targetLymboId = null;
 
-    private OnCompleteListener onCompleteListener;
+    private OnCompleteListener ocListener;
 
     // --------------------
     // Methods - Lifecycle
@@ -39,19 +39,17 @@ public class CopyCardDialogFragment extends DialogFragment {
         StacksController stacksController = StacksController.getInstance(getActivity());
 
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_copy_card, null);
-        final CheckBox cbDeepCopy = (CheckBox) v.findViewById(R.id.cbDeepCopy);
-        final TextView tvDeepCopy = (TextView) v.findViewById(R.id.tvDeepCopy);
+        final View v = View.inflate(getActivity(), R.layout.dialog_move_card, null);
         final TableLayout tblLymbos = (TableLayout) v.findViewById(R.id.tblLymbos);
 
         // Get arguments
         Bundle bundle = this.getArguments();
-        String sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
+        final String sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
 
         // Fill views with arguments
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v);
-        builder.setTitle(R.string.copy_card);
+        builder.setTitle(R.string.move_card);
 
         for (final Stack l : stacksController.getStacks()) {
             if (!l.getId().equals(sourceLymboId)) {
@@ -92,14 +90,6 @@ public class CopyCardDialogFragment extends DialogFragment {
             }
         }
 
-        // Add actions
-        tvDeepCopy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cbDeepCopy.toggle();
-            }
-        });
-
         // Add positive button
         builder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
             @Override
@@ -128,15 +118,12 @@ public class CopyCardDialogFragment extends DialogFragment {
         final String cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_uuid));
 
         AlertDialog dialog = (AlertDialog) getDialog();
-        final CheckBox cbDeepCopy = (CheckBox) dialog.findViewById(R.id.cbDeepCopy);
 
         Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean deepCopy = cbDeepCopy.isChecked();
-
-                onCompleteListener.onCopyCard(sourceLymboId, targetLymboId, cardUuid, deepCopy);
+                ocListener.onMoveCard(sourceLymboId, targetLymboId, cardUuid);
             }
         });
     }
@@ -146,16 +133,16 @@ public class CopyCardDialogFragment extends DialogFragment {
     // --------------------
 
     public interface OnCompleteListener {
-        void onCopyCard(String sourceLymboId, String targetLymboId, String cardId, boolean deepCopy);
+        void onMoveCard(String sourceLymboId, String targetLymboId, String cardId);
     }
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         try {
-            this.onCompleteListener = (OnCompleteListener) activity;
+            this.ocListener = (OnCompleteListener) activity;
         } catch (final ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnCopyCardListener");
+            throw new ClassCastException(activity.toString() + " must implement OnMoveCardListener");
         }
     }
 }

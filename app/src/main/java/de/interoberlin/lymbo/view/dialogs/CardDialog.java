@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.view.dialogfragments;
+package de.interoberlin.lymbo.view.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -41,8 +41,8 @@ import de.interoberlin.lymbo.model.webservice.translate.MicrosoftAccessControlIt
 import de.interoberlin.lymbo.model.webservice.translate.MicrosoftTranslatorTask;
 import de.interoberlin.lymbo.util.ViewUtil;
 
-public class CardDialogFragment extends DialogFragment {
-    public static final String TAG = CardDialogFragment.class.getCanonicalName();
+public class CardDialog extends DialogFragment {
+    public static final String TAG = CardDialog.class.getCanonicalName();
 
     private boolean addTextFrontIsExpanded = false;
     private boolean addQuizIsExpanded = false;
@@ -69,7 +69,7 @@ public class CardDialogFragment extends DialogFragment {
         VIBRATION_DURATION = getResources().getInteger(R.integer.vibration_duration);
 
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_card, null);
+        final View v = View.inflate(getActivity(), R.layout.dialog_card, null);
 
         final EditText etFront = (EditText) v.findViewById(R.id.etFront);
         final ImageView ivExpandTextsFront = (ImageView) v.findViewById(R.id.ivExpandTextsFront);

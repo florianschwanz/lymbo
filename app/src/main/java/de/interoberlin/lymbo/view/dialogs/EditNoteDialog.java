@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.view.dialogfragments;
+package de.interoberlin.lymbo.view.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,8 +14,8 @@ import android.widget.EditText;
 
 import de.interoberlin.lymbo.R;
 
-public class EditNoteDialogFragment extends DialogFragment {
-    public static final String TAG = EditNoteDialogFragment.class.getCanonicalName();
+public class EditNoteDialog extends DialogFragment {
+    public static final String TAG = EditNoteDialog.class.getCanonicalName();
 
     private OnCompleteListener ocListener;
 
@@ -28,7 +28,7 @@ public class EditNoteDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_edit_note, null);
+        final View v = View.inflate(getActivity(), R.layout.dialog_edit_note, null);
         final EditText etNote = (EditText) v.findViewById(R.id.etNote);
 
         // Get arguments

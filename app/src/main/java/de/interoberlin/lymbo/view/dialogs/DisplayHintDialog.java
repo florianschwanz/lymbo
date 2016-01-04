@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.view.dialogfragments;
+package de.interoberlin.lymbo.view.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,8 +11,8 @@ import android.widget.Button;
 
 import de.interoberlin.lymbo.R;
 
-public class DisplayHintDialogFragment extends DialogFragment {
-    public static final String TAG = DisplayHintDialogFragment.class.getCanonicalName();
+public class DisplayHintDialog extends DialogFragment {
+    public static final String TAG = DisplayHintDialog.class.getCanonicalName();
 
     private OnCompleteListener ocListener;
 
@@ -25,7 +25,7 @@ public class DisplayHintDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment, null);
+        final View v = View.inflate(getActivity(), R.layout.dialog, null);
 
         // Get arguments
         Bundle bundle = this.getArguments();

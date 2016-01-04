@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.view.dialogfragments;
+package de.interoberlin.lymbo.view.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,8 +19,8 @@ import java.util.List;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 
-public class FilterStacksDialogFragment extends DialogFragment {
-    public static final String TAG = FilterStacksDialogFragment.class.getCanonicalName();
+public class FilterStacksDialog extends DialogFragment {
+    public static final String TAG = FilterStacksDialog.class.getCanonicalName();
 
     private OnCompleteListener ocListener;
 
@@ -33,7 +33,7 @@ public class FilterStacksDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_filter_stacks, null);
+        final View v = View.inflate(getActivity(), R.layout.dialog_filter_stacks, null);
         final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
         final TextView tvAll = (TextView) v.findViewById(R.id.tvAll);
         final TextView tvNone = (TextView) v.findViewById(R.id.tvNone);
@@ -48,28 +48,32 @@ public class FilterStacksDialogFragment extends DialogFragment {
         builder.setView(v);
         builder.setTitle(R.string.filter);
 
-        for (final String t : tagsAll) {
-            final TableRow tr = new TableRow(getActivity());
-            final CheckBox cb = new CheckBox(getActivity());
-            final TextView tvText = new TextView(getActivity());
+        if (tagsAll != null) {
+            for (final String t : tagsAll) {
+                final TableRow tr = new TableRow(getActivity());
+                final CheckBox cb = new CheckBox(getActivity());
+                final TextView tvText = new TextView(getActivity());
 
-            tr.addView(cb);
-            tr.addView(tvText);
+                tr.addView(cb);
+                tr.addView(tvText);
 
-            for (String cs : tagsSelected) {
-                if (cs.equals(t))
-                    cb.setChecked(true);
-            }
-
-            tvText.setText(t);
-            tvText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cb.toggle();
+                if (tagsSelected != null) {
+                    for (String cs : tagsSelected) {
+                        if (cs.equals(t))
+                            cb.setChecked(true);
+                    }
                 }
-            });
 
-            tblTags.addView(tr);
+                tvText.setText(t);
+                tvText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cb.toggle();
+                    }
+                });
+
+                tblTags.addView(tr);
+            }
         }
 
         // Add actions

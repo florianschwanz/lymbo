@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.view.dialogfragments;
+package de.interoberlin.lymbo.view.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,8 +11,8 @@ import android.widget.Button;
 
 import de.interoberlin.lymbo.R;
 
-public class ConfirmRefreshDialogFragment extends DialogFragment {
-    public static final String TAG = ConfirmRefreshDialogFragment.class.getCanonicalName();
+public class ReportErrorDialog extends DialogFragment {
+    public static final String TAG = ReportErrorDialog.class.getCanonicalName();
 
     private OnCompleteListener ocListener;
 
@@ -25,21 +25,22 @@ public class ConfirmRefreshDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment, null);
-
-        // Get arguments
-        Bundle bundle = this.getArguments();
-        final String dialogTitle = bundle.getString(getResources().getString(R.string.bundle_dialog_title));
-        final String message = bundle.getString(getResources().getString(R.string.bundle_message));
+        final View v = View.inflate(getActivity(), R.layout.dialog_report_error, null);
 
         // Fill views with arguments
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v);
-        builder.setTitle(dialogTitle);
-        builder.setMessage(message);
+        builder.setTitle(R.string.error_occurred);
 
         // Add positive button
         builder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        // Add neutral button
+        builder.setNeutralButton(R.string.show_stacktrace, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }
@@ -49,6 +50,7 @@ public class ConfirmRefreshDialogFragment extends DialogFragment {
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                dismiss();
             }
         });
 
@@ -59,23 +61,25 @@ public class ConfirmRefreshDialogFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
 
+        // Get arguments
+        Bundle bundle = this.getArguments();
+        final String stacktrace = bundle.getString(getResources().getString(R.string.bundle_stacktrace));
+
         AlertDialog dialog = (AlertDialog) getDialog();
+
+        Button neutralButton = dialog.getButton(Dialog.BUTTON_NEUTRAL);
+        neutralButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ocListener.onShowStacktrace(stacktrace);
+            }
+        });
 
         Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ocListener.onConfirmRefresh();
-                dismiss();
-            }
-        });
-
-        Button negativeButton = dialog.getButton(Dialog.BUTTON_NEGATIVE);
-        negativeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ocListener.onCancelRefresh();
-                dismiss();
+                ocListener.onSendReport(stacktrace);
             }
         });
     }
@@ -85,9 +89,8 @@ public class ConfirmRefreshDialogFragment extends DialogFragment {
     // --------------------
 
     public interface OnCompleteListener {
-        void onConfirmRefresh();
-
-        void onCancelRefresh();
+        void onSendReport(String stacktrace);
+        void onShowStacktrace(String stacktrace);
     }
 
     public void onAttach(Activity activity) {

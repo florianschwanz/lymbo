@@ -31,21 +31,21 @@ import de.interoberlin.lymbo.core.model.v1.impl.Card;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.view.adapters.CardsListAdapter;
-import de.interoberlin.lymbo.view.dialogfragments.CardDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.ConfirmRefreshDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.CopyCardDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.DisplayHintDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.EditNoteDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.FilterCardsDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.MoveCardDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.TemplateDialogFragment;
-import de.interoberlin.lymbo.view.dialogfragments.TemplatesDialogFragment;
+import de.interoberlin.lymbo.view.dialogs.CardDialog;
+import de.interoberlin.lymbo.view.dialogs.ConfirmRefreshDialog;
+import de.interoberlin.lymbo.view.dialogs.CopyCardDialog;
+import de.interoberlin.lymbo.view.dialogs.DisplayHintDialog;
+import de.interoberlin.lymbo.view.dialogs.EditNoteDialog;
+import de.interoberlin.lymbo.view.dialogs.FilterCardsDialog;
+import de.interoberlin.lymbo.view.dialogs.MoveCardDialog;
+import de.interoberlin.lymbo.view.dialogs.TemplateDialog;
+import de.interoberlin.lymbo.view.dialogs.TemplatesDialog;
 import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.BaseSwipeListViewListener;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialogFragment.OnCompleteListener, CardDialogFragment.OnCompleteListener, TemplatesDialogFragment.OnCompleteListener, TemplateDialogFragment.OnCompleteListener, DisplayHintDialogFragment.OnCompleteListener, FilterCardsDialogFragment.OnCompleteListener, EditNoteDialogFragment.OnCompleteListener, SnackBar.OnMessageClickListener, CopyCardDialogFragment.OnCompleteListener, MoveCardDialogFragment.OnCompleteListener {
+public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialog.OnCompleteListener, CardDialog.OnCompleteListener, TemplatesDialog.OnCompleteListener, TemplateDialog.OnCompleteListener, DisplayHintDialog.OnCompleteListener, FilterCardsDialog.OnCompleteListener, EditNoteDialog.OnCompleteListener, SnackBar.OnMessageClickListener, CopyCardDialog.OnCompleteListener, MoveCardDialog.OnCompleteListener {
     // Controllers
     private CardsController cardsController;
 
@@ -223,13 +223,13 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                         }
                     }
 
-                    CardDialogFragment dialog = new CardDialogFragment();
+                    CardDialog dialog = new CardDialog();
                     Bundle bundle = new Bundle();
                     bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.add_card));
                     bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
                     bundle.putStringArrayList(getResources().getString(R.string.bundle_templates), templates);
                     dialog.setArguments(bundle);
-                    dialog.show(getFragmentManager(), CardDialogFragment.TAG);
+                    dialog.show(getFragmentManager(), CardDialog.TAG);
                 }
             });
 
@@ -342,7 +342,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
 
     @Override
     public void onRefresh() {
-        ConfirmRefreshDialogFragment dialog = new ConfirmRefreshDialogFragment();
+        ConfirmRefreshDialog dialog = new ConfirmRefreshDialog();
 
         Bundle bundle = new Bundle();
         bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.reset_cards));
@@ -513,11 +513,11 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             }
         }
 
-        TemplatesDialogFragment dialog = new TemplatesDialogFragment();
+        TemplatesDialog dialog = new TemplatesDialog();
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(getResources().getString(R.string.bundle_templates), templates);
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), TemplatesDialogFragment.TAG);
+        dialog.show(getFragmentManager(), TemplatesDialog.TAG);
     }
 
     /**
@@ -530,13 +530,13 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
         ArrayList<String> tagsSelected = Tag.getValues(cardsController.getTagsSelected());
         Boolean displayOnlyFavorites = cardsController.isDisplayOnlyFavorites();
 
-        FilterCardsDialogFragment dialog = new FilterCardsDialogFragment();
+        FilterCardsDialog dialog = new FilterCardsDialog();
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
         bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
         bundle.putBoolean(getResources().getString(R.string.bundle_display_only_favorites), displayOnlyFavorites);
         dialog.setArguments(bundle);
-        dialog.show(getFragmentManager(), FilterCardsDialogFragment.TAG);
+        dialog.show(getFragmentManager(), FilterCardsDialog.TAG);
     }
 
     /**

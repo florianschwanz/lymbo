@@ -1,4 +1,4 @@
-package de.interoberlin.lymbo.view.dialogfragments;
+package de.interoberlin.lymbo.view.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import de.interoberlin.lymbo.R;
 
-public class ShowErrorDialogFragment extends DialogFragment {
-    public static final String TAG = ShowErrorDialogFragment.class.getCanonicalName();
+public class ShowErrorDialog extends DialogFragment {
+    public static final String TAG = ShowErrorDialog.class.getCanonicalName();
 
     private OnCompleteListener ocListener;
 
@@ -26,7 +26,7 @@ public class ShowErrorDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         // Load layout
-        final View v = View.inflate(getActivity(), R.layout.dialogfragment_show_error, null);
+        final View v = View.inflate(getActivity(), R.layout.dialog_show_error, null);
         final TextView tvText = (TextView) v.findViewById(R.id.tvText);
 
         // Get arguments
