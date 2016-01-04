@@ -60,6 +60,7 @@ public class StacksController {
     private static String LYMBO_LOOKUP_PATH;
     private static String LYMBO_SAVE_PATH;
     private static String LYMBO_TMP_PATH;
+    private static String RECYCLE_PATH;
 
     private boolean loaded = false;
 
@@ -99,6 +100,7 @@ public class StacksController {
         LYMBO_LOOKUP_PATH = getResources().getString(R.string.lymbo_lookup_path);
         LYMBO_SAVE_PATH = getResources().getString(R.string.lymbo_save_path);
         LYMBO_TMP_PATH = getResources().getString(R.string.lymbo_tmp_path);
+        RECYCLE_PATH = getResources().getString(R.string.recycle_path);
     }
 
     /**
@@ -111,9 +113,7 @@ public class StacksController {
         if (stack != null) {
             Tag noTag = new Tag(getResources().getString(R.string.no_tag));
             boolean includeStacksWithoutTag = noTag.containedInList(getTagsSelected());
-            boolean matchesTags = stack.matchesTag(getTagsSelected(), includeStacksWithoutTag);
-
-            return matchesTags;
+            return stack.matchesTag(getTagsSelected(), includeStacksWithoutTag);
         } else {
             return false;
         }
@@ -306,7 +306,7 @@ public class StacksController {
 
         // Scan for *.lymbo and *.lymbox files
         for (File f : findFiles(LYMBO_LOOKUP_PATH, LYMBO_FILE_EXTENSION, LYMBOX_FILE_EXTENSION)) {
-            if (!f.getAbsolutePath().contains(LYMBO_TMP_PATH)) {
+            if (!f.getAbsolutePath().contains(LYMBO_TMP_PATH) && !f.getAbsolutePath().contains(RECYCLE_PATH)) {
                 Stack stack = LymboLoader.getLymboFromFile(App.getContext(), f, true);
 
                 if (stack != null && !datasource.contains(TableStackDatasource.colFile.getName(), stack.getFile())) {
@@ -344,7 +344,7 @@ public class StacksController {
         datasource.printTable();
 
         for (TableStackEntry entry : datasource.getEntries()) {
-            if (entry.getFile() != null && new File(entry.getFile()).exists()) {
+            if (entry.getFile() != null && new File(entry.getFile()).exists() && !entry.getFile().contains(RECYCLE_PATH)) {
 
                 if (entry.isNormal()) {
                     lymboFiles.add(new File(entry.getFile()));

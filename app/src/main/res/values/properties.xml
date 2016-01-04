@@ -9,6 +9,7 @@
     <string name="lymbo_save_path" translatable="false">Interoberlin/lymbo</string>
     <string name="lymbo_tmp_path" translatable="false">Interoberlin/lymbo/tmp</string>
     <string name="lymbo_main_file" translatable="false">main.lymbo</string>
+    <string name="recycle_path" translatable="false">recycle</string>
 
     <integer name="refresh_delay_lymbos" translatable="false">500</integer>
     <integer name="refresh_delay_cards" translatable="false">500</integer>
