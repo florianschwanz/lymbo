@@ -290,6 +290,7 @@ public class CardsController {
      */
     public void addTemplate(String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         Card template = new Card();
+        template.setTitle(title);
 
         Side sideFront = new Side();
         sideFront.getComponents().add(new Title(frontTitleValue));
@@ -717,7 +718,7 @@ public class CardsController {
 
     public boolean cardsContainsId(String uuid) {
         for (Card c : stack.getCards()) {
-            if (c.getId().equals(uuid)) {
+            if (c.getId() != null && c.getId().equals(uuid)) {
                 return true;
             }
         }
@@ -727,7 +728,7 @@ public class CardsController {
 
     public Card getCardById(String uuid) {
         for (Card c : stack.getCards()) {
-            if (c.getId().equals(uuid)) {
+            if (c.getId() != null && c.getId().equals(uuid)) {
                 return c;
             }
         }
@@ -738,7 +739,7 @@ public class CardsController {
     public boolean templatesContainsId(String uuid) {
         synchronized (stack.getTemplates()) {
             for (Card t : stack.getTemplates()) {
-                if (t.getId().equals(uuid)) {
+                if (t.getId() != null && t.getId().equals(uuid)) {
                     return true;
                 }
             }
@@ -749,7 +750,7 @@ public class CardsController {
 
     public Card getTemplateById(String uuid) {
         for (Card t : stack.getTemplates()) {
-            if (t.getId().equals(uuid)) {
+            if (t.getId() != null && t.getId().equals(uuid)) {
                 return t;
             }
         }
