@@ -193,7 +193,7 @@ public class CardsController {
         Card card = new Card();
         card.setId(UUID.randomUUID().toString());
 
-        if (frontTitleValue != null) {
+        if (frontTitleValue != null && !frontTitleValue.isEmpty()) {
             Side sideFront = new Side();
             sideFront.getComponents().add(new Title(frontTitleValue));
             for (String s : frontTextsValues) {
@@ -206,7 +206,7 @@ public class CardsController {
             card.getSides().add(sideFront);
         }
 
-        if (backTitleValue != null) {
+        if (backTitleValue != null && !backTitleValue.isEmpty()) {
             Side sideBack = new Side();
             sideBack.getComponents().add(new Title(backTitleValue));
             for (String s : backTextsValues) {
