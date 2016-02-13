@@ -118,8 +118,9 @@ public class CardsController {
             Tag noTag = new Tag(getResources().getString(R.string.no_tag));
             boolean includeStacksWithoutTag = noTag.containedInList(getTagsSelected());
             boolean matchesTags = card.matchesTag(getTagsSelected(), includeStacksWithoutTag);
+            boolean matchesFavorites = (isDisplayOnlyFavorites() && card.isFavorite()) || !isDisplayOnlyFavorites();
 
-            return matchesTags;
+            return matchesTags && matchesFavorites;
         } else {
             return false;
         }

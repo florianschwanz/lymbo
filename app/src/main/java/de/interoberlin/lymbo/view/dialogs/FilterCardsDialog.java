@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -24,8 +23,6 @@ import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 public class FilterCardsDialog extends DialogFragment {
     public static final String TAG = FilterCardsDialog.class.getCanonicalName();
 
-    private boolean displayOnlyFavorites;
-
     private OnCompleteListener ocListener;
 
     // --------------------
@@ -38,7 +35,8 @@ public class FilterCardsDialog extends DialogFragment {
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialog_filter_cards, null);
-        final TextView tvFavorite = (TextView) v.findViewById(R.id.tvFavorite);
+        final CheckBox cbOnlyFavorites = (CheckBox) v.findViewById(R.id.cbOnlyFavorites);
+        final TextView tvOnlyFavorites = (TextView) v.findViewById(R.id.tvOnlyFavorites);
         final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
         final TextView tvAll = (TextView) v.findViewById(R.id.tvAll);
         final TextView tvNone = (TextView) v.findViewById(R.id.tvNone);
@@ -47,7 +45,7 @@ public class FilterCardsDialog extends DialogFragment {
         Bundle bundle = this.getArguments();
         final ArrayList<String> tagsAll = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_all));
         final ArrayList<String> tagsSelected = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_selected));
-        displayOnlyFavorites = bundle.getBoolean(getActivity().getResources().getString(R.string.bundle_display_only_favorites));
+        final boolean displayOnlyFavorites = bundle.getBoolean(getActivity().getResources().getString(R.string.bundle_display_only_favorites));
 
         // Sort lists
         if (tagsAll != null)
@@ -60,10 +58,7 @@ public class FilterCardsDialog extends DialogFragment {
         builder.setView(v);
         builder.setTitle(R.string.filter);
 
-        if (displayOnlyFavorites)
-            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_black_48dp), null);
-        else
-            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_border_black_48dp), null);
+        cbOnlyFavorites.setChecked(displayOnlyFavorites);
 
         if (tagsAll != null) {
             for (final String t : tagsAll) {
@@ -95,10 +90,10 @@ public class FilterCardsDialog extends DialogFragment {
         }
 
         // Add actions
-        tvFavorite.setOnClickListener(new View.OnClickListener() {
+        tvOnlyFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                toggleDisplayOnlyFavorites(tvFavorite);
+            public void onClick(View v) {
+                cbOnlyFavorites.toggle();
             }
         });
 
@@ -140,6 +135,7 @@ public class FilterCardsDialog extends DialogFragment {
 
         AlertDialog dialog = (AlertDialog) getDialog();
         final TableLayout tblTags = (TableLayout) dialog.findViewById(R.id.tblTags);
+        final CheckBox cbOnlyFavorites = (CheckBox) dialog.findViewById(R.id.cbOnlyFavorites);
 
         Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +152,7 @@ public class FilterCardsDialog extends DialogFragment {
                         tagsSelected.add(new Tag(tvText.getText().toString()));
                 }
 
-                ocListener.onFilterCards(tagsSelected, displayOnlyFavorites);
+                ocListener.onFilterCards(tagsSelected, cbOnlyFavorites.isChecked());
 
                 dismiss();
             }
@@ -166,16 +162,6 @@ public class FilterCardsDialog extends DialogFragment {
     // --------------------
     // Methods - Actions
     // --------------------
-
-    private void toggleDisplayOnlyFavorites(TextView tvFavorite) {
-        if (displayOnlyFavorites) {
-            displayOnlyFavorites = false;
-            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_border_black_48dp), null);
-        } else {
-            displayOnlyFavorites = true;
-            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_black_48dp), null);
-        }
-    }
 
     private void setAllTagsTo(TableLayout tblTags, boolean value) {
         for (int i = 0; i < tblTags.getChildCount(); i++) {
