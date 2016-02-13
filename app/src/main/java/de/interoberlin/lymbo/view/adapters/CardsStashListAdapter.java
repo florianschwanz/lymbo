@@ -100,7 +100,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         final FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card_stash, parent, false);
         final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
         final LinearLayout llTags = (LinearLayout) flCard.findViewById(R.id.llTags);
-        final ImageView ivUndo = (ImageView) flCard.findViewById(R.id.ivUndo);
+        final android.widget.ImageView ivUndo = (android.widget.ImageView) flCard.findViewById(R.id.ivUndo);
 
         // Add sides
         for (Side side : card.getSides()) {
