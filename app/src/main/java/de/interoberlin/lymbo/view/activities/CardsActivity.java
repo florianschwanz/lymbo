@@ -96,7 +96,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             VIBRATION_DURATION = getResources().getInteger(R.integer.vibration_duration);
             REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_cards);
 
-            setActionBarIcon(R.drawable.ic_ab_drawer);
+            setActionBarIcon(R.drawable.ic_menu_white_36dp);
             setDisplayHomeAsUpEnabled(true);
         } catch (Exception e) {
             handleException(e);
@@ -281,7 +281,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
                 shuffle();
                 break;
             }
-            case R.id.menu_label: {
+            case R.id.menu_filter: {
                 selectTags();
                 break;
             }

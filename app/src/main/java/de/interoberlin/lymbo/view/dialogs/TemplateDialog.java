@@ -186,7 +186,7 @@ public class TemplateDialog extends DialogFragment {
             public void onClick(View view) {
                 String title = etTitle.getText().toString().trim();
 
-                Drawable dWarning = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_warning);
+                Drawable dWarning = ContextCompat.getDrawable(getActivity(), R.drawable.ic_warning_black_48dp);
 
                 if (title.isEmpty()) {
                     etTitle.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);

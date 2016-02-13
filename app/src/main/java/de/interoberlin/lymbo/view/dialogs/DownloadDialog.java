@@ -74,7 +74,7 @@ public class DownloadDialog extends DialogFragment {
             public void onClick(View view) {
                 String id = etId.getText().toString().trim();
 
-                Drawable dWarning = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_warning);
+                Drawable dWarning = ContextCompat.getDrawable(getActivity(), R.drawable.ic_warning_black_48dp);
                 boolean valid = true;
 
                 if (id.isEmpty()) {

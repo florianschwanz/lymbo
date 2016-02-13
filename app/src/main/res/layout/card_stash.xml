@@ -82,7 +82,7 @@
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/undo"
                             android:padding="10dp"
-                            android:src="@drawable/ic_action_undo" />
+                            android:src="@drawable/ic_undo_black_48dp" />
                     </LinearLayout>
                 </LinearLayout>
 

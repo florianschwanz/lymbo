@@ -61,9 +61,9 @@ public class FilterCardsDialog extends DialogFragment {
         builder.setTitle(R.string.filter);
 
         if (displayOnlyFavorites)
-            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_important), null);
+            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_black_48dp), null);
         else
-            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_not_important), null);
+            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_border_black_48dp), null);
 
         if (tagsAll != null) {
             for (final String t : tagsAll) {
@@ -170,10 +170,10 @@ public class FilterCardsDialog extends DialogFragment {
     private void toggleDisplayOnlyFavorites(TextView tvFavorite) {
         if (displayOnlyFavorites) {
             displayOnlyFavorites = false;
-            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_not_important), null);
+            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_border_black_48dp), null);
         } else {
             displayOnlyFavorites = true;
-            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_important), null);
+            tvFavorite.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_black_48dp), null);
         }
     }
 

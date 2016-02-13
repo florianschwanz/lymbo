@@ -169,5 +169,6 @@
     <string name="this_file_does_not_match_lymbo_format">Diese Datei entspricht nicht dem lymbo Format</string>
     <string name="card_does_not_contain_any_sides">Karte enthält keine Seiten</string>
     <string name="how_useful">(wie nützlich)</string>
+    <string name="menu_filter">Filter</string>
 
 </resources>

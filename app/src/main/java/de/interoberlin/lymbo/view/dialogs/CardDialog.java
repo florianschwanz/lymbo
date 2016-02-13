@@ -73,6 +73,7 @@ public class CardDialog extends DialogFragment {
         final View v = View.inflate(getActivity(), R.layout.dialog_card, null);
 
         final EditText etFront = (EditText) v.findViewById(R.id.etFront);
+        final ImageView ivTranslateFront = (ImageView) v.findViewById(R.id.ivTranslateFront);
         final ImageView ivExpandTextsFront = (ImageView) v.findViewById(R.id.ivExpandTextsFront);
         final LinearLayout llTextFront = (LinearLayout) v.findViewById(R.id.llTextFront);
         final TableLayout tblTextFront = (TableLayout) v.findViewById(R.id.tblTextFront);
@@ -83,7 +84,7 @@ public class CardDialog extends DialogFragment {
         final ImageView ivAddAnswer = (ImageView) v.findViewById(R.id.ivAddAnswer);
 
         final EditText etBack = (EditText) v.findViewById(R.id.etBack);
-        final ImageView ivTranslate = (ImageView) v.findViewById(R.id.ivTranslate);
+        final ImageView ivTranslateBack = (ImageView) v.findViewById(R.id.ivTranslateBack);
         final ImageView ivExpandTextsBack = (ImageView) v.findViewById(R.id.ivExpandTextsBack);
         final LinearLayout llTextBack = (LinearLayout) v.findViewById(R.id.llTextBack);
         final TableLayout tblTextBack = (TableLayout) v.findViewById(R.id.tblTextBack);
@@ -225,10 +226,21 @@ public class CardDialog extends DialogFragment {
             }
         });
 
-        ivTranslate.setOnClickListener(new View.OnClickListener() {
+        ivTranslateFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                translate(stack, etFront, etBack);
+                String languageFrom = stack.getLanguage().getFrom();
+                String languageTo = stack.getLanguage().getTo();
+                translate(stack, languageTo, languageFrom, etBack, etFront);
+            }
+        });
+
+        ivTranslateBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String languageFrom = stack.getLanguage().getFrom();
+                String languageTo = stack.getLanguage().getTo();
+                translate(stack, languageFrom, languageTo, etFront, etBack);
             }
         });
 
@@ -303,7 +315,8 @@ public class CardDialog extends DialogFragment {
         String accessItemAccessToken = prefs.getString(res.getString(R.string.pref_translator_access_item_access_token), null);
 
         if (languageFrom == null || languageTo == null || accessItemAccessToken == null) {
-            ViewUtil.remove(ivTranslate);
+            ViewUtil.remove(ivTranslateFront);
+            ViewUtil.remove(ivTranslateBack);
         }
 
         // Add positive button
@@ -346,7 +359,7 @@ public class CardDialog extends DialogFragment {
             public void onClick(View view) {
                 String front = etFront.getText().toString().trim();
 
-                Drawable dWarning = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_warning);
+                Drawable dWarning = ContextCompat.getDrawable(getActivity(), R.drawable.ic_warning_black_48dp);
 
                 if (front.isEmpty()) {
                     etFront.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);
@@ -369,11 +382,11 @@ public class CardDialog extends DialogFragment {
     private void expandTextsFront(ImageView ivExpandTextsFront, LinearLayout llTextFront) {
         if (addTextFrontIsExpanded) {
             addTextFrontIsExpanded = false;
-            ivExpandTextsFront.setImageResource(R.drawable.ic_action_expand);
+            ivExpandTextsFront.setImageResource(R.drawable.ic_expand_more_black_48dp);
             llTextFront.startAnimation(ViewUtil.collapse(getActivity(), llTextFront));
         } else {
             addTextFrontIsExpanded = true;
-            ivExpandTextsFront.setImageResource(R.drawable.ic_action_collapse);
+            ivExpandTextsFront.setImageResource(R.drawable.ic_expand_less_black_48dp);
             llTextFront.startAnimation(ViewUtil.expand(getActivity(), llTextFront));
         }
     }
@@ -391,11 +404,11 @@ public class CardDialog extends DialogFragment {
     private void expandTextsBack(ImageView ivExpandTextsBack, LinearLayout llTextBack) {
         if (addTextBackIsExpanded) {
             addTextBackIsExpanded = false;
-            ivExpandTextsBack.setImageResource(R.drawable.ic_action_expand);
+            ivExpandTextsBack.setImageResource(R.drawable.ic_expand_more_black_48dp);
             llTextBack.startAnimation(ViewUtil.collapse(getActivity(), llTextBack));
         } else {
             addTextBackIsExpanded = true;
-            ivExpandTextsBack.setImageResource(R.drawable.ic_action_collapse);
+            ivExpandTextsBack.setImageResource(R.drawable.ic_expand_less_black_48dp);
             llTextBack.startAnimation(ViewUtil.expand(getActivity(), llTextBack));
         }
     }
@@ -427,7 +440,7 @@ public class CardDialog extends DialogFragment {
      * @param etFrom source edit text
      * @param etTo   target edit text
      */
-    private void translate(Stack stack, EditText etFrom, EditText etTo) {
+    private void translate(Stack stack, String languageFrom, String languageTo, EditText etFrom, EditText etTo) {
         try {
             Resources res = getActivity().getResources();
 
@@ -435,9 +448,6 @@ public class CardDialog extends DialogFragment {
             String translatorApiSecret = prefs.getString(res.getString(R.string.pref_translator_api_secret), null);
 
             AccessControlItem accessControlItem = new MicrosoftAccessControlItemTask().execute(res.getString(R.string.pref_translator_client_id), translatorApiSecret).get();
-
-            String languageFrom = stack.getLanguage().getFrom();
-            String languageTo = stack.getLanguage().getTo();
 
             if (accessControlItem != null && accessControlItem.getAccess_token() != null) {
                 String translatedText = new MicrosoftTranslatorTask().execute(accessControlItem.getAccess_token(), languageFrom, languageTo, etFrom.getText().toString()).get();

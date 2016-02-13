@@ -47,6 +47,8 @@
     <dimen name="reveal_icon_size">50dp</dimen>
     <dimen name="reveal_icon_padding">20dp</dimen>
 
+    <dimen name="icon_padding">5dp</dimen>
+
     <!-- Tag -->
     <dimen name="tag_margin">6dp</dimen>
     <dimen name="tag_padding">4dp</dimen>

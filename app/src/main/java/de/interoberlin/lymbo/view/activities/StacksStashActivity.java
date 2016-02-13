@@ -54,7 +54,7 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
             }, REFRESH_DELAY);
         }
 
-        setActionBarIcon(R.drawable.ic_ab_drawer);
+        setActionBarIcon(R.drawable.ic_menu_white_36dp);
         setDisplayHomeAsUpEnabled(true);
     }
 
@@ -172,7 +172,7 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.activity_lymbos_stash;
+        return R.layout.activity_stacks_stash;
     }
 
     /**

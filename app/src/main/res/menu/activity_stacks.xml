@@ -2,10 +2,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_label"
-        android:icon="@drawable/ic_action_labels"
+        android:id="@+id/menu_filter"
+        android:icon="@drawable/ic_filter_list_white_48dp"
         android:orderInCategory="50"
-        android:title="@string/menu_labels"
+        android:title="@string/menu_filter"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_stash"

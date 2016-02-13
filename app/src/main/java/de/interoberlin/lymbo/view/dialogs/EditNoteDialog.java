@@ -74,7 +74,7 @@ public class EditNoteDialog extends DialogFragment {
             public void onClick(View view) {
                 String note = etNote.getText().toString().trim();
 
-                Drawable dWarning = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_warning);
+                Drawable dWarning = ContextCompat.getDrawable(getActivity(), R.drawable.ic_warning_black_48dp);
                 boolean valid = true;
 
                 if (note.isEmpty()) {

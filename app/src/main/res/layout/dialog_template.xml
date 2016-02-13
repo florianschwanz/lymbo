@@ -85,7 +85,7 @@
                     android:id="@+id/ivAddTextFront"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_action_new"
+                    android:background="@drawable/ic_add_black_48dp"
                     android:contentDescription="@string/desc_image" />
             </LinearLayout>
         </LinearLayout>
@@ -150,7 +150,7 @@
                     android:id="@+id/ivAddTextBack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_action_new"
+                    android:background="@drawable/ic_add_black_48dp"
                     android:contentDescription="@string/desc_image" />
             </LinearLayout>
         </LinearLayout>
@@ -207,7 +207,7 @@
                     android:id="@+id/ivAddTag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_action_new"
+                    android:background="@drawable/ic_add_black_48dp"
                     android:contentDescription="@string/desc_image" />
             </LinearLayout>
         </LinearLayout>

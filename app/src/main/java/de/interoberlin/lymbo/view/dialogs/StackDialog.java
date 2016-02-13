@@ -299,7 +299,7 @@ public class StackDialog extends DialogFragment {
                         languageTo = ELanguage.fromString(languagesTo.get(i));
                 }
 
-                Drawable dWarning = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_warning);
+                Drawable dWarning = ContextCompat.getDrawable(getActivity(), R.drawable.ic_warning_black_48dp);
 
                 if (title.isEmpty())
                     etTitle.setError(getActivity().getResources().getString(R.string.field_must_not_be_empty), dWarning);

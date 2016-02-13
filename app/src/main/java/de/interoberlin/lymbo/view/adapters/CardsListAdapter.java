@@ -234,9 +234,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         if (!card.isNoteExpanded())
             llNoteBar.getLayoutParams().height = 0;
         if (card.isFavorite())
-            ivFavorite.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_action_important));
+            ivFavorite.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_star_black_48dp));
         else
-            ivFavorite.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_action_not_important));
+            ivFavorite.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_star_border_black_48dp));
 
         String note = cardsController.getNote(context, card.getId());
 
@@ -540,7 +540,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    ivNote.setImageResource(R.drawable.ic_action_expand);
+                    ivNote.setImageResource(R.drawable.ic_expand_more_black_48dp);
                 }
 
                 @Override
@@ -559,7 +559,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    ivNote.setImageResource(R.drawable.ic_action_collapse);
+                    ivNote.setImageResource(R.drawable.ic_expand_less_black_48dp);
                 }
 
                 @Override

@@ -19,6 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="false"
             android:layout_gravity="end|center_vertical"
             android:layout_marginLeft="@dimen/button_margin"
             android:layout_marginRight="@dimen/button_margin"
@@ -27,8 +28,10 @@
             android:minWidth="@dimen/reveal_icon_size"
             android:paddingEnd="@dimen/reveal_icon_padding"
             android:paddingStart="@dimen/reveal_icon_padding"
-            android:src="@drawable/ic_action_replay"
-            android:layout_alignParentStart="false" />
+            android:scaleType="center"
+            android:scaleX="0.75"
+            android:scaleY="0.75"
+            android:src="@drawable/ic_replay_white_48dp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -52,7 +55,10 @@
             android:minWidth="@dimen/reveal_icon_size"
             android:paddingEnd="@dimen/reveal_icon_padding"
             android:paddingStart="@dimen/reveal_icon_padding"
-            android:src="@drawable/ic_action_accept" />
+            android:scaleType="center"
+            android:scaleX="0.75"
+            android:scaleY="0.75"
+            android:src="@drawable/ic_check_white_48dp" />
     </RelativeLayout>
 
 

@@ -21,7 +21,7 @@
                 style="@style/CardText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_action_not_important"
+                android:drawableEnd="@drawable/ic_star_border_black_48dp"
                 android:ellipsize="end"
                 android:text="@string/display_favorites_only" />
         </LinearLayout>

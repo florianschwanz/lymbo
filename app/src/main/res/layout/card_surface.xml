@@ -73,8 +73,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/note"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_action_expand" />
+                            android:padding="@dimen/icon_padding"
+                            android:scaleType="center"
+                            android:scaleX="0.75"
+                            android:scaleY="0.75"
+                            android:src="@drawable/ic_expand_more_black_48dp" />
                     </LinearLayout>
 
                     <!-- Favorite -->
@@ -89,8 +92,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/hint"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_action_not_important" />
+                            android:padding="@dimen/icon_padding"
+                            android:scaleType="center"
+                            android:scaleX="0.75"
+                            android:scaleY="0.75"
+                            android:src="@drawable/ic_star_border_black_48dp" />
                     </LinearLayout>
 
                     <!-- Hint -->
@@ -105,8 +111,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/hint"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_action_about" />
+                            android:padding="@dimen/icon_padding"
+                            android:scaleType="center"
+                            android:scaleX="0.75"
+                            android:scaleY="0.75"
+                            android:src="@drawable/ic_info_outline_black_48dp" />
                     </LinearLayout>
 
                     <!-- Flip -->
@@ -155,10 +164,13 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.9"
-                        android:drawableEnd="@drawable/ic_action_edit"
+                        android:drawableEnd="@drawable/ic_edit_black_48dp"
                         android:hint="@string/note"
                         android:paddingEnd="@dimen/note_margin"
-                        android:paddingStart="@dimen/note_margin" />
+                        android:paddingStart="@dimen/note_margin"
+                        android:scaleType="center"
+                        android:scaleX="0.75"
+                        android:scaleY="0.75" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

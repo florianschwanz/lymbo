@@ -11,16 +11,16 @@
         android:title="@string/menu_stash"/>
     <item
         android:id="@+id/menu_shuffle"
-        android:icon="@drawable/ic_action_shuffle"
+        android:icon="@drawable/ic_shuffle_white_48dp"
         app:showAsAction="ifRoom"
         android:orderInCategory="300"
         android:title="@string/menu_shuffle" />
     <item
-        android:id="@+id/menu_label"
-        android:icon="@drawable/ic_action_labels"
+        android:id="@+id/menu_filter"
+        android:icon="@drawable/ic_filter_list_white_48dp"
         app:showAsAction="ifRoom"
         android:orderInCategory="400"
-        android:title="@string/menu_labels" />
+        android:title="@string/menu_filter" />
     <item
         android:id="@+id/menu_log"
         android:orderInCategory="500"

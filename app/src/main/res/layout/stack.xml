@@ -131,8 +131,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:contentDescription="@string/share"
-                                android:padding="10dp"
-                                android:src="@drawable/ic_action_share" />
+                                android:padding="@dimen/icon_padding"
+                                android:scaleType="center"
+                                android:scaleX="0.75"
+                                android:scaleY="0.75"
+                                android:src="@drawable/ic_share_black_48dp" />
 
                         </LinearLayout>
 
@@ -146,8 +149,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:contentDescription="@string/upload"
-                                android:padding="10dp"
-                                android:src="@drawable/ic_action_upload" />
+                                android:padding="@dimen/icon_padding"
+                                android:scaleType="center"
+                                android:scaleX="0.75"
+                                android:scaleY="0.75"
+                                android:src="@drawable/ic_file_upload_black_48dp" />
 
                         </LinearLayout>
 

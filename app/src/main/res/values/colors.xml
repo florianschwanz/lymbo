@@ -14,10 +14,10 @@
 
     <!-- Card -->
     <color name="stroke">@color/md_grey_400</color>
-    <color name="card_text">@color/md_grey_600</color>
+    <color name="card_text">@color/md_grey_800</color>
     <color name="card_text_error">@color/md_red_A700</color>
-    <color name="card_title_text">@color/md_grey_700</color>
-    <color name="card_light_text">@color/md_grey_500</color>
+    <color name="card_title_text">@color/md_grey_900</color>
+    <color name="card_light_text">@color/md_grey_700</color>
 
     <color name="dialogPrimaryDark">@color/md_grey_300</color>
     <color name="note_bar">@color/md_grey_400</color>

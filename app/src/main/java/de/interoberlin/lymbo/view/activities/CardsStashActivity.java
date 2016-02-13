@@ -65,7 +65,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
                 srl.setRefreshing(false);
             }
 
-            setActionBarIcon(R.drawable.ic_ab_drawer);
+            setActionBarIcon(R.drawable.ic_menu_white_36dp);
             setDisplayHomeAsUpEnabled(true);
         } catch (Exception e) {
             handleException(e);

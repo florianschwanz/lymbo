@@ -89,7 +89,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
                 }, REFRESH_DELAY);
             }
 
-            setActionBarIcon(R.drawable.ic_ab_drawer);
+            setActionBarIcon(R.drawable.ic_menu_white_36dp);
             setDisplayHomeAsUpEnabled(true);
         } catch (Exception e) {
             handleException(e);
@@ -165,7 +165,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_label: {
+            case R.id.menu_filter: {
                 selectTags();
                 break;
             }
@@ -364,7 +364,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.activity_lymbos;
+        return R.layout.activity_stacks;
     }
 
     /**

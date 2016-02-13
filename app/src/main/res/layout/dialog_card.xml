@@ -20,6 +20,14 @@
             android:orientation="horizontal"
             android:padding="@dimen/dialog_fragment_padding">
 
+            <ImageView
+                android:id="@+id/ivTranslateFront"
+                android:layout_width="@dimen/dialog_icon_size"
+                android:layout_height="@dimen/dialog_icon_size"
+                android:contentDescription="@string/desc_image"
+                android:padding="@dimen/icon_padding"
+                android:src="@drawable/ic_translate_black_48dp" />
+
             <EditText
                 android:id="@+id/etFront"
                 android:layout_width="match_parent"
@@ -36,7 +44,7 @@
                 android:layout_height="@dimen/dialog_icon_size"
                 android:layout_weight="0.1"
                 android:contentDescription="@string/desc_image"
-                android:src="@drawable/ic_action_expand" />
+                android:src="@drawable/ic_expand_more_black_48dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -66,7 +74,7 @@
                     android:id="@+id/ivAddTextFront"
                     android:layout_width="@dimen/dialog_icon_size"
                     android:layout_height="@dimen/dialog_icon_size"
-                    android:background="@drawable/ic_action_new"
+                    android:background="@drawable/ic_add_black_48dp"
                     android:contentDescription="@string/desc_image" />
             </LinearLayout>
         </LinearLayout>
@@ -87,7 +95,7 @@
                 android:contentDescription="@string/desc_image"
                 android:paddingEnd="@dimen/stack_bar_padding"
                 android:paddingStart="@dimen/stack_bar_padding"
-                android:src="@drawable/ic_action_help" />
+                android:src="@drawable/ic_question_answer_black_48dp" />
 
             <TextView
                 android:id="@+id/tvExpandQuiz"
@@ -126,7 +134,7 @@
                     android:id="@+id/ivAddAnswer"
                     android:layout_width="@dimen/dialog_icon_size"
                     android:layout_height="@dimen/dialog_icon_size"
-                    android:background="@drawable/ic_action_new"
+                    android:background="@drawable/ic_add_black_48dp"
                     android:contentDescription="@string/desc_image" />
             </LinearLayout>
         </LinearLayout>
@@ -140,11 +148,12 @@
             android:padding="@dimen/dialog_fragment_padding">
 
             <ImageView
-                android:id="@+id/ivTranslate"
+                android:id="@+id/ivTranslateBack"
                 android:layout_width="@dimen/dialog_icon_size"
                 android:layout_height="@dimen/dialog_icon_size"
                 android:contentDescription="@string/desc_image"
-                android:src="@drawable/ic_action_import_export" />
+                android:padding="@dimen/icon_padding"
+                android:src="@drawable/ic_translate_black_48dp" />
 
             <EditText
                 android:id="@+id/etBack"
@@ -159,7 +168,7 @@
                 android:layout_height="@dimen/dialog_icon_size"
                 android:layout_weight="0.1"
                 android:contentDescription="@string/desc_image"
-                android:src="@drawable/ic_action_expand" />
+                android:src="@drawable/ic_expand_more_black_48dp" />
 
         </LinearLayout>
 
@@ -190,7 +199,10 @@
                     android:id="@+id/ivAddTextBack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_action_new" />
+                    android:background="@drawable/ic_add_black_48dp"
+                    android:scaleType="center"
+                    android:scaleX="0.75"
+                    android:scaleY="0.75" />
             </LinearLayout>
         </LinearLayout>
 
@@ -210,7 +222,7 @@
                 android:contentDescription="@string/desc_image"
                 android:paddingEnd="@dimen/stack_bar_padding"
                 android:paddingStart="@dimen/stack_bar_padding"
-                android:src="@drawable/ic_action_labels_dark" />
+                android:src="@drawable/ic_label_black_48dp" />
 
             <TextView
                 android:id="@+id/tvExpandTags"
@@ -249,8 +261,11 @@
                     android:id="@+id/ivAddTag"
                     android:layout_width="@dimen/dialog_icon_size"
                     android:layout_height="@dimen/dialog_icon_size"
-                    android:background="@drawable/ic_action_new"
-                    android:contentDescription="@string/desc_image" />
+                    android:background="@drawable/ic_add_black_48dp"
+                    android:contentDescription="@string/desc_image"
+                    android:scaleType="center"
+                    android:scaleX="0.75"
+                    android:scaleY="0.75" />
             </LinearLayout>
         </LinearLayout>
 
@@ -270,7 +285,7 @@
                 android:contentDescription="@string/desc_image"
                 android:paddingEnd="@dimen/stack_bar_padding"
                 android:paddingStart="@dimen/stack_bar_padding"
-                android:src="@drawable/ic_action_view_as_list" />
+                android:src="@drawable/ic_filter_none_black_48dp" />
 
             <TextView
                 android:id="@+id/tvExpandTemplates"
