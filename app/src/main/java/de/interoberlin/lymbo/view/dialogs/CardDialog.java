@@ -23,6 +23,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -109,6 +110,12 @@ public class CardDialog extends DialogFragment {
         final ArrayList<String> templates = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_templates));
         final ArrayList<String> answersValues = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_answers_value));
         final ArrayList<Integer> answersCorrect = bundle.getIntegerArrayList(getActivity().getResources().getString(R.string.bundle_answers_correct));
+
+        // Sort lists
+        if (tagsAll != null)
+            Collections.sort(tagsAll);
+        if (tagsSelected != null)
+            Collections.sort(tagsSelected);
 
         // Fill views with arguments
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

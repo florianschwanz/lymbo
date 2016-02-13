@@ -15,6 +15,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.interoberlin.lymbo.R;
@@ -47,6 +48,12 @@ public class FilterCardsDialog extends DialogFragment {
         final ArrayList<String> tagsAll = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_all));
         final ArrayList<String> tagsSelected = bundle.getStringArrayList(getActivity().getResources().getString(R.string.bundle_tags_selected));
         displayOnlyFavorites = bundle.getBoolean(getActivity().getResources().getString(R.string.bundle_display_only_favorites));
+
+        // Sort lists
+        if (tagsAll != null)
+            Collections.sort(tagsAll);
+        if (tagsSelected != null)
+            Collections.sort(tagsSelected);
 
         // Fill views with arguments
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
