@@ -7,9 +7,11 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -118,6 +120,12 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             final ImageView ivUpload = (ImageView) llStack.findViewById(R.id.ivUpload);
             final TextView tvCardCount = (TextView) llStack.findViewById(R.id.tvCardCount);
             final LinearLayout llTags = (LinearLayout) llStack.findViewById(R.id.llTags);
+
+            // Tint
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ivShare.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
+                ivUpload.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
+            }
 
             // Set values
             if (stack.getImageFormat() != null && stack.getImage() != null && !stack.getImage().trim().isEmpty()) {

@@ -42,7 +42,7 @@
     <!-- <dimen name="list_text_size">16sp</dimen> -->
     <!-- <dimen name="list_item_height">48dip</dimen> -->
     <dimen name="sticky_height">120dp</dimen>
-    <dimen name="note_margin">15dp</dimen>
+    <dimen name="note_margin">5dp</dimen>
 
     <dimen name="reveal_icon_size">50dp</dimen>
     <dimen name="reveal_icon_padding">20dp</dimen>

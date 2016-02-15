@@ -26,7 +26,7 @@
                 android:layout_height="@dimen/dialog_icon_size"
                 android:contentDescription="@string/desc_image"
                 android:padding="@dimen/icon_padding"
-                android:src="@drawable/ic_translate_black_48dp" />
+                android:src="@drawable/ic_translate_black_36dp" />
 
             <EditText
                 android:id="@+id/etFront"
@@ -44,7 +44,7 @@
                 android:layout_height="@dimen/dialog_icon_size"
                 android:layout_weight="0.1"
                 android:contentDescription="@string/desc_image"
-                android:src="@drawable/ic_expand_more_black_48dp" />
+                android:src="@drawable/ic_expand_more_black_36dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -74,7 +74,7 @@
                     android:id="@+id/ivAddTextFront"
                     android:layout_width="@dimen/dialog_icon_size"
                     android:layout_height="@dimen/dialog_icon_size"
-                    android:background="@drawable/ic_add_black_48dp"
+                    android:background="@drawable/ic_add_black_36dp"
                     android:contentDescription="@string/desc_image" />
             </LinearLayout>
         </LinearLayout>
@@ -134,7 +134,7 @@
                     android:id="@+id/ivAddAnswer"
                     android:layout_width="@dimen/dialog_icon_size"
                     android:layout_height="@dimen/dialog_icon_size"
-                    android:background="@drawable/ic_add_black_48dp"
+                    android:background="@drawable/ic_add_black_36dp"
                     android:contentDescription="@string/desc_image" />
             </LinearLayout>
         </LinearLayout>
@@ -153,7 +153,7 @@
                 android:layout_height="@dimen/dialog_icon_size"
                 android:contentDescription="@string/desc_image"
                 android:padding="@dimen/icon_padding"
-                android:src="@drawable/ic_translate_black_48dp" />
+                android:src="@drawable/ic_translate_black_36dp" />
 
             <EditText
                 android:id="@+id/etBack"
@@ -168,7 +168,7 @@
                 android:layout_height="@dimen/dialog_icon_size"
                 android:layout_weight="0.1"
                 android:contentDescription="@string/desc_image"
-                android:src="@drawable/ic_expand_more_black_48dp" />
+                android:src="@drawable/ic_expand_more_black_36dp" />
 
         </LinearLayout>
 
@@ -199,10 +199,7 @@
                     android:id="@+id/ivAddTextBack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_add_black_48dp"
-                    android:scaleType="center"
-                    android:scaleX="0.75"
-                    android:scaleY="0.75" />
+                    android:background="@drawable/ic_add_black_36dp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -222,7 +219,7 @@
                 android:contentDescription="@string/desc_image"
                 android:paddingEnd="@dimen/stack_bar_padding"
                 android:paddingStart="@dimen/stack_bar_padding"
-                android:src="@drawable/ic_label_black_48dp" />
+                android:src="@drawable/ic_label_black_36dp" />
 
             <TextView
                 android:id="@+id/tvExpandTags"
@@ -261,11 +258,8 @@
                     android:id="@+id/ivAddTag"
                     android:layout_width="@dimen/dialog_icon_size"
                     android:layout_height="@dimen/dialog_icon_size"
-                    android:background="@drawable/ic_add_black_48dp"
-                    android:contentDescription="@string/desc_image"
-                    android:scaleType="center"
-                    android:scaleX="0.75"
-                    android:scaleY="0.75" />
+                    android:background="@drawable/ic_add_black_36dp"
+                    android:contentDescription="@string/desc_image" />
             </LinearLayout>
         </LinearLayout>
 

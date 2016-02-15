@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -98,6 +99,12 @@ public class CardDialog extends DialogFragment {
         final LinearLayout llUseTemplate = (LinearLayout) v.findViewById(R.id.llUseTemplate);
         final LinearLayout llTemplates = (LinearLayout) v.findViewById(R.id.llTemplates);
         final TableLayout tblTemplates = (TableLayout) v.findViewById(R.id.tblTemplates);
+
+        // Tint
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ivExpandTextsFront.getDrawable().setTint(ContextCompat.getColor(getActivity(), R.color.card_icon));
+            ivExpandTextsBack.getDrawable().setTint(ContextCompat.getColor(getActivity(), R.color.card_icon));
+        }
 
         // Get arguments
         Bundle bundle = this.getArguments();
@@ -382,11 +389,11 @@ public class CardDialog extends DialogFragment {
     private void expandTextsFront(ImageView ivExpandTextsFront, LinearLayout llTextFront) {
         if (addTextFrontIsExpanded) {
             addTextFrontIsExpanded = false;
-            ivExpandTextsFront.setImageResource(R.drawable.ic_expand_more_black_48dp);
+            ivExpandTextsFront.setImageResource(R.drawable.ic_expand_more_black_36dp);
             llTextFront.startAnimation(ViewUtil.collapse(getActivity(), llTextFront));
         } else {
             addTextFrontIsExpanded = true;
-            ivExpandTextsFront.setImageResource(R.drawable.ic_expand_less_black_48dp);
+            ivExpandTextsFront.setImageResource(R.drawable.ic_expand_less_black_36dp);
             llTextFront.startAnimation(ViewUtil.expand(getActivity(), llTextFront));
         }
     }
@@ -404,11 +411,11 @@ public class CardDialog extends DialogFragment {
     private void expandTextsBack(ImageView ivExpandTextsBack, LinearLayout llTextBack) {
         if (addTextBackIsExpanded) {
             addTextBackIsExpanded = false;
-            ivExpandTextsBack.setImageResource(R.drawable.ic_expand_more_black_48dp);
+            ivExpandTextsBack.setImageResource(R.drawable.ic_expand_more_black_36dp);
             llTextBack.startAnimation(ViewUtil.collapse(getActivity(), llTextBack));
         } else {
             addTextBackIsExpanded = true;
-            ivExpandTextsBack.setImageResource(R.drawable.ic_expand_less_black_48dp);
+            ivExpandTextsBack.setImageResource(R.drawable.ic_expand_less_black_36dp);
             llTextBack.startAnimation(ViewUtil.expand(getActivity(), llTextBack));
         }
     }

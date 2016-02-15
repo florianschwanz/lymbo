@@ -28,10 +28,7 @@
             android:minWidth="@dimen/reveal_icon_size"
             android:paddingEnd="@dimen/reveal_icon_padding"
             android:paddingStart="@dimen/reveal_icon_padding"
-            android:scaleType="center"
-            android:scaleX="0.75"
-            android:scaleY="0.75"
-            android:src="@drawable/ic_replay_white_48dp" />
+            android:src="@drawable/ic_replay_white_36dp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -55,10 +52,7 @@
             android:minWidth="@dimen/reveal_icon_size"
             android:paddingEnd="@dimen/reveal_icon_padding"
             android:paddingStart="@dimen/reveal_icon_padding"
-            android:scaleType="center"
-            android:scaleX="0.75"
-            android:scaleY="0.75"
-            android:src="@drawable/ic_check_white_48dp" />
+            android:src="@drawable/ic_check_white_36dp" />
     </RelativeLayout>
 
 

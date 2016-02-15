@@ -132,10 +132,7 @@
                                 android:layout_height="wrap_content"
                                 android:contentDescription="@string/share"
                                 android:padding="@dimen/icon_padding"
-                                android:scaleType="center"
-                                android:scaleX="0.75"
-                                android:scaleY="0.75"
-                                android:src="@drawable/ic_share_black_48dp" />
+                                android:src="@drawable/ic_share_black_36dp" />
 
                         </LinearLayout>
 
@@ -150,10 +147,7 @@
                                 android:layout_height="wrap_content"
                                 android:contentDescription="@string/upload"
                                 android:padding="@dimen/icon_padding"
-                                android:scaleType="center"
-                                android:scaleX="0.75"
-                                android:scaleY="0.75"
-                                android:src="@drawable/ic_file_upload_black_48dp" />
+                                android:src="@drawable/ic_file_upload_black_36dp" />
 
                         </LinearLayout>
 

@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
@@ -131,6 +132,13 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         final LinearLayout llNoteBar = (LinearLayout) flCard.findViewById(R.id.llNoteBar);
         final TextView tvNote = (TextView) flCard.findViewById(R.id.tvNote);
 
+        // Tint
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ivNote.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
+            ivFavorite.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
+            ivHint.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
+        }
+
         // Context menu
         flCard.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
@@ -233,10 +241,17 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         if (!card.isNoteExpanded())
             llNoteBar.getLayoutParams().height = 0;
-        if (card.isFavorite())
-            ivFavorite.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_star_black_48dp));
-        else
-            ivFavorite.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_star_border_black_48dp));
+        if (card.isFavorite()) {
+            ivFavorite.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_star_black_36dp));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ivFavorite.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
+            }
+        } else {
+            ivFavorite.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_star_border_black_36dp));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ivFavorite.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
+            }
+        }
 
         String note = cardsController.getNote(context, card.getId());
 
@@ -350,7 +365,9 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      */
     private void edit(final Card card) {
         // Create id if card has none (for some reason)
-        if (card.getId() == null) { card.setId(UUID.randomUUID().toString()); }
+        if (card.getId() == null) {
+            card.setId(UUID.randomUUID().toString());
+        }
 
         String uuid = card.getId();
         String frontTitle = ((Title) card.getSides().get(0).getFirst(EComponentType.TITLE)).getValue();
@@ -540,7 +557,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    ivNote.setImageResource(R.drawable.ic_expand_more_black_48dp);
+                    ivNote.setImageResource(R.drawable.ic_expand_more_black_36dp);
                 }
 
                 @Override
@@ -559,7 +576,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    ivNote.setImageResource(R.drawable.ic_expand_less_black_48dp);
+                    ivNote.setImageResource(R.drawable.ic_expand_less_black_36dp);
                 }
 
                 @Override

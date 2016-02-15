@@ -96,7 +96,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements SwipeRefr
             VIBRATION_DURATION = getResources().getInteger(R.integer.vibration_duration);
             REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_cards);
 
-            setActionBarIcon(R.drawable.ic_menu_white_36dp);
+            setActionBarIcon(R.drawable.ic_arrow_back_white_36dp);
             setDisplayHomeAsUpEnabled(true);
         } catch (Exception e) {
             handleException(e);

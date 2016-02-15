@@ -4,12 +4,12 @@
 
     <header
         android:fragment="de.interoberlin.lymbo.view.activities.SettingsActivity$TranslateAPIPreferenceFragment"
-        android:icon="@drawable/ic_translate_black_48dp"
+        android:icon="@drawable/ic_translate_black_36dp"
         android:title="@string/pref_title_translator" />
 
     <header
         android:fragment="de.interoberlin.lymbo.view.activities.SettingsActivity$LymboWebPreferenceFragment"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:title="@string/pref_title_lymbo_web" />
 
 

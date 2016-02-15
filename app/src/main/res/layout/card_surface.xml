@@ -74,10 +74,7 @@
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/note"
                             android:padding="@dimen/icon_padding"
-                            android:scaleType="center"
-                            android:scaleX="0.75"
-                            android:scaleY="0.75"
-                            android:src="@drawable/ic_expand_more_black_48dp" />
+                            android:src="@drawable/ic_expand_more_black_36dp" />
                     </LinearLayout>
 
                     <!-- Favorite -->
@@ -93,10 +90,7 @@
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/hint"
                             android:padding="@dimen/icon_padding"
-                            android:scaleType="center"
-                            android:scaleX="0.75"
-                            android:scaleY="0.75"
-                            android:src="@drawable/ic_star_border_black_48dp" />
+                            android:src="@drawable/ic_star_border_black_36dp" />
                     </LinearLayout>
 
                     <!-- Hint -->
@@ -112,10 +106,7 @@
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/hint"
                             android:padding="@dimen/icon_padding"
-                            android:scaleType="center"
-                            android:scaleX="0.75"
-                            android:scaleY="0.75"
-                            android:src="@drawable/ic_info_outline_black_48dp" />
+                            android:src="@drawable/ic_info_outline_black_36dp" />
                     </LinearLayout>
 
                     <!-- Flip -->
@@ -164,13 +155,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.9"
-                        android:drawableEnd="@drawable/ic_edit_black_48dp"
+                        android:drawableEnd="@drawable/ic_edit_black_36dp"
                         android:hint="@string/note"
                         android:paddingEnd="@dimen/note_margin"
                         android:paddingStart="@dimen/note_margin"
-                        android:scaleType="center"
-                        android:scaleX="0.75"
-                        android:scaleY="0.75" />
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

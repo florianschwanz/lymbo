@@ -54,10 +54,12 @@ public class StackDialog extends DialogFragment {
         final EditText etTitle = (EditText) v.findViewById(R.id.etTitle);
         final EditText etSubtitle = (EditText) v.findViewById(R.id.etSubtitle);
         final TextView tvAuthor = (TextView) v.findViewById(R.id.tvAuthor);
+        final ImageView ivLanguages = (ImageView) v.findViewById(R.id.ivLanguages);
         final LinearLayout llAddLanguages = (LinearLayout) v.findViewById(R.id.llAddLanguages);
         final LinearLayout llLanguages = (LinearLayout) v.findViewById(R.id.llLanguages);
         final TableLayout tblLanguagesFrom = (TableLayout) v.findViewById(R.id.tblLanguagesFrom);
         final TableLayout tblLanguagesTo = (TableLayout) v.findViewById(R.id.tblLanguagesTo);
+        final ImageView ivLabel = (ImageView) v.findViewById(R.id.ivLabel);
         final LinearLayout llAddTags = (LinearLayout) v.findViewById(R.id.llAddTags);
         final LinearLayout llTags = (LinearLayout) v.findViewById(R.id.llTags);
         final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
