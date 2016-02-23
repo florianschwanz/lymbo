@@ -637,7 +637,16 @@ public class CardsController {
     public List<Tag> getTagsAll() {
         List<Tag> tagsAll = new ArrayList<>();
 
+        // Consider displayed cards
         for (Card card : getCards()) {
+            for (Tag tag : card.getTags()) {
+                if (tag != null && !tag.containedInList(tagsAll) && !tag.getValue().equals(getResources().getString(R.string.no_tag)))
+                    tagsAll.add(tag);
+            }
+        }
+
+        // Consider discarded cards
+        for (Card card : getCardsDiscarded()) {
             for (Tag tag : card.getTags()) {
                 if (tag != null && !tag.containedInList(tagsAll) && !tag.getValue().equals(getResources().getString(R.string.no_tag)))
                     tagsAll.add(tag);

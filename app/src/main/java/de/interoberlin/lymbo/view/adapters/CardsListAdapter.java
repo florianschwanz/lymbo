@@ -307,7 +307,6 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             }
         });
 
-
         // Action : hint
         if (card.getHint() != null) {
             ivHint.setOnClickListener(new View.OnClickListener() {
@@ -370,8 +369,12 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         }
 
         String uuid = card.getId();
-        String frontTitle = ((Title) card.getSides().get(0).getFirst(EComponentType.TITLE)).getValue();
-        String backTitle = ((Title) card.getSides().get(1).getFirst(EComponentType.TITLE)).getValue();
+        String frontTitle = "";
+        if (card.getSides().size() > 0)
+            frontTitle = ((Title) card.getSides().get(0).getFirst(EComponentType.TITLE)).getValue();
+        String backTitle = "";
+        if (card.getSides().size() > 1)
+            backTitle = ((Title) card.getSides().get(1).getFirst(EComponentType.TITLE)).getValue();
         ArrayList<String> frontTexts = new ArrayList<>();
         ArrayList<String> backTexts = new ArrayList<>();
         ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
@@ -380,20 +383,24 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         ArrayList<Integer> answersCorrect = new ArrayList<>();
         ArrayList<String> templates = new ArrayList<>();
 
-        for (AComponent c : card.getSides().get(0).getComponents()) {
-            if (c instanceof Text) {
-                frontTexts.add(((Text) c).getValue());
-            } else if (c instanceof Choice) {
-                for (Answer a : ((Choice) c).getAnswers()) {
-                    answersValue.add(a.getValue());
-                    answersCorrect.add(a.isCorrect() ? 1 : 0);
+        if (card.getSides().size() > 0) {
+            for (AComponent c : card.getSides().get(0).getComponents()) {
+                if (c instanceof Text) {
+                    frontTexts.add(((Text) c).getValue());
+                } else if (c instanceof Choice) {
+                    for (Answer a : ((Choice) c).getAnswers()) {
+                        answersValue.add(a.getValue());
+                        answersCorrect.add(a.isCorrect() ? 1 : 0);
+                    }
                 }
             }
         }
 
-        for (AComponent c : card.getSides().get(1).getComponents()) {
-            if (c instanceof Text) {
-                backTexts.add(((Text) c).getValue());
+        if (card.getSides().size() > 1) {
+            for (AComponent c : card.getSides().get(1).getComponents()) {
+                if (c instanceof Text) {
+                    backTexts.add(((Text) c).getValue());
+                }
             }
         }
 
