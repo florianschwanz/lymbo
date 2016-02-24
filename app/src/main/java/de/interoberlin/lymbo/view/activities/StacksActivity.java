@@ -89,7 +89,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
                 }, REFRESH_DELAY);
             }
 
-            setActionBarIcon(R.drawable.ic_menu_white_36dp);
+            setActionBarIcon(R.drawable.ic_menu_white_24dp);
             setDisplayHomeAsUpEnabled(true);
         } catch (Exception e) {
             handleException(e);
