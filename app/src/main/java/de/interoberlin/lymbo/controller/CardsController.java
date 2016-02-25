@@ -291,20 +291,38 @@ public class CardsController {
      */
     public void addTemplate(String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         Card template = new Card();
+        template.setId(UUID.randomUUID().toString());
+
+        // Title
         template.setTitle(title);
 
-        Side sideFront = new Side();
-        sideFront.getComponents().add(new Title(frontTitleValue));
-        for (String s : frontTextsValues) {
-            sideFront.getComponents().add(new Text(s));
+        // Front
+        if (!frontTitleValue.isEmpty() || !frontTextsValues.isEmpty()) {
+            Side sideFront = new Side();
+
+            if (!frontTitleValue.isEmpty())
+                sideFront.getComponents().add(new Title(frontTitleValue));
+
+            for (String s : frontTextsValues) {
+                sideFront.getComponents().add(new Text(s));
+            }
+            template.getSides().add(sideFront);
         }
 
-        Side sideBack = new Side();
-        sideBack.getComponents().add(new Title(backTitleValue));
-        for (String s : backTextsValues) {
-            sideBack.getComponents().add(new Text(s));
+        // Back
+        if (!backTitleValue.isEmpty() || !backTextsValues.isEmpty()) {
+            Side sideBack = new Side();
+
+            if (!backTitleValue.isEmpty())
+                sideBack.getComponents().add(new Title(backTitleValue));
+
+            for (String s : backTextsValues) {
+                sideBack.getComponents().add(new Text(s));
+            }
+            template.getSides().add(sideBack);
         }
 
+        // Tags
         template.setTags(tags);
 
         stack.getTemplates().add(template);
@@ -585,7 +603,6 @@ public class CardsController {
      * @param deepCopy      true if the copy shall be deep
      */
     public void copyCard(String sourceLymboId, String targetLymboId, String cardId, boolean deepCopy) {
-        Stack sourceStack = stacksController.getLymboById(sourceLymboId);
         Stack targetStack = stacksController.getLymboById(targetLymboId);
         Card card = getCardById(cardId);
 

@@ -205,7 +205,10 @@ public class CardDialog extends DialogFragment {
 
             tr.setPadding(0, (int) res.getDimension(R.dimen.table_row_padding), 0, (int) res.getDimension(R.dimen.table_row_padding));
             tvText.setText(template.getTitle());
-            tvText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+                tvText.setTextAppearance(android.R.style.TextAppearance_Medium);
+            else
+                tvText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
             tvText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -238,7 +241,7 @@ public class CardDialog extends DialogFragment {
             public void onClick(View view) {
                 String languageFrom = stack.getLanguage().getFrom();
                 String languageTo = stack.getLanguage().getTo();
-                translate(stack, languageTo, languageFrom, etBack, etFront);
+                translate(languageTo, languageFrom, etBack, etFront);
             }
         });
 
@@ -247,7 +250,7 @@ public class CardDialog extends DialogFragment {
             public void onClick(View view) {
                 String languageFrom = stack.getLanguage().getFrom();
                 String languageTo = stack.getLanguage().getTo();
-                translate(stack, languageFrom, languageTo, etFront, etBack);
+                translate(languageFrom, languageTo, etFront, etBack);
             }
         });
 
@@ -443,11 +446,12 @@ public class CardDialog extends DialogFragment {
     /**
      * Translates text from @param{etFrom} and writes it into @param{etTo} according to languages set in @param{stack}
      *
-     * @param stack  stack
-     * @param etFrom source edit text
-     * @param etTo   target edit text
+     * @param languageFrom source language
+     * @param languageTo   target language
+     * @param etFrom       source edit text
+     * @param etTo         target edit text
      */
-    private void translate(Stack stack, String languageFrom, String languageTo, EditText etFrom, EditText etTo) {
+    private void translate(String languageFrom, String languageTo, EditText etFrom, EditText etTo) {
         try {
             Resources res = getActivity().getResources();
 
@@ -516,24 +520,30 @@ public class CardDialog extends DialogFragment {
         CardsController cardsController = CardsController.getInstance(getActivity());
 
         // Read values from template
-        String frontTitle = ((Title) template.getSides().get(0).getFirst(EComponentType.TITLE)).getValue();
-        String backTitle = ((Title) template.getSides().get(1).getFirst(EComponentType.TITLE)).getValue();
+        String frontTitle = "";
         ArrayList<String> textsFront = new ArrayList<>();
+        if (template.getSides().size() > 0) {
+            if (template.getSides().get(0).contains(EComponentType.TITLE))
+                frontTitle = ((Title) template.getSides().get(0).getFirst(EComponentType.TITLE)).getValue();
+            for (AComponent c : template.getSides().get(0).getComponents()) {
+                if (c instanceof Text) {
+                    textsFront.add(((Text) c).getValue());
+                }
+            }
+        }
+        String backTitle = "";
         ArrayList<String> textsBack = new ArrayList<>();
+        if (template.getSides().size() > 1) {
+            if (template.getSides().get(1).contains(EComponentType.TITLE))
+                backTitle = ((Title) template.getSides().get(1).getFirst(EComponentType.TITLE)).getValue();
+            for (AComponent c : template.getSides().get(1).getComponents()) {
+                if (c instanceof Text) {
+                    textsBack.add(((Text) c).getValue());
+                }
+            }
+        }
         ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
         ArrayList<String> tagsSelected = Tag.getValues(template.getTags());
-
-        for (AComponent c : template.getSides().get(0).getComponents()) {
-            if (c instanceof Text) {
-                textsFront.add(((Text) c).getValue());
-            }
-        }
-
-        for (AComponent c : template.getSides().get(1).getComponents()) {
-            if (c instanceof Text) {
-                textsBack.add(((Text) c).getValue());
-            }
-        }
 
         // Clear
         tblTextFront.removeAllViews();
@@ -617,7 +627,7 @@ public class CardDialog extends DialogFragment {
             if (tblQuiz.getChildAt(i) instanceof TableRow) {
                 TableRow row = (TableRow) tblQuiz.getChildAt(i);
                 String value = (row.getChildCount() > 1 && row.getChildAt(1) instanceof EditText) ? ((EditText) row.getChildAt(1)).getText().toString() : "";
-                boolean correct = (row.getChildCount() > 0 && row.getChildAt(0) instanceof CheckBox) ? ((CheckBox) row.getChildAt(0)).isChecked() : false;
+                boolean correct = (row.getChildCount() > 0 && row.getChildAt(0) instanceof CheckBox) && ((CheckBox) row.getChildAt(0)).isChecked();
 
                 if (!value.isEmpty()) {
                     selectedAnswers.add(new Answer(value, correct));

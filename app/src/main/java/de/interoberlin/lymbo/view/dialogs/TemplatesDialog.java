@@ -66,7 +66,10 @@ public class TemplatesDialog extends DialogFragment {
 
             tr.setPadding(0, (int) res.getDimension(R.dimen.table_row_padding), 0, (int) res.getDimension(R.dimen.table_row_padding));
             tvText.setText(template.getTitle());
-            tvText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+                tvText.setTextAppearance(android.R.style.TextAppearance_Medium);
+            else
+                tvText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
             tvText.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
                 @Override
                 public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
@@ -152,30 +155,35 @@ public class TemplatesDialog extends DialogFragment {
         CardsController cardsController = CardsController.getInstance(getActivity());
         String uuid = template.getId();
         String title = template.getTitle();
-        String frontTitle = ((Title) template.getSides().get(0).getFirst(EComponentType.TITLE)).getValue();
-        String backTitle = ((Title) template.getSides().get(1).getFirst(EComponentType.TITLE)).getValue();
+
+        String frontTitle = "";
         ArrayList<String> frontTexts = new ArrayList<>();
+        if (template.getSides().size() > 0) {
+            frontTitle = ((Title) template.getSides().get(0).getFirst(EComponentType.TITLE)).getValue();
+            for (AComponent c : template.getSides().get(0).getComponents()) {
+                switch (c.getType()) {
+                    case TEXT: {
+                        frontTexts.add(((Text) c).getValue());
+                        break;
+                    }
+                }
+            }
+        }
+        String backTitle = "";
         ArrayList<String> backTexts = new ArrayList<>();
+        if (template.getSides().size() > 1) {
+            backTitle = ((Title) template.getSides().get(1).getFirst(EComponentType.TITLE)).getValue();
+            for (AComponent c : template.getSides().get(1).getComponents()) {
+                switch (c.getType()) {
+                    case TEXT: {
+                        backTexts.add(((Text) c).getValue());
+                        break;
+                    }
+                }
+            }
+        }
         ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
         ArrayList<String> tagsSelected = Tag.getValues(template.getTags());
-
-        for (AComponent c : template.getSides().get(0).getComponents()) {
-            switch (c.getType()) {
-                case TEXT: {
-                    frontTexts.add(((Text) c).getValue());
-                    break;
-                }
-            }
-        }
-
-        for (AComponent c : template.getSides().get(1).getComponents()) {
-            switch (c.getType()) {
-                case TEXT: {
-                    backTexts.add(((Text) c).getValue());
-                    break;
-                }
-            }
-        }
 
         TemplateDialog dialog = new TemplateDialog();
         Bundle bundle = new Bundle();
