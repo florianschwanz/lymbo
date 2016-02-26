@@ -124,7 +124,6 @@ public class CopyCardDialog extends DialogFragment {
 
         // Get arguments
         Bundle bundle = this.getArguments();
-        final String sourceLymboId = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
         final String cardUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_card_uuid));
 
         AlertDialog dialog = (AlertDialog) getDialog();
@@ -136,7 +135,7 @@ public class CopyCardDialog extends DialogFragment {
             public void onClick(View view) {
                 boolean deepCopy = cbDeepCopy.isChecked();
 
-                onCompleteListener.onCopyCard(sourceLymboId, targetLymboId, cardUuid, deepCopy);
+                onCompleteListener.onCopyCard(targetLymboId, cardUuid, deepCopy);
             }
         });
     }
@@ -146,7 +145,7 @@ public class CopyCardDialog extends DialogFragment {
     // --------------------
 
     public interface OnCompleteListener {
-        void onCopyCard(String sourceLymboId, String targetLymboId, String cardId, boolean deepCopy);
+        void onCopyCard(String targetLymboId, String cardId, boolean deepCopy);
     }
 
     public void onAttach(Activity activity) {

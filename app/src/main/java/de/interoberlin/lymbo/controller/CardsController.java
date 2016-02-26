@@ -597,12 +597,11 @@ public class CardsController {
     /**
      * Copies a card from one stack to another
      *
-     * @param sourceLymboId id of source stack
      * @param targetLymboId id of target stack
      * @param cardId        id of card to be copied
      * @param deepCopy      true if the copy shall be deep
      */
-    public void copyCard(String sourceLymboId, String targetLymboId, String cardId, boolean deepCopy) {
+    public void copyCard(String targetLymboId, String cardId, boolean deepCopy) {
         Stack targetStack = stacksController.getLymboById(targetLymboId);
         Card card = getCardById(cardId);
 

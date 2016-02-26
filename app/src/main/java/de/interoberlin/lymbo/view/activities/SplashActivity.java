@@ -58,7 +58,7 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         super.onCreate(savedInstanceState);
         activity = this;
 
-        splashController = SplashController.getInstance(this);
+        splashController = SplashController.getInstance();
         stacksController = StacksController.getInstance(this);
 
         setContentView(R.layout.activity_splash);

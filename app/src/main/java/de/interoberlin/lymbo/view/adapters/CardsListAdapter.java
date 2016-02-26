@@ -28,6 +28,8 @@ import android.widget.TextView;
 import com.github.mrengineer13.snackbar.SnackBar;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -261,6 +263,12 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         }
 
         // Add tags
+        Collections.sort(card.getTags(), new Comparator<Tag>() {
+            @Override
+            public int compare(Tag lhs, Tag rhs) {
+                return lhs.getValue().compareTo(rhs.getValue());
+            }
+        });
         for (Tag tag : card.getTags()) {
             if (!tag.getValue().equals(getResources().getString(R.string.no_tag))) {
                 TagView cvTag = new TagView(context, tag);
