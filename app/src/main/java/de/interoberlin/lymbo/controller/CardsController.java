@@ -194,12 +194,16 @@ public class CardsController {
         Card card = new Card();
         card.setId(UUID.randomUUID().toString());
 
-        if (frontTitleValue != null && !frontTitleValue.isEmpty()) {
+        if ((frontTitleValue != null && !frontTitleValue.isEmpty()) || !frontTextsValues.isEmpty() || !answers.isEmpty()) {
             Side sideFront = new Side();
+
+            if (frontTitleValue != null && !frontTitleValue.isEmpty())
             sideFront.getComponents().add(new Title(frontTitleValue));
-            for (String s : frontTextsValues) {
-                sideFront.getComponents().add(new Text(s));
-            }
+
+            if (!frontTextsValues.isEmpty())
+                for (String s : frontTextsValues) {
+                    sideFront.getComponents().add(new Text(s));
+                }
 
             if (!answers.isEmpty())
                 sideFront.getComponents().add(new Choice(EChoiceType.MULTIPLE, answers));
@@ -207,12 +211,20 @@ public class CardsController {
             card.getSides().add(sideFront);
         }
 
-        if (backTitleValue != null && !backTitleValue.isEmpty()) {
+        if ((backTitleValue != null && !backTitleValue.isEmpty()) || !backTextsValues.isEmpty() || !answers.isEmpty()) {
             Side sideBack = new Side();
-            sideBack.getComponents().add(new Title(backTitleValue));
-            for (String s : backTextsValues) {
-                sideBack.getComponents().add(new Text(s));
-            }
+
+            if (!answers.isEmpty())
+                sideBack.getComponents().add(new Result());
+
+            if (backTitleValue != null && !backTitleValue.isEmpty())
+                sideBack.getComponents().add(new Title(backTitleValue));
+
+            if (backTextsValues.isEmpty())
+                for (String s : backTextsValues) {
+                    sideBack.getComponents().add(new Text(s));
+                }
+
             card.getSides().add(sideBack);
         }
 
