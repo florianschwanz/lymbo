@@ -1,11 +1,16 @@
 package de.interoberlin.lymbo.view.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
@@ -30,6 +35,7 @@ import de.interoberlin.sauvignon.lib.model.util.SVGPaint;
 import de.interoberlin.sauvignon.lib.view.SVGSurfacePanel;
 
 public class SplashActivity extends Activity implements Accelerator.OnTiltListener {
+    public static final String TAG = SplashActivity.class.getSimpleName();
     public static Activity activity;
 
     // Controllers
@@ -49,6 +55,10 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
     private static SVGSurfacePanel panel;
     private static ImageView ivLogo;
 
+    private static final int  PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
+    private static final int  PERMISSION_REQUEST_VIBRATE = 1;
+    private static final int  PERMISSION_REQUEST_INTERNET = 2;
+
     // --------------------
     // Methods - Lifecycle
     // --------------------
@@ -57,6 +67,10 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = this;
+
+        requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
+        requestPermission(Manifest.permission.VIBRATE, PERMISSION_REQUEST_VIBRATE);
+        requestPermission(Manifest.permission.INTERNET, PERMISSION_REQUEST_INTERNET);
 
         splashController = SplashController.getInstance();
         stacksController = StacksController.getInstance(this);
@@ -157,6 +171,29 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
     // --------------------
     // Methods
     // --------------------
+
+    /**
+     * Asks user for permission
+     *
+     * @param permission permission to ask for
+     * @param callBack   callback
+     */
+    private void requestPermission(String permission, int callBack) {
+        if (ContextCompat.checkSelfPermission(this,
+                permission)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "Permission not granted");
+
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    permission)) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{permission},
+                        callBack);
+            }
+        } else {
+            Log.i(TAG, "Permission granted");
+        }
+    }
 
     private Drawable loadFromAssets(String image) {
         try {
