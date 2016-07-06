@@ -204,6 +204,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             });
 
             // Add tags
+            viewHolder.llTags.removeAllViews();
             for (Tag tag : stack.getTags()) {
                 if (!tag.getValue().equals(getResources().getString(R.string.no_tag))) {
                     TagView cvTag = new TagView(context, tag);

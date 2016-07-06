@@ -295,6 +295,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                 return lhs.getValue().compareTo(rhs.getValue());
             }
         });
+        viewHolder.llTags.removeAllViews();
         for (Tag tag : card.getTags()) {
             if (!tag.getValue().equals(getResources().getString(R.string.no_tag))) {
                 TagView cvTag = new TagView(context, tag);
