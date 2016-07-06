@@ -2,8 +2,6 @@ package de.interoberlin.lymbo.view.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
-import android.os.Vibrator;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +19,12 @@ import java.util.List;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
-import de.interoberlin.lymbo.core.model.v1.impl.components.Choice;
-import de.interoberlin.lymbo.core.model.v1.impl.components.AComponent;
-import de.interoberlin.lymbo.core.model.v1.impl.components.Image;
-import de.interoberlin.lymbo.core.model.v1.impl.components.Result;
 import de.interoberlin.lymbo.core.model.v1.impl.Side;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
+import de.interoberlin.lymbo.core.model.v1.impl.components.AComponent;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Choice;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Image;
+import de.interoberlin.lymbo.core.model.v1.impl.components.Result;
 import de.interoberlin.lymbo.core.model.v1.impl.components.Text;
 import de.interoberlin.lymbo.core.model.v1.impl.components.Title;
 import de.interoberlin.lymbo.util.ViewUtil;
@@ -42,6 +40,14 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     // Context
     private Context context;
     private Activity activity;
+
+    // View
+    static class ViewHolder {
+        private FrameLayout v;
+        private RelativeLayout rlMain;
+        private LinearLayout llTags;
+        private android.widget.ImageView ivUndo;
+    }
 
     // Controllers
     CardsController cardsController;
@@ -88,19 +94,29 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     public View getView(final int position, View v, ViewGroup parent) {
         final Card card = getItem(position);
 
-        return getCardView(position, card, parent);
-    }
+        ViewHolder viewHolder;
 
-    private View getCardView(final int position, final Card card, final ViewGroup parent) {
-        // Layout inflater
-        LayoutInflater vi;
-        vi = LayoutInflater.from(getContext());
+        if (v == null) {
+            viewHolder = new ViewHolder();
 
-        // Load views
-        final FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card_stash, parent, false);
-        final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
-        final LinearLayout llTags = (LinearLayout) flCard.findViewById(R.id.llTags);
-        final android.widget.ImageView ivUndo = (android.widget.ImageView) flCard.findViewById(R.id.ivUndo);
+            // Layout inflater
+            LayoutInflater vi;
+            vi = LayoutInflater.from(getContext());
+
+            // Load views
+            v = vi.inflate(R.layout.card_stash, parent, false);
+
+            viewHolder.v = (FrameLayout) v;
+            viewHolder.rlMain = (RelativeLayout) v.findViewById(R.id.rlMain);
+            viewHolder.llTags = (LinearLayout) v.findViewById(R.id.llTags);
+            viewHolder.ivUndo = (android.widget.ImageView) v.findViewById(R.id.ivUndo);
+
+            v.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) v.getTag();
+        }
+
+        final ViewHolder viewHolderFinal = viewHolder;
 
         // Add sides
         for (Side side : card.getSides()) {
@@ -111,27 +127,32 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
             // Add components
             for (AComponent c : side.getComponents()) {
                 switch (c.getType()) {
-                    case TITLE : {
-                        llComponents.addView(new TitleView(context, (Title) c)); break;
+                    case TITLE: {
+                        llComponents.addView(new TitleView(context, (Title) c));
+                        break;
                     }
-                    case TEXT : {
-                        llComponents.addView(new TextView(context, (Text) c)); break;
+                    case TEXT: {
+                        llComponents.addView(new TextView(context, (Text) c));
+                        break;
                     }
                     case IMAGE: {
-                        llComponents.addView(new ImageView(context, (Image) c)); break;
+                        llComponents.addView(new ImageView(context, (Image) c));
+                        break;
                     }
                     case CHOICE: {
-                        llComponents.addView(new ChoiceView(context, (Choice) c)); break;
+                        llComponents.addView(new ChoiceView(context, (Choice) c));
+                        break;
                     }
                     case RESULT: {
-                        llComponents.addView(new ResultView(context, (Result) c)); break;
+                        llComponents.addView(new ResultView(context, (Result) c));
+                        break;
                     }
                 }
             }
 
             llSide.setVisibility(View.INVISIBLE);
 
-            rlMain.addView(llSide);
+            viewHolder.rlMain.addView(llSide);
         }
 
         // Display width
@@ -139,20 +160,20 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         final int displayWidth = displaymetrics.widthPixels;
 
-        rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
+        viewHolder.rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
 
         // Tags
         for (Tag tag : card.getTags()) {
             if (!tag.getValue().equals(context.getResources().getString(R.string.no_tag)))
-                llTags.addView(new TagView(context, tag));
+                viewHolder.llTags.addView(new TagView(context, tag));
         }
 
         // Reveal : undo
-        ivUndo.setOnClickListener(new View.OnClickListener() {
+        viewHolder.ivUndo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Animation anim = ViewUtil.toLeft(context, flCard, displayWidth);
-                flCard.startAnimation(anim);
+                Animation anim = ViewUtil.toLeft(context, viewHolderFinal.v, displayWidth);
+                viewHolderFinal.v.startAnimation(anim);
 
                 anim.setAnimationListener(new Animation.AnimationListener() {
                     @Override
@@ -162,8 +183,8 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        Animation anim = ViewUtil.collapse(context, flCard);
-                        flCard.startAnimation(anim);
+                        Animation anim = ViewUtil.collapse(context, viewHolderFinal.v);
+                        viewHolderFinal.v.startAnimation(anim);
 
                         anim.setAnimationListener(new Animation.AnimationListener() {
                             @Override
@@ -192,10 +213,10 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         });
 
         if (card.isRestoring()) {
-            flCard.setTranslationX(displayWidth);
+            viewHolderFinal.v.setTranslationX(displayWidth);
 
-            Animation anim = ViewUtil.expand(context, flCard);
-            flCard.startAnimation(anim);
+            Animation anim = ViewUtil.expand(context, viewHolderFinal.v);
+            viewHolderFinal.v.startAnimation(anim);
 
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -205,8 +226,8 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    Animation anim = ViewUtil.fromLeft(context, flCard, displayWidth);
-                    flCard.startAnimation(anim);
+                    Animation anim = ViewUtil.fromLeft(context, viewHolderFinal.v, displayWidth);
+                    viewHolderFinal.v.startAnimation(anim);
                 }
 
                 @Override
@@ -216,14 +237,14 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
             });
         }
 
-        return flCard;
+        return v;
     }
 
     /**
      * Restores a card
      *
-     * @param pos    position of item
-     * @param card   card
+     * @param pos  position of item
+     * @param card card
      */
     private void restore(int pos, Card card) {
         cardsController.restore(card);
@@ -235,9 +256,11 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     // Methods - Filter
     // --------------------
 
+    /*
     public List<Card> getFilteredItems() {
         return filteredItems;
     }
+*/
 
     public void filter() {
         getFilter().filter("");
@@ -259,18 +282,6 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
      */
     protected boolean filterCard(Card card) {
         return card != null;
-    }
-
-    // --------------------
-    // Methods - Util
-    // --------------------
-
-    private void vibrate (int vibrationDuration) {
-        ((Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(vibrationDuration);
-    }
-
-    private Resources getResources() {
-        return activity.getResources();
     }
 
     // --------------------

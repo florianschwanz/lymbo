@@ -64,6 +64,21 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     private Context context;
     private Activity activity;
 
+    // View
+    static class ViewHolder {
+        private FrameLayout v;
+        private RelativeLayout rlMain;
+        private LinearLayout llTags;
+        private LinearLayout llFlip;
+        private TextView tvNumerator;
+        private TextView tvDenominator;
+        private ImageView ivNote;
+        private ImageView ivFavorite;
+        private ImageView ivHint;
+        private LinearLayout llNoteBar;
+        private TextView tvNote;
+    }
+
     // Controllers
     private CardsController cardsController;
 
@@ -113,36 +128,47 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     @Override
     public View getView(final int position, View v, ViewGroup parent) {
         final Card card = getItem(position);
-        return getCardView(position, card, parent);
-    }
 
-    private View getCardView(final int position, final Card card, final ViewGroup parent) {
-        // Layout inflater
-        LayoutInflater vi;
-        vi = LayoutInflater.from(getContext());
+        ViewHolder viewHolder;
 
-        // Load views
-        final FrameLayout flCard = (FrameLayout) vi.inflate(R.layout.card, parent, false);
-        final RelativeLayout rlMain = (RelativeLayout) flCard.findViewById(R.id.rlMain);
-        final LinearLayout llTags = (LinearLayout) flCard.findViewById(R.id.llTags);
-        final LinearLayout llFlip = (LinearLayout) flCard.findViewById(R.id.llFlip);
-        final TextView tvNumerator = (TextView) flCard.findViewById(R.id.tvNumerator);
-        final TextView tvDenominator = (TextView) flCard.findViewById(R.id.tvDenominator);
-        final ImageView ivNote = (ImageView) flCard.findViewById(R.id.ivNote);
-        final ImageView ivFavorite = (ImageView) flCard.findViewById(R.id.ivFavorite);
-        final ImageView ivHint = (ImageView) flCard.findViewById(R.id.ivHint);
-        final LinearLayout llNoteBar = (LinearLayout) flCard.findViewById(R.id.llNoteBar);
-        final TextView tvNote = (TextView) flCard.findViewById(R.id.tvNote);
+        if (v == null) {
+            viewHolder = new ViewHolder();
+
+            // Layout inflater
+            LayoutInflater vi;
+            vi = LayoutInflater.from(getContext());
+
+            // Load views
+            v = vi.inflate(R.layout.card, parent, false);
+
+            viewHolder.v = (FrameLayout) v;
+            viewHolder.rlMain = (RelativeLayout) v.findViewById(R.id.rlMain);
+            viewHolder.llTags = (LinearLayout) v.findViewById(R.id.llTags);
+            viewHolder.llFlip = (LinearLayout) v.findViewById(R.id.llFlip);
+            viewHolder.tvNumerator = (TextView) v.findViewById(R.id.tvNumerator);
+            viewHolder.tvDenominator = (TextView) v.findViewById(R.id.tvDenominator);
+            viewHolder.ivNote = (ImageView) v.findViewById(R.id.ivNote);
+            viewHolder.ivFavorite = (ImageView) v.findViewById(R.id.ivFavorite);
+            viewHolder.ivHint = (ImageView) v.findViewById(R.id.ivHint);
+            viewHolder.llNoteBar = (LinearLayout) v.findViewById(R.id.llNoteBar);
+            viewHolder.tvNote = (TextView) v.findViewById(R.id.tvNote);
+
+            v.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) v.getTag();
+        }
+
+        final ViewHolder viewHolderFinal = viewHolder;
 
         // Tint
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ivNote.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
-            ivFavorite.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
-            ivHint.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
+            viewHolder.ivNote.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
+            viewHolder.ivFavorite.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
+            viewHolder.ivHint.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
         }
 
         // Context menu
-        flCard.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+        v.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
                 contextMenu.add(0, 0, 0, getResources().getString(R.string.edit))
@@ -157,7 +183,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
-                                stash(position, card, flCard);
+                                stash(position, card, viewHolderFinal.v);
                                 return false;
                             }
                         });
@@ -216,11 +242,11 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                 }
 
                 llSide.setVisibility(View.INVISIBLE);
-                rlMain.addView(llSide);
+                viewHolder.rlMain.addView(llSide);
             }
 
             // Set one side visible
-            rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
+            viewHolder.rlMain.getChildAt(card.getSideVisible()).setVisibility(View.VISIBLE);
         } else {
             Title title = new Title(getResources().getString(R.string.card_does_not_contain_any_sides));
             Text text = new Text(getResources().getString(R.string.how_useful));
@@ -233,7 +259,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             llComponents.addView(new de.interoberlin.lymbo.view.components.TextView(context, text));
 
             llSide.setVisibility(View.VISIBLE);
-            rlMain.addView(llSide);
+            viewHolder.rlMain.addView(llSide);
         }
 
         // Get display width
@@ -242,16 +268,16 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         final int displayWidth = displaymetrics.widthPixels;
 
         if (!card.isNoteExpanded())
-            llNoteBar.getLayoutParams().height = 0;
+            viewHolder.llNoteBar.getLayoutParams().height = 0;
         if (card.isFavorite()) {
-            ivFavorite.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_star_black_36dp));
+            viewHolder.ivFavorite.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_star_black_36dp));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                ivFavorite.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
+                viewHolder.ivFavorite.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
             }
         } else {
-            ivFavorite.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_star_border_black_36dp));
+            viewHolder.ivFavorite.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_star_border_black_36dp));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                ivFavorite.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
+                viewHolder.ivFavorite.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
             }
         }
 
@@ -259,7 +285,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         // Add note
         if (note != null && !note.isEmpty()) {
-            tvNote.setText(note);
+            viewHolder.tvNote.setText(note);
         }
 
         // Add tags
@@ -279,36 +305,36 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                     }
                 });
 
-                llTags.addView(cvTag);
+                viewHolder.llTags.addView(cvTag);
             }
         }
 
         // Action : flip
         if (card.getSides().size() > 1) {
-            tvNumerator.setText(String.valueOf(card.getSideVisible() + 1));
-            tvDenominator.setText(String.valueOf(card.getSides().size()));
+            viewHolder.tvNumerator.setText(String.valueOf(card.getSideVisible() + 1));
+            viewHolder.tvDenominator.setText(String.valueOf(card.getSides().size()));
         } else {
-            ViewUtil.remove(llFlip);
+            ViewUtil.remove(viewHolder.llFlip);
         }
 
         // Action : note
-        ivNote.setOnClickListener(new View.OnClickListener() {
+        viewHolder.ivNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toggleNote(card, llNoteBar, ivNote);
+                toggleNote(card, viewHolderFinal.llNoteBar, viewHolderFinal.ivNote);
             }
         });
 
         // Action : edit note
-        tvNote.setOnClickListener(new View.OnClickListener() {
+        viewHolder.tvNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editNote(card, tvNote.getText().toString());
+                editNote(card, viewHolderFinal.tvNote.getText().toString());
             }
         });
 
         // Action : favorite
-        ivFavorite.setOnClickListener(new View.OnClickListener() {
+        viewHolder.ivFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleFavorite(card, !card.isFavorite());
@@ -317,7 +343,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
         // Action : hint
         if (card.getHint() != null) {
-            ivHint.setOnClickListener(new View.OnClickListener() {
+            viewHolder.ivHint.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DisplayHintDialog displayHintDialog = new DisplayHintDialog();
@@ -329,15 +355,15 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
                 }
             });
         } else {
-            ViewUtil.remove(ivHint);
+            ViewUtil.remove(viewHolder.ivHint);
         }
 
         // Restoring animation
         if (card.isRestoring()) {
-            flCard.setTranslationX(displayWidth);
+            v.setTranslationX(displayWidth);
 
-            Animation anim = ViewUtil.expand(context, flCard);
-            flCard.startAnimation(anim);
+            Animation anim = ViewUtil.expand(context, v);
+            v.startAnimation(anim);
 
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -347,8 +373,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    Animation anim = ViewUtil.fromRight(context, flCard, displayWidth);
-                    flCard.startAnimation(anim);
+                    Animation anim = ViewUtil.fromRight(context, viewHolderFinal.v, displayWidth);
+                    viewHolderFinal.v.startAnimation(anim);
                 }
 
                 @Override
@@ -358,7 +384,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             });
         }
 
-        return flCard;
+        return v;
     }
 
     // --------------------

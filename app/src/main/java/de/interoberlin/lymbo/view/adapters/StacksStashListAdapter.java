@@ -26,11 +26,19 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
     private Context context;
     private Activity activity;
 
+    // View
+    static class ViewHolder {
+        private LinearLayout v;
+        private TextView tvTitle;
+        private TextView tvSubtitle;
+        private ImageView ivUndo;
+    }
+
     // Controllers
     private StacksController stacksController;
 
     // Filter
-    private List<Stack> filteredItems = new ArrayList<>();
+    // private List<Stack> filteredItems = new ArrayList<>();
     private List<Stack> originalItems = new ArrayList<>();
     private LymboListFilter lymboListFilter;
     private final Object lock = new Object();
@@ -43,7 +51,7 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
         super(context, resource, items);
         stacksController = StacksController.getInstance(activity);
 
-        this.filteredItems = items;
+        // this.filteredItems = items;
         this.originalItems = items;
 
         this.activity = activity;
@@ -59,33 +67,44 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
     @Override
     public View getView(int position, View v, ViewGroup parent) {
         final Stack stack = getItem(position);
-        return getLymboView(position, stack, parent);
-    }
 
-    private View getLymboView(int position, final Stack stack, ViewGroup parent) {
-        // Layout inflater
-        LayoutInflater vi;
-        vi = LayoutInflater.from(getContext());
+        ViewHolder viewHolder;
 
-        // Load views
-        final LinearLayout llStack = (LinearLayout) vi.inflate(R.layout.stack_stash, parent, false);
-        TextView tvTitle = (TextView) llStack.findViewById(R.id.tvTitle);
-        TextView tvSubtitle = (TextView) llStack.findViewById(R.id.tvSubtitle);
-        ImageView ivUndo = (ImageView) llStack.findViewById(R.id.ivUndo);
+        if (v == null) {
+            viewHolder = new ViewHolder();
+
+            // Layout inflater
+            LayoutInflater vi;
+            vi = LayoutInflater.from(getContext());
+
+            // Load views
+            v = vi.inflate(R.layout.stack_stash, parent, false);
+
+            viewHolder.v = (LinearLayout) v;
+            viewHolder.tvTitle = (TextView) v.findViewById(R.id.tvTitle);
+            viewHolder.tvSubtitle = (TextView) v.findViewById(R.id.tvSubtitle);
+            viewHolder.ivUndo = (ImageView) v.findViewById(R.id.ivUndo);
+
+            v.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) v.getTag();
+        }
+
+        final ViewHolder viewHolderFinal = viewHolder;
 
         // Set values
         if (stack.getTitle() != null)
-            tvTitle.setText(stack.getTitle());
+            viewHolder.tvTitle.setText(stack.getTitle());
         if (stack.getSubtitle() != null)
-            tvSubtitle.setText(stack.getSubtitle());
+            viewHolder.tvSubtitle.setText(stack.getSubtitle());
 
         // Action : stash
         if (stack.getPath() != null) {
-            ivUndo.setOnClickListener(new View.OnClickListener() {
+            viewHolder.ivUndo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Animation anim = ViewUtil.collapse(context, llStack);
-                    llStack.startAnimation(anim);
+                    Animation anim = ViewUtil.collapse(context, viewHolderFinal.v);
+                    viewHolderFinal.v.startAnimation(anim);
 
                     anim.setAnimationListener(new Animation.AnimationListener() {
                         @Override
@@ -108,19 +127,21 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
                 }
             });
         } else {
-            ViewUtil.remove(ivUndo);
+            ViewUtil.remove(viewHolder.v);
         }
 
-        return llStack;
+        return v;
     }
 
     // --------------------
     // Methods - Filter
     // --------------------
 
+    /*
     public List<Stack> getFilteredItems() {
         return filteredItems;
     }
+    */
 
     public void filter() {
         getFilter().filter("");
@@ -180,7 +201,7 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
         @Override
         @SuppressWarnings("unchecked")
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredItems = (List<Stack>) results.values;
+            // filteredItems = (List<Stack>) results.values;
 
             if (results.count > 0) {
                 notifyDataSetChanged();

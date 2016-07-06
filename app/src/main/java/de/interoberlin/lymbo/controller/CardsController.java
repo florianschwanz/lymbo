@@ -18,12 +18,10 @@ import de.interoberlin.lymbo.core.model.v1.impl.Side;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.core.model.v1.impl.components.Answer;
-import de.interoberlin.lymbo.core.model.v1.impl.components.Choice;
-import de.interoberlin.lymbo.core.model.v1.impl.components.EChoiceType;
 import de.interoberlin.lymbo.core.model.v1.impl.components.EGravity;
-import de.interoberlin.lymbo.core.model.v1.impl.components.Result;
 import de.interoberlin.lymbo.core.model.v1.impl.components.Text;
 import de.interoberlin.lymbo.core.model.v1.impl.components.Title;
+import de.interoberlin.lymbo.model.factories.CardFactory;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboWriter;
 import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardDatasource;
@@ -191,44 +189,7 @@ public class CardsController {
      * Adds a new card to the current stack
      */
     public void addCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
-        Card card = new Card();
-        card.setId(UUID.randomUUID().toString());
-
-        if ((frontTitleValue != null && !frontTitleValue.isEmpty()) || !frontTextsValues.isEmpty() || !answers.isEmpty()) {
-            Side sideFront = new Side();
-
-            if (frontTitleValue != null && !frontTitleValue.isEmpty())
-            sideFront.getComponents().add(new Title(frontTitleValue));
-
-            if (!frontTextsValues.isEmpty())
-                for (String s : frontTextsValues) {
-                    sideFront.getComponents().add(new Text(s));
-                }
-
-            if (!answers.isEmpty())
-                sideFront.getComponents().add(new Choice(EChoiceType.MULTIPLE, answers));
-
-            card.getSides().add(sideFront);
-        }
-
-        if ((backTitleValue != null && !backTitleValue.isEmpty()) || !backTextsValues.isEmpty() || !answers.isEmpty()) {
-            Side sideBack = new Side();
-
-            if (!answers.isEmpty())
-                sideBack.getComponents().add(new Result());
-
-            if (backTitleValue != null && !backTitleValue.isEmpty())
-                sideBack.getComponents().add(new Title(backTitleValue));
-
-            if (backTextsValues.isEmpty())
-                for (String s : backTextsValues) {
-                    sideBack.getComponents().add(new Text(s));
-                }
-
-            card.getSides().add(sideBack);
-        }
-
-        card.setTags(tags);
+        Card card = CardFactory.getInstance().getCard(UUID.randomUUID().toString(), frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags, answers);
 
         stack.getCards().add(card);
         cards.add(card);
@@ -238,7 +199,7 @@ public class CardsController {
     /**
      * Updates a card
      *
-     * @param uuid             id of the card to be updated
+     * @param id               id of the card to be updated
      * @param frontTitleValue  front title
      * @param frontTextsValues front texts
      * @param backTitleValue   back title
@@ -246,54 +207,10 @@ public class CardsController {
      * @param tags             tags
      * @param answers          answers
      */
-    public void updateCard(String uuid, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
-        if (cardsContainsId(uuid)) {
-            Card card = getCardById(uuid);
+    public void updateCard(String id, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
 
-            if (card.getSides().size() > 0) {
-                Side frontSide = card.getSides().get(0);
-                frontSide.getComponents().clear();
-
-                Title frontTitle = new Title();
-                frontTitle.setValue(frontTitleValue);
-                frontTitle.setGravity(EGravity.CENTER);
-                frontSide.getComponents().add(frontTitle);
-
-                for (String frontTextValue : frontTextsValues) {
-                    Text frontText = new Text();
-                    frontText.setValue(frontTextValue);
-                    frontText.setGravity(EGravity.START);
-                    frontSide.getComponents().add(frontText);
-                }
-
-                if (answers != null && !answers.isEmpty()) {
-                    frontSide.getComponents().add(new Choice(EChoiceType.MULTIPLE, answers));
-                }
-            }
-
-            if (card.getSides().size() > 1) {
-                Side backSide = card.getSides().get(1);
-                backSide.getComponents().clear();
-
-                Title backTitle = new Title();
-                backTitle.setGravity(EGravity.CENTER);
-                backTitle.setValue(backTitleValue);
-                backSide.getComponents().add(backTitle);
-
-                for (String backTextValue : backTextsValues) {
-                    Text backText = new Text();
-                    backText.setValue(backTextValue);
-                    backText.setGravity(EGravity.START);
-                    backSide.getComponents().add(backText);
-                }
-
-                if (answers != null && !answers.isEmpty()) {
-                    backSide.getComponents().add(new Result());
-                }
-            }
-
-            card.setTags(tags);
-
+        if (cardsContainsId(id)) {
+            setCardById(id, CardFactory.getInstance().getCard(id, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags, answers));
             save();
         }
     }
@@ -754,9 +671,9 @@ public class CardsController {
         this.tagsSelected = tagsSelected;
     }
 
-    public boolean cardsContainsId(String uuid) {
+    public boolean cardsContainsId(String id) {
         for (Card c : stack.getCards()) {
-            if (c.getId() != null && c.getId().equals(uuid)) {
+            if (c.getId() != null && c.getId().equals(id)) {
                 return true;
             }
         }
@@ -764,14 +681,22 @@ public class CardsController {
         return false;
     }
 
-    public Card getCardById(String uuid) {
+    public Card getCardById(String id) {
         for (Card c : stack.getCards()) {
-            if (c.getId() != null && c.getId().equals(uuid)) {
+            if (c.getId() != null && c.getId().equals(id)) {
                 return c;
             }
         }
 
         return null;
+    }
+
+    private void setCardById(String id, Card card) {
+    for (Card c : stack.getCards()) {
+        if (c.getId() != null && c.getId().equals(id)) {
+            c = card;
+        }
+    }
     }
 
     public boolean templatesContainsId(String uuid) {

@@ -3,7 +3,6 @@ package de.interoberlin.lymbo.util;
 
 import android.content.Context;
 import android.view.View;
-import android.view.ViewManager;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.GridLayout;
@@ -22,7 +21,8 @@ public class ViewUtil {
      * @param v View to be removed
      */
     public static void remove(View v) {
-        ((ViewManager) v.getParent()).removeView(v);
+        v.setVisibility(View.GONE);
+        // ((ViewManager) v.getParent()).removeView(v);
     }
 
     /**

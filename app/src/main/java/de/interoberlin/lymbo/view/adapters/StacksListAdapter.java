@@ -51,6 +51,21 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     private Context context;
     private Activity activity;
 
+    // View
+    static class ViewHolder {
+        private LinearLayout v;
+        private ImageView ivImage;
+        private TextView tvTitle;
+        private TextView tvSubtitle;
+        private ImageView ivShare;
+        private ImageView ivUpload;
+        private TextView tvCardCount;
+        private LinearLayout llTags;
+
+        private TextView tvPath;
+        private TextView tvError;
+    }
+
     // Controllers
     private StacksController stacksController;
     private CardsController cardsController;
@@ -100,31 +115,42 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     }
 
     @Override
-    public View getView(int position, View v, ViewGroup parent) {
+    public View getView(final int position, View v, ViewGroup parent) {
         final Stack stack = getItem(position);
-        return getLymboView(position, stack, parent);
-    }
 
-    private View getLymboView(final int position, final Stack stack, ViewGroup parent) {
+        ViewHolder viewHolder;
+
         if (stack.getError() == null) {
-            // Layout inflater
-            LayoutInflater vi;
-            vi = LayoutInflater.from(getContext());
+            if (v == null) {
+                viewHolder = new ViewHolder();
 
-            // Load views
-            final LinearLayout llStack = (LinearLayout) vi.inflate(R.layout.stack, parent, false);
-            final ImageView ivImage = (ImageView) llStack.findViewById(R.id.ivImage);
-            final TextView tvTitle = (TextView) llStack.findViewById(R.id.tvTitle);
-            final TextView tvSubtitle = (TextView) llStack.findViewById(R.id.tvSubtitle);
-            final ImageView ivShare = (ImageView) llStack.findViewById(R.id.ivShare);
-            final ImageView ivUpload = (ImageView) llStack.findViewById(R.id.ivUpload);
-            final TextView tvCardCount = (TextView) llStack.findViewById(R.id.tvCardCount);
-            final LinearLayout llTags = (LinearLayout) llStack.findViewById(R.id.llTags);
+                // Layout inflater
+                LayoutInflater vi;
+                vi = LayoutInflater.from(getContext());
+
+                // Load views
+                v = vi.inflate(R.layout.stack, parent, false);
+
+                viewHolder.v = (LinearLayout) v;
+                viewHolder.ivImage = (ImageView) v.findViewById(R.id.ivImage);
+                viewHolder.tvTitle = (TextView) v.findViewById(R.id.tvTitle);
+                viewHolder.tvSubtitle = (TextView) v.findViewById(R.id.tvSubtitle);
+                viewHolder.ivShare = (ImageView) v.findViewById(R.id.ivShare);
+                viewHolder.ivUpload = (ImageView) v.findViewById(R.id.ivUpload);
+                viewHolder.tvCardCount = (TextView) v.findViewById(R.id.tvCardCount);
+                viewHolder.llTags = (LinearLayout) v.findViewById(R.id.llTags);
+
+                v.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) v.getTag();
+            }
+
+            final ViewHolder viewHolderFinal = viewHolder;
 
             // Tint
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                ivShare.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
-                ivUpload.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
+                viewHolder.ivShare.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
+                viewHolder.ivUpload.getDrawable().setTint(ContextCompat.getColor(context, R.color.card_icon));
             }
 
             // Set values
@@ -132,27 +158,28 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                 switch (stack.getImageFormat()) {
                     case BASE_64: {
                         Bitmap bmp = Base64BitmapConverter.decodeBase64(stack.getImage());
-                        ivImage.setImageBitmap(bmp);
+                        viewHolder.ivImage.setImageBitmap(bmp);
                         break;
                     }
                     case REF: {
                         String imagePath = stack.getPath() + "/" + stack.getImage();
                         Bitmap bmp = BitmapFactory.decodeFile(imagePath);
-                        ivImage.setImageBitmap(bmp);
-                        ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        viewHolder.ivImage.setImageBitmap(bmp);
+                        viewHolder.ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
                         break;
                     }
                 }
             } else {
-                ivImage.getLayoutParams().height = 0;
+                viewHolder.ivImage.getLayoutParams().height = 0;
             }
+
             if (stack.getTitle() != null)
-                tvTitle.setText(stack.getTitle());
+                viewHolder.tvTitle.setText(stack.getTitle());
             if (stack.getSubtitle() != null)
-                tvSubtitle.setText(stack.getSubtitle());
+                viewHolder.tvSubtitle.setText(stack.getSubtitle());
 
             // Context menu
-            llStack.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            viewHolder.v.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
                 @Override
                 public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
                     if (!stack.isAsset()) {
@@ -168,7 +195,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                                 .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
-                                        stash(position, stack, llStack);
+                                        stash(position, stack, viewHolderFinal.v);
                                         return false;
                                     }
                                 });
@@ -187,7 +214,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                         }
                     });
 
-                    llTags.addView(cvTag);
+                    viewHolder.llTags.addView(cvTag);
                 }
             }
 
@@ -203,7 +230,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                     }
                 });
 
-                llTags.addView(cvTagLanguageFrom);
+                viewHolder.llTags.addView(cvTagLanguageFrom);
 
                 Tag languageToTag = new Tag(language.getTo());
                 TagView cvTagLanguageTo = new TagView(context, languageToTag);
@@ -214,11 +241,11 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                     }
                 });
 
-                llTags.addView(cvTagLanguageTo);
+                viewHolder.llTags.addView(cvTagLanguageTo);
             }
 
             // Action : open cards view
-            llStack.setOnClickListener(new View.OnClickListener() {
+            viewHolder.v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     cardsController.setStack(stack);
@@ -230,14 +257,14 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
 
             // Action : share
             if (!stack.isAsset()) {
-                ivShare.setOnClickListener(new View.OnClickListener() {
+                viewHolder.ivShare.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         MailSender.sendLymbo(context, activity, stack);
                     }
                 });
             } else {
-                ViewUtil.remove(ivShare);
+                ViewUtil.remove(viewHolder.ivShare);
             }
 
             // Action : upload
@@ -248,7 +275,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             String username = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
 
             if (author == null || author.isEmpty() || author.equals(noAuthorSpecified) || author.equals(username)) {
-                ivUpload.setOnClickListener(new View.OnClickListener() {
+                viewHolder.ivUpload.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Resources res = getResources();
@@ -275,29 +302,38 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                     }
                 });
             } else {
-                ViewUtil.remove(ivUpload);
+                ViewUtil.remove(viewHolder.ivUpload);
             }
 
             // Card count
-            tvCardCount.setText(String.valueOf(stack.getCards().size() + " " + context.getResources().getString(R.string.cards)));
+            viewHolder.tvCardCount.setText(String.valueOf(stack.getCards().size() + " " + context.getResources().getString(R.string.cards)));
 
-            return llStack;
+            return v;
         } else {
-            // Layout inflater
-            LayoutInflater vi;
-            vi = LayoutInflater.from(getContext());
+            if (v == null) {
+                viewHolder = new ViewHolder();
+                // Layout inflater
+                LayoutInflater vi;
+                vi = LayoutInflater.from(getContext());
 
-            // Load views
-            final LinearLayout llStack = (LinearLayout) vi.inflate(R.layout.stack_broken, parent, false);
-            TextView tvTitle = (TextView) llStack.findViewById(R.id.tvTitle);
-            TextView tvPath = (TextView) llStack.findViewById(R.id.tvPath);
-            TextView tvError = (TextView) llStack.findViewById(R.id.tvError);
+                // Load views
+                v = vi.inflate(R.layout.stack_broken, parent, false);
+
+                viewHolder.v = (LinearLayout) v;
+                viewHolder.tvTitle = (TextView) v.findViewById(R.id.tvTitle);
+                viewHolder.tvPath = (TextView) v.findViewById(R.id.tvPath);
+                viewHolder.tvError = (TextView) v.findViewById(R.id.tvError);
+            } else {
+                viewHolder = (ViewHolder) v.getTag();
+            }
+
+            final ViewHolder viewHolderFinal = viewHolder;
 
             // Set values
-            tvTitle.setText(getResources().getString(R.string.broken_lymbo_file));
+            viewHolder.tvTitle.setText(getResources().getString(R.string.broken_lymbo_file));
 
             // Context menu
-            llStack.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            viewHolder.v.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
                 @Override
                 public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
                     if (!stack.isAsset()) {
@@ -305,7 +341,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                                 .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
-                                        stash(position, stack, llStack);
+                                        stash(position, stack, viewHolderFinal.v);
                                         return false;
                                     }
                                 });
@@ -314,12 +350,12 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             });
 
             if (stack.getPath() != null)
-                tvPath.setText(stack.getFile());
+                viewHolderFinal.tvPath.setText(stack.getFile());
 
             if (stack.getError() != null)
-                tvError.setText(stack.getError());
+                viewHolderFinal.tvError.setText(stack.getError());
 
-            return llStack;
+            return v;
         }
     }
 
@@ -414,9 +450,11 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     // Methods - Filter
     // --------------------
 
+    /*
     public List<Stack> getFilteredItems() {
         return filteredItems;
     }
+    */
 
     public void filter() {
         getFilter().filter("");
