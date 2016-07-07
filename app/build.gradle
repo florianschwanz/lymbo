@@ -1,16 +1,18 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'maven'
+apply from: 'javadoc.gradle'
+apply from: 'maven.gradle'
 
 import java.util.regex.Pattern
 
 buildscript {
     repositories {
+        jcenter()
         mavenLocal()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.3.0'
+        classpath 'com.android.tools.build:gradle:2.1.0'
     }
 }
 
@@ -23,6 +25,13 @@ repositories {
 }
 
 ext.versionPatch = project.hasProperty('patch') ? project.getProperty('patch') : versionPatch
+ext.javadocDir = project.hasProperty('javadoc') ? project.getProperty('javadoc') : 'javadoc'
+ext.fdroidDir = project.hasProperty('fdroid') ? project.getProperty('fdroid') : null
+ext.fdroidMessage = project.hasProperty('message') ? project.getProperty('message') : "git log --format=%B -n 1".execute().text.trim()
+
+ext.apkName = 'app-release'
+ext.apkNameMaven = artifactId + '-' + version
+ext.apkNameFrdoid = (System.getenv("GIT_COMMIT") == null) ? apkNameMaven : apkNameMaven + '.' + System.getenv("GIT_COMMIT").substring(0, 8)
 
 android {
     compileSdkVersion 23
@@ -30,7 +39,7 @@ android {
 
     defaultConfig {
         applicationId groupId + '.' + artifactId
-        minSdkVersion 17
+        minSdkVersion 18
         targetSdkVersion 23
         versionCode versionPatch as Integer ?: 0
         versionName versionMajor + "." + versionMinor + "." + versionPatch
@@ -65,11 +74,6 @@ android {
     }
 }
 
-def version = versionMajor + '.' + versionMinor + '.' + versionPatch
-def apkName = 'app-release'
-def apkNameMaven = artifactId + '-' + version
-def apkNameFrdoid = (System.getenv("GIT_COMMIT") == null) ? apkNameMaven : apkNameMaven + '.' + System.getenv("GIT_COMMIT").substring(0, 8)
-
 // --------------------
 // Properties injection
 // --------------------
@@ -94,13 +98,6 @@ task injectProperties() {
     def propertiesContent = matcherVersionPatch.replaceAll("versionPatch=" + versionPatch)
     propertiesFile.write(propertiesContent)
 }
-
-// --------------------
-// Fdroid
-// --------------------
-
-ext.fdroidDir = project.hasProperty('fdroid') ? project.getProperty('fdroid') : null
-ext.fdroidMessage = project.hasProperty('message') ? project.getProperty('message') : "git log --format=%B -n 1".execute().text.trim()
 
 // Run update command
 task publishFdroid(type: Exec, dependsOn: "updateMetadata") {
@@ -209,68 +206,25 @@ task tidy(type: Delete) {
     delete fdroidDir + '/' + apkNameFrdoid + '.apk'
 }
 
-// --------------------
-// Javadoc
-// --------------------
-
-ext.javadocDir = project.hasProperty('javadoc') ? project.getProperty('javadoc') : project.path + 'javadoc'
-
-android.applicationVariants.all { variant ->
-    // Tidy javadoc dir
-    task "tidyJavadoc${variant.name}"(type: Delete) {
-        delete new File(javadocDir + '/' + groupId + '/' + artifactId);
-    }
-
-    task "publishJavadoc${variant.name}"(type: Javadoc, dependsOn: "tidyJavadoc${variant.name}") {
-        title = artifactId.capitalize()
-        description = summary
-        source = variant.javaCompile.source
-        classpath = files(variant.javaCompile.classpath.files, project.android.getBootClasspath())
-        destinationDir = new File(javadocDir + '/' + groupId + '/' + artifactId)
-        options {
-            links "http://docs.oracle.com/javase/7/docs/api/"
-            linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
-        }
-        exclude '**/BuildConfig.java'
-        exclude '**/R.java'
-    }
-}
-
-// --------------------
-// Maven
-// --------------------
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository url: 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
-            pom.groupId = groupId
-            pom.artifactId = artifactId
-            if (System.getenv("BUILD_NUMBER") != null)
-                pom.version = versionMajor + '.' + versionMinor + '.' + versionPatch
-        }
-    }
-}
-
 assembleDebug.dependsOn(copyPropertiesDebug)
 assembleRelease.dependsOn(copyPropertiesRelease)
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:cardview-v7:23.0.1'
+    compile 'com.android.support:recyclerview-v7:23.0.1'
+    compile 'com.android.support:support-v4:23.0.1'
+    compile 'com.github.mrengineer13:snackbar:1.1.0'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.squareup.picasso:picasso:2.3.4'
+    compile 'commons-io:commons-io:2.4'
     compile 'de.interoberlin:sauvignon:0.2.30@aar'
     compile 'de.interoberlin:swipelistview:0.2.3@aar'
     compile 'de.interoberlin:mate:0.4.27@aar'
     compile 'de.interoberlin:lymbo.core:0.2.36'
-    compile 'commons-io:commons-io:2.4'
     compile 'org.apache.commons:commons-lang3:3.0'
-    compile 'com.squareup.picasso:picasso:2.3.4'
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.android.support:cardview-v7:23.0.1'
-    compile 'com.android.support:recyclerview-v7:23.0.1'
-    compile 'com.github.mrengineer13:snackbar:1.1.0'
-    compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.android.support:support-v4:23.0.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
     testCompile 'org.hamcrest:hamcrest-library:1.1'
