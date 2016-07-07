@@ -36,7 +36,7 @@ public class CopyCardDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StacksController stacksController = StacksController.getInstance(getActivity());
+        StacksController stacksController = StacksController.getInstance();
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialog_copy_card, null);

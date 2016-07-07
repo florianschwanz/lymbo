@@ -25,19 +25,19 @@ import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
 public class CardsStashActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialog.OnCompleteListener, SnackBar.OnMessageClickListener {
-    // Controllers
-    CardsController cardsController;
-
     // Model
     private CardsStashListAdapter cardsStashAdapter;
+
+    // Controller
+    CardsController cardsController;
+
+    // Properties
+    private static int REFRESH_DELAY;
+    private static final int EVENT_RESTORE = 2;
 
     private Card recentCard = null;
     private int recentCardPos = -1;
     private int recentEvent = -1;
-
-    private static final int EVENT_RESTORE = 2;
-
-    private static int REFRESH_DELAY;
 
     // --------------------
     // Methods - Lifecycle
@@ -47,7 +47,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
     public void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
-            cardsController = CardsController.getInstance(this);
+            cardsController = CardsController.getInstance();
 
             REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_cards);
 
@@ -60,7 +60,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
                 boolean asset = savedInstanceState.getBoolean(getResources().getString(R.string.bundle_asset));
 
                 cardsController.reloadStack(path, asset);
-                cardsController.init();
+                cardsController.init(this);
 
                 srl.setRefreshing(false);
             }
@@ -191,7 +191,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
     public void onMessageClick(Parcelable token) {
         switch (recentEvent) {
             case EVENT_RESTORE: {
-                cardsController.stash(recentCardPos, recentCard);
+                cardsController.stash(this, recentCardPos, recentCard);
                 break;
             }
         }
@@ -206,7 +206,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
     /**
      * Restores a card
      *
-     * @param pos poistion of the card
+     * @param pos  poistion of the card
      * @param card card to be restored
      */
     public void restore(int pos, Card card) {
@@ -251,7 +251,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
 
         @Override
         protected Void doInBackground(Void... params) {
-            cardsController.restoreAll();
+            cardsController.restoreAll(CardsStashActivity.this);
             return null;
         }
 

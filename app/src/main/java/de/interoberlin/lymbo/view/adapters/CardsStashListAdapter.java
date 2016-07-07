@@ -64,7 +64,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
     public CardsStashListAdapter(Context context, Activity activity, int resource, List<Card> items) {
         super(context, resource, items);
-        cardsController = CardsController.getInstance(activity);
+        cardsController = CardsController.getInstance();
 
         this.filteredItems = items;
         this.originalItems = items;
@@ -247,7 +247,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
      * @param card card
      */
     private void restore(int pos, Card card) {
-        cardsController.restore(card);
+        cardsController.restore(getContext(), card);
         ((CardsStashActivity) activity).restore(pos, card);
         filter();
     }

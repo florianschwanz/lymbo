@@ -85,8 +85,8 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
 
     public StacksListAdapter(Activity activity, Context context, int resource, List<Stack> items) {
         super(context, resource, items);
-        stacksController = StacksController.getInstance(activity);
-        cardsController = CardsController.getInstance(activity);
+        stacksController = StacksController.getInstance();
+        cardsController = CardsController.getInstance();
 
         this.filteredItems = items;
         this.originalItems = items;
@@ -250,7 +250,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                 @Override
                 public void onClick(View view) {
                     cardsController.setStack(stack);
-                    cardsController.init();
+                    cardsController.init(getContext());
                     Intent openStartingPoint = new Intent(context, CardsActivity.class);
                     context.startActivity(openStartingPoint);
                 }
@@ -419,7 +419,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                stacksController.stash(stack);
+                stacksController.stash(getContext(), stack);
                 ((StacksActivity) activity).stash(position, stack);
                 filter();
             }

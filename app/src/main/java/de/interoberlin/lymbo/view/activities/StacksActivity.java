@@ -47,7 +47,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     // Controllers
     private StacksController stacksController;
 
-    // Model
+    // View
     private StacksListAdapter stacksAdapter;
 
     private Stack recentStack = null;
@@ -66,7 +66,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     public void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
-            stacksController = StacksController.getInstance(this);
+            stacksController = StacksController.getInstance();
             stacksController.setTagsSelected(stacksController.getTagsAll());
 
             REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_lymbos);
@@ -235,7 +235,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     public void onMessageClick(Parcelable token) {
         switch (recentEvent) {
             case EVENT_STASH: {
-                stacksController.restore(recentStack);
+                stacksController.restore(this, recentStack);
                 break;
             }
         }
@@ -248,7 +248,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         Stack stack = stacksController.getEmptyStack(title, subtitle, author, languageFrom, languageTo, tags);
 
         if (!new File(stack.getFile()).exists()) {
-            stacksController.addStack(stack);
+            stacksController.addStack(this, stack);
             stacksController.addTagsSelected(tags);
             stacksAdapter.notifyDataSetChanged();
         } else {
@@ -260,7 +260,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
     @Override
     public void onEditStack(String uuid, String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags) {
-        stacksController.updateStack(uuid, title, subtitle, author, languageFrom, languageTo, tags);
+        stacksController.updateStack(this, uuid, title, subtitle, author, languageFrom, languageTo, tags);
         stacksController.addTagsSelected(tags);
         stacksAdapter.notifyDataSetChanged();
 
@@ -281,10 +281,15 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     }
 
     @Override
+    public void onDownload(String id) {
+        stacksController.download(this, this, id);
+    }
+
+    @Override
     public void onLymboDownloaded(String response) {
         if (!response.equals("Error")) {
             Stack stack = LymboLoader.getLymboFromString(this, response, false);
-            stacksController.save(stack);
+            stacksController.save(this, stack);
 
             final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
             srl.post(new Runnable() {
@@ -305,11 +310,6 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         } else {
             snack(this, R.string.error_downloading_lymbo, SnackBar.Style.ALERT);
         }
-    }
-
-    @Override
-    public void onDownload(String id) {
-        StacksController.getInstance(this).download(id);
     }
 
     // --------------------
@@ -390,7 +390,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
         @Override
         protected Void doInBackground(Void... params) {
-            stacksController.load();
+            stacksController.load(StacksActivity.this);
 
             return null;
         }
@@ -414,8 +414,8 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
         @Override
         protected Void doInBackground(Void... params) {
-            stacksController.scan();
-            stacksController.load();
+            stacksController.scan(StacksActivity.this);
+            stacksController.load(StacksActivity.this);
 
             return null;
         }

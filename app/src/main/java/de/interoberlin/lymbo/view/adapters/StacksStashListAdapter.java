@@ -49,7 +49,7 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
 
     public StacksStashListAdapter(Activity activity, Context context, int resource, List<Stack> items) {
         super(context, resource, items);
-        stacksController = StacksController.getInstance(activity);
+        stacksController = StacksController.getInstance();
 
         // this.filteredItems = items;
         this.originalItems = items;
@@ -114,7 +114,7 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
 
                         @Override
                         public void onAnimationEnd(Animation animation) {
-                            stacksController.restore(stack);
+                            stacksController.restore(getContext(), stack);
                             ((StacksStashActivity) activity).restore(stack);
                             notifyDataSetChanged();
                         }

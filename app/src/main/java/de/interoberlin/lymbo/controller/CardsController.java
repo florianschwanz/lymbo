@@ -1,8 +1,6 @@
 package de.interoberlin.lymbo.controller;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,10 +27,7 @@ import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardEntry;
 import de.interoberlin.lymbo.util.ZipUtil;
 
 public class CardsController {
-    // Activity
-    private Activity activity;
-
-    // Controllers
+    // Controller
     private StacksController stacksController;
 
     // Database
@@ -54,17 +49,13 @@ public class CardsController {
     // Constructors
     // --------------------
 
-    private CardsController(Activity activity) {
-        init();
-        setActivity(activity);
+    private CardsController() {
     }
 
-    public static CardsController getInstance(Activity activity) {
+    public static CardsController getInstance() {
         if (instance == null) {
-            instance = new CardsController(activity);
+            instance = new CardsController();
         }
-
-        instance.setActivity(activity);
 
         return instance;
     }
@@ -73,8 +64,8 @@ public class CardsController {
     // Methods
     // --------------------
 
-    public void init() {
-        stacksController = StacksController.getInstance(activity);
+    public void init(Context context) {
+        stacksController = StacksController.getInstance();
 
         cards = new ArrayList<>();
         cardsDismissed = new CopyOnWriteArrayList<>();
@@ -84,7 +75,7 @@ public class CardsController {
         displayOnlyFavorites = false;
 
         if (stack != null) {
-            datasource = new TableCardDatasource(activity);
+            datasource = new TableCardDatasource(context);
             datasource.open();
 
             for (Card c : stack.getCards()) {
@@ -108,12 +99,13 @@ public class CardsController {
     /**
      * Determines whether a given card shall be displayed considering all filters
      *
-     * @param card card to determine visibility of
+     * @param context context
+     * @param card    card to determine visibility of
      * @return whether card is visbible or not
      */
-    public boolean isVisible(Card card) {
+    public boolean isVisible(Context context, Card card) {
         if (card != null) {
-            Tag noTag = new Tag(getResources().getString(R.string.no_tag));
+            Tag noTag = new Tag(context.getResources().getString(R.string.no_tag));
             boolean includeStacksWithoutTag = noTag.containedInList(getTagsSelected());
             boolean matchesTags = card.matchesTag(getTagsSelected(), includeStacksWithoutTag);
             boolean matchesFavorites = (isDisplayOnlyFavorites() && card.isFavorite()) || !isDisplayOnlyFavorites();
@@ -127,13 +119,14 @@ public class CardsController {
     /**
      * Returns the amounts of currently visible cards
      *
+     * @param context context
      * @return number of visible cards
      */
-    public int getVisibleCardCount() {
+    public int getVisibleCardCount(Context context) {
         int count = 0;
 
         for (Card card : getCards()) {
-            if (isVisible(card))
+            if (isVisible(context, card))
                 count++;
         }
 
@@ -146,8 +139,10 @@ public class CardsController {
 
     /**
      * Writes lymbo object into file
+     *
+     * @param context context
      */
-    public void save() {
+    public void save(Context context) {
         if (stack.getFile() != null) {
 
             switch (stack.getFormat()) {
@@ -156,7 +151,7 @@ public class CardsController {
                     break;
                 }
                 case LYMBOX: {
-                    LymboWriter.writeXml(stack, new File(stack.getPath() + "/" + activity.getResources().getString(R.string.lymbo_main_file)));
+                    LymboWriter.writeXml(stack, new File(stack.getPath() + "/" + context.getResources().getString(R.string.lymbo_main_file)));
                     ZipUtil.zip(new File(stack.getPath()).listFiles(), new File(stack.getFile()));
                     break;
                 }
@@ -166,12 +161,14 @@ public class CardsController {
 
     /**
      * Resets all cards
+     *
+     * @param context context
      */
-    public void reset() {
+    public void reset(Context context) {
         synchronized (cardsDismissed) {
             for (Card card : cardsDismissed) {
                 if (card != null) {
-                    retain(card);
+                    retain(context, card);
                 }
             }
         }
@@ -187,18 +184,21 @@ public class CardsController {
 
     /**
      * Adds a new card to the current stack
+     *
+     * @param context context
      */
-    public void addCard(String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
+    public void addCard(Context context, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
         Card card = CardFactory.getInstance().getCard(UUID.randomUUID().toString(), frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags, answers);
 
         stack.getCards().add(card);
         cards.add(card);
-        save();
+        save(context);
     }
 
     /**
      * Updates a card
      *
+     * @param context          context
      * @param id               id of the card to be updated
      * @param frontTitleValue  front title
      * @param frontTextsValues front texts
@@ -207,18 +207,20 @@ public class CardsController {
      * @param tags             tags
      * @param answers          answers
      */
-    public void updateCard(String id, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
+    public void updateCard(Context context, String id, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags, List<Answer> answers) {
 
         if (cardsContainsId(id)) {
             setCardById(id, CardFactory.getInstance().getCard(id, frontTitleValue, frontTextsValues, backTitleValue, backTextsValues, tags, answers));
-            save();
+            save(context);
         }
     }
 
     /**
      * Adds a new template to the current stack
+     *
+     * @param context context
      */
-    public void addTemplate(String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+    public void addTemplate(Context context, String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         Card template = new Card();
         template.setId(UUID.randomUUID().toString());
 
@@ -255,12 +257,13 @@ public class CardsController {
         template.setTags(tags);
 
         stack.getTemplates().add(template);
-        save();
+        save(context);
     }
 
     /**
      * Updates a template
      *
+     * @param context          context
      * @param uuid             id of the template to be updated
      * @param title            title of the template
      * @param frontTitleValue  front title
@@ -269,7 +272,7 @@ public class CardsController {
      * @param backTextsValues  back texts
      * @param tags             tags
      */
-    public void updateTemplate(String uuid, String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
+    public void updateTemplate(Context context, String uuid, String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags) {
         if (templatesContainsId(uuid)) {
             Card template = getTemplateById(uuid);
 
@@ -311,31 +314,32 @@ public class CardsController {
 
             template.setTags(tags);
 
-            save();
+            save(context);
         }
     }
 
-    public void deleteTemplate(Card template) {
+    public void deleteTemplate(Context context, Card template) {
         if (template != null && template.getId() != null) {
             Card t = getTemplateById(template.getId());
 
             if (t != null)
                 stack.getTemplates().remove(t);
         }
-        save();
+        save(context);
     }
 
     /**
      * Stashes a card
      *
-     * @param card card
+     * @param context context
+     * @param card    card
      */
-    public void stash(Card card) {
+    public void stash(Context context, Card card) {
         card.setRestoring(true);
 
         getCards().remove(card);
         getCardsStashed().add(card);
-        changeCardStateStashed(card);
+        changeCardStateStashed(context, card);
     }
 
     /**
@@ -344,70 +348,76 @@ public class CardsController {
      * @param pos  position where the card will be stashed
      * @param card card
      */
-    public void stash(int pos, Card card) {
+    public void stash(Context context, int pos, Card card) {
         card.setRestoring(true);
 
         getCards().remove(card);
         getCardsStashed().add(pos < getCardsStashed().size() ? pos : 0, card);
-        changeCardStateStashed(card);
+        changeCardStateStashed(context, card);
     }
 
     /**
      * Restores a card
      *
-     * @param card card
+     * @param context context
+     * @param card    card
      */
-    public void restore(Card card) {
+    public void restore(Context context, Card card) {
         getCards().add(card);
         getCardsStashed().remove(card);
-        changeCardStateNormal(card);
+        changeCardStateNormal(context, card);
     }
 
     /**
      * Restores a card
      *
-     * @param pos  position where the card will be restored
-     * @param card card
+     * @param context context
+     * @param pos     position where the card will be restored
+     * @param card    card
      */
-    public void restore(int pos, Card card) {
+    public void restore(Context context, int pos, Card card) {
         card.setRestoring(true);
 
         getCards().add(pos < getCards().size() ? pos : 0, card);
         getCardsStashed().remove(card);
-        changeCardStateNormal(card);
+        changeCardStateNormal(context, card);
     }
 
     /**
      * Restores all stashed cards
+     *
+     * @param context context
      */
-    public void restoreAll() {
+    public void restoreAll(Context context) {
         for (Card card : cardsStashed) {
-            restore(card);
+            restore(context, card);
         }
     }
 
     /**
      * Discards a card from the current stack
      *
-     * @param card card
+     * @param context context
+     * @param card    card
      */
-    public void discard(Card card) {
+    public void discard(Context context, Card card) {
         getCards().remove(card);
         getCardsDiscarded().add(card);
-        changeCardStateDiscarded(card);
+        changeCardStateDiscarded(context, card);
     }
 
     /**
      * Retains a card that has been removed
      *
-     * @param card card
+     * @param context context
+     * @param card    card
      */
-    public void retain(Card card) {
+    public void retain(Context context, Card card) {
         card.setRestoring(true);
 
         getCardsDiscarded().remove(card);
         getCards().add(card);
-        changeCardStateNormal(card);
+        changeCardStateNormal(context, card);
     }
 
     /**
@@ -416,30 +426,30 @@ public class CardsController {
      * @param pos  position where the card will be retained
      * @param card card
      */
-    public void retain(int pos, Card card) {
+    public void retain(Context context, int pos, Card card) {
         card.setRestoring(true);
 
         getCards().add(pos < getCards().size() ? pos : 0, card);
         getCardsDiscarded().remove(card);
-        changeCardStateNormal(card);
+        changeCardStateNormal(context, card);
     }
 
-    private void changeCardStateNormal(Card card) {
-        datasource = new TableCardDatasource(activity);
+    private void changeCardStateNormal(Context context, Card card) {
+        datasource = new TableCardDatasource(context);
         datasource.open();
         datasource.updateCardStateNormal(card.getId());
         datasource.close();
     }
 
-    private void changeCardStateDiscarded(Card card) {
-        datasource = new TableCardDatasource(activity);
+    private void changeCardStateDiscarded(Context context, Card card) {
+        datasource = new TableCardDatasource(context);
         datasource.open();
         datasource.updateCardStateDiscarded(card.getId());
         datasource.close();
     }
 
-    private void changeCardStateStashed(Card card) {
-        datasource = new TableCardDatasource(activity);
+    private void changeCardStateStashed(Context context, Card card) {
+        datasource = new TableCardDatasource(context);
         datasource.open();
         datasource.updateCardStateStashed(card.getId());
         datasource.close();
@@ -526,11 +536,12 @@ public class CardsController {
     /**
      * Copies a card from one stack to another
      *
+     * @param context       context
      * @param targetLymboId id of target stack
      * @param cardId        id of card to be copied
      * @param deepCopy      true if the copy shall be deep
      */
-    public void copyCard(String targetLymboId, String cardId, boolean deepCopy) {
+    public void copyCard(Context context, String targetLymboId, String cardId, boolean deepCopy) {
         Stack targetStack = stacksController.getLymboById(targetLymboId);
         Card card = getCardById(cardId);
 
@@ -538,38 +549,35 @@ public class CardsController {
             card.setId(UUID.randomUUID().toString());
 
         targetStack.getCards().add(card);
-        stacksController.save(targetStack);
+        stacksController.save(context, targetStack);
     }
 
     /**
      * Moves a card from one stack to another
      *
+     * @param context       context
      * @param sourceLymboId id of source stack
      * @param targetLymboId id of target stack
      * @param cardId        id of card to be copied
      */
-    public void moveCard(String sourceLymboId, String targetLymboId, String cardId) {
+    public void moveCard(Context context, String sourceLymboId, String targetLymboId, String cardId) {
         Stack sourceStack = stacksController.getLymboById(sourceLymboId);
         Stack targetStack = stacksController.getLymboById(targetLymboId);
         Card card = getCardById(cardId);
 
         targetStack.getCards().add(card);
-        stacksController.save(targetStack);
+        stacksController.save(context, targetStack);
 
         sourceStack.getCards().remove(card);
-        stacksController.save(sourceStack);
+        stacksController.save(context, sourceStack);
 
         getCards().remove(card);
-        save();
+        save(context);
     }
 
     // --------------------
     // Methods - Util
     // --------------------
-
-    private Resources getResources() {
-        return activity.getResources();
-    }
 
     public void addTagsSelected(List<Tag> tags) {
         for (Tag tag : tags) {
@@ -579,13 +587,13 @@ public class CardsController {
         }
     }
 
-    public List<Tag> getTagsAll() {
+    public List<Tag> getTagsAll(Context context) {
         List<Tag> tagsAll = new ArrayList<>();
 
         // Consider displayed cards
         for (Card card : getCards()) {
             for (Tag tag : card.getTags()) {
-                if (tag != null && !tag.containedInList(tagsAll) && !tag.getValue().equals(getResources().getString(R.string.no_tag)))
+                if (tag != null && !tag.containedInList(tagsAll) && !tag.getValue().equals(context.getResources().getString(R.string.no_tag)))
                     tagsAll.add(tag);
             }
         }
@@ -593,19 +601,19 @@ public class CardsController {
         // Consider discarded cards
         for (Card card : getCardsDiscarded()) {
             for (Tag tag : card.getTags()) {
-                if (tag != null && !tag.containedInList(tagsAll) && !tag.getValue().equals(getResources().getString(R.string.no_tag)))
+                if (tag != null && !tag.containedInList(tagsAll) && !tag.getValue().equals(context.getResources().getString(R.string.no_tag)))
                     tagsAll.add(tag);
             }
         }
 
         for (Card template : getTemplates()) {
             for (Tag tag : template.getTags()) {
-                if (tag != null && !tag.containedInList(tagsAll) && !tag.getValue().equals(getResources().getString(R.string.no_tag)))
+                if (tag != null && !tag.containedInList(tagsAll) && !tag.getValue().equals(context.getResources().getString(R.string.no_tag)))
                     tagsAll.add(tag);
             }
         }
 
-        tagsAll.add(new Tag(getResources().getString(R.string.no_tag)));
+        tagsAll.add(new Tag(context.getResources().getString(R.string.no_tag)));
 
         return tagsAll;
     }
@@ -626,10 +634,6 @@ public class CardsController {
     // --------------------
     // Getters / Setters
     // --------------------
-
-    public void setActivity(Activity activity) {
-        this.activity = activity;
-    }
 
     public Stack getStack() {
         return stack;
@@ -692,11 +696,11 @@ public class CardsController {
     }
 
     private void setCardById(String id, Card card) {
-    for (Card c : stack.getCards()) {
-        if (c.getId() != null && c.getId().equals(id)) {
-            c = card;
+        for (Card c : stack.getCards()) {
+            if (c.getId() != null && c.getId().equals(id)) {
+                c = card;
+            }
         }
-    }
     }
 
     public boolean templatesContainsId(String uuid) {

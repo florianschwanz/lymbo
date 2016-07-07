@@ -41,7 +41,7 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        stacksController = StacksController.getInstance(this);
+        stacksController = StacksController.getInstance();
 
         REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_lymbos);
 
@@ -144,7 +144,7 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
     public void onMessageClick(Parcelable token) {
         final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
-        stacksController.stash(recentStack);
+        stacksController.stash(this, recentStack);
         lymbosStashAdapter.notifyDataSetChanged();
         slv.invalidateViews();
     }
@@ -209,8 +209,8 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
 
         @Override
         protected Void doInBackground(Void... params) {
-            stacksController.scan();
-            stacksController.load();
+            stacksController.scan(StacksStashActivity.this);
+            stacksController.load(StacksStashActivity.this);
             return null;
         }
 

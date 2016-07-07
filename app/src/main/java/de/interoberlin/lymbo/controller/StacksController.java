@@ -1,6 +1,6 @@
 package de.interoberlin.lymbo.controller;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Environment;
@@ -36,14 +36,10 @@ import de.interoberlin.lymbo.model.webservice.AccessControlItem;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebAccessControlItemTask;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebDownloadTask;
 import de.interoberlin.lymbo.util.ZipUtil;
-import de.interoberlin.lymbo.view.activities.StacksActivity;
 import de.interoberlin.mate.lib.model.Log;
 
 public class StacksController {
     public static final String TAG = StacksController.class.toString();
-
-    // Activity
-    private Activity activity;
 
     // Database
     private TableStackDatasource datasource;
@@ -51,7 +47,6 @@ public class StacksController {
     // Model
     private List<Stack> stacks;
     private List<Stack> stacksStashed;
-
     private List<Tag> tagsSelected;
 
     // Properties
@@ -70,17 +65,14 @@ public class StacksController {
     // Constructors
     // --------------------
 
-    private StacksController(Activity activity) {
-        setActivity(activity);
+    private StacksController() {
         init();
     }
 
-    public static StacksController getInstance(Activity activity) {
+    public static StacksController getInstance() {
         if (instance == null) {
-            instance = new StacksController(activity);
+            instance = new StacksController();
         }
-
-        instance.setActivity(activity);
 
         return instance;
     }
@@ -154,16 +146,18 @@ public class StacksController {
     /**
      * Creates a new lymbo stack
      *
+     * @param context context
      * @param stack lymbo to be created
      */
-    public void addStack(Stack stack) {
+    public void addStack(Context context, Stack stack) {
         stacks.add(stack);
-        save(stack);
+        save(context, stack);
     }
 
     /**
      * Updates a stack
      *
+     * @param context context
      * @param uuid         id of stack to be updated
      * @param title        title
      * @param subtitle     subtitle
@@ -171,7 +165,7 @@ public class StacksController {
      * @param languageFrom source language
      * @param languageTo   target language
      */
-    public void updateStack(String uuid, String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags) {
+    public void updateStack(Context context, String uuid, String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags) {
         if (lymbosContainsId(uuid)) {
             Stack stack = getLymboById(uuid);
 
@@ -193,7 +187,7 @@ public class StacksController {
                     stack.setLanguage(language);
                 }
 
-                save(stack);
+                save(context, stack);
             }
         }
     }
@@ -201,38 +195,41 @@ public class StacksController {
     /**
      * Stashes a lymbo
      *
+     * @param context context
      * @param stack lymbo to be stashed
      */
-    public void stash(Stack stack) {
+    public void stash(Context context, Stack stack) {
         getStacks().remove(stack);
         getStacksStashed().add(stack);
-        changeState(stack.getId(), true);
+        changeState(context, stack.getId(), true);
     }
 
     /**
      * Restores a lymbo
      *
+     * @param context context
      * @param stack lymbo to be stashed
      */
-    public void restore(Stack stack) {
+    public void restore(Context context, Stack stack) {
         getStacks().add(stack);
         getStacksStashed().remove(stack);
-        changeState(stack.getId(), false);
+        changeState(context, stack.getId(), false);
     }
 
     /**
      * Saves an existing stack
      *
-     * @param stack stack to be saved
+     * @param context context
+     * @param stack   stack to be saved
      * @return whether save worked or not
      */
-    public boolean save(Stack stack) {
+    public boolean save(Context context, Stack stack) {
         if (stack.getFile() != null) {
             switch (stack.getFormat()) {
                 case LYMBO: {
                     LymboWriter.writeXml(stack, new File(stack.getFile()));
 
-                    datasource = new TableStackDatasource(activity);
+                    datasource = new TableStackDatasource(context);
                     datasource.open();
                     datasource.updateStackLocation(stack.getId(), stack.getFile(), stack.getPath(), TableStackDatasource.FORMAT_LYMBO);
                     datasource.close();
@@ -241,9 +238,9 @@ public class StacksController {
                 }
                 case LYMBOX: {
                     LymboWriter.writeXml(stack, new File(stack.getFile()));
-                    ZipUtil.zip(new File(stack.getPath()).listFiles(), new File(stack.getPath() + "/" + activity.getResources().getString(R.string.lymbo_main_file)));
+                    ZipUtil.zip(new File(stack.getPath()).listFiles(), new File(stack.getPath() + "/" + context.getResources().getString(R.string.lymbo_main_file)));
 
-                    datasource = new TableStackDatasource(activity);
+                    datasource = new TableStackDatasource(context);
                     datasource.open();
                     datasource.updateStackLocation(stack.getId(), stack.getFile(), stack.getPath(), TableStackDatasource.FORMAT_LYMBOX);
                     datasource.close();
@@ -259,10 +256,12 @@ public class StacksController {
     /**
      * Saves lymbo under a new name
      *
-     * @param stack lymbo to be saved
-     * @param file  new file
+     * @param context context
+     * @param stack   lymbo to be saved
+     * @param file    new file
      */
-    public void saveAs(Stack stack, String file) {
+    @SuppressWarnings("unused")
+    public void saveAs(Context context, Stack stack, String file) {
         switch (stack.getFormat()) {
             case LYMBO: {
                 LymboWriter.writeXml(stack, new File(stack.getFile()));
@@ -272,7 +271,7 @@ public class StacksController {
 
                 stack.setPath(file);
 
-                datasource = new TableStackDatasource(activity);
+                datasource = new TableStackDatasource(context);
                 datasource.open();
                 datasource.updateStackLocation(stack.getId(), stack.getFile(), stack.getPath(), TableStackDatasource.FORMAT_LYMBO);
                 datasource.close();
@@ -288,7 +287,7 @@ public class StacksController {
                     if (!new File(stack.getFile()).renameTo(new File(file)))
                         return;
 
-                    datasource = new TableStackDatasource(activity);
+                    datasource = new TableStackDatasource(context);
                     datasource.open();
                     datasource.updateStackLocation(stack.getId(), stack.getFile(), stack.getPath(), TableStackDatasource.FORMAT_LYMBOX);
                     datasource.close();
@@ -299,9 +298,11 @@ public class StacksController {
 
     /**
      * Searches for lymbo and lymbox files on storage and saves location in database
+     *
+     * @param context context
      */
-    public void scan() {
-        datasource = new TableStackDatasource(activity);
+    public void scan(Context context) {
+        datasource = new TableStackDatasource(context);
         datasource.open();
 
         // Scan for *.lymbo and *.lymbox files
@@ -332,9 +333,11 @@ public class StacksController {
 
     /**
      * Loads lymbo files and updates database status if necessary
+     *
+     * @param context context
      */
-    public void load() {
-        datasource = new TableStackDatasource(activity);
+    public void load(Context context) {
+        datasource = new TableStackDatasource(context);
         datasource.open();
 
         // Retrieve lymbo files from database table
@@ -358,7 +361,7 @@ public class StacksController {
         }
 
         stacks.clear();
-        stacks.addAll(getStacksFromAssets());
+        stacks.addAll(getStacksFromAssets(context));
         stacks.addAll(getStacksFromFiles(lymboFiles));
 
         stacksStashed.clear();
@@ -368,8 +371,8 @@ public class StacksController {
         loaded = true;
     }
 
-    public void changeState(String uuid, boolean stashed) {
-        datasource = new TableStackDatasource(activity);
+    public void changeState(Context context, String uuid, boolean stashed) {
+        datasource = new TableStackDatasource(context);
         datasource.open();
 
         if (stashed) {
@@ -428,13 +431,15 @@ public class StacksController {
 
     /**
      * Adds lymbos from assets
+     *
+     * @param context context
      */
-    private List<Stack> getStacksFromAssets() {
+    private List<Stack> getStacksFromAssets(Context context) {
         List<Stack> stacks = new ArrayList<>();
 
         try {
-            for (String asset : Arrays.asList(activity.getAssets().list(""))) {
-                Stack s = LymboLoader.getLymboFromAsset(activity, asset, false);
+            for (String asset : Arrays.asList(context.getAssets().list(""))) {
+                Stack s = LymboLoader.getLymboFromAsset(context, asset, false);
 
                 if (s != null) {
                     Log.i(TAG, "Loaded asset " + s.getFile());
@@ -532,9 +537,9 @@ public class StacksController {
         return null;
     }
 
-    public void download(String id) {
+    public void download(Context context, LymboWebDownloadTask.OnCompleteListener ocListener, String id) {
         Resources res = getResources();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         String username = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
         String password = prefs.getString(res.getString(R.string.pref_lymbo_web_password), null);
@@ -545,7 +550,7 @@ public class StacksController {
             AccessControlItem accessControlItem = new LymboWebAccessControlItemTask().execute(username, password, clientId, clientSecret).get();
 
             if (accessControlItem != null && accessControlItem.getAccess_token() != null) {
-                new LymboWebDownloadTask((StacksActivity) activity).execute(accessControlItem.getAccess_token(), id, username).get();
+                new LymboWebDownloadTask(ocListener).execute(accessControlItem.getAccess_token(), id, username).get();
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
@@ -555,10 +560,6 @@ public class StacksController {
     // --------------------
     // Getters / Setters
     // --------------------
-
-    public void setActivity(Activity activity) {
-        this.activity = activity;
-    }
 
     public List<Stack> getStacks() {
         return stacks;

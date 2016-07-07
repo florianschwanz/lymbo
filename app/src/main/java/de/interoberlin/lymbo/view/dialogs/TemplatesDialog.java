@@ -39,7 +39,7 @@ public class TemplatesDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CardsController cardsController = CardsController.getInstance(getActivity());
+        CardsController cardsController = CardsController.getInstance();
         Resources res = getActivity().getResources();
 
         // Load layout
@@ -140,8 +140,8 @@ public class TemplatesDialog extends DialogFragment {
     // --------------------
 
     private void add() {
-        CardsController cardsController = CardsController.getInstance(getActivity());
-        ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
+        CardsController cardsController = CardsController.getInstance();
+        ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll(getActivity()));
 
         TemplateDialog dialog = new TemplateDialog();
         Bundle bundle = new Bundle();
@@ -152,7 +152,7 @@ public class TemplatesDialog extends DialogFragment {
     }
 
     private void edit(Card template) {
-        CardsController cardsController = CardsController.getInstance(getActivity());
+        CardsController cardsController = CardsController.getInstance();
         String uuid = template.getId();
         String title = template.getTitle();
 
@@ -182,7 +182,7 @@ public class TemplatesDialog extends DialogFragment {
                 }
             }
         }
-        ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
+        ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll(getActivity()));
         ArrayList<String> tagsSelected = Tag.getValues(template.getTags());
 
         TemplateDialog dialog = new TemplateDialog();

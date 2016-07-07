@@ -97,7 +97,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
     public CardsListAdapter(Context context, Activity activity, int resource, List<Card> items) {
         super(context, resource, items);
-        cardsController = CardsController.getInstance(activity);
+        cardsController = CardsController.getInstance();
 
         this.filteredItems = items;
         this.originalItems = items;
@@ -412,7 +412,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
             backTitle = ((Title) card.getSides().get(1).getFirst(EComponentType.TITLE)).getValue();
         ArrayList<String> frontTexts = new ArrayList<>();
         ArrayList<String> backTexts = new ArrayList<>();
-        ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
+        ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll(getContext()));
         ArrayList<String> tagsSelected = Tag.getValues(card.getTags());
         ArrayList<String> answersValue = new ArrayList<>();
         ArrayList<Integer> answersCorrect = new ArrayList<>();
@@ -482,7 +482,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                cardsController.stash(card);
+                cardsController.stash(getContext(), card);
 
                 if (activity instanceof CardsActivity)
                     ((CardsActivity) activity).stash(position, card);
@@ -533,7 +533,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     private void selectTags() {
         ((Vibrator) activity.getSystemService(Activity.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
 
-        ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
+        ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll(getContext()));
         ArrayList<String> tagsSelected = Tag.getValues(cardsController.getTagsSelected());
         Boolean displayOnlyFavorites = cardsController.isDisplayOnlyFavorites();
 
@@ -748,7 +748,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
      * @return true if item is visible
      */
     protected boolean filterCard(Card card) {
-        return cardsController.isVisible(card);
+        return cardsController.isVisible(getContext(), card);
     }
 
     // --------------------

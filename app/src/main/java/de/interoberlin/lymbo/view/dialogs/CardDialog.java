@@ -64,7 +64,7 @@ public class CardDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CardsController cardsController = CardsController.getInstance(getActivity());
+        CardsController cardsController = CardsController.getInstance();
         final Stack stack = cardsController.getStack();
         final Resources res = getActivity().getResources();
 
@@ -517,7 +517,7 @@ public class CardDialog extends DialogFragment {
     private void useTemplate(Card template, EditText etFront, EditText etBack, TableLayout tblTextFront, TableLayout tblTextBack, TableLayout tblTags) {
         ((Vibrator) getActivity().getSystemService(Activity.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
 
-        CardsController cardsController = CardsController.getInstance(getActivity());
+        CardsController cardsController = CardsController.getInstance();
 
         // Read values from template
         String frontTitle = "";
@@ -542,7 +542,7 @@ public class CardDialog extends DialogFragment {
                 }
             }
         }
-        ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll());
+        ArrayList<String> tagsAll = Tag.getValues(cardsController.getTagsAll(getActivity()));
         ArrayList<String> tagsSelected = Tag.getValues(template.getTags());
 
         // Clear

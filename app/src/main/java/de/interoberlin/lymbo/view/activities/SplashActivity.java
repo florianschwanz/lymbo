@@ -36,25 +36,26 @@ import de.interoberlin.sauvignon.lib.view.SVGSurfacePanel;
 
 public class SplashActivity extends Activity implements Accelerator.OnTiltListener {
     public static final String TAG = SplashActivity.class.getSimpleName();
-    public static Activity activity;
 
-    // Controllers
-    SplashController splashController;
-    StacksController stacksController;
+    // Model
+    private static SVG svg;
 
     // Views
     private static LinearLayout llSVG;
     private static LinearLayout llLogo;
     private static TextView tvMessage;
+    private static SVGSurfacePanel panel;
+    private static ImageView ivLogo;
+
+    // Controller
+    SplashController splashController;
+    StacksController stacksController;
 
     // Accelerometer
     private SensorManager sensorManager;
     private Sensor accelerator;
 
-    private static SVG svg;
-    private static SVGSurfacePanel panel;
-    private static ImageView ivLogo;
-
+    // Properties
     private static final int  PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
     private static final int  PERMISSION_REQUEST_VIBRATE = 1;
     private static final int  PERMISSION_REQUEST_INTERNET = 2;
@@ -66,14 +67,13 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = this;
 
         requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
         requestPermission(Manifest.permission.VIBRATE, PERMISSION_REQUEST_VIBRATE);
         requestPermission(Manifest.permission.INTERNET, PERMISSION_REQUEST_INTERNET);
 
         splashController = SplashController.getInstance();
-        stacksController = StacksController.getInstance(this);
+        stacksController = StacksController.getInstance();
 
         setContentView(R.layout.activity_splash);
 
@@ -114,7 +114,7 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         Thread timer = new Thread() {
             public void run() {
                 splashController.loadMessages();
-                stacksController.load();
+                stacksController.load(SplashActivity.this);
 
                 Collections.shuffle(splashController.getMessages());
 
@@ -204,8 +204,8 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         }
     }
 
-    public static void showMessage(final int message) {
-        activity.runOnUiThread(new Runnable() {
+    public void showMessage(final int message) {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 tvMessage.setText(message);
@@ -213,8 +213,8 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         });
     }
 
-    public static void showMessage(final String message) {
-        activity.runOnUiThread(new Runnable() {
+    public void showMessage(final String message) {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 tvMessage.setText(message);
