@@ -1,5 +1,6 @@
 package de.interoberlin.lymbo.view.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -25,6 +26,7 @@ import com.github.mrengineer13.snackbar.SnackBar;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.StacksController;
@@ -32,6 +34,9 @@ import de.interoberlin.lymbo.core.model.v1.impl.ELanguage;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.model.persistence.filesystem.LymboLoader;
+import de.interoberlin.lymbo.model.share.MailSender;
+import de.interoberlin.lymbo.model.webservice.AccessControlItem;
+import de.interoberlin.lymbo.model.webservice.web.LymboWebAccessControlItemTask;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebDownloadTask;
 import de.interoberlin.lymbo.model.webservice.web.LymboWebUploadTask;
 import de.interoberlin.lymbo.view.adapters.StacksListAdapter;
@@ -43,24 +48,43 @@ import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialog.OnCompleteListener, StackDialog.OnCompleteListener, FilterStacksDialog.OnCompleteListener, LymboWebUploadTask.OnCompleteListener, LymboWebDownloadTask.OnCompleteListener, DownloadDialog.OnCompleteListener, SnackBar.OnMessageClickListener {
-    // Controllers
-    private StacksController stacksController;
+public class StacksActivity extends SwipeRefreshBaseActivity implements
+    // <editor-fold defaultstate="expanded" desc="Interfaces">
+        SwipeRefreshLayout.OnRefreshListener,
+        StacksListAdapter.OnCompleteListener,
+        SnackBar.OnMessageClickListener,
+        ConfirmRefreshDialog.OnCompleteListener,
+        StackDialog.OnCompleteListener,
+        FilterStacksDialog.OnCompleteListener,
+        DownloadDialog.OnCompleteListener,
+        LymboWebUploadTask.OnCompleteListener,
+        LymboWebDownloadTask.OnCompleteListener {
+    // </editor-fold>
+
+    // <editor-fold defaultstate="expanded" desc="Members">
 
     // View
     private StacksListAdapter stacksAdapter;
+
+    // Controller
+    private StacksController stacksController;
 
     private Stack recentStack = null;
     private int recentStackPos = -1;
     private int recentEvent = -1;
 
+    // Properties
     private static final int EVENT_STASH = 2;
     private static int REFRESH_DELAY;
     private static int VIBRATION_DURATION;
 
+    // </editor-fold>
+
     // --------------------
     // Methods - Lifecycle
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Lifecycle">
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,6 +120,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         }
     }
 
+    @Override
     public void onResume() {
         try {
             super.onResume();
@@ -145,15 +170,10 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
             registerHideableFooterView(ibFab);
             enableActionBarAutoHide(slv);
 
-            updateListView();
+            updateView();
         } catch (Exception e) {
             handleException(e);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -201,10 +221,15 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         return true;
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods - Callbacks
     // --------------------
 
+    // <editor-fold defaultstate="expanded" desc="Callbacks">
+
+    // <editor-fold defaultstate="collapsed" desc="Callbacks SwipeRefreshLayout">
     @Override
     public void onRefresh() {
         ConfirmRefreshDialog dialog = new ConfirmRefreshDialog();
@@ -214,7 +239,106 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         dialog.setArguments(bundle);
         dialog.show(getFragmentManager(), ConfirmRefreshDialog.TAG);
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Callbacks StacksListAdapter">
+    @Override
+    public void onClickEdit(Stack stack) {
+        String uuid = stack.getId();
+        String title = stack.getTitle();
+        String subtitle = stack.getSubtitle();
+        String author = stack.getAuthor();
+        String languageFrom = null;
+        String languageTo = null;
+        ArrayList<String> tagsAll = Tag.getValues(stacksController.getTagsAll());
+        ArrayList<String> tagsSelected = Tag.getValues(stack.getTags());
+
+        if (stack.getLanguage() != null && stack.getLanguage().getFrom() != null && stack.getLanguage().getTo() != null) {
+            languageFrom = stack.getLanguage().getFrom();
+            languageTo = stack.getLanguage().getTo();
+        }
+
+        vibrate();
+
+        StackDialog dialog = new StackDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.edit_stack));
+        bundle.putString(getResources().getString(R.string.bundle_lymbo_uuid), uuid);
+        bundle.putString(getResources().getString(R.string.bundle_title), title);
+        bundle.putString(getResources().getString(R.string.bundle_subtitle), subtitle);
+        bundle.putString(getResources().getString(R.string.bundle_author), author);
+        bundle.putString(getResources().getString(R.string.bundle_language_from), languageFrom);
+        bundle.putString(getResources().getString(R.string.bundle_language_to), languageTo);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
+        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), StackDialog.TAG);
+    }
+
+    @Override
+    public void onClickStash(int position, Stack stack) {
+        stacksController.stash(this, stack);
+
+        recentStack = stack;
+        recentStackPos = position;
+        recentEvent = EVENT_STASH;
+
+        snack(this, R.string.stack_stashed, R.string.undo);
+        updateView();
+    }
+
+    @Override
+    public void onClickSelectTags() {
+        vibrate();
+        selectTags();
+    }
+
+    @Override
+    public void onClickSend(Stack stack) {
+        MailSender.sendLymbo(this, this, stack);
+    }
+
+    @Override
+    public void onClickUpload(Stack stack) {
+        Resources res = getResources();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String username = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
+        String password = prefs.getString(res.getString(R.string.pref_lymbo_web_password), null);
+        String clientId = res.getString(R.string.pref_lymbo_web_client_id);
+        String clientSecret = prefs.getString(res.getString(R.string.pref_lymbo_web_api_secret), null);
+
+        String id = stack.getId();
+        String author = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
+        String content = stack.toString();
+
+        try {
+            AccessControlItem accessControlItem = new LymboWebAccessControlItemTask().execute(username, password, clientId, clientSecret).get();
+
+            if (accessControlItem != null && accessControlItem.getAccess_token() != null) {
+                new LymboWebUploadTask(this).execute(accessControlItem.getAccess_token(), id, author, content).get();
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Callbacks Snackbar">
+    @Override
+    public void onMessageClick(Parcelable token) {
+        switch (recentEvent) {
+            case EVENT_STASH: {
+                stacksController.restore(this, recentStack);
+                break;
+            }
+        }
+
+       updateView();
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Callbacks RefreshDialog">
     @Override
     public void onConfirmRefresh() {
         new Handler().postDelayed(new Runnable() {
@@ -230,19 +354,9 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         srl.setRefreshing(false);
     }
+    // </editor-fold>
 
-    @Override
-    public void onMessageClick(Parcelable token) {
-        switch (recentEvent) {
-            case EVENT_STASH: {
-                stacksController.restore(this, recentStack);
-                break;
-            }
-        }
-
-        updateListView();
-    }
-
+    // <editor-fold defaultstate="collapsed" desc="Callbacks StackDialog">
     @Override
     public void onAddStack(String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags) {
         Stack stack = stacksController.getEmptyStack(title, subtitle, author, languageFrom, languageTo, tags);
@@ -255,7 +369,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
             Toast.makeText(this, getResources().getString(R.string.lymbo_with_same_name_already_exists), Toast.LENGTH_SHORT).show();
         }
 
-        updateListView();
+        updateView();
     }
 
     @Override
@@ -264,27 +378,35 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         stacksController.addTagsSelected(tags);
         stacksAdapter.notifyDataSetChanged();
 
-        updateListView();
+        updateView();
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Callbacks FilterCardsDialog">
     @Override
     public void onTagsSelected(List<Tag> tagsSelected) {
         stacksController.setTagsSelected(tagsSelected);
 
         snack(this, R.string.tag_selected);
-        updateListView();
+        updateView();
     }
+    // </editor-fold>
 
-    @Override
-    public void onLymboUploaded(String response) {
-        snack(this, R.string.uploaded_lymbo);
-    }
-
+    // <editor-fold defaultstate="collapsed" desc="Callbacks DownloadDialog">
     @Override
     public void onDownload(String id) {
         stacksController.download(this, this, id);
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Callbacks LymboWebUploadTask">
+    @Override
+    public void onLymboUploaded(String response) {
+        snack(this, R.string.uploaded_lymbo);
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Callbacks LymboWebDownloadTask">
     @Override
     public void onLymboDownloaded(String response) {
         if (!response.equals("Error")) {
@@ -311,31 +433,21 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
             snack(this, R.string.error_downloading_lymbo, SnackBar.Style.ALERT);
         }
     }
+    // </editor-fold>
+
+    // </editor-fold>
 
     // --------------------
     // Methods - Actions
     // --------------------
 
-    /**
-     * Stashes a lymbo
-     *
-     * @param pos   position of the stack
-     * @param stack lymbo to be stashed
-     */
-    public void stash(int pos, Stack stack) {
-        recentStack = stack;
-        recentStackPos = pos;
-        recentEvent = EVENT_STASH;
-
-        snack(this, R.string.stack_stashed, R.string.undo);
-        updateListView();
-    }
+    // <editor-fold defaultstate="collapsed" desc="Actions">
 
     /**
      * Opens a dialog to select tags
      */
     private void selectTags() {
-        ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+        vibrate();
 
         ArrayList<String> tagsAll = Tag.getValues(stacksController.getTagsAll());
         ArrayList<String> tagsSelected = Tag.getValues(stacksController.getTagsSelected());
@@ -349,7 +461,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     }
 
     private void download() {
-        ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+        vibrate();
 
         DownloadDialog dialog = new DownloadDialog();
         Bundle bundle = new Bundle();
@@ -358,9 +470,21 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         dialog.show(getFragmentManager(), DownloadDialog.TAG);
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods
     // --------------------
+
+    // <editor-fold defaultstate="collapsed" desc="Methods">
+
+    private void vibrate() {
+        vibrate(VIBRATION_DURATION);
+    }
+
+    private void vibrate(int VIBRATION_DURATION) {
+        ((Vibrator) getSystemService(Activity.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
+    }
 
     @Override
     protected int getLayoutResource() {
@@ -370,7 +494,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
     /**
      * Updates the list view
      */
-    private void updateListView() {
+    private void updateView() {
         final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
         stacksAdapter.filter();
@@ -378,9 +502,13 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
         slv.invalidateViews();
     }
 
+    // </editor-fold>
+
     // --------------------
     // Inner classes
     // --------------------
+
+    // <editor-fold defaultstate="collapsed" desc="Inner classes">
 
     public class LoadLymbosTask extends AsyncTask<Void, Void, Void> {
         @Override
@@ -402,9 +530,17 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
             srl.setRefreshing(false);
             snack(StacksActivity.this, R.string.lymbos_loaded);
-            updateListView();
+            updateView();
         }
     }
+
+    // </editor-fold>
+
+    // --------------------
+    // Tasks
+    // --------------------
+
+    // <editor-fold defaultstate="collapsed" desc="Tasks">
 
     public class ScanLoadLymbosTask extends AsyncTask<Void, Void, Void> {
         @Override
@@ -427,7 +563,8 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements SwipeRef
 
             srl.setRefreshing(false);
             snack(StacksActivity.this, R.string.lymbos_loaded);
-            updateListView();
+            updateView();
         }
     }
+    // </editor-fold>
 }

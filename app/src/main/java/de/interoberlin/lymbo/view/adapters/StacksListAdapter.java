@@ -1,6 +1,5 @@
 package de.interoberlin.lymbo.view.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,8 +7,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.view.ContextMenu;
@@ -26,7 +23,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
@@ -34,22 +30,17 @@ import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.core.model.v1.impl.Language;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
-import de.interoberlin.lymbo.model.share.MailSender;
-import de.interoberlin.lymbo.model.webservice.AccessControlItem;
-import de.interoberlin.lymbo.model.webservice.web.LymboWebAccessControlItemTask;
-import de.interoberlin.lymbo.model.webservice.web.LymboWebUploadTask;
 import de.interoberlin.lymbo.util.Base64BitmapConverter;
 import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.CardsActivity;
-import de.interoberlin.lymbo.view.activities.StacksActivity;
 import de.interoberlin.lymbo.view.components.TagView;
-import de.interoberlin.lymbo.view.dialogs.FilterStacksDialog;
-import de.interoberlin.lymbo.view.dialogs.StackDialog;
 
 public class StacksListAdapter extends ArrayAdapter<Stack> {
+    // <editor-fold defaultstate="expanded" desc="Members">
+
     // Context
     private Context context;
-    private Activity activity;
+    private OnCompleteListener ocListener;
 
     // View
     static class ViewHolder {
@@ -66,7 +57,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
         private TextView tvError;
     }
 
-    // Controllers
+    // Controller
     private StacksController stacksController;
     private CardsController cardsController;
 
@@ -76,14 +67,15 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     private LymboListFilter lymboListFilter;
     private final Object lock = new Object();
 
-    // Properties
-    private static int VIBRATION_DURATION;
+    // </editor-fold>
 
     // --------------------
     // Constructors
     // --------------------
 
-    public StacksListAdapter(Activity activity, Context context, int resource, List<Stack> items) {
+    // <editor-fold defaultstate="expanded" desc="Constructors">
+
+    public StacksListAdapter(Context context, OnCompleteListener ocListener, int resource, List<Stack> items) {
         super(context, resource, items);
         stacksController = StacksController.getInstance();
         cardsController = CardsController.getInstance();
@@ -91,18 +83,19 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
         this.filteredItems = items;
         this.originalItems = items;
 
-        this.activity = activity;
         this.context = context;
-
-        // Properties
-        VIBRATION_DURATION = getResources().getInteger(R.integer.vibration_duration);
+        this.ocListener = ocListener;
 
         filter();
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Methods">
 
     @Override
     public int getCount() {
@@ -118,7 +111,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     public View getView(final int position, View v, ViewGroup parent) {
         final Stack stack = getItem(position);
 
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
 
         if (stack.getError() == null) {
             if (v == null) {
@@ -145,7 +138,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                 viewHolder = (ViewHolder) v.getTag();
             }
 
-            final ViewHolder viewHolderFinal = viewHolder;
+            // final ViewHolder viewHolderFinal = viewHolder;
 
             // Tint
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -187,7 +180,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                                 .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
-                                        edit(stack);
+                                        ocListener.onClickEdit(stack);
                                         return false;
                                     }
                                 });
@@ -195,7 +188,25 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                                 .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
-                                        stash(position, stack, viewHolderFinal.v);
+                                        Animation a = ViewUtil.collapse(context, viewHolder.v);
+                                        viewHolder.v.startAnimation(a);
+
+                                        a.setAnimationListener(new Animation.AnimationListener() {
+                                            @Override
+                                            public void onAnimationStart(Animation animation) {
+                                            }
+
+                                            @Override
+                                            public void onAnimationEnd(Animation animation) {
+                                                ocListener.onClickStash(position, stack);
+                                                filter();
+                                            }
+
+                                            @Override
+                                            public void onAnimationRepeat(Animation animation) {
+                                            }
+                                        });
+
                                         return false;
                                     }
                                 });
@@ -211,7 +222,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                     cvTag.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            selectTags();
+                            ocListener.onClickSelectTags();
                         }
                     });
 
@@ -227,7 +238,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                 cvTagLanguageFrom.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        selectTags();
+                        ocListener.onClickSelectTags();
                     }
                 });
 
@@ -238,7 +249,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                 cvTagLanguageTo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        selectTags();
+                        ocListener.onClickSelectTags();
                     }
                 });
 
@@ -261,7 +272,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                 viewHolder.ivShare.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        MailSender.sendLymbo(context, activity, stack);
+                        ocListener.onClickSend(stack);
                     }
                 });
             } else {
@@ -269,37 +280,16 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             }
 
             // Action : upload
-            Resources res = getResources();
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             String author = stack.getAuthor();
-            String noAuthorSpecified = res.getString(R.string.no_author_specified);
-            String username = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
+            String noAuthorSpecified = getResources().getString(R.string.no_author_specified);
+            String username = prefs.getString(getResources().getString(R.string.pref_lymbo_web_user_name), null);
 
             if (author == null || author.isEmpty() || author.equals(noAuthorSpecified) || author.equals(username)) {
                 viewHolder.ivUpload.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Resources res = getResources();
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-                        String username = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
-                        String password = prefs.getString(res.getString(R.string.pref_lymbo_web_password), null);
-                        String clientId = res.getString(R.string.pref_lymbo_web_client_id);
-                        String clientSecret = prefs.getString(res.getString(R.string.pref_lymbo_web_api_secret), null);
-
-                        String id = stack.getId();
-                        String author = prefs.getString(res.getString(R.string.pref_lymbo_web_user_name), null);
-                        String content = stack.toString();
-
-                        try {
-                            AccessControlItem accessControlItem = new LymboWebAccessControlItemTask().execute(username, password, clientId, clientSecret).get();
-
-                            if (accessControlItem != null && accessControlItem.getAccess_token() != null) {
-                                new LymboWebUploadTask((StacksActivity) activity).execute(accessControlItem.getAccess_token(), id, author, content).get();
-                            }
-                        } catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
+                        ocListener.onClickUpload(stack);
                     }
                 });
             } else {
@@ -328,8 +318,6 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                 viewHolder = (ViewHolder) v.getTag();
             }
 
-            final ViewHolder viewHolderFinal = viewHolder;
-
             // Set values
             viewHolder.tvTitle.setText(getResources().getString(R.string.broken_lymbo_file));
 
@@ -342,7 +330,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                                 .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
-                                        stash(position, stack, viewHolderFinal.v);
+                                        stash(position, stack, viewHolder.v);
                                         return false;
                                     }
                                 });
@@ -351,55 +339,22 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             });
 
             if (stack.getPath() != null)
-                viewHolderFinal.tvPath.setText(stack.getFile());
+                viewHolder.tvPath.setText(stack.getFile());
 
             if (stack.getError() != null)
-                viewHolderFinal.tvError.setText(stack.getError());
+                viewHolder.tvError.setText(stack.getError());
 
             return v;
         }
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods - Actions
     // --------------------
 
-    /**
-     * Opens dialog to edit stack
-     *
-     * @param stack stack to be edited
-     */
-    private void edit(final Stack stack) {
-        String uuid = stack.getId();
-        String title = stack.getTitle();
-        String subtitle = stack.getSubtitle();
-        String author = stack.getAuthor();
-        String languageFrom = null;
-        String languageTo = null;
-        ArrayList<String> tagsAll = Tag.getValues(stacksController.getTagsAll());
-        ArrayList<String> tagsSelected = Tag.getValues(stack.getTags());
-
-        if (stack.getLanguage() != null && stack.getLanguage().getFrom() != null && stack.getLanguage().getTo() != null) {
-            languageFrom = stack.getLanguage().getFrom();
-            languageTo = stack.getLanguage().getTo();
-        }
-
-        vibrate(VIBRATION_DURATION);
-
-        StackDialog dialog = new StackDialog();
-        Bundle bundle = new Bundle();
-        bundle.putString(getResources().getString(R.string.bundle_dialog_title), getResources().getString(R.string.edit_stack));
-        bundle.putString(context.getResources().getString(R.string.bundle_lymbo_uuid), uuid);
-        bundle.putString(context.getResources().getString(R.string.bundle_title), title);
-        bundle.putString(context.getResources().getString(R.string.bundle_subtitle), subtitle);
-        bundle.putString(context.getResources().getString(R.string.bundle_author), author);
-        bundle.putString(context.getResources().getString(R.string.bundle_language_from), languageFrom);
-        bundle.putString(context.getResources().getString(R.string.bundle_language_to), languageTo);
-        bundle.putStringArrayList(context.getResources().getString(R.string.bundle_tags_all), tagsAll);
-        bundle.putStringArrayList(context.getResources().getString(R.string.bundle_tags_selected), tagsSelected);
-        dialog.setArguments(bundle);
-        dialog.show(activity.getFragmentManager(), StackDialog.TAG);
-    }
+    // <editor-fold defaultstate="expanded" desc="Actions">
 
     /**
      * Performs stash animation
@@ -419,8 +374,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                stacksController.stash(getContext(), stack);
-                ((StacksActivity) activity).stash(position, stack);
+                ocListener.onClickStash(position, stack);
                 filter();
             }
 
@@ -430,26 +384,13 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
         });
     }
 
-    /**
-     * Opens a dialog to select tags
-     */
-    private void selectTags() {
-        ((Vibrator) activity.getSystemService(Activity.VIBRATOR_SERVICE)).vibrate(VIBRATION_DURATION);
-
-        ArrayList<String> tagsAll = Tag.getValues(stacksController.getTagsAll());
-        ArrayList<String> tagsSelected = Tag.getValues(stacksController.getTagsSelected());
-
-        FilterStacksDialog dialog = new FilterStacksDialog();
-        Bundle bundle = new Bundle();
-        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_all), tagsAll);
-        bundle.putStringArrayList(getResources().getString(R.string.bundle_tags_selected), tagsSelected);
-        dialog.setArguments(bundle);
-        dialog.show(activity.getFragmentManager(), FilterStacksDialog.TAG);
-    }
+    // </editor-fold>
 
     // --------------------
     // Methods - Filter
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Filter">
 
     /*
     public List<Stack> getFilteredItems() {
@@ -470,30 +411,34 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     }
 
     /**
-     * Determines if a lymbo shall be displayed
+     * Determines if a stack shall be displayed
      *
-     * @param stack lymbo
+     * @param stack stack
      * @return true if item is visible
      */
     protected boolean filterLymbo(Stack stack) {
         return stacksController.isVisible(stack);
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods - Util
     // --------------------
 
-    private void vibrate(int vibrationDuration) {
-        ((Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(vibrationDuration);
-    }
+    // <editor-fold defaultstate="expanded" desc="Util">
 
     private Resources getResources() {
-        return activity.getResources();
+        return getContext().getResources();
     }
+
+    // </editor-fold>
 
     // --------------------
     // Inner classes
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Inner classes">
 
     public class LymboListFilter extends Filter {
         @Override
@@ -536,4 +481,26 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             }
         }
     }
+
+    // </editor-fold>
+
+    // --------------------
+    // Callback interfaces
+    // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
+
+    public interface OnCompleteListener {
+        void onClickEdit(Stack stack);
+
+        void onClickStash(int position, Stack stack);
+
+        void onClickSelectTags();
+
+        void onClickSend(Stack stack);
+
+        void onClickUpload(Stack stack);
+    }
+
+    // </editor-fold>
 }

@@ -27,8 +27,7 @@ import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardEntry;
 import de.interoberlin.lymbo.util.ZipUtil;
 
 public class CardsController {
-    // Controller
-    private StacksController stacksController;
+    // <editor-fold defaultstate="expanded" desc="Members">
 
     // Database
     private TableCardDatasource datasource;
@@ -41,13 +40,20 @@ public class CardsController {
     private List<Card> templates;
     private List<Tag> tagsSelected;
 
+    // Controller
+    private StacksController stacksController;
+
     private boolean displayOnlyFavorites;
 
     private static CardsController instance;
 
+    // </editor-fold>
+
     // --------------------
     // Constructors
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Constructors">
 
     private CardsController() {
     }
@@ -60,9 +66,13 @@ public class CardsController {
         return instance;
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Methods">
 
     public void init(Context context) {
         stacksController = StacksController.getInstance();
@@ -132,10 +142,6 @@ public class CardsController {
 
         return count;
     }
-
-    // --------------------
-    // Methods
-    // --------------------
 
     /**
      * Writes lymbo object into file
@@ -522,14 +528,13 @@ public class CardsController {
      *
      * @param context  context
      * @param card     card
-     * @param favorite whether or not to set a card as a favorite
      */
-    public void toggleFavorite(Context context, Card card, boolean favorite) {
-        card.setFavorite(favorite);
+    public void toggleFavorite(Context context, Card card) {
+        card.setFavorite(!card.isFavorite());
 
         datasource = new TableCardDatasource(context);
         datasource.open();
-        datasource.updateCardFavorite(card.getId(), favorite);
+        datasource.updateCardFavorite(card.getId(), card.isFavorite());
         datasource.close();
     }
 
@@ -575,9 +580,13 @@ public class CardsController {
         save(context);
     }
 
+    // </editor-fold>
+
     // --------------------
-    // Methods - Util
+    // Util
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Util">
 
     public void addTagsSelected(List<Tag> tags) {
         for (Tag tag : tags) {
@@ -631,9 +640,13 @@ public class CardsController {
             stack = LymboLoader.getLymboFromFile(App.getContext(), new File(path), false);
     }
 
+    // </editor-fold>
+
     // --------------------
-    // Getters / Setters
+    // Getters ( Setters
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Getters ( Setters">
 
     public Stack getStack() {
         return stack;
@@ -732,4 +745,6 @@ public class CardsController {
     public void setDisplayOnlyFavorites(boolean displayOnlyFavorites) {
         this.displayOnlyFavorites = displayOnlyFavorites;
     }
+
+    // </editor-fold>
 }

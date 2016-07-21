@@ -23,20 +23,32 @@ import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class StacksStashActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, SnackBar.OnMessageClickListener {
-    // Controllers
-    private StacksController stacksController;
+public class StacksStashActivity extends SwipeRefreshBaseActivity implements
+    // <editor-fold defaultstate="expanded" desc="Interfaces">
+        SwipeRefreshLayout.OnRefreshListener,
+        SnackBar.OnMessageClickListener {
+    // </editor-fold>
+
+    // <editor-fold defaultstate="expanded" desc="Members">
 
     // Model
     private StacksStashListAdapter lymbosStashAdapter;
 
+    // Controller
+    private StacksController stacksController;
+
     private Stack recentStack = null;
 
+    // Properties
     private static int REFRESH_DELAY;
+
+    // </editor-fold>
 
     // --------------------
     // Methods - Lifecycle
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Lifecycle">
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +70,7 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
         setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override
     public void onResume() {
         super.onResume();
         lymbosStashAdapter = new StacksStashListAdapter(this, this, R.layout.stack_stash, stacksController.getStacksStashed());
@@ -84,17 +97,7 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
         registerHideableHeaderView(toolbarWrapper);
         enableActionBarAutoHide(slv);
 
-        updateListView();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+        updateView();
     }
 
     @Override
@@ -132,14 +135,22 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
         return true;
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods - Callbacks
     // --------------------
 
+    // <editor-fold defaultstate="expanded" desc="Callbacks">
+
+    // <editor-fold defaultstate="collapsed" desc="Callbacks SwipeRefreshLayout">
+
     @Override
     public void onRefresh() {
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Callbacks Snackbar">
     @Override
     public void onMessageClick(Parcelable token) {
         final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
@@ -148,10 +159,15 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
         lymbosStashAdapter.notifyDataSetChanged();
         slv.invalidateViews();
     }
+    // </editor-fold>
+
+    // </editor-fold>
 
     // --------------------
     // Methods - Actions
     // --------------------
+
+    // <editor-fold defaultstate="collapsed" desc="Actions">
 
     /**
      * Restores a lymbo
@@ -163,12 +179,16 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
         recentStack = stack;
 
         snack(this, R.string.stack_restored, R.string.undo);
-        updateListView();
+        updateView();
     }
+
+    // </editor-fold>
 
     // --------------------
     // Methods
     // --------------------
+
+    // <editor-fold defaultstate="collapsed" desc="Methods">
 
     @Override
     protected int getLayoutResource() {
@@ -178,7 +198,7 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
     /**
      * Updates the list view
      */
-    private void updateListView() {
+    private void updateView() {
         final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
         lymbosStashAdapter.filter();
@@ -186,20 +206,13 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
         slv.invalidateViews();
     }
 
-    /**
-     * Indicates that lymbos have been loaded
-     */
-    public void snackLymbosLoaded() {
-        new SnackBar.Builder(this)
-                .withMessageId(R.string.lymbos_loaded)
-                .withStyle(SnackBar.Style.INFO)
-                .withDuration(SnackBar.MED_SNACK)
-                .show();
-    }
+    // </editor-fold>
 
     // --------------------
     // Inner classes
     // --------------------
+
+    // <editor-fold defaultstate="collapsed" desc="Inner classes">
 
     public class LoadLymbosTask extends AsyncTask<Void, Void, Void> {
         @Override
@@ -220,8 +233,10 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements Swi
             final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 
             srl.setRefreshing(false);
-            snackLymbosLoaded();
-            updateListView();
+            snack(StacksStashActivity.this, R.string.lymbos_loaded);
+            updateView();
         }
     }
+
+    // </editor-fold>
 }

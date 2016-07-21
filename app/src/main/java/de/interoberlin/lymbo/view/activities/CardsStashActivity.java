@@ -24,24 +24,36 @@ import de.interoberlin.mate.lib.view.AboutActivity;
 import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
-public class CardsStashActivity extends SwipeRefreshBaseActivity implements SwipeRefreshLayout.OnRefreshListener, ConfirmRefreshDialog.OnCompleteListener, SnackBar.OnMessageClickListener {
+public class CardsStashActivity extends SwipeRefreshBaseActivity implements
+    // <editor-fold defaultstate="expanded" desc="Interfaces">
+        SwipeRefreshLayout.OnRefreshListener,
+        ConfirmRefreshDialog.OnCompleteListener,
+        SnackBar.OnMessageClickListener {
+    // </editor-fold>
+
+    // <editor-fold defaultstate="expanded" desc="Members">
+
     // Model
     private CardsStashListAdapter cardsStashAdapter;
 
     // Controller
     CardsController cardsController;
 
-    // Properties
-    private static int REFRESH_DELAY;
-    private static final int EVENT_RESTORE = 2;
-
     private Card recentCard = null;
     private int recentCardPos = -1;
     private int recentEvent = -1;
 
+    // Properties
+    private static int REFRESH_DELAY;
+    private static final int EVENT_RESTORE = 2;
+
+    // </editor-fold>
+
     // --------------------
     // Methods - Lifecycle
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Lifecycle">
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +84,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
         }
     }
 
+    @Override
     public void onResume() {
         try {
             super.onResume();
@@ -102,16 +115,6 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
         } catch (Exception e) {
             handleException(e);
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -157,10 +160,15 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
         super.onSaveInstanceState(savedInstanceState);
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods - Callbacks
     // --------------------
 
+    // <editor-fold defaultstate="expanded" desc="Callbacks">
+
+    // <editor-fold defaultstate="collapsed" desc="Callbacks SwipeRefreshLayout">
     @Override
     public void onRefresh() {
         ConfirmRefreshDialog dialog = new ConfirmRefreshDialog();
@@ -170,7 +178,23 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
         dialog.setArguments(bundle);
         dialog.show(getFragmentManager(), ConfirmRefreshDialog.TAG);
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Callbacks Snackbar">
+    @Override
+    public void onMessageClick(Parcelable token) {
+        switch (recentEvent) {
+            case EVENT_RESTORE: {
+                cardsController.stash(this, recentCardPos, recentCard);
+                break;
+            }
+        }
+
+        updateListView();
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Callbacks RefreshDialog">
     @Override
     public void onConfirmRefresh() {
         new Handler().postDelayed(new Runnable() {
@@ -186,22 +210,13 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
         final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         srl.setRefreshing(false);
     }
-
-    @Override
-    public void onMessageClick(Parcelable token) {
-        switch (recentEvent) {
-            case EVENT_RESTORE: {
-                cardsController.stash(this, recentCardPos, recentCard);
-                break;
-            }
-        }
-
-        updateListView();
-    }
+    // </editor-fold>
 
     // --------------------
     // Methods - Actions
     // --------------------
+
+    // <editor-fold defaultstate="collapsed" desc="Actions">
 
     /**
      * Restores a card
@@ -219,9 +234,13 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
         updateListView();
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods
     // --------------------
+
+    // <editor-fold defaultstate="collapsed" desc="Methods">
 
     @Override
     protected int getLayoutResource() {
@@ -239,9 +258,13 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
         slv.invalidateViews();
     }
 
+    // </editor-fold>
+
     // --------------------
     // Inner classes
     // --------------------
+
+    // <editor-fold defaultstate="collapsed" desc="Inner classes">
 
     public class RestoreCardsTask extends AsyncTask<Void, Void, Void> {
         @Override
@@ -265,4 +288,6 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements Swip
             updateListView();
         }
     }
+
+    // </editor-fold>
 }

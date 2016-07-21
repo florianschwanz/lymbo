@@ -41,10 +41,6 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
     private static final int HEADER_HIDE_ANIM_DURATION = 500;
 
     // --------------------
-    // Methods
-    // --------------------
-
-    // --------------------
     // Methods -  Toolbar
     // --------------------
 
@@ -169,6 +165,7 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
         }
     }
 
+    @SuppressWarnings("ununsed")
     protected void deregisterHideableHeaderView(View hideableHeaderView) {
         if (hideableHeaderViews.contains(hideableHeaderView)) {
             hideableHeaderViews.remove(hideableHeaderView);
@@ -181,6 +178,7 @@ public abstract class SwipeRefreshBaseActivity extends BaseActivity {
         }
     }
 
+    @SuppressWarnings("ununsed")
     protected void deregisterHideableFooterView(View hideableFooterView) {
         if (hideableFooterViews.contains(hideableFooterView)) {
             hideableFooterViews.remove(hideableFooterView);

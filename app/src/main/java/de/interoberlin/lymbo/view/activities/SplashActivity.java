@@ -40,7 +40,7 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
     // Model
     private static SVG svg;
 
-    // Views
+    // View
     private static LinearLayout llSVG;
     private static LinearLayout llLogo;
     private static TextView tvMessage;

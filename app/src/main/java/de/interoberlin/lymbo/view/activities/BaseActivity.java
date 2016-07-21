@@ -37,16 +37,21 @@ import de.interoberlin.lymbo.view.dialogs.ReportErrorDialog;
 import de.interoberlin.lymbo.view.dialogs.ShowErrorDialog;
 
 public abstract class BaseActivity extends AppCompatActivity implements Accelerator.OnShakeListener, GiveFeedbackDialog.OnCompleteListener, ReportErrorDialog.OnCompleteListener, ShowErrorDialog.OnCompleteListener {
+    // <editor-fold defaultstate="expanded" desc="Members">
+
+    private Sensor accelerator;
     private SensorManager sensorManager;
 
     // Properties
     private static int VIBRATION_DURATION;
 
-    private Sensor accelerator;
+    // </editor-fold>
 
     // --------------------
     // Methods - Lifecycle
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Lifecycle">
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +77,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Accelera
         VIBRATION_DURATION = res.getInteger(R.integer.vibration_duration);
     }
 
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -85,6 +91,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Accelera
 
         super.onPause();
     }
+
+    // </editor-fold>
+
+    // --------------------
+    // Methods - Callbacks
+    // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Callbacks">
 
     @Override
     public void onShake(int count) {
@@ -130,6 +144,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Accelera
         dialog.setArguments(bundle);
         dialog.show(getFragmentManager(), ShowErrorDialog.TAG);
     }
+
+    // </editor-fold>
+
+    // --------------------
+    // Methods
+    // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Methods">
 
     protected void handleException(Exception e) {
         ReportErrorDialog dialog = new ReportErrorDialog();
@@ -182,10 +204,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Accelera
                 .show();
     }
 
-    // --------------------
-    // Getters / Setters
-    // --------------------
-
     protected abstract int getLayoutResource();
 
     protected Toolbar getToolbar() {
@@ -200,4 +218,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Accelera
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
     }
+
+    // </editor-fold>
 }

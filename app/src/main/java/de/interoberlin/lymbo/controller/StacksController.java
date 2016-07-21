@@ -39,6 +39,7 @@ import de.interoberlin.lymbo.util.ZipUtil;
 import de.interoberlin.mate.lib.model.Log;
 
 public class StacksController {
+    // <editor-fold defaultstate="expanded" desc="Members">
     public static final String TAG = StacksController.class.toString();
 
     // Database
@@ -61,9 +62,13 @@ public class StacksController {
 
     private static StacksController instance;
 
+    // </editor-fold>
+
     // --------------------
     // Constructors
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Constructors">
 
     private StacksController() {
         init();
@@ -77,9 +82,13 @@ public class StacksController {
         return instance;
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Methods">
 
     public void init() {
         stacks = new ArrayList<>();
@@ -486,9 +495,13 @@ public class StacksController {
         return externalStorageAvailable && externalStorageWriteable;
     }
 
+    // </editor-fold>
+
     // --------------------
-    // Methods - Util
+    // Util
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Util">
 
     private Resources getResources() {
         return App.getContext().getResources();
@@ -557,9 +570,13 @@ public class StacksController {
         }
     }
 
+    // </editor-fold>
+
     // --------------------
-    // Getters / Setters
+    // Getters ( Setters
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Getters ( Setters">
 
     public List<Stack> getStacks() {
         return stacks;
@@ -580,4 +597,6 @@ public class StacksController {
     public boolean isLoaded() {
         return loaded;
     }
+
+    // </editor-fold>
 }

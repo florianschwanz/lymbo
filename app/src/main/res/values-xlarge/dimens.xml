@@ -1,0 +1,4 @@
+<resources>
+    <!-- Screen width -->
+    <dimen name="min_screen_width">720dp</dimen>
+</resources>

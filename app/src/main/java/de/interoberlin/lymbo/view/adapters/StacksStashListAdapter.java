@@ -22,6 +22,8 @@ import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.StacksStashActivity;
 
 public class StacksStashListAdapter extends ArrayAdapter<Stack> {
+    // <editor-fold defaultstate="expanded" desc="Members">
+
     // Context
     private Context context;
     private Activity activity;
@@ -43,9 +45,13 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
     private LymboListFilter lymboListFilter;
     private final Object lock = new Object();
 
+    // </editor-fold>
+
     // --------------------
     // Constructors
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Constructors">
 
     public StacksStashListAdapter(Activity activity, Context context, int resource, List<Stack> items) {
         super(context, resource, items);
@@ -60,9 +66,13 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
         filter();
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Methods">
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
@@ -133,9 +143,13 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
         return v;
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods - Filter
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Filter">
 
     /*
     public List<Stack> getFilteredItems() {
@@ -165,9 +179,13 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
         return stack != null;
     }
 
+    // </editor-fold>
+
     // --------------------
     // Inner classes
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Inner classes">
 
     public class LymboListFilter extends Filter {
         @Override
@@ -210,4 +228,6 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
             }
         }
     }
+
+    // </editor-fold>
 }

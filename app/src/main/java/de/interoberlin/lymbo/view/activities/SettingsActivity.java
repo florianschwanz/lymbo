@@ -47,7 +47,6 @@ public class SettingsActivity extends PreferenceActivity {
     // Methods - Lifecycle
     // --------------------
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

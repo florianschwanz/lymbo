@@ -37,6 +37,8 @@ import de.interoberlin.lymbo.view.components.TextView;
 import de.interoberlin.lymbo.view.components.TitleView;
 
 public class CardsStashListAdapter extends ArrayAdapter<Card> {
+    // <editor-fold defaultstate="expanded" desc="Members">
+
     // Context
     private Context context;
     private Activity activity;
@@ -49,7 +51,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         private android.widget.ImageView ivUndo;
     }
 
-    // Controllers
+    // Controller
     CardsController cardsController;
 
     // Filter
@@ -58,9 +60,13 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     private CardListFilter cardListFilter;
     private final Object lock = new Object();
 
+    // </editor-fold>
+
     // --------------------
     // Constructors
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Constructors">
 
     public CardsStashListAdapter(Context context, Activity activity, int resource, List<Card> items) {
         super(context, resource, items);
@@ -75,9 +81,13 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         filter();
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Methods">
 
     @Override
     public int getCount() {
@@ -240,6 +250,14 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         return v;
     }
 
+    // </editor-fold>
+
+    // --------------------
+    // Methods - Actions
+    // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Actions">
+
     /**
      * Restores a card
      *
@@ -252,15 +270,19 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         filter();
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods - Filter
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Filter">
 
     /*
     public List<Card> getFilteredItems() {
         return filteredItems;
     }
-*/
+    */
 
     public void filter() {
         getFilter().filter("");
@@ -284,9 +306,13 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         return card != null;
     }
 
+    // </editor-fold>
+
     // --------------------
     // Inner classes
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Inner classes">
 
     public class CardListFilter extends Filter {
         @Override
@@ -329,4 +355,6 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
             }
         }
     }
+
+    // </editor-fold>
 }
