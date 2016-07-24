@@ -44,8 +44,9 @@ import de.interoberlin.lymbo.model.webservice.translate.MicrosoftTranslatorTask;
 import de.interoberlin.lymbo.util.ViewUtil;
 
 public class CardDialog extends DialogFragment {
-    public static final String TAG = CardDialog.class.getCanonicalName();
+    public static final String TAG = CardDialog.class.getSimpleName();
 
+    // Model
     private boolean addTextFrontIsExpanded = false;
     private boolean addQuizIsExpanded = false;
     private boolean addTextBackIsExpanded = false;

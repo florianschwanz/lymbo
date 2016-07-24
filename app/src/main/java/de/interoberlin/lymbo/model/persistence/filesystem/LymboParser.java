@@ -42,7 +42,7 @@ import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardEntry;
 import de.interoberlin.mate.lib.model.Log;
 
 public class LymboParser {
-    public static final String TAG = LymboParser.class.getCanonicalName();
+    public static final String TAG = LymboParser.class.getSimpleName();
 
     private static boolean onlyTopLevel;
     private static boolean containsGeneratedIds;

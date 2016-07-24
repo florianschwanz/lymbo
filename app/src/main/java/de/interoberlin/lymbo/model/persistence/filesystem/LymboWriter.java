@@ -17,7 +17,7 @@ import de.interoberlin.mate.lib.model.Log;
  * This class can be used to write a lymbo object into an xml file
  */
 public class LymboWriter {
-    private static final String TAG = LymboWriter.class.getCanonicalName();
+    private static final String TAG = LymboWriter.class.getSimpleName();
 
     /**
      * Writes a {@code stack} into a {@code file}

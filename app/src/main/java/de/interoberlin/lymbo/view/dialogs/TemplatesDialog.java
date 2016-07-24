@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -18,23 +17,34 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
+import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.core.model.v1.impl.components.AComponent;
 import de.interoberlin.lymbo.core.model.v1.impl.components.EComponentType;
-import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.core.model.v1.impl.components.Text;
 import de.interoberlin.lymbo.core.model.v1.impl.components.Title;
 
 public class TemplatesDialog extends DialogFragment {
-    public static final String TAG = TemplatesDialog.class.getCanonicalName();
+    // <editor-fold defaultstate="expanded" desc="Members">
+
+    public static final String TAG = TemplatesDialog.class.getSimpleName();
+
+    // View
+    @BindView(R.id.tblTemplates) TableLayout tblTemplates;
 
     private OnCompleteListener ocListener;
+
+    // </editor-fold>
 
     // --------------------
     // Methods - Lifecycle
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Lifecycle">
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -44,7 +54,7 @@ public class TemplatesDialog extends DialogFragment {
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialog_templates, null);
-        final TableLayout tblTemplates = (TableLayout) v.findViewById(R.id.tblTemplates);
+        ButterKnife.bind(this, v);
 
         final ArrayList<String> templates = new ArrayList<>();
         for (Card template : cardsController.getStack().getTemplates()) {
@@ -68,8 +78,6 @@ public class TemplatesDialog extends DialogFragment {
             tvText.setText(template.getTitle());
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
                 tvText.setTextAppearance(android.R.style.TextAppearance_Medium);
-            else
-                tvText.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
             tvText.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
                 @Override
                 public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
@@ -110,17 +118,6 @@ public class TemplatesDialog extends DialogFragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
 
@@ -135,9 +132,13 @@ public class TemplatesDialog extends DialogFragment {
         });
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods - Actions
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Actions">
 
     private void add() {
         CardsController cardsController = CardsController.getInstance();
@@ -204,21 +205,28 @@ public class TemplatesDialog extends DialogFragment {
         ocListener.onDeleteTemplate(template);
     }
 
+    // </editor-fold>
+
     // --------------------
     // Callback interfaces
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
 
     public interface OnCompleteListener {
         void onDeleteTemplate(Card template);
     }
 
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         try {
             this.ocListener = (OnCompleteListener) activity;
         } catch (final ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnTagsSelectedListener");
+            throw new ClassCastException(activity.toString() + " must implement " + TAG);
         }
     }
+
+    // </editor-fold>
 }

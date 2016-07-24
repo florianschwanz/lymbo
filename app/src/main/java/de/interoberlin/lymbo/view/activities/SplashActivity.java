@@ -22,9 +22,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.interoberlin.lymbo.R;
-import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.controller.SplashController;
+import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.model.accelerometer.Accelerator;
 import de.interoberlin.sauvignon.lib.controller.loader.SvgLoader;
 import de.interoberlin.sauvignon.lib.model.svg.SVG;
@@ -41,15 +43,15 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
     private static SVG svg;
 
     // View
-    private static LinearLayout llSVG;
-    private static LinearLayout llLogo;
-    private static TextView tvMessage;
-    private static SVGSurfacePanel panel;
-    private static ImageView ivLogo;
+    @BindView(R.id.llSVG) LinearLayout llSVG;
+    @BindView(R.id.llLogo) LinearLayout llLogo;
+    @BindView(R.id.tvMessage) TextView tvMessage;
+    private SVGSurfacePanel panel;
+    private ImageView ivLogo;
 
     // Controller
-    SplashController splashController;
-    StacksController stacksController;
+    private SplashController splashController;
+    private StacksController stacksController;
 
     // Accelerometer
     private SensorManager sensorManager;
@@ -76,11 +78,6 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         stacksController = StacksController.getInstance();
 
         setContentView(R.layout.activity_splash);
-
-        // Load layout
-        llSVG = (LinearLayout) findViewById(R.id.llSVG);
-        llLogo = (LinearLayout) findViewById(R.id.llLogo);
-        tvMessage = (TextView) findViewById(R.id.tvMessage);
 
         // Get instances of managers
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -144,6 +141,7 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         Accelerator.getInstance().setDisplay(((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay());
 
         panel.init();
+        ButterKnife.bind(this);
     }
 
     public void onResume() {

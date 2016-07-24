@@ -15,6 +15,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
@@ -30,10 +32,15 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
 
     // View
     static class ViewHolder {
-        private LinearLayout v;
-        private TextView tvTitle;
-        private TextView tvSubtitle;
-        private ImageView ivUndo;
+        LinearLayout v;
+        @BindView(R.id.tvTitle) TextView tvTitle;
+        @BindView(R.id.tvSubtitle) TextView tvSubtitle;
+        @BindView(R.id.ivUndo) ImageView ivUndo;
+
+        public ViewHolder(View v) {
+            this.v = (LinearLayout) v;
+            ButterKnife.bind(this, v);
+        }
     }
 
     // Controllers
@@ -81,20 +88,8 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
         ViewHolder viewHolder;
 
         if (v == null) {
-            viewHolder = new ViewHolder();
-
-            // Layout inflater
-            LayoutInflater vi;
-            vi = LayoutInflater.from(getContext());
-
-            // Load views
-            v = vi.inflate(R.layout.stack_stash, parent, false);
-
-            viewHolder.v = (LinearLayout) v;
-            viewHolder.tvTitle = (TextView) v.findViewById(R.id.tvTitle);
-            viewHolder.tvSubtitle = (TextView) v.findViewById(R.id.tvSubtitle);
-            viewHolder.ivUndo = (ImageView) v.findViewById(R.id.ivUndo);
-
+            v = LayoutInflater.from(getContext()).inflate(R.layout.card, parent, false);
+            viewHolder = new ViewHolder(v);
             v.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) v.getTag();
@@ -228,6 +223,4 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
             }
         }
     }
-
-    // </editor-fold>
 }

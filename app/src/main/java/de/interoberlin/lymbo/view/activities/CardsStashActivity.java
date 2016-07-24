@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.github.mrengineer13.snackbar.SnackBar;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
@@ -33,8 +35,13 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements
 
     // <editor-fold defaultstate="expanded" desc="Members">
 
-    // Model
+    // View
     private CardsStashListAdapter cardsStashAdapter;
+    @BindView(R.id.dl) DrawerLayout drawer;
+    @BindView(R.id.toolbar_wrapper) LinearLayout toolbarWrapper;
+    @BindView(R.id.toolbar_title) TextView toolbarTitleView;
+    @BindView(R.id.swipe_container) SwipeRefreshLayout srl;
+    @BindView(R.id.slv) SwipeListView slv;
 
     // Controller
     CardsController cardsController;
@@ -79,6 +86,8 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements
 
             setActionBarIcon(R.drawable.ic_arrow_back_white_24dp);
             setDisplayHomeAsUpEnabled(true);
+
+            ButterKnife.bind(this);
         } catch (Exception e) {
             handleException(e);
         }
@@ -89,13 +98,6 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements
         try {
             super.onResume();
             cardsStashAdapter = new CardsStashListAdapter(this, this, R.layout.card_stash, cardsController.getCardsStashed());
-
-            // Load layout
-            final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
-            final LinearLayout toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
-            final TextView toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
-            final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-            final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
             toolbarTitleView.setText(R.string.cards_stash);
 

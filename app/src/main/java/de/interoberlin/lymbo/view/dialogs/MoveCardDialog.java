@@ -17,21 +17,32 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 
 public class MoveCardDialog extends DialogFragment {
-    public static final String TAG = MoveCardDialog.class.getCanonicalName();
+    // <editor-fold defaultstate="expanded" desc="Members">
+
+    public static final String TAG = MoveCardDialog.class.getSimpleName();
 
     private List<CheckBox> checkboxes = new ArrayList<>();
     private String targetLymboId = null;
 
+    // View
+    @BindView(R.id.tblStacks) TableLayout tblStacks;
+
     private OnCompleteListener ocListener;
+
+    // </editor-fold>
 
     // --------------------
     // Methods - Lifecycle
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Lifecycle">
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -40,7 +51,7 @@ public class MoveCardDialog extends DialogFragment {
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialog_move_card, null);
-        final TableLayout tblLymbos = (TableLayout) v.findViewById(R.id.tblLymbos);
+        ButterKnife.bind(this, v);
 
         // Get arguments
         Bundle bundle = this.getArguments();
@@ -86,7 +97,7 @@ public class MoveCardDialog extends DialogFragment {
                     }
                 });
 
-                tblLymbos.addView(tr);
+                tblStacks.addView(tr);
             }
         }
 
@@ -128,21 +139,28 @@ public class MoveCardDialog extends DialogFragment {
         });
     }
 
+    // </editor-fold>
+
     // --------------------
     // Callback interfaces
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
 
     public interface OnCompleteListener {
         void onMoveCard(String sourceLymboId, String targetLymboId, String cardId);
     }
 
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         try {
             this.ocListener = (OnCompleteListener) activity;
         } catch (final ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnMoveCardListener");
+            throw new ClassCastException(activity.toString() + " must implement " + TAG);
         }
     }
+
+    // </editor-fold>
 }

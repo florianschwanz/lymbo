@@ -20,7 +20,7 @@ import de.interoberlin.mate.lib.model.Log;
  * Data source for SQLite database table
  */
 public class TableCardDatasource {
-    public static final String TAG = TableCardDatasource.class.getCanonicalName();
+    public static final String TAG = TableCardDatasource.class.getSimpleName();
 
     private SQLiteDatabase database;
     private LymboSQLiteOpenHelper dbLymboSQLiteOpenHelper;

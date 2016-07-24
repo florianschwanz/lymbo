@@ -22,7 +22,7 @@ import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 
 public class CopyCardDialog extends DialogFragment {
-    public static final String TAG = CopyCardDialog.class.getCanonicalName();
+    public static final String TAG = CopyCardDialog.class.getSimpleName();
 
     private List<CheckBox> checkboxes = new ArrayList<>();
     private String targetLymboId = null;

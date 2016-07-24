@@ -39,6 +39,7 @@ import de.interoberlin.lymbo.view.dialogs.ShowErrorDialog;
 public abstract class BaseActivity extends AppCompatActivity implements Accelerator.OnShakeListener, GiveFeedbackDialog.OnCompleteListener, ReportErrorDialog.OnCompleteListener, ShowErrorDialog.OnCompleteListener {
     // <editor-fold defaultstate="expanded" desc="Members">
 
+    // Model
     private Sensor accelerator;
     private SensorManager sensorManager;
 

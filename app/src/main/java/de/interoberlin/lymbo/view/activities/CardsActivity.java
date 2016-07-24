@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
@@ -73,7 +75,10 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements
 
     // Model
     private Stack stack;
+
+    // View
     private CardsListAdapter cardsAdapter;
+    @BindView(R.id.swipe_container) SwipeRefreshLayout srl;
 
     // Controller
     private CardsController cardsController;
@@ -99,10 +104,10 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements
 
     // <editor-fold defaultstate="expanded" desc="Lifecycle">
 
+    @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         srl.setRefreshing(true);
 
         String fileName = savedInstanceState.getString(getResources().getString(R.string.bundle_lymbo_file_name));
@@ -127,6 +132,8 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements
 
             setActionBarIcon(R.drawable.ic_arrow_back_white_24dp);
             setDisplayHomeAsUpEnabled(true);
+
+            ButterKnife.bind(this);
         } catch (Exception e) {
             handleException(e);
         }

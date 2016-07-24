@@ -15,7 +15,7 @@ import android.widget.EditText;
 import de.interoberlin.lymbo.R;
 
 public class DownloadDialog extends DialogFragment {
-    public static final String TAG = DownloadDialog.class.getCanonicalName();
+    public static final String TAG = DownloadDialog.class.getSimpleName();
 
     private OnCompleteListener ocListener;
 

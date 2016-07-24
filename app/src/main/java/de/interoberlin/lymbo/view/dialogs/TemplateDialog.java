@@ -21,17 +21,36 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 
 public class TemplateDialog extends DialogFragment {
-    public static final String TAG = TemplateDialog.class.getCanonicalName();
+    // <editor-fold defaultstate="expanded" desc="Members">
+
+    public static final String TAG = TemplateDialog.class.getSimpleName();
+
+    /// View
+    @BindView(R.id.etTitle) EditText etTitle;
+    @BindView(R.id.etFront) EditText etFront;
+    @BindView(R.id.tblTextFront) TableLayout tblTextFront;
+    @BindView(R.id.ivAddTextFront) ImageView ivAddTextFront;
+    @BindView(R.id.etBack) EditText etBack;
+    @BindView(R.id.tblTextBack) TableLayout tblTextBack;
+    @BindView(R.id.ivAddTextBack) ImageView ivAddTextBack;
+    @BindView(R.id.tblTags) TableLayout tblTags;
+    @BindView(R.id.ivAddTag) ImageView ivAddTag;
 
     private OnCompleteListener ocListener;
+
+    // </editor-fold>
 
     // --------------------
     // Methods - Lifecycle
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Lifecycle">
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -40,19 +59,7 @@ public class TemplateDialog extends DialogFragment {
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialog_template, null);
-
-        final EditText etTitle = (EditText) v.findViewById(R.id.etTitle);
-
-        final EditText etFront = (EditText) v.findViewById(R.id.etFront);
-        final TableLayout tblTextFront = (TableLayout) v.findViewById(R.id.tblTextFront);
-        final ImageView ivAddTextFront = (ImageView) v.findViewById(R.id.ivAddTextFront);
-
-        final EditText etBack = (EditText) v.findViewById(R.id.etBack);
-        final TableLayout tblTextBack = (TableLayout) v.findViewById(R.id.tblTextBack);
-        final ImageView ivAddTextBack = (ImageView) v.findViewById(R.id.ivAddTextBack);
-
-        final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
-        final ImageView ivAddTag = (ImageView) v.findViewById(R.id.ivAddTag);
+        ButterKnife.bind(this, v);
 
         // Get arguments
         Bundle bundle = this.getArguments();
@@ -173,12 +180,6 @@ public class TemplateDialog extends DialogFragment {
         final String templateUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_template_uuid));
 
         AlertDialog dialog = (AlertDialog) getDialog();
-        final EditText etTitle = (EditText) dialog.findViewById(R.id.etTitle);
-        final EditText etFront = (EditText) dialog.findViewById(R.id.etFront);
-        final TableLayout tblTextFront = (TableLayout) dialog.findViewById(R.id.tblTextFront);
-        final EditText etBack = (EditText) dialog.findViewById(R.id.etBack);
-        final TableLayout tblTextBack = (TableLayout) dialog.findViewById(R.id.tblTextBack);
-        final TableLayout tblTags = (TableLayout) dialog.findViewById(R.id.tblTags);
 
         Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener(new View.OnClickListener() {
@@ -202,9 +203,13 @@ public class TemplateDialog extends DialogFragment {
         });
     }
 
+    // </editor-fold>
+
     // --------------------
     // Methods - Actions
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Actions">
 
     private void addText(TableLayout tblText) {
         TableRow row = (TableRow) tblText.getChildAt(tblText.getChildCount() - 1);
@@ -235,9 +240,13 @@ public class TemplateDialog extends DialogFragment {
         }
     }
 
+    // </editor-fold>
+
     // --------------------
-    // Methods
+    // Methos
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Methods">
 
     private List<String> getTexts(TableLayout tblTexts) {
         List<String> texts = new ArrayList<>();
@@ -288,22 +297,30 @@ public class TemplateDialog extends DialogFragment {
         return false;
     }
 
+    // </editor-fold>
+
     // --------------------
     // Callback interfaces
     // --------------------
 
+    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
+
     public interface OnCompleteListener {
         void onAddTemplate(String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
+
         void onEditTemplate(String uuid, String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);
     }
 
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         try {
             this.ocListener = (OnCompleteListener) activity;
         } catch (final ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnCompleteListener");
+            throw new ClassCastException(activity.toString() + " must implement " + TAG);
         }
     }
+
+    // </editor-fold>
 }

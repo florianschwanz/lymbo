@@ -40,6 +40,7 @@ import de.interoberlin.mate.lib.model.Log;
 
 public class StacksController {
     // <editor-fold defaultstate="expanded" desc="Members">
+
     public static final String TAG = StacksController.class.toString();
 
     // Database

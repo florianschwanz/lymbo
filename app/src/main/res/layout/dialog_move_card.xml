@@ -11,7 +11,7 @@
         android:orientation="vertical">
 
         <TableLayout
-            android:id="@+id/tblLymbos"
+            android:id="@+id/tblStacks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

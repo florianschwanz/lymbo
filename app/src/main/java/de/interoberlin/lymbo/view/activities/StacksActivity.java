@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.core.model.v1.impl.ELanguage;
@@ -65,11 +67,18 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements
 
     // View
     private StacksListAdapter stacksAdapter;
+    @BindView(R.id.dl) DrawerLayout drawer;
+    @BindView(R.id.toolbar_wrapper) LinearLayout toolbarWrapper;
+    @BindView(R.id.toolbar_title) TextView toolbarTitleView;
+    @BindView(R.id.swipe_container) SwipeRefreshLayout srl;
+    @BindView(R.id.slv) SwipeListView slv;
+    @BindView(R.id.fab) ImageButton ibFab;
 
     // Controller
     private StacksController stacksController;
 
     private Stack recentStack = null;
+    @SuppressWarnings("ununsed")
     private int recentStackPos = -1;
     private int recentEvent = -1;
 
@@ -115,6 +124,8 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements
 
             setActionBarIcon(R.drawable.ic_menu_white_24dp);
             setDisplayHomeAsUpEnabled(true);
+
+            ButterKnife.bind(this);
         } catch (Exception e) {
             handleException(e);
         }
@@ -125,14 +136,6 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements
         try {
             super.onResume();
             stacksAdapter = new StacksListAdapter(this, this, R.layout.stack, stacksController.getStacks());
-
-            // Load layout
-            final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
-            final LinearLayout toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
-            final TextView toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
-            final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-            final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
-            final ImageButton ibFab = (ImageButton) findViewById(R.id.fab);
 
             toolbarTitleView.setText(R.string.lymbos);
 

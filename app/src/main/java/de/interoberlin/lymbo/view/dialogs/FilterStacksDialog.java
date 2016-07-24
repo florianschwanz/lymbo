@@ -16,17 +16,30 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 
 public class FilterStacksDialog extends DialogFragment {
-    public static final String TAG = FilterStacksDialog.class.getCanonicalName();
+    // <editor-fold defaultstate="expanded" desc="Members">
+
+    public static final String TAG = FilterStacksDialog.class.getSimpleName();
+
+    // View
+    @BindView(R.id.tblTags) TableLayout tblTags;
+    @BindView(R.id.tvAll) TextView tvAll;
+    @BindView(R.id.tvNone) TextView tvNone;
 
     private OnCompleteListener ocListener;
+
+    // </editor-fold>
 
     // --------------------
     // Methods - Lifecycle
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Lifecycle">
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -34,9 +47,7 @@ public class FilterStacksDialog extends DialogFragment {
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialog_filter_stacks, null);
-        final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
-        final TextView tvAll = (TextView) v.findViewById(R.id.tvAll);
-        final TextView tvNone = (TextView) v.findViewById(R.id.tvNone);
+        ButterKnife.bind(this, v);
 
         // Get arguments
         Bundle bundle = this.getArguments();
@@ -138,6 +149,14 @@ public class FilterStacksDialog extends DialogFragment {
         });
     }
 
+    // </editor-fold>
+
+    // --------------------
+    // Methods - Actions
+    // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Actions">
+
     private void setAllTagsTo(TableLayout tblTags, boolean value) {
         for (int i = 0; i < tblTags.getChildCount(); i++) {
             if (tblTags.getChildAt(i) instanceof TableRow) {
@@ -150,21 +169,28 @@ public class FilterStacksDialog extends DialogFragment {
         }
     }
 
+    // </editor-fold>
+
     // --------------------
     // Callback interfaces
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
 
     public interface OnCompleteListener {
         void onTagsSelected(List<Tag> tagsSelected);
     }
 
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         try {
             this.ocListener = (OnCompleteListener) activity;
         } catch (final ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnTagsSelectedListener");
+            throw new ClassCastException(activity.toString() + " must implement " + TAG);
         }
     }
+
+    // </editor-fold>
 }

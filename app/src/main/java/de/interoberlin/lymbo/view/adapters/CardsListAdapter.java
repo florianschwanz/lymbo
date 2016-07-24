@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
@@ -55,16 +57,21 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     // View
     static class ViewHolder {
         private FrameLayout v;
-        private RelativeLayout rlMain;
-        private LinearLayout llTags;
-        private LinearLayout llFlip;
-        private TextView tvNumerator;
-        private TextView tvDenominator;
-        private ImageView ivNote;
-        private ImageView ivFavorite;
-        private ImageView ivHint;
-        private LinearLayout llNoteBar;
-        private TextView tvNote;
+        @BindView(R.id.rlMain) RelativeLayout rlMain;
+        @BindView(R.id.llTags) LinearLayout llTags;
+        @BindView(R.id.llFlip) LinearLayout llFlip;
+        @BindView(R.id.tvNumerator) TextView tvNumerator;
+        @BindView(R.id.tvDenominator) TextView tvDenominator;
+        @BindView(R.id.ivNote) ImageView ivNote;
+        @BindView(R.id.ivFavorite) ImageView ivFavorite;
+        @BindView(R.id.ivHint) ImageView ivHint;
+        @BindView(R.id.llNoteBar) LinearLayout llNoteBar;
+        @BindView(R.id.tvNote) TextView tvNote;
+
+        public ViewHolder(View v) {
+            this.v = (FrameLayout) v;
+            ButterKnife.bind(this, v);
+        }
     }
 
     // Controller
@@ -123,27 +130,8 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
         final ViewHolder viewHolder;
 
         if (v == null) {
-            viewHolder = new ViewHolder();
-
-            // Layout inflater
-            LayoutInflater vi;
-            vi = LayoutInflater.from(getContext());
-
-            // Load views
-            v = vi.inflate(R.layout.card, parent, false);
-
-            viewHolder.v = (FrameLayout) v;
-            viewHolder.rlMain = (RelativeLayout) v.findViewById(R.id.rlMain);
-            viewHolder.llTags = (LinearLayout) v.findViewById(R.id.llTags);
-            viewHolder.llFlip = (LinearLayout) v.findViewById(R.id.llFlip);
-            viewHolder.tvNumerator = (TextView) v.findViewById(R.id.tvNumerator);
-            viewHolder.tvDenominator = (TextView) v.findViewById(R.id.tvDenominator);
-            viewHolder.ivNote = (ImageView) v.findViewById(R.id.ivNote);
-            viewHolder.ivFavorite = (ImageView) v.findViewById(R.id.ivFavorite);
-            viewHolder.ivHint = (ImageView) v.findViewById(R.id.ivHint);
-            viewHolder.llNoteBar = (LinearLayout) v.findViewById(R.id.llNoteBar);
-            viewHolder.tvNote = (TextView) v.findViewById(R.id.tvNote);
-
+            v = LayoutInflater.from(getContext()).inflate(R.layout.card, parent, false);
+            viewHolder = new ViewHolder(v);
             v.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) v.getTag();

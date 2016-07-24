@@ -12,7 +12,7 @@ import android.widget.Button;
 import de.interoberlin.lymbo.R;
 
 public class ConfirmRefreshDialog extends DialogFragment {
-    public static final String TAG = ConfirmRefreshDialog.class.getCanonicalName();
+    public static final String TAG = ConfirmRefreshDialog.class.getSimpleName();
 
     private OnCompleteListener ocListener;
 

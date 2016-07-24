@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.github.mrengineer13.snackbar.SnackBar;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
@@ -31,16 +33,18 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements
 
     // <editor-fold defaultstate="expanded" desc="Members">
 
-    // Model
+    // View
     private StacksStashListAdapter lymbosStashAdapter;
+    @BindView(R.id.dl) DrawerLayout drawer;
+    @BindView(R.id.toolbar_wrapper) LinearLayout toolbarWrapper;
+    @BindView(R.id.toolbar_title) TextView toolbarTitleView;
+    @BindView(R.id.swipe_container) SwipeRefreshLayout srl;
+    @BindView(R.id.slv) SwipeListView slv;
 
     // Controller
     private StacksController stacksController;
 
     private Stack recentStack = null;
-
-    // Properties
-    private static int REFRESH_DELAY;
 
     // </editor-fold>
 
@@ -55,7 +59,7 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements
         super.onCreate(savedInstanceState);
         stacksController = StacksController.getInstance();
 
-        REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_lymbos);
+        int REFRESH_DELAY = getResources().getInteger(R.integer.refresh_delay_lymbos);
 
         if (stacksController.getStacks().isEmpty()) {
             new Handler().postDelayed(new Runnable() {
@@ -68,19 +72,14 @@ public class StacksStashActivity extends SwipeRefreshBaseActivity implements
 
         setActionBarIcon(R.drawable.ic_arrow_back_white_24dp);
         setDisplayHomeAsUpEnabled(true);
+
+        ButterKnife.bind(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         lymbosStashAdapter = new StacksStashListAdapter(this, this, R.layout.stack_stash, stacksController.getStacksStashed());
-
-        // Load layout
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.dl);
-        final LinearLayout toolbarWrapper = (LinearLayout) findViewById(R.id.toolbar_wrapper);
-        final TextView toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
-        final SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        final SwipeListView slv = (SwipeListView) findViewById(R.id.slv);
 
         drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 

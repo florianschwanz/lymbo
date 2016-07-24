@@ -22,13 +22,17 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.core.model.v1.impl.ELanguage;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.util.ViewUtil;
 
 public class StackDialog extends DialogFragment {
-    public static final String TAG = StackDialog.class.getCanonicalName();
+    // <editor-fold defaultstate="expanded" desc="Members">
+
+    public static final String TAG = StackDialog.class.getSimpleName();
 
     private List<CheckBox> checkboxesLanguageFrom = new ArrayList<>();
     private List<String> languagesFrom = new ArrayList<>();
@@ -39,11 +43,28 @@ public class StackDialog extends DialogFragment {
     private boolean addLanguagesIsExpanded = false;
     private boolean addTagsIsExpanded = false;
 
+    // View
+    @BindView(R.id.etTitle) EditText etTitle;
+    @BindView(R.id.etSubtitle) EditText etSubtitle;
+    @BindView(R.id.tvAuthor) TextView tvAuthor;
+    @BindView(R.id.llAddLanguages) LinearLayout llAddLanguages;
+    @BindView(R.id.llLanguages) LinearLayout llLanguages;
+    @BindView(R.id.tblLanguagesFrom) TableLayout tblLanguagesFrom;
+    @BindView(R.id.tblLanguagesTo) TableLayout tblLanguagesTo;
+    @BindView(R.id.llAddTags) LinearLayout llAddTags;
+    @BindView(R.id.llTags) LinearLayout llTags;
+    @BindView(R.id.tblTags) TableLayout tblTags;
+    @BindView(R.id.ivAddTag) ImageView ivAddTag;
+
     private OnCompleteListener ocListener;
+
+    // </editor-fold>
 
     // --------------------
     // Methods - Lifecycle
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Lifecycle">
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -51,19 +72,7 @@ public class StackDialog extends DialogFragment {
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialog_stack, null);
-        final EditText etTitle = (EditText) v.findViewById(R.id.etTitle);
-        final EditText etSubtitle = (EditText) v.findViewById(R.id.etSubtitle);
-        final TextView tvAuthor = (TextView) v.findViewById(R.id.tvAuthor);
-        final ImageView ivLanguages = (ImageView) v.findViewById(R.id.ivLanguages);
-        final LinearLayout llAddLanguages = (LinearLayout) v.findViewById(R.id.llAddLanguages);
-        final LinearLayout llLanguages = (LinearLayout) v.findViewById(R.id.llLanguages);
-        final TableLayout tblLanguagesFrom = (TableLayout) v.findViewById(R.id.tblLanguagesFrom);
-        final TableLayout tblLanguagesTo = (TableLayout) v.findViewById(R.id.tblLanguagesTo);
-        final ImageView ivLabel = (ImageView) v.findViewById(R.id.ivLabel);
-        final LinearLayout llAddTags = (LinearLayout) v.findViewById(R.id.llAddTags);
-        final LinearLayout llTags = (LinearLayout) v.findViewById(R.id.llTags);
-        final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
-        final ImageView ivAddTag = (ImageView) v.findViewById(R.id.ivAddTag);
+        ButterKnife.bind(this, v);
 
         // Get arguments
         Bundle bundle = this.getArguments();
@@ -276,10 +285,6 @@ public class StackDialog extends DialogFragment {
         final String lymboUuid = bundle.getString(getActivity().getResources().getString(R.string.bundle_lymbo_uuid));
 
         AlertDialog dialog = (AlertDialog) getDialog();
-        final EditText etTitle = (EditText) dialog.findViewById(R.id.etTitle);
-        final EditText etSubtitle = (EditText) dialog.findViewById(R.id.etSubtitle);
-        final TextView tvAuthor = (TextView) dialog.findViewById(R.id.tvAuthor);
-        final TableLayout tblTags = (TableLayout) dialog.findViewById(R.id.tblTags);
 
         Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener(new View.OnClickListener() {
@@ -317,19 +322,13 @@ public class StackDialog extends DialogFragment {
         });
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
+    // </editor-fold>
 
     // --------------------
     // Methods
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Methods">
 
     private List<Tag> getSelectedTags(TableLayout tblTags) {
         List<Tag> selectedTags = new ArrayList<>();
@@ -364,9 +363,13 @@ public class StackDialog extends DialogFragment {
         return false;
     }
 
+    // </editor-fold>
+
     // --------------------
     // Callback interfaces
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
 
     public interface OnCompleteListener {
         void onAddStack(String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags);
@@ -383,4 +386,6 @@ public class StackDialog extends DialogFragment {
             throw new ClassCastException(activity.toString() + " must implement OnCompleteListener");
         }
     }
+
+    // </editor-fold>
 }

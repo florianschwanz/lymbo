@@ -16,6 +16,8 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.core.model.v1.impl.Card;
@@ -45,10 +47,15 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
     // View
     static class ViewHolder {
-        private FrameLayout v;
-        private RelativeLayout rlMain;
-        private LinearLayout llTags;
-        private android.widget.ImageView ivUndo;
+        FrameLayout v;
+        @BindView(R.id.rlMain) RelativeLayout rlMain;
+        @BindView(R.id.llTags) LinearLayout llTags;
+        @BindView(R.id.ivUndo) android.widget.ImageView ivUndo;
+
+        public ViewHolder(View v) {
+            this.v = (FrameLayout) v;
+            ButterKnife.bind(this, v);
+        }
     }
 
     // Controller
@@ -107,20 +114,8 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
         ViewHolder viewHolder;
 
         if (v == null) {
-            viewHolder = new ViewHolder();
-
-            // Layout inflater
-            LayoutInflater vi;
-            vi = LayoutInflater.from(getContext());
-
-            // Load views
-            v = vi.inflate(R.layout.card_stash, parent, false);
-
-            viewHolder.v = (FrameLayout) v;
-            viewHolder.rlMain = (RelativeLayout) v.findViewById(R.id.rlMain);
-            viewHolder.llTags = (LinearLayout) v.findViewById(R.id.llTags);
-            viewHolder.ivUndo = (android.widget.ImageView) v.findViewById(R.id.ivUndo);
-
+            v = LayoutInflater.from(getContext()).inflate(R.layout.card, parent, false);
+            viewHolder = new ViewHolder(v);
             v.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) v.getTag();
@@ -199,7 +194,6 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
                         anim.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
-
                             }
 
                             @Override
@@ -209,7 +203,6 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
 
                             @Override
                             public void onAnimationRepeat(Animation animation) {
-
                             }
                         });
                     }

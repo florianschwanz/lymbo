@@ -24,6 +24,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.controller.CardsController;
 import de.interoberlin.lymbo.controller.StacksController;
@@ -44,17 +46,21 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
 
     // View
     static class ViewHolder {
-        private LinearLayout v;
-        private ImageView ivImage;
-        private TextView tvTitle;
-        private TextView tvSubtitle;
-        private ImageView ivShare;
-        private ImageView ivUpload;
-        private TextView tvCardCount;
-        private LinearLayout llTags;
+        LinearLayout v;
+        @BindView(R.id.ivImage) ImageView ivImage;
+        @BindView(R.id.tvTitle) TextView tvTitle;
+        @BindView(R.id.tvSubtitle) TextView tvSubtitle;
+        @BindView(R.id.ivShare) ImageView ivShare;
+        @BindView(R.id.ivUpload) ImageView ivUpload;
+        @BindView(R.id.tvCardCount) TextView tvCardCount;
+        @BindView(R.id.llTags) LinearLayout llTags;
+        @BindView(R.id.tvPath) TextView tvPath;
+        @BindView(R.id.tvError) TextView tvError;
 
-        private TextView tvPath;
-        private TextView tvError;
+        public ViewHolder(View v) {
+            this.v = (LinearLayout) v;
+            ButterKnife.bind(this, v);
+        }
     }
 
     // Controller
@@ -115,24 +121,8 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
 
         if (stack.getError() == null) {
             if (v == null) {
-                viewHolder = new ViewHolder();
-
-                // Layout inflater
-                LayoutInflater vi;
-                vi = LayoutInflater.from(getContext());
-
-                // Load views
-                v = vi.inflate(R.layout.stack, parent, false);
-
-                viewHolder.v = (LinearLayout) v;
-                viewHolder.ivImage = (ImageView) v.findViewById(R.id.ivImage);
-                viewHolder.tvTitle = (TextView) v.findViewById(R.id.tvTitle);
-                viewHolder.tvSubtitle = (TextView) v.findViewById(R.id.tvSubtitle);
-                viewHolder.ivShare = (ImageView) v.findViewById(R.id.ivShare);
-                viewHolder.ivUpload = (ImageView) v.findViewById(R.id.ivUpload);
-                viewHolder.tvCardCount = (TextView) v.findViewById(R.id.tvCardCount);
-                viewHolder.llTags = (LinearLayout) v.findViewById(R.id.llTags);
-
+                v = LayoutInflater.from(getContext()).inflate(R.layout.card, parent, false);
+                viewHolder = new ViewHolder(v);
                 v.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) v.getTag();
@@ -302,18 +292,9 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             return v;
         } else {
             if (v == null) {
-                viewHolder = new ViewHolder();
-                // Layout inflater
-                LayoutInflater vi;
-                vi = LayoutInflater.from(getContext());
-
-                // Load views
-                v = vi.inflate(R.layout.stack_broken, parent, false);
-
-                viewHolder.v = (LinearLayout) v;
-                viewHolder.tvTitle = (TextView) v.findViewById(R.id.tvTitle);
-                viewHolder.tvPath = (TextView) v.findViewById(R.id.tvPath);
-                viewHolder.tvError = (TextView) v.findViewById(R.id.tvError);
+                v = LayoutInflater.from(getContext()).inflate(R.layout.card, parent, false);
+                viewHolder = new ViewHolder(v);
+                v.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) v.getTag();
             }

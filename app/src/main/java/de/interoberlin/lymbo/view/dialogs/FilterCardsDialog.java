@@ -17,17 +17,31 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 
 public class FilterCardsDialog extends DialogFragment {
-    public static final String TAG = FilterCardsDialog.class.getCanonicalName();
+    // <editor-fold defaultstate="expanded" desc=
+
+    public static final String TAG = FilterCardsDialog.class.getSimpleName();
+
+    @BindView(R.id.cbOnlyFavorites) CheckBox cbOnlyFavorites;
+    @BindView(R.id.tvOnlyFavorites) TextView tvOnlyFavorites;
+    @BindView(R.id.tblTags) TableLayout tblTags;
+    @BindView(R.id.tvAll) TextView tvAll;
+    @BindView(R.id.tvNone) TextView tvNone;
 
     private OnCompleteListener ocListener;
+
+    // </editor-fold>
 
     // --------------------
     // Methods - Lifecycle
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Lifecycle">
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -35,11 +49,7 @@ public class FilterCardsDialog extends DialogFragment {
 
         // Load layout
         final View v = View.inflate(getActivity(), R.layout.dialog_filter_cards, null);
-        final CheckBox cbOnlyFavorites = (CheckBox) v.findViewById(R.id.cbOnlyFavorites);
-        final TextView tvOnlyFavorites = (TextView) v.findViewById(R.id.tvOnlyFavorites);
-        final TableLayout tblTags = (TableLayout) v.findViewById(R.id.tblTags);
-        final TextView tvAll = (TextView) v.findViewById(R.id.tvAll);
-        final TextView tvNone = (TextView) v.findViewById(R.id.tvNone);
+        ButterKnife.bind(this, v);
 
         // Get arguments
         Bundle bundle = this.getArguments();
@@ -134,8 +144,6 @@ public class FilterCardsDialog extends DialogFragment {
         super.onStart();
 
         AlertDialog dialog = (AlertDialog) getDialog();
-        final TableLayout tblTags = (TableLayout) dialog.findViewById(R.id.tblTags);
-        final CheckBox cbOnlyFavorites = (CheckBox) dialog.findViewById(R.id.cbOnlyFavorites);
 
         Button positiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener(new View.OnClickListener() {
@@ -159,9 +167,13 @@ public class FilterCardsDialog extends DialogFragment {
         });
     }
 
+    // </editor-fold>
+
     // --------------------
-    // Methods - Actions
+    // Method - Actions
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Actions">
 
     private void setAllTagsTo(TableLayout tblTags, boolean value) {
         for (int i = 0; i < tblTags.getChildCount(); i++) {
@@ -175,21 +187,28 @@ public class FilterCardsDialog extends DialogFragment {
         }
     }
 
+    // </editor-fold>
+
     // --------------------
     // Callback interfaces
     // --------------------
+
+    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
 
     public interface OnCompleteListener {
         void onFilterCards(List<Tag> tagsSelected, boolean displayOnlyFavorites);
     }
 
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         try {
             this.ocListener = (OnCompleteListener) activity;
         } catch (final ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnTagsSelectedListener");
+            throw new ClassCastException(activity.toString() + " must implement " + TAG);
         }
     }
+
+    // </editor-fold>
 }
