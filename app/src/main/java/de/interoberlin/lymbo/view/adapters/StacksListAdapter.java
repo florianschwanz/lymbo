@@ -54,10 +54,20 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
         @BindView(R.id.ivUpload) ImageView ivUpload;
         @BindView(R.id.tvCardCount) TextView tvCardCount;
         @BindView(R.id.llTags) LinearLayout llTags;
+
+        public ViewHolder(View v) {
+            this.v = (LinearLayout) v;
+            ButterKnife.bind(this, v);
+        }
+    }
+
+    static class ViewHolderBroken {
+        LinearLayout v;
+        @BindView(R.id.tvTitle) TextView tvTitle;
         @BindView(R.id.tvPath) TextView tvPath;
         @BindView(R.id.tvError) TextView tvError;
 
-        public ViewHolder(View v) {
+        public ViewHolderBroken(View v) {
             this.v = (LinearLayout) v;
             ButterKnife.bind(this, v);
         }
@@ -117,11 +127,11 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     public View getView(final int position, View v, ViewGroup parent) {
         final Stack stack = getItem(position);
 
-        final ViewHolder viewHolder;
-
         if (stack.getError() == null) {
+            final ViewHolder viewHolder;
+
             if (v == null) {
-                v = LayoutInflater.from(getContext()).inflate(R.layout.card, parent, false);
+                v = LayoutInflater.from(getContext()).inflate(R.layout.stack, parent, false);
                 viewHolder = new ViewHolder(v);
                 v.setTag(viewHolder);
             } else {
@@ -153,7 +163,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                     }
                 }
             } else {
-                viewHolder.ivImage.getLayoutParams().height = 0;
+                viewHolder.ivImage.setVisibility(View.GONE);
             }
 
             if (stack.getTitle() != null)
@@ -291,12 +301,14 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
 
             return v;
         } else {
+            final ViewHolderBroken viewHolder;
+
             if (v == null) {
                 v = LayoutInflater.from(getContext()).inflate(R.layout.card, parent, false);
-                viewHolder = new ViewHolder(v);
+                viewHolder = new ViewHolderBroken(v);
                 v.setTag(viewHolder);
             } else {
-                viewHolder = (ViewHolder) v.getTag();
+                viewHolder = (ViewHolderBroken) v.getTag();
             }
 
             // Set values

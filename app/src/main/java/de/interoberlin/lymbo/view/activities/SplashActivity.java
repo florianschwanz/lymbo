@@ -78,6 +78,7 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         stacksController = StacksController.getInstance();
 
         setContentView(R.layout.activity_splash);
+        ButterKnife.bind(this);
 
         // Get instances of managers
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -141,7 +142,6 @@ public class SplashActivity extends Activity implements Accelerator.OnTiltListen
         Accelerator.getInstance().setDisplay(((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay());
 
         panel.init();
-        ButterKnife.bind(this);
     }
 
     public void onResume() {
