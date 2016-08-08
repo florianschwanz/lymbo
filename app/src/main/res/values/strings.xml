@@ -13,6 +13,7 @@
     <string name="back">Back</string>
     <string name="broken_lymbo_file">Broken lymbo :(</string>
     <string name="cancel">Cancel</string>
+    <string name="card_does_not_contain_any_sides">Card does not contain any sides</string>
     <string name="card_restored">Card restored</string>
     <string name="cards">Cards</string>
     <string name="cards_resetted">Cards resetted</string>
@@ -45,6 +46,7 @@
     <string name="front">Front</string>
     <string name="give_feedback_question">Feedback is very important for us to improve the app. Feel free to send us comments, hints and wishes.</string>
     <string name="hint">Hint</string>
+    <string name="how_useful">(how useful)</string>
     <string name="id">ID</string>
     <string name="log">Log</string>
     <string name="logo">Logo</string>
@@ -56,6 +58,7 @@
     <string name="lymbos_stash">Lymbos Stash</string>
     <string name="menu_about">About</string>
     <string name="menu_download">Download</string>
+    <string name="menu_filter">Filter</string>
     <string name="menu_log">Log</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_shuffle">Shuffle</string>
@@ -64,8 +67,8 @@
     <string name="message">Message</string>
     <string name="move_card">Move card</string>
     <string name="moved_card">Moved card</string>
-    <string name="new_tag">new tag</string>
     <string name="new_answer">new answer</string>
+    <string name="new_tag">new tag</string>
     <string name="new_text">new text</string>
     <string name="no_author_specified">no author specified</string>
     <string name="no_tag">no tag</string>
@@ -73,12 +76,12 @@
     <string name="note">Note</string>
     <string name="note_edited">Note edited</string>
     <string name="okay">Okay</string>
-    <string name="pref_title_translator">Translator</string>
-    <string name="pref_title_translator_api_secret">Translator API secret</string>
     <string name="pref_title_lymbo_web">Lymbo Web</string>
     <string name="pref_title_lymbo_web_api_secret">Lymbo Web API secret</string>
-    <string name="pref_title_lymbo_web_user_name">User name</string>
     <string name="pref_title_lymbo_web_password">Password</string>
+    <string name="pref_title_lymbo_web_user_name">User name</string>
+    <string name="pref_title_translator">Translator</string>
+    <string name="pref_title_translator_api_secret">Translator API secret</string>
     <string name="put_card_to_end">Put card to end</string>
     <string name="remove_card_from_favorites">Removed card from favorites</string>
     <string name="report_error_question">Do you want to send the error log to the developer? This helps a lot fixing this issue.</string>
@@ -111,15 +114,12 @@
     <string name="target_language">Target language</string>
     <string name="templates">Templates</string>
     <string name="text">Text</string>
+    <string name="this_file_does_not_match_lymbo_format">This file does not match lymbo format</string>
     <string name="title">Title</string>
-    <string name="use_template">Use template</string>
     <string name="undo">Undo</string>
     <string name="upload">Upload</string>
     <string name="uploaded_lymbo">Uploaded lymbo</string>
+    <string name="use_template">Use template</string>
     <string name="wrong">wrong</string>
-    <string name="this_file_does_not_match_lymbo_format">This file does not match lymbo format</string>
-    <string name="card_does_not_contain_any_sides">Card does not contain any sides</string>
-    <string name="how_useful">(how useful)</string>
-    <string name="menu_filter">Filter</string>
 
 </resources>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="version_code" translatable="false">versionCode</string>
     <string name="version_major" translatable="false">versionMajor</string>
     <string name="version_minor" translatable="false">versionMinor</string>
     <string name="version_patch" translatable="false">versionPatch</string>

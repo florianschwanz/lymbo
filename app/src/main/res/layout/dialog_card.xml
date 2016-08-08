@@ -57,7 +57,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:foreground="@drawable/bottom_shadow" />
+                android:background="@drawable/bottom_shadow" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -99,7 +99,7 @@
 
             <TextView
                 android:id="@+id/tvExpandQuiz"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.9"
@@ -117,7 +117,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:foreground="@drawable/bottom_shadow" />
+                android:background="@drawable/bottom_shadow" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -182,7 +182,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:foreground="@drawable/bottom_shadow" />
+                android:background="@drawable/bottom_shadow" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -199,7 +199,8 @@
                     android:id="@+id/ivAddTextBack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_add_black_36dp" />
+                    android:background="@drawable/ic_add_black_36dp"
+                    android:contentDescription="@string/desc_image" />
             </LinearLayout>
         </LinearLayout>
 
@@ -223,7 +224,7 @@
 
             <TextView
                 android:id="@+id/tvExpandTags"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.9"
@@ -241,7 +242,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:foreground="@drawable/bottom_shadow" />
+                android:background="@drawable/bottom_shadow" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -283,7 +284,7 @@
 
             <TextView
                 android:id="@+id/tvExpandTemplates"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.9"
@@ -301,7 +302,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:foreground="@drawable/bottom_shadow" />
+                android:background="@drawable/bottom_shadow" />
 
             <LinearLayout
                 android:layout_width="match_parent"
