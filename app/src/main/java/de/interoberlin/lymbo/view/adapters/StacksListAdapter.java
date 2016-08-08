@@ -38,7 +38,7 @@ import de.interoberlin.lymbo.view.activities.CardsActivity;
 import de.interoberlin.lymbo.view.components.TagView;
 
 public class StacksListAdapter extends ArrayAdapter<Stack> {
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     // Context
     private Context context;
@@ -89,7 +89,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     // Constructors
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Constructors">
+    // <editor-fold defaultstate="collapsed" desc="Constructors">
 
     public StacksListAdapter(Context context, OnCompleteListener ocListener, int resource, List<Stack> items) {
         super(context, resource, items);
@@ -111,7 +111,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     // Methods
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Methods">
+    // <editor-fold defaultstate="collapsed" desc="Methods">
 
     @Override
     public int getCount() {
@@ -128,6 +128,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
         final Stack stack = getItem(position);
 
         if (stack.getError() == null) {
+            // <editor-fold defaultstate="collapsed" desc="Stack">
             final ViewHolder viewHolder;
 
             if (v == null) {
@@ -300,11 +301,14 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
             viewHolder.tvCardCount.setText(String.valueOf(stack.getCards().size() + " " + context.getResources().getString(R.string.cards)));
 
             return v;
+
+            // </editor-fold>
         } else {
+            // <editor-fold defaultstate="collapsed" desc="Stack broken">
             final ViewHolderBroken viewHolder;
 
             if (v == null) {
-                v = LayoutInflater.from(getContext()).inflate(R.layout.card, parent, false);
+                v = LayoutInflater.from(getContext()).inflate(R.layout.stack_broken, parent, false);
                 viewHolder = new ViewHolderBroken(v);
                 v.setTag(viewHolder);
             } else {
@@ -338,6 +342,8 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
                 viewHolder.tvError.setText(stack.getError());
 
             return v;
+
+            // </editor-fold>
         }
     }
 
@@ -347,7 +353,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     // Methods - Actions
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Actions">
+    // <editor-fold defaultstate="collapsed" desc="Actions">
 
     /**
      * Performs stash animation
@@ -383,7 +389,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     // Methods - Filter
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Filter">
+    // <editor-fold defaultstate="collapsed" desc="Filter">
 
     /*
     public List<Stack> getFilteredItems() {
@@ -419,7 +425,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     // Methods - Util
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Util">
+    // <editor-fold defaultstate="collapsed" desc="Util">
 
     private Resources getResources() {
         return getContext().getResources();
@@ -431,7 +437,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     // Inner classes
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Inner classes">
+    // <editor-fold defaultstate="collapsed" desc="Inner classes">
 
     public class LymboListFilter extends Filter {
         @Override
@@ -481,7 +487,7 @@ public class StacksListAdapter extends ArrayAdapter<Stack> {
     // Callback interfaces
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
+    // <editor-fold defaultstate="collapsed" desc="Callback interfaces">
 
     public interface OnCompleteListener {
         void onClickEdit(Stack stack);

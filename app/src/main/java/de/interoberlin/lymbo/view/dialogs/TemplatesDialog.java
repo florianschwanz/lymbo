@@ -29,7 +29,7 @@ import de.interoberlin.lymbo.core.model.v1.impl.components.Text;
 import de.interoberlin.lymbo.core.model.v1.impl.components.Title;
 
 public class TemplatesDialog extends DialogFragment {
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     public static final String TAG = TemplatesDialog.class.getSimpleName();
 
@@ -44,7 +44,7 @@ public class TemplatesDialog extends DialogFragment {
     // Methods - Lifecycle
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Lifecycle">
+    // <editor-fold defaultstate="collapsed" desc="Lifecycle">
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -138,7 +138,7 @@ public class TemplatesDialog extends DialogFragment {
     // Methods - Actions
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Actions">
+    // <editor-fold defaultstate="collapsed" desc="Actions">
 
     private void add() {
         CardsController cardsController = CardsController.getInstance();
@@ -211,7 +211,7 @@ public class TemplatesDialog extends DialogFragment {
     // Callback interfaces
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
+    // <editor-fold defaultstate="collapsed" desc="Callback interfaces">
 
     public interface OnCompleteListener {
         void onDeleteTemplate(Card template);

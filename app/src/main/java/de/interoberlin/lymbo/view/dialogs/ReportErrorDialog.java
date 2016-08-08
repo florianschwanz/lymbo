@@ -12,7 +12,7 @@ import android.widget.Button;
 import de.interoberlin.lymbo.R;
 
 public class ReportErrorDialog extends DialogFragment {
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     public static final String TAG = ReportErrorDialog.class.getSimpleName();
 
@@ -24,7 +24,7 @@ public class ReportErrorDialog extends DialogFragment {
     // Methods - Lifecycle
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Lifecycle">
+    // <editor-fold defaultstate="collapsed" desc="Lifecycle">
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -96,7 +96,7 @@ public class ReportErrorDialog extends DialogFragment {
     // Callback interfaces
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
+    // <editor-fold defaultstate="collapsed" desc="Callback interfaces">
 
     public interface OnCompleteListener {
         void onSendReport(String stacktrace);

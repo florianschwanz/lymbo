@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Settings activity -->
-    <string name="pref_header_general" translatable="false">pref_header_general</string>
     <string name="pref_translator_api_secret" translatable="false">pref_translator_api_secret</string>
     <string name="pref_lymbo_web_api_secret" translatable="false">pref_lymbo_web_api_secret</string>
     <string name="pref_lymbo_web_user_name" translatable="false">pref_lymbo_web_user_name</string>

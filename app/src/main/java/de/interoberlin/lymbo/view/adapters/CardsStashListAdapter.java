@@ -39,7 +39,7 @@ import de.interoberlin.lymbo.view.components.TextView;
 import de.interoberlin.lymbo.view.components.TitleView;
 
 public class CardsStashListAdapter extends ArrayAdapter<Card> {
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     // Context
     private Context context;
@@ -73,7 +73,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     // Constructors
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Constructors">
+    // <editor-fold defaultstate="collapsed" desc="Constructors">
 
     public CardsStashListAdapter(Context context, Activity activity, int resource, List<Card> items) {
         super(context, resource, items);
@@ -94,7 +94,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     // Methods
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Methods">
+    // <editor-fold defaultstate="collapsed" desc="Methods">
 
     @Override
     public int getCount() {
@@ -249,7 +249,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     // Methods - Actions
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Actions">
+    // <editor-fold defaultstate="collapsed" desc="Actions">
 
     /**
      * Restores a card
@@ -269,7 +269,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     // Methods - Filter
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Filter">
+    // <editor-fold defaultstate="collapsed" desc="Filter">
 
     /*
     public List<Card> getFilteredItems() {
@@ -305,7 +305,7 @@ public class CardsStashListAdapter extends ArrayAdapter<Card> {
     // Inner classes
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Inner classes">
+    // <editor-fold defaultstate="collapsed" desc="Inner classes">
 
     public class CardListFilter extends Filter {
         @Override

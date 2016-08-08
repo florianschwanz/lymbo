@@ -42,9 +42,6 @@
     <dimen name="card_small_text">14.0sp</dimen>
     <dimen name="card_medium_text">20.0sp</dimen>
     <dimen name="card_large_text">25.0sp</dimen>
-    <!-- <dimen name="list_text_size">16sp</dimen> -->
-    <!-- <dimen name="list_item_height">48dip</dimen> -->
-    <dimen name="sticky_height">120dp</dimen>
     <dimen name="note_margin">5dp</dimen>
 
     <dimen name="reveal_icon_size">50dp</dimen>

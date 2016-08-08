@@ -27,7 +27,7 @@ import de.interoberlin.lymbo.model.persistence.sqlite.cards.TableCardEntry;
 import de.interoberlin.lymbo.util.ZipUtil;
 
 public class CardsController {
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     // Database
     private TableCardDatasource datasource;
@@ -53,7 +53,7 @@ public class CardsController {
     // Constructors
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Constructors">
+    // <editor-fold defaultstate="collapsed" desc="Constructors">
 
     private CardsController() {
     }
@@ -72,7 +72,7 @@ public class CardsController {
     // Methods
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Methods">
+    // <editor-fold defaultstate="collapsed" desc="Methods">
 
     public void init(Context context) {
         stacksController = StacksController.getInstance();
@@ -586,7 +586,7 @@ public class CardsController {
     // Util
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Util">
+    // <editor-fold defaultstate="collapsed" desc="Util">
 
     public void addTagsSelected(List<Tag> tags) {
         for (Tag tag : tags) {
@@ -646,7 +646,7 @@ public class CardsController {
     // Getters ( Setters
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Getters ( Setters">
+    // <editor-fold defaultstate="collapsed" desc="Getters ( Setters">
 
     public Stack getStack() {
         return stack;

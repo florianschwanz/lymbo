@@ -27,13 +27,13 @@ import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
 public class CardsStashActivity extends SwipeRefreshBaseActivity implements
-    // <editor-fold defaultstate="expanded" desc="Interfaces">
+    // <editor-fold defaultstate="collapsed" desc="Interfaces">
         SwipeRefreshLayout.OnRefreshListener,
         ConfirmRefreshDialog.OnCompleteListener,
         SnackBar.OnMessageClickListener {
     // </editor-fold>
 
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     // View
     private CardsStashListAdapter cardsStashAdapter;
@@ -60,7 +60,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements
     // Methods - Lifecycle
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Lifecycle">
+    // <editor-fold defaultstate="collapsed" desc="Lifecycle">
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -168,7 +168,7 @@ public class CardsStashActivity extends SwipeRefreshBaseActivity implements
     // Methods - Callbacks
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Callbacks">
+    // <editor-fold defaultstate="collapsed" desc="Callbacks">
 
     // <editor-fold defaultstate="collapsed" desc="Callbacks SwipeRefreshLayout">
     @Override

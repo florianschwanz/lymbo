@@ -27,7 +27,7 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 
 public class TemplateDialog extends DialogFragment {
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     public static final String TAG = TemplateDialog.class.getSimpleName();
 
@@ -50,7 +50,7 @@ public class TemplateDialog extends DialogFragment {
     // Methods - Lifecycle
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Lifecycle">
+    // <editor-fold defaultstate="collapsed" desc="Lifecycle">
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -209,7 +209,7 @@ public class TemplateDialog extends DialogFragment {
     // Methods - Actions
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Actions">
+    // <editor-fold defaultstate="collapsed" desc="Actions">
 
     private void addText(TableLayout tblText) {
         TableRow row = (TableRow) tblText.getChildAt(tblText.getChildCount() - 1);
@@ -246,7 +246,7 @@ public class TemplateDialog extends DialogFragment {
     // Methos
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Methods">
+    // <editor-fold defaultstate="collapsed" desc="Methods">
 
     private List<String> getTexts(TableLayout tblTexts) {
         List<String> texts = new ArrayList<>();
@@ -303,7 +303,7 @@ public class TemplateDialog extends DialogFragment {
     // Callback interfaces
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
+    // <editor-fold defaultstate="collapsed" desc="Callback interfaces">
 
     public interface OnCompleteListener {
         void onAddTemplate(String title, String frontTitleValue, List<String> frontTextsValues, String backTitleValue, List<String> backTextsValues, List<Tag> tags);

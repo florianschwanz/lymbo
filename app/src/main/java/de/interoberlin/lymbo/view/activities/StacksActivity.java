@@ -51,7 +51,7 @@ import de.interoberlin.mate.lib.view.LogActivity;
 import de.interoberlin.swipelistview.view.SwipeListView;
 
 public class StacksActivity extends SwipeRefreshBaseActivity implements
-    // <editor-fold defaultstate="expanded" desc="Interfaces">
+    // <editor-fold defaultstate="collapsed" desc="Interfaces">
         SwipeRefreshLayout.OnRefreshListener,
         StacksListAdapter.OnCompleteListener,
         SnackBar.OnMessageClickListener,
@@ -63,7 +63,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements
         LymboWebDownloadTask.OnCompleteListener {
     // </editor-fold>
 
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     // View
     private StacksListAdapter stacksAdapter;
@@ -93,7 +93,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements
     // Methods - Lifecycle
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Lifecycle">
+    // <editor-fold defaultstate="collapsed" desc="Lifecycle">
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -230,7 +230,7 @@ public class StacksActivity extends SwipeRefreshBaseActivity implements
     // Methods - Callbacks
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Callbacks">
+    // <editor-fold defaultstate="collapsed" desc="Callbacks">
 
     // <editor-fold defaultstate="collapsed" desc="Callbacks SwipeRefreshLayout">
     @Override

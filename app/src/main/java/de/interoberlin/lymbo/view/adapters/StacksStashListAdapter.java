@@ -24,7 +24,7 @@ import de.interoberlin.lymbo.util.ViewUtil;
 import de.interoberlin.lymbo.view.activities.StacksStashActivity;
 
 public class StacksStashListAdapter extends ArrayAdapter<Stack> {
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     // Context
     private Context context;
@@ -58,7 +58,7 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
     // Constructors
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Constructors">
+    // <editor-fold defaultstate="collapsed" desc="Constructors">
 
     public StacksStashListAdapter(Activity activity, Context context, int resource, List<Stack> items) {
         super(context, resource, items);
@@ -79,7 +79,7 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
     // Methods
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Methods">
+    // <editor-fold defaultstate="collapsed" desc="Methods">
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
@@ -144,7 +144,7 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
     // Methods - Filter
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Filter">
+    // <editor-fold defaultstate="collapsed" desc="Filter">
 
     /*
     public List<Stack> getFilteredItems() {
@@ -180,7 +180,7 @@ public class StacksStashListAdapter extends ArrayAdapter<Stack> {
     // Inner classes
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Inner classes">
+    // <editor-fold defaultstate="collapsed" desc="Inner classes">
 
     public class LymboListFilter extends Filter {
         @Override

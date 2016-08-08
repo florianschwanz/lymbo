@@ -13,7 +13,7 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.App;
 
 public class GiveFeedbackDialog extends DialogFragment {
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     public static final String TAG = GiveFeedbackDialog.class.getSimpleName();
 
@@ -25,7 +25,7 @@ public class GiveFeedbackDialog extends DialogFragment {
     // Methods - Lifecycle
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Lifecycle">
+    // <editor-fold defaultstate="collapsed" desc="Lifecycle">
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -91,7 +91,7 @@ public class GiveFeedbackDialog extends DialogFragment {
     // Callback interfaces
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
+    // <editor-fold defaultstate="collapsed" desc="Callback interfaces">
 
     public interface OnCompleteListener {
         void onGiveFeedbackDialogDialogComplete();

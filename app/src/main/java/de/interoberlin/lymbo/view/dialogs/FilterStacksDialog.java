@@ -22,7 +22,7 @@ import de.interoberlin.lymbo.R;
 import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 
 public class FilterStacksDialog extends DialogFragment {
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     public static final String TAG = FilterStacksDialog.class.getSimpleName();
 
@@ -39,7 +39,7 @@ public class FilterStacksDialog extends DialogFragment {
     // Methods - Lifecycle
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Lifecycle">
+    // <editor-fold defaultstate="collapsed" desc="Lifecycle">
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -155,7 +155,7 @@ public class FilterStacksDialog extends DialogFragment {
     // Methods - Actions
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Actions">
+    // <editor-fold defaultstate="collapsed" desc="Actions">
 
     private void setAllTagsTo(TableLayout tblTags, boolean value) {
         for (int i = 0; i < tblTags.getChildCount(); i++) {
@@ -175,7 +175,7 @@ public class FilterStacksDialog extends DialogFragment {
     // Callback interfaces
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
+    // <editor-fold defaultstate="collapsed" desc="Callback interfaces">
 
     public interface OnCompleteListener {
         void onTagsSelected(List<Tag> tagsSelected);

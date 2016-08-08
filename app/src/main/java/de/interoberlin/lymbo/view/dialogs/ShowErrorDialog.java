@@ -13,7 +13,7 @@ import android.widget.TextView;
 import de.interoberlin.lymbo.R;
 
 public class ShowErrorDialog extends DialogFragment {
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     public static final String TAG = ShowErrorDialog.class.getSimpleName();
 
@@ -25,7 +25,7 @@ public class ShowErrorDialog extends DialogFragment {
     // Methods - Lifecycle
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Lifecycle">
+    // <editor-fold defaultstate="collapsed" desc="Lifecycle">
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -88,7 +88,7 @@ public class ShowErrorDialog extends DialogFragment {
     // Callback interfaces
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
+    // <editor-fold defaultstate="collapsed" desc="Callback interfaces">
 
     public interface OnCompleteListener {
         void onShowErrorDialogComplete(String stacktrace);

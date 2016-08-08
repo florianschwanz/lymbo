@@ -24,7 +24,7 @@ import de.interoberlin.lymbo.controller.StacksController;
 import de.interoberlin.lymbo.core.model.v1.impl.Stack;
 
 public class MoveCardDialog extends DialogFragment {
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     public static final String TAG = MoveCardDialog.class.getSimpleName();
 
@@ -42,7 +42,7 @@ public class MoveCardDialog extends DialogFragment {
     // Methods - Lifecycle
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Lifecycle">
+    // <editor-fold defaultstate="collapsed" desc="Lifecycle">
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -145,7 +145,7 @@ public class MoveCardDialog extends DialogFragment {
     // Callback interfaces
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
+    // <editor-fold defaultstate="collapsed" desc="Callback interfaces">
 
     public interface OnCompleteListener {
         void onMoveCard(String sourceLymboId, String targetLymboId, String cardId);

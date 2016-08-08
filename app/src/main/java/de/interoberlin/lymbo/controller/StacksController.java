@@ -39,7 +39,7 @@ import de.interoberlin.lymbo.util.ZipUtil;
 import de.interoberlin.mate.lib.model.Log;
 
 public class StacksController {
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     public static final String TAG = StacksController.class.toString();
 
@@ -69,7 +69,7 @@ public class StacksController {
     // Constructors
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Constructors">
+    // <editor-fold defaultstate="collapsed" desc="Constructors">
 
     private StacksController() {
         init();
@@ -89,7 +89,7 @@ public class StacksController {
     // Methods
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Methods">
+    // <editor-fold defaultstate="collapsed" desc="Methods">
 
     public void init() {
         stacks = new ArrayList<>();
@@ -502,7 +502,7 @@ public class StacksController {
     // Util
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Util">
+    // <editor-fold defaultstate="collapsed" desc="Util">
 
     private Resources getResources() {
         return App.getContext().getResources();
@@ -577,7 +577,7 @@ public class StacksController {
     // Getters ( Setters
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Getters ( Setters">
+    // <editor-fold defaultstate="collapsed" desc="Getters ( Setters">
 
     public List<Stack> getStacks() {
         return stacks;

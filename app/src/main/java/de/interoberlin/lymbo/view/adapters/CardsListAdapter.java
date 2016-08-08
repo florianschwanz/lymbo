@@ -48,7 +48,7 @@ import de.interoberlin.lymbo.view.components.TagView;
 import de.interoberlin.lymbo.view.components.TitleView;
 
 public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     // Context
     private Context context;
@@ -89,7 +89,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     // Constructors
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Constructors">
+    // <editor-fold defaultstate="collapsed" desc="Constructors">
 
     public CardsListAdapter(Context context, OnCompleteListener ocListener, int resource, List<Card> items) {
         super(context, resource, items);
@@ -110,7 +110,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     // Methods
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Methods">
+    // <editor-fold defaultstate="collapsed" desc="Methods">
 
     @Override
     public int getCount() {
@@ -378,7 +378,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     // Methods - Actions
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Actions">
+    // <editor-fold defaultstate="collapsed" desc="Actions">
 
     /**
      * Flips a card to the next side
@@ -536,7 +536,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     // Methods - Callbacks
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Callbacks">
+    // <editor-fold defaultstate="collapsed" desc="Callbacks">
 
     public List<Card> getFilteredItems() {
         return filteredItems;
@@ -570,7 +570,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     // Methods - Util
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Util">
+    // <editor-fold defaultstate="collapsed" desc="Util">
 
     private Resources getResources() {
         return getContext().getResources();
@@ -582,7 +582,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     // Inner classes
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Inner classes">
+    // <editor-fold defaultstate="collapsed" desc="Inner classes">
 
     public class CardListFilter extends Filter {
         @Override
@@ -632,7 +632,7 @@ public class CardsListAdapter extends ArrayAdapter<Card> implements Filterable {
     // Callback interfaces
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
+    // <editor-fold defaultstate="collapsed" desc="Callback interfaces">
 
     public interface OnCompleteListener {
         void onClickEdit(Card card);

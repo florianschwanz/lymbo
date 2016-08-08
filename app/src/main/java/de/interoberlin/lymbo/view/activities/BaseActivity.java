@@ -37,7 +37,7 @@ import de.interoberlin.lymbo.view.dialogs.ReportErrorDialog;
 import de.interoberlin.lymbo.view.dialogs.ShowErrorDialog;
 
 public abstract class BaseActivity extends AppCompatActivity implements Accelerator.OnShakeListener, GiveFeedbackDialog.OnCompleteListener, ReportErrorDialog.OnCompleteListener, ShowErrorDialog.OnCompleteListener {
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     // Model
     private Sensor accelerator;
@@ -52,7 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Accelera
     // Methods - Lifecycle
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Lifecycle">
+    // <editor-fold defaultstate="collapsed" desc="Lifecycle">
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +99,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Accelera
     // Methods - Callbacks
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Callbacks">
+    // <editor-fold defaultstate="collapsed" desc="Callbacks">
 
     @Override
     public void onShake(int count) {
@@ -152,7 +152,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Accelera
     // Methods
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Methods">
+    // <editor-fold defaultstate="collapsed" desc="Methods">
 
     protected void handleException(Exception e) {
         ReportErrorDialog dialog = new ReportErrorDialog();

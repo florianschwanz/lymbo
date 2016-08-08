@@ -30,7 +30,7 @@ import de.interoberlin.lymbo.core.model.v1.impl.Tag;
 import de.interoberlin.lymbo.util.ViewUtil;
 
 public class StackDialog extends DialogFragment {
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     public static final String TAG = StackDialog.class.getSimpleName();
 
@@ -64,7 +64,7 @@ public class StackDialog extends DialogFragment {
     // Methods - Lifecycle
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Lifecycle">
+    // <editor-fold defaultstate="collapsed" desc="Lifecycle">
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -328,7 +328,7 @@ public class StackDialog extends DialogFragment {
     // Methods
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Methods">
+    // <editor-fold defaultstate="collapsed" desc="Methods">
 
     private List<Tag> getSelectedTags(TableLayout tblTags) {
         List<Tag> selectedTags = new ArrayList<>();
@@ -369,7 +369,7 @@ public class StackDialog extends DialogFragment {
     // Callback interfaces
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Callback interfaces">
+    // <editor-fold defaultstate="collapsed" desc="Callback interfaces">
 
     public interface OnCompleteListener {
         void onAddStack(String title, String subtitle, String author, ELanguage languageFrom, ELanguage languageTo, List<Tag> tags);

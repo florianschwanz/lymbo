@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="group_id" translatable="false">groupId</string>
-    <string name="artifact_id" translatable="false">artifactId</string>
     <string name="version_code" translatable="false">versionCode</string>
     <string name="version_major" translatable="false">versionMajor</string>
     <string name="version_minor" translatable="false">versionMinor</string>
     <string name="version_patch" translatable="false">versionPatch</string>
     <string name="license" translatable="false">license</string>
     <string name="website" translatable="false">website</string>
-    <string name="project_url" translatable="false">projectUrl</string>
     <string name="sourcecode" translatable="false">sourcecode</string>
     <string name="issuetracker" translatable="false">issuetracker</string>
-    <string name="summary" translatable="false">summary</string>
 </resources>

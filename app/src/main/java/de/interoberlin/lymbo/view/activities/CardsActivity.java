@@ -55,7 +55,7 @@ import de.interoberlin.swipelistview.view.SwipeListView;
 import de.interoberlin.swipelistview.view.SwipeListViewListener;
 
 public class CardsActivity extends SwipeRefreshBaseActivity implements
-    // <editor-fold defaultstate="expanded" desc="Interfaces">
+    // <editor-fold defaultstate="collapsed" desc="Interfaces">
         SwipeRefreshLayout.OnRefreshListener,
         CardsListAdapter.OnCompleteListener,
         SwipeListViewListener,
@@ -71,7 +71,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements
         MoveCardDialog.OnCompleteListener {
     // </editor-fold>
 
-    // <editor-fold defaultstate="expanded" desc="Members">
+    // <editor-fold defaultstate="collapsed" desc="Members">
 
     // Model
     private Stack stack;
@@ -102,7 +102,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements
     // Methods - Lifecycle
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Lifecycle">
+    // <editor-fold defaultstate="collapsed" desc="Lifecycle">
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -291,7 +291,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements
     // Methods - Callbacks
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Callbacks">
+    // <editor-fold defaultstate="collapsed" desc="Callbacks">
 
     // <editor-fold defaultstate="collapsed" desc="Callbacks SwipeRefreshLayout">
     @Override
@@ -719,7 +719,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements
     // Methods - Actions
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Actions">
+    // <editor-fold defaultstate="collapsed" desc="Actions">
 
     /**
      * Shuffles visible cards
@@ -776,7 +776,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements
     // Methods
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Methods">
+    // <editor-fold defaultstate="collapsed" desc="Methods">
 
     private void vibrate() {
         vibrate(VIBRATION_DURATION);
@@ -843,7 +843,7 @@ public class CardsActivity extends SwipeRefreshBaseActivity implements
     // Inner classes
     // --------------------
 
-    // <editor-fold defaultstate="expanded" desc="Inner classes">
+    // <editor-fold defaultstate="collapsed" desc="Inner classes">
 
     public class LoadCardsTask extends AsyncTask<Void, Void, Void> {
         @Override
